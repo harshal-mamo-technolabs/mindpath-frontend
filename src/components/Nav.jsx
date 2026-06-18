@@ -14,14 +14,16 @@ import {
   User,
 } from 'lucide-react'
 import Logo from './Logo.jsx'
+import { useAuth } from '../hooks/useAuth.js'
 
-/* Primary product sections — shown as the desktop top nav. */
+/* Primary product sections — desktop top nav + the mobile bottom tab bar.
+   4th item is a short label for the narrow bottom bar. */
 const PRIMARY = [
-  ['Dashboard', '/dashboard', LayoutDashboard],
-  ['Assessments', '/assessments', ClipboardList],
-  ['Your reports', '/reports', FileHeart],
-  ['Daily audio', '/audio', Headphones],
-  ['Ebooks', '/ebooks', BookOpen],
+  ['Dashboard', '/dashboard', LayoutDashboard, 'Dashboard'],
+  ['Assessments', '/assessments', ClipboardList, 'Assess'],
+  ['Your reports', '/reports', FileHeart, 'Reports'],
+  ['Daily audio', '/audio', Headphones, 'Audio'],
+  ['Ebooks', '/ebooks', BookOpen, 'Ebooks'],
 ]
 /* Secondary features — live in the account menu. */
 const EXPLORE = [
@@ -40,6 +42,11 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { pathname } = useLocation()
   const userRef = useRef(null)
+
+  const { user, logout } = useAuth()
+  const displayName = user?.name || 'Maya Kapoor'
+  const email = user?.email || 'maya@example.com'
+  const initial = displayName.trim().charAt(0).toUpperCase() || 'M'
 
   const isActive = (to) => pathname === to || (to !== '/' && pathname.startsWith(to))
 
@@ -79,70 +86,87 @@ export default function Nav() {
   )
 
   return (
-    <header className={`nav ${scrolled ? 'scrolled' : ''}`}>
-      <div className="container nav-inner">
-        <Logo />
-        <nav aria-label="Primary">
-          <ul className="nav-links">
-            {PRIMARY.map(([label, to]) => (
-              <li key={to}>
-                <Link to={to} className={isActive(to) ? 'active' : ''}>
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+    <>
+      <header className={`nav ${scrolled ? 'scrolled' : ''}`}>
+        <div className="container nav-inner">
+          <Logo />
+          <nav aria-label="Primary">
+            <ul className="nav-links">
+              {PRIMARY.map(([label, to]) => (
+                <li key={to}>
+                  <Link to={to} className={isActive(to) ? 'active' : ''}>
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-        <div className="nav-cta">
-          <div className="nav-user" ref={userRef}>
-            <button
-              className={`nav-avatar ${menuOpen ? 'open' : ''}`}
-              aria-label="Account & menu"
-              aria-haspopup="menu"
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen((o) => !o)}
-            >
-              M
-            </button>
+          <div className="nav-cta">
+            <div className="nav-user" ref={userRef}>
+              <button
+                className={`nav-avatar ${menuOpen ? 'open' : ''}`}
+                aria-label="Account & menu"
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen((o) => !o)}
+              >
+                {initial}
+              </button>
 
-            {menuOpen && (
-              <div className="nav-menu" role="menu">
-                <div className="nav-menu-head">
-                  <span className="nav-menu-avatar" aria-hidden="true">
-                    M
-                  </span>
-                  <div>
-                    <strong>Maya Kapoor</strong>
-                    <small>maya@example.com</small>
+              {menuOpen && (
+                <div className="nav-menu" role="menu">
+                  <div className="nav-menu-head">
+                    <span className="nav-menu-avatar" aria-hidden="true">
+                      {initial}
+                    </span>
+                    <div>
+                      <strong>{displayName}</strong>
+                      <small>{email}</small>
+                    </div>
                   </div>
-                </div>
 
-                {/* primary sections — surfaced here for mobile, where the top nav is hidden */}
-                <div className="nav-menu-group nav-menu-mobile">
-                  <span className="nav-menu-label">Browse</span>
-                  {PRIMARY.map(MenuItem)}
-                </div>
+                  <div className="nav-menu-group">
+                    <span className="nav-menu-label">Explore</span>
+                    {EXPLORE.map(MenuItem)}
+                  </div>
 
-                <div className="nav-menu-group">
-                  <span className="nav-menu-label">Explore</span>
-                  {EXPLORE.map(MenuItem)}
-                </div>
+                  <div className="nav-menu-group">
+                    <span className="nav-menu-label">Account</span>
+                    {ACCOUNT.map(MenuItem)}
+                  </div>
 
-                <div className="nav-menu-group">
-                  <span className="nav-menu-label">Account</span>
-                  {ACCOUNT.map(MenuItem)}
+                  <div className="nav-menu-divider" />
+                  <Link
+                    to="/login"
+                    className="nav-menu-item danger"
+                    role="menuitem"
+                    onClick={logout}
+                  >
+                    <LogOut size={16} /> Log out
+                  </Link>
                 </div>
-
-                <div className="nav-menu-divider" />
-                <Link to="/login" className="nav-menu-item danger" role="menuitem">
-                  <LogOut size={16} /> Log out
-                </Link>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* mobile bottom tab bar — quick access to the primary sections */}
+      <nav className="botnav" aria-label="Primary">
+        {PRIMARY.map(([label, to, Icon, short]) => (
+          <Link
+            key={to}
+            to={to}
+            className={`botnav-item ${isActive(to) ? 'active' : ''}`}
+            aria-label={label}
+            aria-current={isActive(to) ? 'page' : undefined}
+          >
+            <Icon size={21} />
+            <span>{short}</span>
+          </Link>
+        ))}
+      </nav>
+    </>
   )
 }

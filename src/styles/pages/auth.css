@@ -109,6 +109,17 @@
   margin-bottom: 16px;
 }
 
+/* gender + age side by side */
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.auth-row .auth-field {
+  margin-bottom: 16px;
+}
+
 .auth-label {
   display: flex;
   align-items: center;
@@ -165,6 +176,42 @@
 
 .auth-input input:focus {
   outline: none;
+}
+
+/* gender select — strip native chrome, match the inputs, custom caret */
+.auth-input select {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 14px 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.auth-input select:focus {
+  outline: none;
+}
+
+/* show the empty "Select" option like a placeholder */
+.auth-input select:invalid {
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.auth-input select option {
+  color: var(--ink);
+}
+
+.auth-select-caret {
+  flex: none;
+  color: var(--ink-3);
+  pointer-events: none;
 }
 
 .auth-input input::placeholder {
@@ -241,6 +288,26 @@
   font-size: 12px;
   font-weight: 700;
   color: var(--ink-3);
+}
+
+/* server-side / submit error banner */
+.auth-form-error {
+  display: grid;
+  gap: 5px;
+  background: rgba(194, 69, 47, 0.08);
+  border: 1px solid rgba(194, 69, 47, 0.24);
+  border-radius: 12px;
+  padding: 11px 14px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--danger);
+}
+
+.auth-form-error ul {
+  margin: 0;
+  padding-left: 18px;
+  font-weight: 600;
 }
 
 .auth-submit {

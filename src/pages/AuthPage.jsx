@@ -1,60 +1,102 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, Check, Eye, EyeOff, Loader2, Lock, Mail, Sparkles, User } from 'lucide-react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import {
+  ArrowRight,
+  Cake,
+  Check,
+  ChevronDown,
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  Sparkles,
+  User,
+  Users,
+} from 'lucide-react'
 import Logo from '../components/Logo.jsx'
+import { login, saveSession, signup } from '../lib/auth.js'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-function strengthOf(pw) {
-  if (!pw) return null
-  let score = 0
-  if (pw.length >= 8) score++
-  if (pw.length >= 12) score++
-  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++
-  if (/\d/.test(pw) || /[^A-Za-z0-9]/.test(pw)) score++
-  if (score <= 1) return { label: 'Take a breath  too short', cls: 'weak', pct: 28 }
-  if (score === 2) return { label: 'Getting steadier', cls: 'mid', pct: 55 }
-  if (score === 3) return { label: 'Calm and solid', cls: 'good', pct: 80 }
-  return { label: 'Deeply grounded', cls: 'good', pct: 100 }
-}
-
 export default function AuthPage({ mode }) {
   const navigate = useNavigate()
+  const [params] = useSearchParams()
   const isLogin = mode === 'login'
 
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
+  // Where to go after success — e.g. checkout sends users here with ?next=/checkout?plan=...
+  const next = params.get('next') || '/dashboard'
+  const swapTo = (path) =>
+    next === '/dashboard' ? path : `${path}?next=${encodeURIComponent(next)}`
+
+  const [form, setForm] = useState({ name: '', email: '', password: '', gender: '', age: '' })
   const [errors, setErrors] = useState({})
+  const [submitError, setSubmitError] = useState(null) // { message, items[] } | null
   const [showPw, setShowPw] = useState(false)
   const [status, setStatus] = useState('idle') // idle | loading | success
-  const strength = !isLogin ? strengthOf(form.password) : null
+  const [account, setAccount] = useState(null) // user returned by the API
 
   const set = (key) => (e) => {
-    setForm((f) => ({ ...f, [key]: e.target.value }))
+    const { value } = e.target
+    setForm((f) => ({ ...f, [key]: value }))
     setErrors((er) => ({ ...er, [key]: undefined }))
+    setSubmitError(null)
   }
 
   function validate() {
     const er = {}
-    if (!isLogin && form.name.trim().length < 2) er.name = 'Tell us what to call you.'
+    if (!isLogin) {
+      const name = form.name.trim()
+      if (name.length < 2 || name.length > 50) er.name = 'Use between 2 and 50 characters.'
+    }
     if (!EMAIL_RE.test(form.email)) er.email = 'That email doesn’t look complete.'
-    if (form.password.length < 8) er.password = 'At least 8 characters keeps it safe.'
+    // No password rules on the client — the backend is the source of truth.
+    if (!isLogin) {
+      if (!form.gender) er.gender = 'Choose one.'
+      const age = Number(form.age)
+      if (!form.age || !Number.isInteger(age) || age < 1 || age > 120)
+        er.age = 'Enter an age from 1 to 120.'
+    }
     return er
   }
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault()
-    if (status !== 'idle') return
+    if (status === 'loading') return
+    setSubmitError(null)
     const er = validate()
     setErrors(er)
     if (Object.keys(er).length) return
+
     setStatus('loading')
-    setTimeout(() => {
+    try {
+      const session = isLogin
+        ? await login({ email: form.email.trim(), password: form.password })
+        : await signup({
+            name: form.name.trim(),
+            email: form.email.trim(),
+            password: form.password,
+            gender: form.gender,
+            age: Number(form.age),
+          })
+      saveSession(session)
+      setAccount(session.user)
       setStatus('success')
-      setTimeout(() => navigate('/dashboard'), 1300)
-    }, 1300)
+      setTimeout(() => navigate(next), 1300)
+    } catch (err) {
+      setStatus('idle')
+      // 409 (email already in use) reads best pinned to the email field; every
+      // other failure (401 invalid creds, 422 validation, 500, network) shows
+      // as a banner above the form, with any server `errors` listed.
+      if (err.status === 409) {
+        setErrors((prev) => ({ ...prev, email: err.message }))
+      } else {
+        setSubmitError({ message: err.message, items: err.errors || [] })
+      }
+    }
   }
 
-  const firstName = form.name.trim().split(' ')[0] || 'Maya'
+  const firstName = (account?.name || form.name).trim().split(' ')[0] || 'there'
 
   return (
     <div className="auth">
@@ -94,6 +136,19 @@ export default function AuthPage({ mode }) {
               </p>
 
               <form className="auth-form" onSubmit={submit} noValidate>
+                {submitError && (
+                  <div className="auth-form-error" role="alert">
+                    <span>{submitError.message}</span>
+                    {submitError.items.length > 0 && (
+                      <ul>
+                        {submitError.items.map((msg) => (
+                          <li key={msg}>{msg}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+
                 {!isLogin && (
                   <label className={`auth-field ${errors.name ? 'has-error' : ''}`}>
                     <span className="auth-label">Your name</span>
@@ -141,7 +196,7 @@ export default function AuthPage({ mode }) {
                       type={showPw ? 'text' : 'password'}
                       value={form.password}
                       onChange={set('password')}
-                      placeholder={isLogin ? 'Your password' : 'At least 8 characters'}
+                      placeholder={isLogin ? 'Your password' : 'Choose a password'}
                       autoComplete={isLogin ? 'current-password' : 'new-password'}
                     />
                     <button
@@ -154,15 +209,46 @@ export default function AuthPage({ mode }) {
                     </button>
                   </span>
                   {errors.password && <em className="auth-error">{errors.password}</em>}
-                  {!isLogin && strength && (
-                    <span className="auth-strength">
-                      <span className={`auth-strength-bar ${strength.cls}`}>
-                        <i style={{ width: `${strength.pct}%` }} />
-                      </span>
-                      <small>{strength.label}</small>
-                    </span>
-                  )}
                 </label>
+
+                {!isLogin && (
+                  <div className="auth-row">
+                    <label className={`auth-field ${errors.gender ? 'has-error' : ''}`}>
+                      <span className="auth-label">Gender</span>
+                      <span className="auth-input">
+                        <Users size={16} />
+                        <select value={form.gender} onChange={set('gender')} required>
+                          <option value="" disabled>
+                            Select
+                          </option>
+                          <option value="female">Female</option>
+                          <option value="male">Male</option>
+                          <option value="other">Other</option>
+                        </select>
+                        <ChevronDown size={16} className="auth-select-caret" />
+                      </span>
+                      {errors.gender && <em className="auth-error">{errors.gender}</em>}
+                    </label>
+
+                    <label className={`auth-field ${errors.age ? 'has-error' : ''}`}>
+                      <span className="auth-label">Age</span>
+                      <span className="auth-input">
+                        <Cake size={16} />
+                        <input
+                          type="number"
+                          value={form.age}
+                          onChange={set('age')}
+                          placeholder="28"
+                          min="1"
+                          max="120"
+                          inputMode="numeric"
+                          autoComplete="off"
+                        />
+                      </span>
+                      {errors.age && <em className="auth-error">{errors.age}</em>}
+                    </label>
+                  </div>
+                )}
 
                 <button className="btn btn-primary auth-submit" disabled={status === 'loading'}>
                   {status === 'loading' ? (
@@ -192,13 +278,13 @@ export default function AuthPage({ mode }) {
                 {isLogin ? (
                   <>
                     New here?{' '}
-                    <Link to="/signup">
+                    <Link to={swapTo('/signup')}>
                       Create an account <Sparkles size={13} />
                     </Link>
                   </>
                 ) : (
                   <>
-                    Already walking a path? <Link to="/login">Log in</Link>
+                    Already walking a path? <Link to={swapTo('/login')}>Log in</Link>
                   </>
                 )}
               </p>

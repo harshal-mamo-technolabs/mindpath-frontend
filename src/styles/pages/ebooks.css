@@ -1138,6 +1138,28 @@
   }
 }
 
+@media (max-width: 560px) {
+  /* stack personal-ebook cards so the wide cover doesn't crowd out the text */
+  .eb-personal-card {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .eb-personal-card .bk-cover,
+  .eb-locked-cover {
+    align-self: center;
+  }
+
+  .eb-personal-body {
+    width: 100%;
+  }
+
+  .eb-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 480px) {
   .eb-grid {
     grid-template-columns: 1fr 1fr;

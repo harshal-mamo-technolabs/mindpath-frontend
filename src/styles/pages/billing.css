@@ -79,11 +79,50 @@
   padding: 30px 0 110px;
 }
 
+/* shown on /pricing when the user already has an active plan */
+.pricing-current-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+  padding: 14px 20px;
+  border-radius: var(--r-md);
+  background: var(--violet-ghost);
+  border: 1px solid var(--violet-soft);
+  color: var(--ink);
+  font-size: 14.5px;
+}
+
+.pricing-current-banner > svg {
+  flex: none;
+  color: var(--violet-deep);
+}
+
+.pricing-current-link {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  color: var(--violet-deep);
+}
+
+.pricing-current-link:hover {
+  text-decoration: underline;
+}
+
 .plan-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 22px;
   align-items: start;
+}
+
+.plan-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
 }
 
 .plan-card {
@@ -185,6 +224,7 @@
   display: grid;
   gap: 11px;
   padding: 20px 0;
+  margin-bottom: 24px;
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
@@ -231,6 +271,90 @@
 .plan-btn {
   width: 100%;
   margin-top: auto;
+}
+
+/* loading skeleton cards */
+.plan-skel .skel {
+  display: block;
+  border-radius: 8px;
+  background-color: rgba(var(--line-rgb), 0.08);
+  background-image: linear-gradient(
+    90deg,
+    rgba(var(--line-rgb), 0) 0%,
+    rgba(var(--line-rgb), 0.06) 50%,
+    rgba(var(--line-rgb), 0) 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: skelShimmer 1.3s ease-in-out infinite;
+}
+
+.skel-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+}
+
+.skel-title {
+  width: 55%;
+  height: 22px;
+  margin-top: 18px;
+}
+
+.skel-line {
+  width: 100%;
+  height: 13px;
+  margin-top: 12px;
+}
+
+.skel-price {
+  width: 42%;
+  height: 30px;
+  margin-top: 22px;
+}
+
+.skel-btn {
+  width: 100%;
+  height: 46px;
+  border-radius: 12px;
+  margin-top: 24px;
+}
+
+@keyframes skelShimmer {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+/* load / error / empty states — span the whole grid */
+.pricing-status {
+  grid-column: 1 / -1;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--ink-2);
+}
+
+.pricing-status h3 {
+  font-family: var(--font-display);
+  font-weight: 420;
+  font-size: 23px;
+  color: var(--ink);
+}
+
+.pricing-status .btn {
+  margin-top: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-skel .skel {
+    animation: none;
+  }
 }
 
 /* pay-as-you-go strip */
@@ -525,6 +649,141 @@
   margin-top: 8px;
 }
 
+/* success / error action buttons */
+.checkout-done-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+/* loading / finalizing / error screens (share the done layout) */
+.checkout-status {
+  min-height: calc(100dvh - 70px);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 40px 24px;
+  color: var(--ink-2);
+  background:
+    radial-gradient(800px 460px at 50% -10%, var(--lav-tint) 0%, transparent 60%), var(--paper);
+}
+
+.checkout-status h1 {
+  font-family: var(--font-display);
+  font-weight: 420;
+  font-size: clamp(26px, 3.4vw, 38px);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.checkout-status p {
+  font-size: 15px;
+  max-width: 44ch;
+}
+
+.checkout-status > svg {
+  color: var(--violet);
+}
+
+/* inline variant — shown while the card form is being prepared */
+.checkout-status-inline {
+  min-height: 0;
+  background: none;
+  padding: 28px 0;
+  gap: 10px;
+}
+
+.checkout-status-inline p {
+  font-size: 14px;
+}
+
+/* form-level payment error */
+.checkout-error {
+  background: rgba(194, 69, 47, 0.08);
+  border: 1px solid rgba(194, 69, 47, 0.24);
+  border-radius: 12px;
+  padding: 11px 14px;
+  margin-bottom: 18px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--danger);
+}
+
+/* saved cards (one-click) */
+.pay-methods {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.pay-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  background: var(--surface);
+  color: var(--ink);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.pay-card:hover {
+  border-color: rgba(var(--line-rgb), 0.28);
+}
+
+.pay-card.selected {
+  border-color: var(--accent, var(--violet));
+  box-shadow: 0 0 0 3px rgba(100, 80, 207, 0.12);
+}
+
+.pay-card > svg {
+  flex: none;
+  color: var(--ink-3);
+}
+
+.pay-card-info {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.pay-card-info strong {
+  font-size: 14.5px;
+  font-weight: 800;
+}
+
+.pay-card-info small {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.pay-card .pay-card-check {
+  flex: none;
+  color: var(--accent, var(--violet));
+}
+
+/* text toggle between saved card and new card */
+.pay-switch {
+  display: block;
+  margin: 14px auto 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--violet-deep);
+}
+
+.pay-switch:hover {
+  text-decoration: underline;
+}
+
 /* ============================================================
    Billing dashboard
    ============================================================ */
@@ -584,12 +843,30 @@
   color: var(--sage-deep);
 }
 
-.bl-dot-live {
+.bl-plan-status.warn {
+  color: var(--gold);
+}
+
+.bl-plan-status.off {
+  color: var(--ink-3);
+}
+
+.bl-status-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--sage);
   box-shadow: 0 0 0 3px var(--sage-soft);
+}
+
+.bl-plan-status.warn .bl-status-dot {
+  background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(217, 156, 58, 0.22);
+}
+
+.bl-plan-status.off .bl-status-dot {
+  background: var(--ink-3);
+  box-shadow: 0 0 0 3px rgba(var(--line-rgb), 0.12);
 }
 
 .bl-plan-main h2 {
@@ -860,6 +1137,107 @@
   line-height: 1.5;
 }
 
+/* saved-card list (list/add/remove/default) */
+.bl-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bl-card-default {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--violet-ghost);
+  color: var(--violet-deep);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.bl-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+
+/* neutralize the single-button margin rule from .bl-card-row .bl-link-btn */
+.bl-card-actions .bl-link-btn {
+  margin-left: 0;
+}
+
+.bl-link-btn.danger {
+  color: var(--danger);
+}
+
+.bl-link-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.bl-cancel-note {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+.bl-empty {
+  margin-top: 16px;
+  font-size: 13.5px;
+  color: var(--ink-3);
+}
+
+/* loading / error / no-subscription states */
+.bl-state {
+  min-height: 60vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+  color: var(--ink-2);
+}
+
+.bl-state h1 {
+  font-family: var(--font-display);
+  font-weight: 420;
+  font-size: clamp(26px, 3.4vw, 36px);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.bl-state p {
+  font-size: 15px;
+  max-width: 44ch;
+}
+
+.bl-state > svg {
+  color: var(--violet);
+}
+
+.bl-state-ico {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--violet-ghost);
+  color: var(--violet-deep);
+}
+
+/* add-card modal — roomier for the Stripe Payment Element */
+.bl-addcard-modal {
+  width: min(460px, 100%);
+  text-align: left;
+}
+
+.bl-addcard-modal h3 {
+  margin-bottom: 18px;
+}
+
 /* upsell */
 .bl-upsell-card {
   background: linear-gradient(160deg, #2a2350 0%, #4d3da8 110%);
@@ -1026,6 +1404,150 @@
 .bl-cancel-confirm:hover {
   filter: brightness(1.08);
   transform: translateY(-2px);
+}
+
+.bl-cancel-confirm:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.bl-cancel-confirm:disabled:hover {
+  filter: none;
+  transform: none;
+}
+
+/* cancellation survey (dark modal) */
+.bl-cancel-modal {
+  max-height: 86vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.bl-cancel-modal .checkout-error {
+  margin: 14px 0 0;
+  color: #ffd9d0;
+  background: rgba(194, 69, 47, 0.2);
+  border-color: rgba(194, 69, 47, 0.45);
+}
+
+.bl-survey {
+  border: none;
+  padding: 0;
+  margin: 20px 0 0;
+}
+
+.bl-survey-q {
+  padding: 0;
+  margin-bottom: 12px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--night-ink);
+}
+
+.bl-req {
+  color: #ff8f7a;
+}
+
+.bl-survey-opts {
+  display: grid;
+  gap: 8px;
+}
+
+.bl-radio,
+.bl-check {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 13.5px;
+  color: var(--night-ink-2);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    color 0.15s;
+}
+
+.bl-radio:hover,
+.bl-check:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.bl-radio.checked,
+.bl-check.checked {
+  border-color: var(--violet);
+  background: rgba(100, 80, 207, 0.18);
+  color: #fff;
+}
+
+/* visually hidden native inputs (state lives on the label) */
+.bl-radio input,
+.bl-check input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.bl-radio-dot {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  transition: border-color 0.15s;
+}
+
+.bl-radio-dot::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--violet);
+  transform: scale(0);
+  transition: transform 0.15s var(--ease-out);
+}
+
+.bl-radio.checked .bl-radio-dot {
+  border-color: var(--violet);
+}
+
+.bl-radio.checked .bl-radio-dot::after {
+  transform: scale(1);
+}
+
+.bl-check-box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.bl-check-box svg {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.bl-check.checked .bl-check-box {
+  background: var(--violet);
+  border-color: var(--violet);
+}
+
+.bl-check.checked .bl-check-box svg {
+  opacity: 1;
 }
 
 /* ============================================================

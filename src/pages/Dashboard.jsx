@@ -30,12 +30,12 @@ import {
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import { useTheme } from '../hooks/useTheme.js'
+import { useAuth } from '../hooks/useAuth.js'
 import { ASSESSMENTS } from '../data/assessments.js'
 import { AUDIO_PLANS } from '../data/audioPlans.js'
 import { REPORT_GROUPS } from '../data/reportHistory.js'
 import { PERSONAL_EBOOKS, READING_PROGRESS } from '../data/ebooks.js'
 
-const NAME = 'Maya'
 const STREAK = 9
 
 const MOODS = [
@@ -74,6 +74,8 @@ function Spark({ data, accent }) {
 
 export default function Dashboard() {
   const { theme, toggle } = useTheme()
+  const { user } = useAuth()
+  const firstName = (user?.name || 'Maya').trim().split(' ')[0]
   const [mood, setMood] = useState(null)
   const [toast, setToast] = useState(null)
   const toastTimer = useRef(null)
@@ -122,7 +124,7 @@ export default function Dashboard() {
           <div>
             <p className="dash-date">{dateLabel}</p>
             <h1 className="dash-greeting">
-              {greeting}, {NAME}.
+              {greeting}, {firstName}.
             </h1>
             <p className="dash-subline">
               You&rsquo;re on a <strong>{STREAK}-day streak</strong> Day {primary.completed + 1} of

@@ -548,12 +548,6 @@ a {
   padding: 8px 12px 5px;
 }
 
-/* the "Browse" group duplicates the desktop top-nav, so only show it where
-   the top-nav links are hidden (mobile) */
-.nav-menu-mobile {
-  display: none;
-}
-
 .nav-menu-divider {
   height: 1px;
   background: rgba(var(--line-rgb), 0.08);
@@ -2614,6 +2608,41 @@ a {
 /* ============================================================
    Responsive
    ============================================================ */
+/* mobile bottom tab bar — hidden on desktop, shown ≤760px (see media query) */
+.botnav {
+  display: none;
+}
+
+.botnav-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 2px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-3);
+  transition: color 0.2s;
+}
+
+.botnav-item svg {
+  flex: none;
+}
+
+.botnav-item span {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.botnav-item.active {
+  color: var(--violet-deep);
+}
+
 @media (max-width: 1220px) {
   .nav-cta .btn-ghost {
     display: none;
@@ -2684,9 +2713,23 @@ a {
     display: none;
   }
 
-  /* top-nav links are hidden on mobile — surface them inside the menu */
-  .nav-menu-mobile {
-    display: grid;
+  /* top-nav links are hidden on mobile — the bottom tab bar covers them */
+  .botnav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 80;
+    background: var(--surface);
+    border-top: 1px solid rgba(var(--line-rgb), 0.1);
+    box-shadow: 0 -6px 22px -10px rgba(var(--line-rgb), 0.22);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* keep page content clear of the fixed bottom bar */
+  body {
+    padding-bottom: 64px;
   }
 
   .hide-sm {
