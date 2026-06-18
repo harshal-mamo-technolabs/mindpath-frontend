@@ -1,0 +1,1150 @@
+/* ============================================================
+   MindPath  /ebooks (shop, light theme)
+   ============================================================ */
+.eb {
+  background: var(--paper);
+  min-height: 100dvh;
+}
+
+/* ------- hero ------- */
+.eb-hero {
+  position: relative;
+  padding: 156px 0 48px;
+  overflow: clip;
+}
+
+.eb-hero .container {
+  position: relative;
+  z-index: 1;
+  max-width: 840px;
+}
+
+.eb-title {
+  font-size: clamp(38px, 5vw, 62px);
+}
+
+.eb-shelf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-2);
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: 999px;
+  padding: 9px 17px;
+  box-shadow: var(--shadow-soft);
+}
+
+.eb-shelf-pill svg {
+  color: var(--violet-deep);
+}
+
+/* ------- sections ------- */
+.eb-section {
+  padding: 28px 0 16px;
+}
+
+.eb-library {
+  padding-bottom: 120px;
+}
+
+.eb-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px 24px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.13);
+  padding-bottom: 16px;
+}
+
+.eb-section-count {
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.eb-section-sub {
+  margin: 14px 0 24px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+  max-width: 56ch;
+}
+
+/* ============================================================
+   Book cover (CSS art)
+   ============================================================ */
+.bk-cover {
+  position: relative;
+  flex: none;
+  aspect-ratio: 25 / 34;
+  border-radius: 4px 9px 9px 4px;
+  background: linear-gradient(
+    152deg,
+    color-mix(in srgb, var(--accent) 82%, #fff) 0%,
+    var(--accent) 52%,
+    color-mix(in srgb, var(--accent) 64%, #000) 100%
+  );
+  color: #fff;
+  padding: 16px 15px 15px 22px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -7px 9px 24px -9px rgba(var(--line-rgb), 0.45);
+  overflow: hidden;
+}
+
+.bk-md {
+  width: 150px;
+}
+
+.bk-lg {
+  width: 172px;
+}
+
+.bk-spine {
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.bk-cover::after {
+  /* soft sheen */
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -20%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.28) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.bk-press {
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+
+.bk-title {
+  font-family: var(--font-display);
+  font-weight: 520;
+  font-size: 17px;
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  margin-top: 13px;
+}
+
+.bk-lg .bk-title {
+  font-size: 20px;
+}
+
+.bk-author {
+  font-size: 10.5px;
+  font-weight: 600;
+  opacity: 0.85;
+  margin-top: auto;
+}
+
+.bk-for {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.92;
+  margin-top: auto;
+}
+
+.bk-personal {
+  box-shadow: -7px 9px 28px -9px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.bk-personal::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 3px 6px 6px 3px;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Personalized shelf
+   ============================================================ */
+.eb-personal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.eb-personal-card {
+  display: flex;
+  gap: 22px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.eb-personal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lift);
+}
+
+.eb-personal-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.eb-from {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--violet-deep);
+}
+
+.eb-personal-body h3 {
+  font-family: var(--font-display);
+  font-weight: 520;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  margin-top: 10px;
+  line-height: 1.1;
+}
+
+.eb-personal-sub {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 600;
+  margin-top: 7px;
+}
+
+.eb-personal-actions {
+  margin-top: auto;
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.eb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.eb-owned-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--sage-deep);
+}
+
+.eb-textlink {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--violet-deep);
+  transition: color 0.2s;
+}
+
+.eb-textlink:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.eb-textlink.sm {
+  font-size: 12.5px;
+}
+
+.eb-locked-personal {
+  align-items: center;
+  border-style: dashed;
+  box-shadow: none;
+  background: rgba(var(--line-rgb), 0.03);
+}
+
+.eb-locked-cover {
+  flex: none;
+  width: 110px;
+  aspect-ratio: 25 / 34;
+  border-radius: 4px 9px 9px 4px;
+  display: grid;
+  place-items: center;
+  background: var(--paper-deep);
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   General library
+   ============================================================ */
+.eb-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--surface);
+  border: 1.5px solid rgba(var(--line-rgb), 0.13);
+  border-radius: 999px;
+  padding: 0 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.eb-search:focus-within {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 4px rgba(100, 80, 207, 0.1);
+}
+
+.eb-search svg {
+  color: var(--ink-3);
+  flex: none;
+}
+
+.eb-search input {
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 11px 0;
+  width: 200px;
+}
+
+.eb-search input:focus {
+  outline: none;
+}
+
+.eb-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 28px;
+}
+
+.eb-chip {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-2);
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 999px;
+  padding: 9px 17px;
+  transition: all 0.2s var(--ease-out);
+}
+
+.eb-chip:hover {
+  border-color: rgba(var(--line-rgb), 0.3);
+}
+
+.eb-chip.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.eb-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+.eb-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.eb-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lift);
+}
+
+.eb-card-cover {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 26px 24px 18px;
+  background: var(--paper);
+  cursor: pointer;
+}
+
+.eb-card-cover .bk-cover {
+  transition: transform 0.3s var(--ease-out);
+}
+
+.eb-card:hover .bk-card-cover .bk-cover,
+.eb-card:hover .eb-card-cover .bk-cover {
+  transform: translateY(-4px) rotate(-1.5deg);
+}
+
+.eb-card-owned {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--sage-deep);
+  background: var(--sage-soft);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+
+.eb-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 20px 20px;
+}
+
+.eb-cat {
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  padding: 5px 11px;
+}
+
+.eb-card-body h3 {
+  font-family: var(--font-display);
+  font-weight: 520;
+  font-size: 19px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin-top: 12px;
+}
+
+.eb-author {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.eb-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.eb-rating,
+.eb-pages {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+.eb-rating svg {
+  color: var(--gold);
+}
+
+.eb-rating small {
+  color: var(--ink-3);
+  font-weight: 600;
+}
+
+.eb-card-foot {
+  margin-top: auto;
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eb-btn-read,
+.eb-btn-buy {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 10px 18px;
+  transition: transform 0.2s var(--ease-out), background 0.2s, box-shadow 0.2s;
+}
+
+.eb-btn-buy {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.eb-btn-buy:hover {
+  background: var(--violet-deep);
+  transform: translateY(-2px);
+}
+
+.eb-btn-read {
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+}
+
+.eb-btn-read:hover {
+  transform: translateY(-2px);
+}
+
+.eb-empty {
+  text-align: center;
+  padding: 50px 0;
+  font-size: 15px;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+
+/* ============================================================
+   Reader drawer
+   ============================================================ */
+.eb-reader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(10, 8, 24, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.eb-reader {
+  position: relative;
+  width: min(520px, 100%);
+  height: 100%;
+  background: var(--paper);
+  box-shadow: -30px 0 80px -20px rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+  padding: 30px 32px 40px;
+  animation: drawerIn 0.4s var(--ease-out);
+}
+
+@keyframes drawerIn {
+  from {
+    transform: translateX(40px);
+    opacity: 0.4;
+  }
+}
+
+.eb-reader-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--ink-2);
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  transition: transform 0.2s, color 0.2s;
+  z-index: 1;
+}
+
+.eb-reader-close:hover {
+  color: var(--ink);
+  transform: rotate(90deg);
+}
+
+.eb-reader-top {
+  display: flex;
+  gap: 22px;
+}
+
+.eb-reader-info {
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.eb-reader-info h2 {
+  font-family: var(--font-display);
+  font-weight: 520;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-top: 12px;
+}
+
+.eb-reader-author {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.eb-reader-info .eb-meta {
+  flex-wrap: wrap;
+}
+
+.eb-reader-progress {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 16px;
+}
+
+.eb-reader-bar {
+  flex: 1;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--paper-deep);
+  overflow: hidden;
+}
+
+.eb-reader-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.eb-reader-progress span {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink-2);
+}
+
+.eb-reader-locked {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 16px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+.eb-reader-body {
+  margin-top: 28px;
+}
+
+.eb-sample-head,
+.eb-toc-head {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.eb-sample {
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink);
+  padding: 18px 20px;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  border-left: 3px solid var(--violet);
+}
+
+.eb-toc-head {
+  margin-top: 28px;
+}
+
+.eb-toc {
+  list-style: none;
+  margin-top: 12px;
+  display: grid;
+  gap: 2px;
+}
+
+.eb-toc li {
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.eb-toc-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 13px 8px;
+  font-size: 15px;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border-radius: 9px;
+  transition: background 0.18s, padding 0.18s;
+}
+
+.eb-toc li.readable .eb-toc-row {
+  cursor: pointer;
+}
+
+.eb-toc li.readable .eb-toc-row:hover {
+  background: var(--surface);
+  padding-left: 12px;
+}
+
+.eb-toc-row:disabled {
+  cursor: default;
+}
+
+.eb-toc li.locked .eb-toc-row {
+  color: var(--ink-3);
+}
+
+.eb-toc-go {
+  color: var(--ink-3);
+  flex: none;
+  transition: transform 0.18s, color 0.18s;
+}
+
+.eb-toc li.readable .eb-toc-row:hover .eb-toc-go {
+  transform: translateX(3px);
+  color: var(--violet);
+}
+
+.eb-toc-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--violet);
+  flex: none;
+}
+
+.eb-toc li.locked .eb-toc-num {
+  color: var(--ink-3);
+}
+
+.eb-toc-title {
+  flex: 1;
+  font-weight: 600;
+}
+
+.eb-toc-tag {
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--sage-deep);
+  background: var(--sage-soft);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+
+.eb-toc-lock {
+  color: var(--ink-3);
+  flex: none;
+}
+
+.eb-reader-foot {
+  position: sticky;
+  bottom: -40px;
+  margin: 28px -32px -40px;
+  padding: 20px 32px;
+  background: linear-gradient(180deg, transparent, var(--paper) 30%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eb-reader-foot .btn {
+  flex: 1;
+}
+
+.eb-reader-foot .eb-textlink {
+  flex: none;
+}
+
+.eb-download {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.eb-download:hover {
+  border-color: rgba(var(--line-rgb), 0.32);
+  transform: translateY(-1px);
+}
+
+/* ---- reading view: expand to a wide, centered, comfortable canvas ---- */
+.eb-reader-overlay.reading {
+  justify-content: center;
+}
+
+.eb-reader.reading {
+  width: min(920px, 100%);
+  padding: 30px 56px 40px;
+  animation: readerZoom 0.34s var(--ease-out);
+}
+
+@keyframes readerZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(8px);
+  }
+}
+
+/* keep the line length readable even though the surface is wide */
+.eb-reader.reading .eb-read-head,
+.eb-reader.reading .eb-read-body {
+  max-width: 660px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.eb-reader.reading .eb-read-nav {
+  max-width: 660px;
+  margin: 12px auto -40px;
+}
+
+.eb-reader.reading .eb-read-body {
+  margin-top: 22px;
+  padding-bottom: 36px;
+}
+
+.eb-reader.reading .eb-read-title {
+  font-size: 34px;
+}
+
+.eb-reader.reading .eb-read-body p {
+  font-size: 18.5px;
+  line-height: 1.8;
+}
+
+.eb-read-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-right: 48px;
+}
+
+.eb-read-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--violet-deep);
+  background: none;
+  transition: gap 0.18s;
+}
+
+.eb-read-back:hover {
+  gap: 9px;
+}
+
+.eb-read-of {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+}
+
+.eb-read-body {
+  margin-top: 18px;
+  padding-bottom: 16px;
+}
+
+.eb-read-eyebrow {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.eb-read-title {
+  font-family: var(--font-display);
+  font-weight: 480;
+  font-size: 30px;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 9px 0 22px;
+  color: var(--ink);
+}
+
+.eb-read-body p {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 17.5px;
+  line-height: 1.78;
+  color: #38334f;
+  margin-bottom: 18px;
+}
+
+/* night mode — soft light ink so the book stays comfortable to read */
+:root[data-theme='dark'] .eb-read-body p {
+  color: #cfcae2;
+}
+
+.eb-read-body p:first-of-type::first-letter {
+  font-size: 52px;
+  line-height: 0.78;
+  float: left;
+  margin: 7px 10px 0 0;
+  color: var(--violet);
+  font-weight: 500;
+}
+
+.eb-read-nav {
+  position: sticky;
+  bottom: -40px;
+  margin: 12px -32px -40px;
+  padding: 18px 32px;
+  background: linear-gradient(180deg, transparent, var(--paper) 28%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eb-read-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  color: var(--ink);
+  transition: transform 0.2s, border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.eb-read-step:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.eb-read-step:not(:disabled):hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--line-rgb), 0.28);
+}
+
+.eb-read-step.primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.eb-read-step.primary:hover {
+  background: var(--violet-deep);
+  border-color: var(--violet-deep);
+}
+
+.eb-read-step.locked {
+  background: var(--violet-ghost);
+  color: var(--violet-deep);
+  border-color: transparent;
+}
+
+.eb-read-end {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   Buy / generate modal extras (reuse .ap-modal)
+   ============================================================ */
+.eb-modal-top {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.eb-modal-top h3 {
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 23px;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.eb-modal-author {
+  font-size: 13px;
+  color: var(--night-ink-2);
+  margin-top: 4px;
+}
+
+.eb-modal-price {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+
+.eb-modal-price.free {
+  background: rgba(143, 212, 174, 0.2);
+  color: #8fd4ae;
+}
+
+.eb-btn-wide {
+  width: 100%;
+}
+
+.eb-modal-demo {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--night-ink-2);
+}
+
+/* generation ceremony */
+.eb-gen {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 14px 6px 8px;
+}
+
+.eb-gen-cover {
+  position: relative;
+  animation: floaty 5s ease-in-out infinite alternate;
+}
+
+.eb-gen-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px 9px 9px 4px;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+  background-size: 220% 100%;
+  animation: ebShine 1.6s linear infinite;
+}
+
+@keyframes ebShine {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+.eb-gen h3 {
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 24px;
+  color: #fff;
+  margin-top: 6px;
+}
+
+.eb-gen .gen-steps {
+  margin-top: 6px;
+}
+
+/* ------- responsive ------- */
+@media (max-width: 1080px) {
+  .eb-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .eb-personal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .eb-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .eb-hero {
+    padding-top: 124px;
+  }
+
+  .eb-search input {
+    width: 100%;
+  }
+
+  .eb-search {
+    flex: 1;
+  }
+
+  .eb-reader.reading {
+    padding: 26px 22px 40px;
+  }
+
+  .eb-reader.reading .eb-read-title {
+    font-size: 27px;
+  }
+
+  .eb-reader.reading .eb-read-body p {
+    font-size: 17.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .eb-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .eb-card-cover {
+    padding: 18px 14px 12px;
+  }
+
+  .bk-md {
+    width: 120px;
+  }
+
+  .eb-reader {
+    padding: 26px 20px 36px;
+  }
+
+  .eb-reader-top {
+    gap: 16px;
+  }
+
+  .eb-card-body h3 {
+    font-size: 17px;
+  }
+}
+
+/* ------- reduced motion ------- */
+@media (prefers-reduced-motion: reduce) {
+  .eb-reader,
+  .eb-reader-overlay,
+  .eb-gen-cover,
+  .eb-gen-shine {
+    animation: none;
+  }
+}
