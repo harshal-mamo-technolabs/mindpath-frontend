@@ -21,8 +21,8 @@ export default function Ecosystem() {
           Made for <em>exactly one person.</em>
         </Reveal>
         <Reveal as="p" className="lede" delay={0.16}>
-          Once your report exists, everything else can be shaped to it  and the music is
-          simply free, for everyone, forever.
+          Once your report exists, everything else can be shaped to it and the music is simply free,
+          for everyone, forever.
         </Reveal>
 
         <div className="eco-grid">
@@ -30,8 +30,8 @@ export default function Ecosystem() {
             <span className="eco-tag">Personalized ebooks</span>
             <h3>A short book with your name on the cover</h3>
             <p>
-              Generated from your report  specific to your scores, your patterns, your
-              next 30 days. General titles are open to everyone.
+              Generated from your report specific to your scores, your patterns, your next 30 days.
+              General titles are open to everyone.
             </p>
             <Link className="eco-link" to="/ebooks" style={{ color: '#8a5420' }}>
               Visit the shop <ArrowRight size={16} />
@@ -47,8 +47,8 @@ export default function Ecosystem() {
             <span className="eco-tag">AI counselling</span>
             <h3>Talk it through, out loud</h3>
             <p>
-              A speech-to-speech advisor that has read your report  so you never start
-              from &ldquo;tell me about yourself.&rdquo;
+              A speech-to-speech advisor that has read your report so you never start from
+              &ldquo;tell me about yourself.&rdquo;
             </p>
             <Link className="eco-link" to="/counselling">
               How sessions work <ArrowRight size={16} />
@@ -68,7 +68,7 @@ export default function Ecosystem() {
           <Reveal as="article" className="eco-card eco-music" delay={0.3}>
             <span className="eco-tag">Free · no account</span>
             <h3>Yoga &amp; meditation music</h3>
-            <p>Press play right now. No paywall, no sign-up  just somewhere calm to start.</p>
+            <p>Press play right now. No paywall, no sign-up just somewhere calm to start.</p>
             <Link className="eco-link" to="/music">
               Open the library <ArrowRight size={16} />
             </Link>

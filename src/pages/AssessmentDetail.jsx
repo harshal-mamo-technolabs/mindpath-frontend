@@ -74,8 +74,8 @@ export default function AssessmentDetail() {
                   Begin assessment · {a.price} <ArrowRight size={18} />
                 </Link>
                 <p className="detail-note">
-                  <ShieldCheck size={14} /> A self-reflection instrument  not a clinical
-                  or diagnostic tool.
+                  <ShieldCheck size={14} /> A self-reflection instrument not a clinical or
+                  diagnostic tool.
                 </p>
               </Reveal>
             </div>
@@ -114,10 +114,9 @@ export default function AssessmentDetail() {
               </span>
               <h3>Your personal report</h3>
               <p>
-                Scores across all {a.dims.length} dimensions with plain-language
-                interpretation  what each number means for you and what tends to help.
-                Generated deterministically from a validated framework: same answers,
-                same insight, every time.
+                Scores across all {a.dims.length} dimensions with plain-language interpretation what
+                each number means for you and what tends to help. Generated deterministically from a
+                validated framework: same answers, same insight, every time.
               </p>
               <ul className="receive-list">
                 <li>Overall profile &amp; per-dimension scores</li>
@@ -135,13 +134,12 @@ export default function AssessmentDetail() {
               </span>
               <h3>A {a.plan.days}-day audio plan</h3>
               <p>
-                Sessions selected and ordered from your scores  one unlocks each
-                morning, 5–10 minutes each. It opens with a welcome recorded for you, by
-                name.
+                Sessions selected and ordered from your scores one unlocks each morning, 5–10
+                minutes each. It opens with a welcome recorded for you, by name.
               </p>
               <div className="receive-plan">
                 <p className="receive-welcome">
-                  <Mic size={14} /> &ldquo;Hi {'{your name}'}  {a.plan.welcome}&rdquo;
+                  <Mic size={14} /> &ldquo;Hi {'{your name}'} {a.plan.welcome}&rdquo;
                 </p>
                 {a.plan.sessions.slice(0, 3).map((s) => (
                   <span className="receive-session" key={s.day}>
@@ -160,8 +158,8 @@ export default function AssessmentDetail() {
               </span>
               <h3>Unlocked after your report</h3>
               <p>
-                Your report opens doors that stay personal  each one built from your
-                dimensions, not a template.
+                Your report opens doors that stay personal each one built from your dimensions, not
+                a template.
               </p>
               <ul className="receive-unlocks">
                 <li>
@@ -199,8 +197,8 @@ export default function AssessmentDetail() {
                 Ready when you are. <em>It takes {a.mins} quiet minutes.</em>
               </h2>
               <p>
-                Answer as the person you are this week  not your best week, not your
-                worst. Honest in, useful out.
+                Answer as the person you are this week not your best week, not your worst. Honest
+                in, useful out.
               </p>
             </div>
             <Link to={`/assessments/${a.id}/take`} className="btn btn-light">

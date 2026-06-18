@@ -44,8 +44,8 @@ export default function Journey() {
             One loop. <em>Lasting change.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.16}>
-            Everything at MindPath begins with understanding yourself  and everything
-            after is built from that understanding.
+            Everything at MindPath begins with understanding yourself and everything after is built
+            from that understanding.
           </Reveal>
         </div>
 
@@ -81,7 +81,7 @@ export default function Journey() {
         <Reveal className="journey-loop-note" delay={0.2}>
           <span className="loop-pill">
             <Repeat size={16} />
-            Then the path loops  deeper topic, new plan, visible progress.
+            Then the path loops deeper topic, new plan, visible progress.
           </span>
         </Reveal>
       </div>

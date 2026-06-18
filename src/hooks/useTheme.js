@@ -19,8 +19,8 @@ export function setTheme(theme) {
   else root.removeAttribute('data-theme')
   try {
     localStorage.setItem('mp-theme', theme)
-  } catch (e) {
-    /* ignore */
+  } catch {
+    /* storage unavailable (private mode, etc.) — theme still applies for the session */
   }
   listeners.forEach((cb) => cb())
 }

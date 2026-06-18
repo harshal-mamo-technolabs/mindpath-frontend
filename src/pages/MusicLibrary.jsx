@@ -1,9 +1,20 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Heart, Layers, Pause, Play, Plus, SkipForward, Sparkles, X } from 'lucide-react'
+import {
+  ArrowRight,
+  Heart,
+  Layers,
+  Pause,
+  Play,
+  Plus,
+  SkipForward,
+  Sparkles,
+  X,
+} from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import SceneArt from '../components/SoundScenes.jsx'
-import { AMBIENT, fmtTime, lenToSecs, MOODS, moodOf, SOUNDSCAPES } from '../data/music.js'
+import { AMBIENT, MOODS, moodOf, SOUNDSCAPES } from '../data/music.js'
+import { clockToSeconds, formatTime } from '../lib/time.js'
 
 const DEMO_SPEED = 9
 
@@ -36,12 +47,12 @@ export default function MusicLibrary() {
 
   const list = useMemo(
     () => (mood === 'All' ? SOUNDSCAPES : SOUNDSCAPES.filter((s) => moodOf(s) === mood)),
-    [mood]
+    [mood],
   )
 
   const playScene = useCallback((scene) => {
     setLayers(new Set())
-    setCurrent({ ...scene, secs: lenToSecs(scene.len) })
+    setCurrent({ ...scene, secs: clockToSeconds(scene.len) })
     setElapsed(0)
     setPlaying(true)
   }, [])
@@ -104,8 +115,8 @@ export default function MusicLibrary() {
               quiet to <em>land.</em>
             </Reveal>
             <Reveal as="p" className="mz-lede" delay={0.13}>
-              Yoga &amp; meditation soundscapes — illustrated places you can step into, or
-              layered textures you can mix into your own calm. On us, always.
+              Yoga &amp; meditation soundscapes — illustrated places you can step into, or layered
+              textures you can mix into your own calm. On us, always.
             </Reveal>
             <Reveal className="mz-hero-index" delay={0.2}>
               {SOUNDSCAPES.length} soundscapes · {AMBIENT.length} ambient layers · 0 sign-ups
@@ -113,7 +124,11 @@ export default function MusicLibrary() {
           </div>
 
           <Reveal className="mz-hero-feature" delay={0.16}>
-            <button className="mz-feature-art" onClick={() => playScene(featured)} aria-label={`Play ${featured.title}`}>
+            <button
+              className="mz-feature-art"
+              onClick={() => playScene(featured)}
+              aria-label={`Play ${featured.title}`}
+            >
               <SceneArt scene={featured.scene} />
               <span className="mz-feature-play">
                 <Play size={22} fill="currentColor" strokeWidth={0} />
@@ -122,7 +137,9 @@ export default function MusicLibrary() {
             <div className="mz-feature-meta">
               <span className="mz-feature-tag">Start here</span>
               <h2>{featured.title}</h2>
-              <p>{featured.mood} · {featured.len}</p>
+              <p>
+                {featured.mood} · {featured.len}
+              </p>
             </div>
           </Reveal>
         </div>
@@ -140,7 +157,9 @@ export default function MusicLibrary() {
                 <p>Tap to layer textures. They blend live — no two mixes the same.</p>
               </div>
               <span className="mz-mixer-count">
-                {layers.size === 0 ? 'Nothing playing yet' : `${layers.size} layer${layers.size > 1 ? 's' : ''} blending`}
+                {layers.size === 0
+                  ? 'Nothing playing yet'
+                  : `${layers.size} layer${layers.size > 1 ? 's' : ''} blending`}
               </span>
             </div>
             <div className="mz-layers">
@@ -195,18 +214,33 @@ export default function MusicLibrary() {
             {list.map((s, i) => {
               const isOn = current?.id === s.id
               return (
-                <Reveal as="article" key={s.id} className={`mz-scene-card ${isOn ? 'is-playing' : ''}`} delay={(i % 6) * 0.05}>
-                  <button className="mz-scene-art" onClick={() => playScene(s)} aria-label={`Play ${s.title}`}>
+                <Reveal
+                  as="article"
+                  key={s.id}
+                  className={`mz-scene-card ${isOn ? 'is-playing' : ''}`}
+                  delay={(i % 6) * 0.05}
+                >
+                  <button
+                    className="mz-scene-art"
+                    onClick={() => playScene(s)}
+                    aria-label={`Play ${s.title}`}
+                  >
                     <SceneArt scene={s.scene} />
                     <span className="mz-scene-num">{String(i + 1).padStart(2, '0')}</span>
                     <span className="mz-scene-play">
-                      {isOn && playing ? <Pause size={18} fill="currentColor" strokeWidth={0} /> : <Play size={18} fill="currentColor" strokeWidth={0} />}
+                      {isOn && playing ? (
+                        <Pause size={18} fill="currentColor" strokeWidth={0} />
+                      ) : (
+                        <Play size={18} fill="currentColor" strokeWidth={0} />
+                      )}
                     </span>
                   </button>
                   <div className="mz-scene-info">
                     <div className="mz-scene-text">
                       <h3>{s.title}</h3>
-                      <p>{s.mood} · {s.len} · {s.plays} plays</p>
+                      <p>
+                        {s.mood} · {s.len} · {s.plays} plays
+                      </p>
                     </div>
                     <button
                       className={`mz-like ${liked.has(s.id) ? 'on' : ''}`}
@@ -231,8 +265,13 @@ export default function MusicLibrary() {
               <SceneArt scene="dawn" />
             </div>
             <div className="mz-cta-text">
-              <h2>The music is the doorway. <em>Your path is just inside.</em></h2>
-              <p>When you&rsquo;re ready for sessions shaped around you, it starts with one honest assessment.</p>
+              <h2>
+                The music is the doorway. <em>Your path is just inside.</em>
+              </h2>
+              <p>
+                When you&rsquo;re ready for sessions shaped around you, it starts with one honest
+                assessment.
+              </p>
               <Link to="/assessments" className="btn btn-light">
                 Find your path <ArrowRight size={18} />
               </Link>
@@ -268,7 +307,11 @@ export default function MusicLibrary() {
                 }}
                 aria-label={playing ? 'Pause' : 'Play'}
               >
-                {playing ? <Pause size={20} fill="currentColor" strokeWidth={0} /> : <Play size={20} fill="currentColor" strokeWidth={0} style={{ marginLeft: 2 }} />}
+                {playing ? (
+                  <Pause size={20} fill="currentColor" strokeWidth={0} />
+                ) : (
+                  <Play size={20} fill="currentColor" strokeWidth={0} style={{ marginLeft: 2 }} />
+                )}
               </button>
               {!isMix && (
                 <button className="mz-pc" onClick={next} aria-label="Next">
@@ -280,7 +323,7 @@ export default function MusicLibrary() {
                 <span className="mz-player-infinity">∞ looping</span>
               ) : (
                 <span className="mz-player-time">
-                  {fmtTime(Math.min(elapsed, current.secs))} / {current.len}
+                  {formatTime(Math.min(elapsed, current.secs))} / {current.len}
                 </span>
               )}
             </div>

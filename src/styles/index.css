@@ -32,8 +32,8 @@
   --line-rgb: 35, 32, 56; /* hairlines & subtle borders, used as rgba(var(--line-rgb), a) */
 
   /* type */
-  --font-display: "Fraunces", "Georgia", serif;
-  --font-body: "Manrope", -apple-system, "Segoe UI", sans-serif;
+  --font-display: 'Fraunces', 'Georgia', serif;
+  --font-body: 'Manrope', -apple-system, 'Segoe UI', sans-serif;
 
   /* shape */
   --r-xl: 32px;
@@ -41,8 +41,10 @@
   --r-md: 16px;
   --r-sm: 10px;
 
-  --shadow-soft: 0 2px 6px rgba(var(--line-rgb), 0.05), 0 18px 44px -18px rgba(var(--line-rgb), 0.18);
-  --shadow-lift: 0 4px 10px rgba(var(--line-rgb), 0.06), 0 30px 60px -20px rgba(var(--line-rgb), 0.28);
+  --shadow-soft:
+    0 2px 6px rgba(var(--line-rgb), 0.05), 0 18px 44px -18px rgba(var(--line-rgb), 0.18);
+  --shadow-lift:
+    0 4px 10px rgba(var(--line-rgb), 0.06), 0 30px 60px -20px rgba(var(--line-rgb), 0.28);
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --container: 1200px;
@@ -166,7 +168,7 @@ a {
 }
 
 .eyebrow::before {
-  content: "";
+  content: '';
   width: 26px;
   height: 2px;
   border-radius: 2px;
@@ -215,7 +217,9 @@ a {
   font-size: 15.5px;
   padding: 16px 28px;
   border-radius: 999px;
-  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out),
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out),
     background 0.2s;
   min-height: 52px;
   white-space: nowrap;
@@ -262,7 +266,9 @@ a {
 [data-reveal] {
   opacity: 0;
   transform: translateY(26px);
-  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.8s var(--ease-out);
   transition-delay: var(--d, 0s);
   will-change: opacity, transform;
 }
@@ -279,7 +285,10 @@ a {
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 100;
-  transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s,
+    backdrop-filter 0.3s;
   padding: 18px 0;
 }
 
@@ -330,7 +339,9 @@ a {
   padding: 10px 14px;
   border-radius: 999px;
   white-space: nowrap;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
 }
 
 .nav-links a:hover {
@@ -365,7 +376,9 @@ a {
   color: var(--ink-2);
   padding: 10px 16px;
   border-radius: 999px;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
   white-space: nowrap;
 }
 
@@ -387,7 +400,9 @@ a {
   font-weight: 520;
   font-size: 17px;
   box-shadow: 0 0 0 0 rgba(100, 80, 207, 0.4);
-  transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s;
 }
 
 .nav-avatar:hover,
@@ -477,7 +492,9 @@ a {
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .nav-menu-item svg {
@@ -800,7 +817,12 @@ a {
   width: 78%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(207, 226, 210, 0.85) 0%, rgba(246, 217, 184, 0.4) 45%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(207, 226, 210, 0.85) 0%,
+    rgba(246, 217, 184, 0.4) 45%,
+    transparent 70%
+  );
   filter: blur(36px);
   z-index: 0;
   animation: breathe 9s ease-in-out infinite;
@@ -864,7 +886,8 @@ a {
     #5a48bd 78%,
     #4a3aa0 100%
   );
-  box-shadow: 0 30px 70px -18px rgba(90, 72, 189, 0.55),
+  box-shadow:
+    0 30px 70px -18px rgba(90, 72, 189, 0.55),
     inset 0 -18px 40px rgba(33, 24, 92, 0.35),
     inset 0 14px 30px rgba(255, 255, 255, 0.28);
   display: grid;
@@ -1045,7 +1068,7 @@ a {
 }
 
 .marquee-item::after {
-  content: "";
+  content: '';
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -1109,7 +1132,9 @@ a {
   border: 1px solid rgba(var(--line-rgb), 0.07);
   box-shadow: var(--shadow-soft);
   padding: 28px 26px;
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
 }
 
 .step-card:hover {
@@ -1204,7 +1229,9 @@ a {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
   box-shadow: var(--shadow-soft);
   cursor: pointer;
 }
@@ -1292,7 +1319,10 @@ a {
   display: grid;
   place-items: center;
   background: var(--paper-deep);
-  transition: background 0.25s, color 0.25s, transform 0.25s;
+  transition:
+    background 0.25s,
+    color 0.25s,
+    transform 0.25s;
 }
 
 .topic-card:hover .topic-cta .arrow {
@@ -1459,7 +1489,9 @@ a {
   opacity: 0;
   transform: translateY(14px) scale(0.984);
   pointer-events: none;
-  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
 }
 .report-card.on {
   z-index: 2;
@@ -1483,7 +1515,9 @@ a {
   border-radius: 99px;
   background: rgba(var(--line-rgb), 0.18);
   cursor: pointer;
-  transition: width 0.4s var(--ease-out), background 0.4s var(--ease-out);
+  transition:
+    width 0.4s var(--ease-out),
+    background 0.4s var(--ease-out);
 }
 .report-dots button:hover {
   background: rgba(var(--line-rgb), 0.34);
@@ -1686,7 +1720,8 @@ a {
    Audio plan (night section)
    ============================================================ */
 .audio {
-  background: radial-gradient(1100px 520px at 80% -10%, #332a66 0%, transparent 60%),
+  background:
+    radial-gradient(1100px 520px at 80% -10%, #332a66 0%, transparent 60%),
     radial-gradient(900px 500px at 0% 110%, #251f4d 0%, transparent 55%), var(--night);
   color: var(--night-ink);
   overflow: clip;
@@ -1778,7 +1813,9 @@ a {
   transform: scale(0.3);
   transform-box: fill-box;
   transform-origin: center;
-  transition: opacity 0.5s var(--ease-out) var(--d), transform 0.55s var(--ease-out) var(--d);
+  transition:
+    opacity 0.5s var(--ease-out) var(--d),
+    transform 0.55s var(--ease-out) var(--d);
 }
 .in .dt-node {
   opacity: 1;
@@ -1863,7 +1900,10 @@ a {
   background: rgba(255, 255, 255, 0.05);
   border: 1.5px solid rgba(255, 255, 255, 0.09);
   color: var(--night-ink-2);
-  transition: transform 0.2s var(--ease-out), background 0.2s, border-color 0.2s,
+  transition:
+    transform 0.2s var(--ease-out),
+    background 0.2s,
+    border-color 0.2s,
     color 0.2s;
 }
 
@@ -1993,7 +2033,9 @@ a {
   color: #4a2c0c;
   display: grid;
   place-items: center;
-  transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s;
   box-shadow: 0 14px 30px -8px rgba(238, 179, 129, 0.45);
 }
 
@@ -2098,7 +2140,9 @@ a {
   display: flex;
   flex-direction: column;
   min-height: 380px;
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
   border: 1px solid rgba(var(--line-rgb), 0.07);
   box-shadow: var(--shadow-soft);
 }
@@ -2175,7 +2219,7 @@ a {
 }
 
 .eco-book-mock::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 7px;
   top: 0;

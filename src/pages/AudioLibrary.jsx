@@ -16,7 +16,8 @@ import {
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
-import { AUDIO_PLANS, fmtTime, lenToSeconds } from '../data/audioPlans.js'
+import { AUDIO_PLANS } from '../data/audioPlans.js'
+import { formatTime, minutesToSeconds } from '../lib/time.js'
 
 /* Demo time runs faster than the clock so sessions can be finished. */
 const DEMO_SPEED = 14
@@ -38,10 +39,10 @@ function MoodSpark({ data, accent }) {
 
 export default function AudioLibrary() {
   const [unlocked, setUnlocked] = useState(
-    () => new Set(AUDIO_PLANS.filter((p) => !p.locked).map((p) => p.id))
+    () => new Set(AUDIO_PLANS.filter((p) => !p.locked).map((p) => p.id)),
   )
   const [progress, setProgress] = useState(() =>
-    Object.fromEntries(AUDIO_PLANS.map((p) => [p.id, p.completed || 0]))
+    Object.fromEntries(AUDIO_PLANS.map((p) => [p.id, p.completed || 0])),
   )
   const [nowPlaying, setNowPlaying] = useState(null) // {planId, day, title, len}
   const [playing, setPlaying] = useState(false)
@@ -57,7 +58,7 @@ export default function AudioLibrary() {
         isUnlocked: unlocked.has(p.id),
         done: progress[p.id] ?? 0,
       })),
-    [unlocked, progress]
+    [unlocked, progress],
   )
   const active = plans.filter((p) => p.isUnlocked && p.done < p.days)
   const completedPlans = plans.filter((p) => p.isUnlocked && p.done >= p.days)
@@ -70,7 +71,7 @@ export default function AudioLibrary() {
     toastTimer.current = setTimeout(() => setToast(null), 4200)
   }, [])
 
-  const duration = nowPlaying ? lenToSeconds(nowPlaying.len) : 0
+  const duration = nowPlaying ? minutesToSeconds(nowPlaying.len) : 0
 
   const finishSession = useCallback(() => {
     setPlaying(false)
@@ -81,7 +82,7 @@ export default function AudioLibrary() {
       say(
         day >= plan.days
           ? `Path complete  all ${plan.days} days walked. Time for a retake?`
-          : `Day ${day} complete. Day ${day + 1} unlocks tomorrow at 7:00.`
+          : `Day ${day} complete. Day ${day + 1} unlocks tomorrow at 7:00.`,
       )
     } else {
       say(`Day ${day} replayed  revisiting is part of the practice.`)
@@ -108,11 +109,17 @@ export default function AudioLibrary() {
       say(
         wait === 1
           ? `Day ${session.day} unlocks tomorrow at 7:00  one day at a time.`
-          : `Day ${session.day} is ${wait} mornings away  one day at a time.`
+          : `Day ${session.day} is ${wait} mornings away  one day at a time.`,
       )
       return
     }
-    setNowPlaying({ planId: plan.id, planTitle: plan.title, cover: plan.cover, accent: plan.accent, ...session })
+    setNowPlaying({
+      planId: plan.id,
+      planTitle: plan.title,
+      cover: plan.cover,
+      accent: plan.accent,
+      ...session,
+    })
     setElapsed(0)
     setPlaying(true)
   }
@@ -185,7 +192,10 @@ export default function AudioLibrary() {
                     {primary.lastListened || 'just now'}
                   </p>
                   <div className="ap-primary-actions">
-                    <button className="btn btn-light" onClick={() => play(primary, nextOf(primary))}>
+                    <button
+                      className="btn btn-light"
+                      onClick={() => play(primary, nextOf(primary))}
+                    >
                       <Play size={17} fill="currentColor" strokeWidth={0} /> Begin Day{' '}
                       {primary.done + 1}
                     </button>
@@ -198,67 +208,70 @@ export default function AudioLibrary() {
               <div className="ap-also-inner">
                 {primary ? (
                   <>
-                  <p className="panel-title">
-                    Session by session <em>{primary.done}/{primary.days}</em>
-                  </p>
-                  <div className="ap-also-list">
-                    {primary.sessions.map((s) => {
-                      const state =
-                        s.day <= primary.done
-                          ? 'done'
-                          : s.day === primary.done + 1
-                            ? 'today'
-                            : 'locked'
-                      const isCurrent =
-                        nowPlaying?.planId === primary.id && nowPlaying?.day === s.day
-                      return (
-                        <button
-                          key={s.day}
-                          className={`ap-also-row ap-also-session ${state} ${isCurrent ? 'current' : ''}`}
-                          onClick={() => play(primary, s)}
-                          aria-label={`Day ${s.day}: ${s.title}, ${
-                            state === 'locked'
-                              ? 'locked'
-                              : state === 'done'
-                                ? 'completed, replay'
-                                : 'play'
-                          }`}
-                        >
-                          <span
-                            className="ap-also-state"
-                            style={
-                              state === 'today'
-                                ? { background: primary.accent, color: '#fff' }
-                                : undefined
-                            }
+                    <p className="panel-title">
+                      Session by session{' '}
+                      <em>
+                        {primary.done}/{primary.days}
+                      </em>
+                    </p>
+                    <div className="ap-also-list">
+                      {primary.sessions.map((s) => {
+                        const state =
+                          s.day <= primary.done
+                            ? 'done'
+                            : s.day === primary.done + 1
+                              ? 'today'
+                              : 'locked'
+                        const isCurrent =
+                          nowPlaying?.planId === primary.id && nowPlaying?.day === s.day
+                        return (
+                          <button
+                            key={s.day}
+                            className={`ap-also-row ap-also-session ${state} ${isCurrent ? 'current' : ''}`}
+                            onClick={() => play(primary, s)}
+                            aria-label={`Day ${s.day}: ${s.title}, ${
+                              state === 'locked'
+                                ? 'locked'
+                                : state === 'done'
+                                  ? 'completed, replay'
+                                  : 'play'
+                            }`}
                           >
-                            {state === 'done' ? (
-                              <Check size={13} />
-                            ) : state === 'today' ? (
-                              <Play size={11} fill="currentColor" strokeWidth={0} />
-                            ) : (
-                              <Lock size={11} />
-                            )}
-                          </span>
-                          <span className="ap-also-text">
-                            <strong>
-                              Day {s.day} · {s.title}
-                            </strong>
-                          </span>
-                          <span className="ap-also-len">
-                            {state === 'locked' ? `+${s.day - primary.done - 1}d` : s.len}
-                          </span>
-                        </button>
-                      )
-                    })}
-                  </div>
+                            <span
+                              className="ap-also-state"
+                              style={
+                                state === 'today'
+                                  ? { background: primary.accent, color: '#fff' }
+                                  : undefined
+                              }
+                            >
+                              {state === 'done' ? (
+                                <Check size={13} />
+                              ) : state === 'today' ? (
+                                <Play size={11} fill="currentColor" strokeWidth={0} />
+                              ) : (
+                                <Lock size={11} />
+                              )}
+                            </span>
+                            <span className="ap-also-text">
+                              <strong>
+                                Day {s.day} · {s.title}
+                              </strong>
+                            </span>
+                            <span className="ap-also-len">
+                              {state === 'locked' ? `+${s.day - primary.done - 1}d` : s.len}
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
                     <p className="ap-also-note">
                       <Sparkles size={13} /> One new session unlocks each morning.
                     </p>
                   </>
                 ) : (
                   <p className="ap-also-empty">
-                    No active path right now  unlock one below to begin.
+                    No active path right now unlock one below to begin.
                   </p>
                 )}
               </div>
@@ -329,7 +342,8 @@ export default function AudioLibrary() {
                         </>
                       ) : (
                         <button className="ap-btn-play" onClick={() => play(p, nextOf(p))}>
-                          <Play size={14} fill="currentColor" strokeWidth={0} /> Begin Day {p.done + 1}
+                          <Play size={14} fill="currentColor" strokeWidth={0} /> Begin Day{' '}
+                          {p.done + 1}
                         </button>
                       )}
                     </div>
@@ -341,7 +355,6 @@ export default function AudioLibrary() {
         </div>
       </section>
 
-
       {/* ===== locked plans ===== */}
       <section className="ap-section ap-locked-section">
         <div className="container">
@@ -352,12 +365,17 @@ export default function AudioLibrary() {
             <span className="ap-section-count">{lockedPlans.length} paths</span>
           </div>
           <p className="ap-locked-sub">
-            Each plan is sequenced from its assessment report  or unlock the plan alone and
-            start with the standard sequence.
+            Each plan is sequenced from its assessment report or unlock the plan alone and start
+            with the standard sequence.
           </p>
           <div className="ap-plans-grid">
             {lockedPlans.map((p, i) => (
-              <Reveal as="article" key={p.id} className="ap-plan-card ap-locked-card" delay={(i % 3) * 0.08}>
+              <Reveal
+                as="article"
+                key={p.id}
+                className="ap-plan-card ap-locked-card"
+                delay={(i % 3) * 0.08}
+              >
                 <div className={`ap-plan-cover cover-${p.cover} is-locked`}>
                   <span className="ap-lock-overlay">
                     <Lock size={18} />
@@ -416,12 +434,8 @@ export default function AudioLibrary() {
               ))}
             </div>
             <div className="ap-player-progress">
-              <span>{fmtTime(elapsed)}</span>
-              <button
-                className="ap-seek"
-                onClick={seek}
-                aria-label="Seek within session"
-              >
+              <span>{formatTime(elapsed)}</span>
+              <button className="ap-seek" onClick={seek} aria-label="Seek within session">
                 <i
                   style={{
                     width: `${duration ? (elapsed / duration) * 100 : 0}%`,
@@ -429,7 +443,7 @@ export default function AudioLibrary() {
                   }}
                 />
               </button>
-              <span>{fmtTime(duration)}</span>
+              <span>{formatTime(duration)}</span>
             </div>
             <button
               className="ap-player-toggle"
@@ -490,9 +504,9 @@ export default function AudioLibrary() {
                   </li>
                 </ul>
                 <p className="ap-modal-reco">
-                  <Sparkles size={14} /> Best results: take the {modal.plan.days >= 21 ? '12' : '11'}-minute
-                  assessment first  your sessions get sequenced from your report, and the plan
-                  is included.
+                  <Sparkles size={14} /> Best results: take the{' '}
+                  {modal.plan.days >= 21 ? '12' : '11'}-minute assessment first your sessions get
+                  sequenced from your report, and the plan is included.
                 </p>
                 <div className="ap-modal-actions">
                   <Link to={`/assessments/${modal.plan.assessmentId}`} className="btn btn-light">
@@ -502,7 +516,11 @@ export default function AudioLibrary() {
                     Unlock plan only · {modal.plan.price}
                   </button>
                 </div>
-                <button className="ap-modal-close" onClick={() => setModal(null)} aria-label="Close">
+                <button
+                  className="ap-modal-close"
+                  onClick={() => setModal(null)}
+                  aria-label="Close"
+                >
                   <X size={18} />
                 </button>
               </>
@@ -511,7 +529,7 @@ export default function AudioLibrary() {
               <div className="ap-modal-processing">
                 <Loader2 size={34} className="ap-spin" />
                 <h3>Securing your sessions…</h3>
-                <p>Demo checkout  no card, no charge.</p>
+                <p>Demo checkout no card, no charge.</p>
               </div>
             )}
             {modal.step === 'done' && (
@@ -521,7 +539,7 @@ export default function AudioLibrary() {
                 </span>
                 <h3>{modal.plan.title} unlocked</h3>
                 <p>
-                  Day 1 is ready right now. Day 2 arrives tomorrow at 7:00  the path works one
+                  Day 1 is ready right now. Day 2 arrives tomorrow at 7:00 the path works one
                   morning at a time.
                 </p>
                 <div className="ap-modal-actions">

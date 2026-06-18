@@ -45,7 +45,12 @@ function Cover({ book, size = 'md' }) {
   )
 }
 
-const GEN_STEPS = ['Reading your report', 'Writing your chapters', 'Designing your cover', 'Binding it together']
+const GEN_STEPS = [
+  'Reading your report',
+  'Writing your chapters',
+  'Designing your cover',
+  'Binding it together',
+]
 
 export default function EbooksLibrary() {
   const [owned, setOwned] = useState(() => new Set(INITIAL_OWNED))
@@ -74,7 +79,7 @@ export default function EbooksLibrary() {
     return GENERAL_EBOOKS.filter(
       (b) =>
         (category === 'All' || b.category === category) &&
-        (!q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q))
+        (!q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)),
     )
   }, [category, query])
 
@@ -112,8 +117,7 @@ export default function EbooksLibrary() {
   }, [openChapter, reader])
 
   function downloadBook(book) {
-    const esc = (s) =>
-      String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     const author = book.kind === 'personal' ? `Written for ${book.forName}` : book.author
     const chaptersHtml = book.chapters
       .map((ch, i) => {
@@ -156,7 +160,10 @@ ${chaptersHtml}
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${book.title.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase()}.html`
+    a.download = `${book.title
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/^-|-$/g, '')
+      .toLowerCase()}.html`
     document.body.appendChild(a)
     a.click()
     a.remove()
@@ -218,8 +225,8 @@ ${chaptersHtml}
             Words for your <em>exact chapter.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.14}>
-            Short, specific books  some written for everyone, and some generated from your
-            own report, with your name on the cover.
+            Short, specific books some written for everyone, and some generated from your own
+            report, with your name on the cover.
           </Reveal>
           <Reveal className="eb-shelf-pill" delay={0.2}>
             <BookOpen size={15} /> {shelfCount} on your shelf
@@ -239,8 +246,8 @@ ${chaptersHtml}
             </span>
           </div>
           <p className="eb-section-sub">
-            One companion per report you&rsquo;ve unlocked  free, because your assessment
-            already paid for it.
+            One companion per report you&rsquo;ve unlocked free, because your assessment already
+            paid for it.
           </p>
 
           <div className="eb-personal-grid">
@@ -271,7 +278,10 @@ ${chaptersHtml}
                       </div>
                     ) : (
                       <div className="eb-personal-actions">
-                        <button className="btn btn-primary eb-btn" onClick={() => startGenerate(book)}>
+                        <button
+                          className="btn btn-primary eb-btn"
+                          onClick={() => startGenerate(book)}
+                        >
                           <Sparkles size={16} /> Generate · free
                         </button>
                         <button className="eb-textlink" onClick={() => openReader(book)}>
@@ -284,7 +294,12 @@ ${chaptersHtml}
               )
             })}
 
-            <Reveal as={Link} to="/assessments" className="eb-personal-card eb-locked-personal" delay={0.24}>
+            <Reveal
+              as={Link}
+              to="/assessments"
+              className="eb-personal-card eb-locked-personal"
+              delay={0.24}
+            >
               <div className="eb-locked-cover" aria-hidden="true">
                 <Lock size={22} />
               </div>
@@ -321,9 +336,7 @@ ${chaptersHtml}
               />
             </label>
           </div>
-          <p className="eb-section-sub">
-            Topic books anyone can read  no assessment required.
-          </p>
+          <p className="eb-section-sub">Topic books anyone can read no assessment required.</p>
 
           <div className="eb-filters" role="tablist" aria-label="Categories">
             {CATEGORIES.map((c) => (
@@ -340,14 +353,18 @@ ${chaptersHtml}
           </div>
 
           {filtered.length === 0 ? (
-            <p className="eb-empty">No books match that yet  try another category or search.</p>
+            <p className="eb-empty">No books match that yet try another category or search.</p>
           ) : (
             <div className="eb-grid">
               {filtered.map((book, i) => {
                 const ready = isOwned(book)
                 return (
                   <Reveal as="article" key={book.id} className="eb-card" delay={(i % 4) * 0.06}>
-                    <button className="eb-card-cover" onClick={() => openReader(book)} aria-label={`Preview ${book.title}`}>
+                    <button
+                      className="eb-card-cover"
+                      onClick={() => openReader(book)}
+                      aria-label={`Preview ${book.title}`}
+                    >
                       <Cover book={book} size="md" />
                       {ready && (
                         <span className="eb-card-owned">
@@ -367,12 +384,15 @@ ${chaptersHtml}
                           <small>({book.ratings})</small>
                         </span>
                         <span className="eb-pages">
-                          <Clock size={12} /> {Math.round(book.readMin / 60 * 10) / 10}h
+                          <Clock size={12} /> {Math.round((book.readMin / 60) * 10) / 10}h
                         </span>
                       </div>
                       <div className="eb-card-foot">
                         {ready ? (
-                          <button className="eb-btn-read" onClick={() => openReader(book, continueChapter(book))}>
+                          <button
+                            className="eb-btn-read"
+                            onClick={() => openReader(book, continueChapter(book))}
+                          >
                             <BookOpen size={15} /> Read
                           </button>
                         ) : (
@@ -450,7 +470,12 @@ ${chaptersHtml}
                     {isOwned(reader) ? (
                       <div className="eb-reader-progress">
                         <div className="eb-reader-bar">
-                          <i style={{ width: `${progress[reader.id] ?? 4}%`, background: reader.accent }} />
+                          <i
+                            style={{
+                              width: `${progress[reader.id] ?? 4}%`,
+                              background: reader.accent,
+                            }}
+                          />
                         </div>
                         <span>{progress[reader.id] ?? 4}% read</span>
                       </div>
@@ -577,7 +602,10 @@ ${chaptersHtml}
 
                   {openChapter < reader.chapters.length - 1 ? (
                     canRead(reader, openChapter + 1) ? (
-                      <button className="eb-read-step primary" onClick={() => setOpenChapter((c) => c + 1)}>
+                      <button
+                        className="eb-read-step primary"
+                        onClick={() => setOpenChapter((c) => c + 1)}
+                      >
                         Next <ChevronRight size={16} />
                       </button>
                     ) : (
@@ -595,7 +623,8 @@ ${chaptersHtml}
                     )
                   ) : (
                     <span className="eb-read-end">
-                      The end · {reader.kind === 'personal' ? `for ${reader.forName}` : reader.author}
+                      The end ·{' '}
+                      {reader.kind === 'personal' ? `for ${reader.forName}` : reader.author}
                     </span>
                   )}
                 </div>
@@ -642,7 +671,7 @@ ${chaptersHtml}
                     Buy now · {buy.book.price}
                   </button>
                 </div>
-                <p className="eb-modal-demo">Demo checkout  no card, no charge.</p>
+                <p className="eb-modal-demo">Demo checkout no card, no charge.</p>
                 <button className="ap-modal-close" onClick={() => setBuy(null)} aria-label="Close">
                   <X size={18} />
                 </button>
@@ -652,7 +681,7 @@ ${chaptersHtml}
               <div className="ap-modal-processing">
                 <Loader2 size={34} className="ap-spin" />
                 <h3>Adding to your shelf…</h3>
-                <p>Demo checkout  no card, no charge.</p>
+                <p>Demo checkout no card, no charge.</p>
               </div>
             )}
             {buy.step === 'done' && (
@@ -661,7 +690,7 @@ ${chaptersHtml}
                   <Check size={26} />
                 </span>
                 <h3>{buy.book.title} is yours</h3>
-                <p>It&rsquo;s on your shelf now  start whenever you like.</p>
+                <p>It&rsquo;s on your shelf now start whenever you like.</p>
                 <div className="ap-modal-actions">
                   <button className="btn btn-light" onClick={() => finishBuy(true)}>
                     <BookOpen size={16} /> Read now
@@ -697,8 +726,8 @@ ${chaptersHtml}
                   </div>
                 </div>
                 <p className="ap-modal-pitch">
-                  {gen.book.fromReport}. Your scores shape the chapters; your name goes on
-                  the cover. It takes a few seconds to write.
+                  {gen.book.fromReport}. Your scores shape the chapters; your name goes on the
+                  cover. It takes a few seconds to write.
                 </p>
                 <ul className="ap-modal-list">
                   <li>
@@ -708,7 +737,7 @@ ${chaptersHtml}
                     <Check size={15} /> Personalized cover with your name
                   </li>
                   <li>
-                    <Check size={15} /> Short and specific  {gen.book.readMin} minutes
+                    <Check size={15} /> Short and specific {gen.book.readMin} minutes
                   </li>
                 </ul>
                 <div className="ap-modal-actions">
@@ -730,8 +759,13 @@ ${chaptersHtml}
                 <h3>Writing your book…</h3>
                 <ul className="gen-steps" aria-live="polite">
                   {GEN_STEPS.map((s, i) => (
-                    <li key={s} className={i < gen.reached ? 'done' : i === gen.reached ? 'active' : ''}>
-                      <span className="gen-check">{i < gen.reached ? <Check size={13} /> : null}</span>
+                    <li
+                      key={s}
+                      className={i < gen.reached ? 'done' : i === gen.reached ? 'active' : ''}
+                    >
+                      <span className="gen-check">
+                        {i < gen.reached ? <Check size={13} /> : null}
+                      </span>
                       {s}
                     </li>
                   ))}
@@ -744,7 +778,10 @@ ${chaptersHtml}
                   <Check size={26} />
                 </span>
                 <h3>{gen.book.title} is written</h3>
-                <p>{gen.book.chapters.length} chapters, just for {gen.book.forName}  it&rsquo;s on your shelf.</p>
+                <p>
+                  {gen.book.chapters.length} chapters, just for {gen.book.forName} it&rsquo;s on
+                  your shelf.
+                </p>
                 <div className="ap-modal-actions">
                   <button className="btn btn-light" onClick={() => finishGenerate(true)}>
                     <BookOpen size={16} /> Read it now

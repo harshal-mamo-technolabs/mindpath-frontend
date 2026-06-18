@@ -24,13 +24,12 @@ import {
   Plus,
   RefreshCcw,
   Smile,
-  Sparkles,
   Sun,
   TrendingDown,
   TrendingUp,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
-import { useTheme } from '../useTheme.js'
+import { useTheme } from '../hooks/useTheme.js'
 import { ASSESSMENTS } from '../data/assessments.js'
 import { AUDIO_PLANS } from '../data/audioPlans.js'
 import { REPORT_GROUPS } from '../data/reportHistory.js'
@@ -55,9 +54,16 @@ function Spark({ data, accent }) {
     .join(' ')
   return (
     <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
-      <polyline points={pts} fill="none" stroke={accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline
+        points={pts}
+        fill="none"
+        stroke={accent}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       <circle
-        cx={(data.length - 1) / (data.length - 1) * (w - 8) + 4}
+        cx={((data.length - 1) / (data.length - 1)) * (w - 8) + 4}
         cy={h - 5 - ((data[data.length - 1] - 1) / 4) * (h - 11)}
         r="3.5"
         fill={accent}
@@ -119,8 +125,8 @@ export default function Dashboard() {
               {greeting}, {NAME}.
             </h1>
             <p className="dash-subline">
-              You&rsquo;re on a <strong>{STREAK}-day streak</strong>  Day {primary.completed + 1}{' '}
-              of your {primary.title.replace(' path', '')} is ready.
+              You&rsquo;re on a <strong>{STREAK}-day streak</strong> Day {primary.completed + 1} of
+              your {primary.title.replace(' path', '')} is ready.
             </p>
           </div>
           <div className="dash-head-right">
@@ -159,7 +165,8 @@ export default function Dashboard() {
               <div className="dash-feature-scene" aria-hidden="true" />
               <div className="dash-feature-body">
                 <p className="dash-kicker">
-                  Today&rsquo;s session · {primary.title} · Day {primary.completed + 1} of {primary.days}
+                  Today&rsquo;s session · {primary.title} · Day {primary.completed + 1} of{' '}
+                  {primary.days}
                 </p>
                 <h2>{nextSession.title}</h2>
                 <p className="dash-feature-meta">
@@ -205,7 +212,9 @@ export default function Dashboard() {
                   <span className="dash-mood-delta">
                     <TrendingUp size={13} /> {primary.moodDelta}
                   </span>
-                  <small>{mood === null ? 'One tap before your session' : 'across this plan'}</small>
+                  <small>
+                    {mood === null ? 'One tap before your session' : 'across this plan'}
+                  </small>
                 </div>
               </div>
             </Reveal>
@@ -218,7 +227,7 @@ export default function Dashboard() {
                 <FileHeart size={20} />
                 <div>
                   <h3>Topics you haven&rsquo;t explored yet</h3>
-                  <p>Each new assessment adds another report  and another path to follow.</p>
+                  <p>Each new assessment adds another report and another path to follow.</p>
                 </div>
               </div>
               <div className="reports-explore-grid">
@@ -301,7 +310,12 @@ export default function Dashboard() {
                         </span>
                       </div>
                       <div className="dash-plan-bar">
-                        <i style={{ width: `${(p.completed / p.days) * 100}%`, background: p.accent }} />
+                        <i
+                          style={{
+                            width: `${(p.completed / p.days) * 100}%`,
+                            background: p.accent,
+                          }}
+                        />
                       </div>
                     </div>
                   )
@@ -332,9 +346,12 @@ export default function Dashboard() {
               </div>
               <p className="dash-report-note">
                 Across {retakeGroup.takes.length} check-ins. It&rsquo;s been {retakeGroup.lastDays}{' '}
-                days  a retake now proves how far you&rsquo;ve come.
+                days a retake now proves how far you&rsquo;ve come.
               </p>
-              <Link to={`/assessments/${retakeGroup.id}/take`} className="btn btn-primary dash-report-btn">
+              <Link
+                to={`/assessments/${retakeGroup.id}/take`}
+                className="btn btn-primary dash-report-btn"
+              >
                 <RefreshCcw size={16} /> Retake now
               </Link>
             </Reveal>
@@ -350,11 +367,7 @@ export default function Dashboard() {
                 </Link>
               </div>
               <div className="dash-read-row">
-                <div
-                  className="dash-book"
-                  style={{ '--accent': ebook.accent }}
-                  aria-hidden="true"
-                >
+                <div className="dash-book" style={{ '--accent': ebook.accent }} aria-hidden="true">
                   <span className="dash-book-title">{ebook.title}</span>
                   <span className="dash-book-for">for {ebook.forName}</span>
                 </div>
@@ -384,7 +397,7 @@ export default function Dashboard() {
                 <MessagesSquare size={22} />
               </span>
               <h3>Talk it through</h3>
-              <p>An AI advisor that has already read your report  start where you are, out loud.</p>
+              <p>An AI advisor that has already read your report start where you are, out loud.</p>
               <Link to="/counselling" className="dash-upsell-link">
                 Explore counselling <ArrowRight size={15} />
               </Link>
@@ -395,7 +408,7 @@ export default function Dashboard() {
                 <Gift size={22} />
               </span>
               <h3>Bring a friend</h3>
-              <p>Invite someone walking their own path  you both get a free counselling session.</p>
+              <p>Invite someone walking their own path you both get a free counselling session.</p>
               <button className="dash-upsell-link" onClick={copyInvite}>
                 <Copy size={15} /> Copy invite link
               </button>

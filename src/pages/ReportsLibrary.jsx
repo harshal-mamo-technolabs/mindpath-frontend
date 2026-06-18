@@ -14,12 +14,7 @@ import {
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import { ASSESSMENTS, bandOf } from '../data/assessments.js'
-import {
-  BEST_IMPROVEMENT,
-  fmtDate,
-  REPORT_GROUPS,
-  TOTAL_REPORTS,
-} from '../data/reportHistory.js'
+import { BEST_IMPROVEMENT, fmtDate, REPORT_GROUPS, TOTAL_REPORTS } from '../data/reportHistory.js'
 
 const BAND_META = {
   load: {
@@ -85,7 +80,10 @@ function TrendChart({ takes, accent }) {
               style={{ left: `${xOf(i)}%`, top: `${yOf(t.overall)}%` }}
             >
               <span className="r-node-score">{t.overall}</span>
-              <span className="r-node-dot" style={{ borderColor: accent, background: isLast ? accent : '#fff' }} />
+              <span
+                className="r-node-dot"
+                style={{ borderColor: accent, background: isLast ? accent : '#fff' }}
+              />
             </div>
           )
         })}
@@ -107,8 +105,6 @@ function ReportGroup({ g, i }) {
   const latestBand = bandFor(g.latest.overall, a.direction)
   const multi = g.takes.length > 1
   const DeltaIcon = g.delta === 0 ? Minus : g.improved ? TrendingDown : TrendingUp
-  // For load topics improvement points down; flip the glyph so "good" always reads as down-and-green here.
-  const deltaArrow = g.improved ? ArrowDownRight : ArrowUpRight
 
   return (
     <Reveal as="article" className="r-group" delay={i * 0.06} style={{ '--topic': a.accent }}>
@@ -137,8 +133,8 @@ function ReportGroup({ g, i }) {
               {Math.abs(g.delta)} pts {g.improved ? g.betterWord : 'higher'}
             </span>
             <p>
-              Across {g.takes.length} check-ins, your {a.ringLabel.toLowerCase()} has moved
-              from <strong>{g.first.overall}</strong> to <strong>{g.latest.overall}</strong>
+              Across {g.takes.length} check-ins, your {a.ringLabel.toLowerCase()} has moved from{' '}
+              <strong>{g.first.overall}</strong> to <strong>{g.latest.overall}</strong>
               {g.improved ? '  that change is yours, not the measurement’s.' : '.'}
             </p>
           </div>
@@ -163,7 +159,10 @@ function ReportGroup({ g, i }) {
                   </header>
                   <div className="r-ba-track">
                     <span className="r-ba-first" style={{ width: `${f}%` }} />
-                    <span className="r-ba-latest" style={{ width: `${l}%`, background: a.accent }} />
+                    <span
+                      className="r-ba-latest"
+                      style={{ width: `${l}%`, background: a.accent }}
+                    />
                   </div>
                 </div>
               )
@@ -189,7 +188,8 @@ function ReportGroup({ g, i }) {
             .map(({ t, idx }) => {
               const prev = g.takes[idx - 1]
               const change = prev ? t.overall - prev.overall : null
-              const changeBetter = change != null && (a.direction === 'load' ? change < 0 : change > 0)
+              const changeBetter =
+                change != null && (a.direction === 'load' ? change < 0 : change > 0)
               const band = bandFor(t.overall, a.direction)
               const isLatest = idx === g.takes.length - 1
               return (
@@ -212,7 +212,13 @@ function ReportGroup({ g, i }) {
                     <span className={`band-chip ${band.cls}`}>{band.chip}</span>
                     {change != null ? (
                       <span className={`r-take-change ${changeBetter ? 'good' : 'rise'}`}>
-                        {change < 0 ? <ArrowDownRight size={13} /> : change > 0 ? <ArrowUpRight size={13} /> : <Minus size={13} />}
+                        {change < 0 ? (
+                          <ArrowDownRight size={13} />
+                        ) : change > 0 ? (
+                          <ArrowUpRight size={13} />
+                        ) : (
+                          <Minus size={13} />
+                        )}
                         {Math.abs(change)}
                       </span>
                     ) : (
@@ -233,8 +239,8 @@ function ReportGroup({ g, i }) {
               Retake now <ArrowRight size={17} />
             </Link>
             <p className="r-retake-note">
-              <CalendarClock size={14} /> It&rsquo;s been {g.lastDays} days  a retake now
-              shows how far you&rsquo;ve come.
+              <CalendarClock size={14} /> It&rsquo;s been {g.lastDays} days a retake now shows how
+              far you&rsquo;ve come.
             </p>
           </>
         ) : (
@@ -246,7 +252,12 @@ function ReportGroup({ g, i }) {
               <small>{g.lastDays} / 60 days</small>
             </div>
             <div className="r-retake-bar">
-              <i style={{ width: `${Math.min(100, (g.lastDays / 60) * 100)}%`, background: a.accent }} />
+              <i
+                style={{
+                  width: `${Math.min(100, (g.lastDays / 60) * 100)}%`,
+                  background: a.accent,
+                }}
+              />
             </div>
             <small className="r-retake-sub">
               Retaking every 60–90 days keeps the comparison meaningful.
@@ -277,8 +288,8 @@ export default function ReportsLibrary() {
             Proof you can <em>watch move.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.14}>
-            Every report you&rsquo;ve unlocked, grouped by topic  so each retake stacks
-            into a story of where you started and how far you&rsquo;ve come.
+            Every report you&rsquo;ve unlocked, grouped by topic so each retake stacks into a story
+            of where you started and how far you&rsquo;ve come.
           </Reveal>
 
           <Reveal className="reports-ledger" delay={0.2}>
@@ -317,7 +328,7 @@ export default function ReportsLibrary() {
                 <FileHeart size={20} />
                 <div>
                   <h3>Topics you haven&rsquo;t explored yet</h3>
-                  <p>Each new assessment adds another report  and another path to follow.</p>
+                  <p>Each new assessment adds another report and another path to follow.</p>
                 </div>
               </div>
               <div className="reports-explore-grid">
@@ -330,7 +341,9 @@ export default function ReportsLibrary() {
                       </span>
                       <div>
                         <strong>{a.title}</strong>
-                        <small>{a.dims.length} dimensions · {a.mins} min</small>
+                        <small>
+                          {a.dims.length} dimensions · {a.mins} min
+                        </small>
                       </div>
                       <span className="reports-explore-add">
                         <Plus size={16} />

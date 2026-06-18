@@ -7,7 +7,8 @@
   display: grid;
   place-items: center;
   padding: 56px 20px;
-  background: radial-gradient(680px 460px at 84% -6%, var(--lav-tint) 0%, transparent 58%),
+  background:
+    radial-gradient(680px 460px at 84% -6%, var(--lav-tint) 0%, transparent 58%),
     radial-gradient(620px 420px at 12% 108%, #f3e7d6 0%, transparent 55%), var(--paper);
   overflow: hidden;
 }
@@ -15,7 +16,7 @@
 /* soft aurora behind the card */
 .auth::before,
 .auth::after {
-  content: "";
+  content: '';
   position: absolute;
   border-radius: 50%;
   filter: blur(90px);
@@ -53,7 +54,9 @@
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: var(--r-xl);
-  box-shadow: 0 4px 12px rgba(var(--line-rgb), 0.05), 0 40px 80px -32px rgba(var(--line-rgb), 0.32);
+  box-shadow:
+    0 4px 12px rgba(var(--line-rgb), 0.05),
+    0 40px 80px -32px rgba(var(--line-rgb), 0.32);
   padding: 40px 40px 34px;
 }
 
@@ -133,7 +136,9 @@
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 14px;
   padding: 0 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .auth-input:focus-within {
@@ -175,7 +180,9 @@
   height: 32px;
   border-radius: 9px;
   color: var(--ink-3);
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
 }
 
 .auth-eye:hover {
@@ -213,7 +220,9 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  transition: width 0.4s var(--ease-out), background 0.3s;
+  transition:
+    width 0.4s var(--ease-out),
+    background 0.3s;
 }
 
 .auth-strength-bar.weak i {

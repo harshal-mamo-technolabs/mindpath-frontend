@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react'
-import { BookOpen, Headphones, MessagesSquare, ScanSearch, ShieldCheck, Sparkles } from 'lucide-react'
+import {
+  BookOpen,
+  Headphones,
+  MessagesSquare,
+  ScanSearch,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
 const POINTS = [
@@ -200,8 +207,8 @@ export default function Report() {
             A report that <em>reads you back.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.16}>
-            Not a percentage and a pat on the back — a detailed profile of where you are,
-            written like a kind, clear-eyed friend.
+            Not a percentage and a pat on the back — a detailed profile of where you are, written
+            like a kind, clear-eyed friend.
           </Reveal>
 
           <div className="report-points">

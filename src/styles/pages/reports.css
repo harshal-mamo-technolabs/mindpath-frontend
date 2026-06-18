@@ -369,7 +369,10 @@
   border-radius: 14px;
   border: 1px solid rgba(var(--line-rgb), 0.08);
   background: var(--paper);
-  transition: background 0.2s, border-color 0.2s, transform 0.2s var(--ease-out);
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.2s var(--ease-out);
 }
 
 .r-take-row:hover {
@@ -554,7 +557,9 @@
   border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: var(--r-md);
   padding: 15px 17px;
-  transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s;
 }
 
 .reports-explore-card:hover {
@@ -590,7 +595,9 @@
   background: var(--violet-ghost);
   color: var(--violet-deep);
   flex: none;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .reports-explore-card:hover .reports-explore-add {

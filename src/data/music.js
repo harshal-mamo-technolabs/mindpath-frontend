@@ -28,14 +28,3 @@ export const AMBIENT = [
   { id: 'fire', label: 'Crackle', scene: 'ember', accent: '#b05f2c' },
   { id: 'drone', label: 'Drone', scene: 'focus', accent: '#4d3da8' },
 ]
-
-export const lenToSecs = (len) => {
-  const [m, s] = len.split(':').map(Number)
-  return m * 60 + s
-}
-
-export const fmtTime = (secs) => {
-  const m = Math.floor(secs / 60)
-  const s = Math.round(secs % 60)
-  return `${m}:${String(s).padStart(2, '0')}`
-}

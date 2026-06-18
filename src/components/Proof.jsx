@@ -54,7 +54,7 @@ export default function Proof() {
               ))}
             </div>
             <p className="progress-foot">
-              Same questions, same framework  so the change you see is yours, not the
+              Same questions, same framework so the change you see is yours, not the
               measurement&rsquo;s.
             </p>
           </Reveal>

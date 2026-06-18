@@ -92,10 +92,13 @@ export default function CounsellingPage() {
     timers.current.forEach(clearTimeout)
     timers.current = []
   }
-  useEffect(() => () => {
-    clearTimers()
-    clearTimeout(toastTimer.current)
-  }, [])
+  useEffect(
+    () => () => {
+      clearTimers()
+      clearTimeout(toastTimer.current)
+    },
+    [],
+  )
 
   // auto-play transcript while in call
   useEffect(() => {
@@ -161,7 +164,11 @@ export default function CounsellingPage() {
           <p className="take-topic">
             {phase === 'summary' ? 'Session summary' : `Live · ${topic.title}`}
           </p>
-          <button className="take-exit" onClick={phase === 'summary' ? backToLobby : endCall} aria-label="Close session">
+          <button
+            className="take-exit"
+            onClick={phase === 'summary' ? backToLobby : endCall}
+            aria-label="Close session"
+          >
             <X size={20} />
           </button>
         </header>
@@ -243,7 +250,9 @@ export default function CounsellingPage() {
               </p>
               {lines.slice(0, revealed).map((line, i) => (
                 <div key={i} className={`cn-msg ${line.from}`}>
-                  <span className="cn-msg-who">{line.from === 'advisor' ? ADVISOR.name : 'You'}</span>
+                  <span className="cn-msg-who">
+                    {line.from === 'advisor' ? ADVISOR.name : 'You'}
+                  </span>
                   <p>{line.text}</p>
                 </div>
               ))}
@@ -268,7 +277,9 @@ export default function CounsellingPage() {
                     })()}
                   </span>
                   <div>
-                    <small>{ADVISOR.name} suggests · {SUGGEST_META[script.suggest.type].label}</small>
+                    <small>
+                      {ADVISOR.name} suggests · {SUGGEST_META[script.suggest.type].label}
+                    </small>
                     <strong>{script.suggest.title}</strong>
                   </div>
                   <ArrowRight size={16} />
@@ -294,13 +305,17 @@ export default function CounsellingPage() {
                 <button className="cn-ctrl cn-end" onClick={endCall} aria-label="End session">
                   <PhoneOff size={22} />
                 </button>
-                <button className="cn-ctrl" onClick={() => setBuyOpen(true)} aria-label="Buy minutes">
+                <button
+                  className="cn-ctrl"
+                  onClick={() => setBuyOpen(true)}
+                  aria-label="Buy minutes"
+                >
                   <Plus size={20} />
                 </button>
               </div>
               {remaining <= 5 && (
                 <p className="cn-low">
-                  <Zap size={13} /> Running low  top up to keep talking.
+                  <Zap size={13} /> Running low top up to keep talking.
                 </p>
               )}
             </div>
@@ -338,7 +353,10 @@ export default function CounsellingPage() {
   const contextLink = topic.hasReport
     ? { to: '/reports', label: `View your ${topic.title} report` }
     : topic.assessmentId
-      ? { to: `/assessments/${topic.assessmentId}`, label: `Take the ${topic.title} assessment first` }
+      ? {
+          to: `/assessments/${topic.assessmentId}`,
+          label: `Take the ${topic.title} assessment first`,
+        }
       : null
 
   return (
@@ -364,8 +382,8 @@ export default function CounsellingPage() {
             <Sparkles size={18} /> What would you like to talk about?
           </h2>
           <p className="cn-section-sub">
-            Pick whatever you&rsquo;re carrying — no report required — and we&rsquo;ll show you
-            how that session goes before you start.
+            Pick whatever you&rsquo;re carrying — no report required — and we&rsquo;ll show you how
+            that session goes before you start.
           </p>
           <div className="cn-topics">
             {TOPICS.map((t) => {
@@ -522,7 +540,7 @@ function BuyMinutes({ pack, setPack, step, onConfirm, onFinish, onClose }) {
           <>
             <h3>Add counselling minutes</h3>
             <p className="ap-modal-pitch">
-              Use them whenever  they stack on top of your plan&rsquo;s included minutes.
+              Use them whenever they stack on top of your plan&rsquo;s included minutes.
             </p>
             <div className="cn-packs">
               {MINUTE_PACKS.map((p) => (
@@ -542,7 +560,7 @@ function BuyMinutes({ pack, setPack, step, onConfirm, onFinish, onClose }) {
                 Buy {pack.minutes} min · ${pack.price}
               </button>
             </div>
-            <p className="cn-buy-demo">Demo checkout  no card is charged.</p>
+            <p className="cn-buy-demo">Demo checkout no card is charged.</p>
             <button className="ap-modal-close" onClick={onClose} aria-label="Close">
               <X size={18} />
             </button>
@@ -552,7 +570,7 @@ function BuyMinutes({ pack, setPack, step, onConfirm, onFinish, onClose }) {
           <div className="ap-modal-processing">
             <Loader2 size={34} className="ap-spin" />
             <h3>Adding minutes…</h3>
-            <p>Demo checkout  no card, no charge.</p>
+            <p>Demo checkout no card, no charge.</p>
           </div>
         )}
         {step === 'done' && (

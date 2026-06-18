@@ -15,14 +15,7 @@ import {
   Zap,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
-import {
-  fmtDate,
-  getPlan,
-  INVOICES,
-  PAYG,
-  priceFor,
-  SUBSCRIPTION,
-} from '../data/billing.js'
+import { fmtDate, getPlan, INVOICES, PAYG, priceFor, SUBSCRIPTION } from '../data/billing.js'
 
 const ALLOWANCE_ROWS = [
   {
@@ -95,8 +88,9 @@ export default function BillingPage() {
               </p>
               <h2>{plan.name} plan</h2>
               <p className="bl-plan-sub">
-                ${priceFor(plan, SUBSCRIPTION.cycle)}/{SUBSCRIPTION.cycle === 'yearly' ? 'yr' : 'mo'} ·
-                renews {fmtDate(SUBSCRIPTION.renewsOn)}
+                ${priceFor(plan, SUBSCRIPTION.cycle)}/
+                {SUBSCRIPTION.cycle === 'yearly' ? 'yr' : 'mo'} · renews{' '}
+                {fmtDate(SUBSCRIPTION.renewsOn)}
               </p>
             </div>
           </div>
@@ -139,9 +133,7 @@ export default function BillingPage() {
                         <Zap size={12} /> Pay-as-you-go
                       </span>
                     ) : (
-                      <span className="bl-allowance-left">
-                        {unlimited ? '∞' : left} left
-                      </span>
+                      <span className="bl-allowance-left">{unlimited ? '∞' : left} left</span>
                     )}
                   </div>
 
@@ -204,7 +196,7 @@ export default function BillingPage() {
               </button>
             </div>
             <p className="bl-pay-note">
-              Payments are securely handled by Stripe. This is a demo  no real card is stored.
+              Payments are securely handled by Stripe. This is a demo no real card is stored.
             </p>
           </section>
 
@@ -215,8 +207,8 @@ export default function BillingPage() {
             </span>
             <h3>Running out of assessments?</h3>
             <p>
-              Flourish unlocks 6 assessments, unlimited ebooks, and 120 counselling minutes
-              every month  often cheaper than topping up.
+              Flourish unlocks 6 assessments, unlimited ebooks, and 120 counselling minutes every
+              month often cheaper than topping up.
             </p>
             <Link to="/checkout?plan=flourish&cycle=monthly" className="btn btn-light">
               Upgrade to Flourish <ArrowRight size={16} />
@@ -243,7 +235,11 @@ export default function BillingPage() {
                   </em>
                 </span>
                 <span className="bl-inv-amount">${inv.amount}</span>
-                <button className="bl-inv-dl" onClick={() => say('Receipt download is a demo.')} aria-label="Download receipt">
+                <button
+                  className="bl-inv-dl"
+                  onClick={() => say('Receipt download is a demo.')}
+                  aria-label="Download receipt"
+                >
                   <Download size={15} />
                 </button>
               </div>
@@ -273,8 +269,8 @@ export default function BillingPage() {
           <div className="ap-modal bl-cancel-modal">
             <h3>Cancel your {plan.name} plan?</h3>
             <p>
-              You&rsquo;ll keep your allowances until {fmtDate(SUBSCRIPTION.renewsOn)}, then move
-              to pay-as-you-go. Everything you&rsquo;ve unlocked stays yours.
+              You&rsquo;ll keep your allowances until {fmtDate(SUBSCRIPTION.renewsOn)}, then move to
+              pay-as-you-go. Everything you&rsquo;ve unlocked stays yours.
             </p>
             <div className="ap-modal-actions">
               <button

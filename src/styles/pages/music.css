@@ -219,7 +219,9 @@
   overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
   border: 1.5px solid rgba(255, 255, 255, 0.08);
-  transition: border-color 0.2s, transform 0.2s var(--ease-out);
+  transition:
+    border-color 0.2s,
+    transform 0.2s var(--ease-out);
   text-align: left;
 }
 
@@ -233,12 +235,17 @@
   position: relative;
   filter: saturate(0.55) brightness(0.92);
   opacity: 0.7;
-  transition: filter 0.3s, opacity 0.3s, transform 0.3s;
+  transition:
+    filter 0.3s,
+    opacity 0.3s,
+    transform 0.3s;
 }
 
 .mz-layer.on {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent), 0 12px 28px -12px var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 12px 28px -12px var(--accent);
 }
 
 .mz-layer.on .mz-layer-art {
@@ -271,7 +278,9 @@
   height: 9px;
   border-radius: 50%;
   border: 1.5px solid var(--night-ink-2);
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .mz-layer.on .mz-layer-dot {
@@ -343,7 +352,9 @@
   border-radius: var(--r-lg);
   overflow: hidden;
   box-shadow: var(--shadow-soft);
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
 }
 
 .mz-scene-card:hover {
@@ -353,7 +364,9 @@
 
 .mz-scene-card.is-playing {
   border-color: var(--sage);
-  box-shadow: 0 0 0 1px var(--sage), var(--shadow-lift);
+  box-shadow:
+    0 0 0 1px var(--sage),
+    var(--shadow-lift);
 }
 
 .mz-scene-art {
@@ -397,7 +410,9 @@
   box-shadow: 0 8px 18px -6px rgba(0, 0, 0, 0.4);
   transform: translateY(6px);
   opacity: 0;
-  transition: opacity 0.25s, transform 0.25s var(--ease-out);
+  transition:
+    opacity 0.25s,
+    transform 0.25s var(--ease-out);
 }
 
 .mz-scene-card:hover .mz-scene-play,
@@ -436,7 +451,9 @@
   display: grid;
   place-items: center;
   color: var(--ink-3);
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
 }
 
 .mz-like:hover {
@@ -585,7 +602,10 @@
   display: grid;
   place-items: center;
   color: #cdc8ee;
-  transition: color 0.2s, background 0.2s, transform 0.2s var(--ease-out);
+  transition:
+    color 0.2s,
+    background 0.2s,
+    transform 0.2s var(--ease-out);
 }
 
 .mz-pc:hover {
@@ -679,7 +699,9 @@
   display: grid;
   place-items: center;
   color: #a7a2cc;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
 }
 
 .mz-player-close:hover {

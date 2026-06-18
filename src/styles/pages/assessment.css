@@ -88,7 +88,9 @@
   border-radius: var(--r-lg);
   padding: 30px;
   box-shadow: var(--shadow-soft);
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
   cursor: pointer;
 }
 
@@ -103,8 +105,8 @@
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   grid-template-areas:
-    "head chips"
-    "head foot";
+    'head chips'
+    'head foot';
   column-gap: 48px;
   row-gap: 22px;
   align-items: start;
@@ -117,7 +119,7 @@
 
 .cat-featured::after {
   /* soft light bloom, top-right */
-  content: "";
+  content: '';
   position: absolute;
   top: -40%;
   right: -10%;
@@ -240,7 +242,10 @@
   display: grid;
   place-items: center;
   background: var(--paper-deep);
-  transition: background 0.25s, color 0.25s, transform 0.25s;
+  transition:
+    background 0.25s,
+    color 0.25s,
+    transform 0.25s;
 }
 
 .cat-card:hover .cat-go .arrow {
@@ -325,7 +330,9 @@
   border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 999px;
   padding: 8px 16px;
-  transition: color 0.2s, transform 0.2s;
+  transition:
+    color 0.2s,
+    transform 0.2s;
 }
 
 .crumb:hover {
@@ -419,7 +426,9 @@
   border: 1px solid rgba(var(--line-rgb), 0.07);
   border-radius: var(--r-xl);
   padding: 30px;
-  box-shadow: 14px 14px 0 0 var(--violet-soft), var(--shadow-lift);
+  box-shadow:
+    14px 14px 0 0 var(--violet-soft),
+    var(--shadow-lift);
   display: grid;
   gap: 22px;
 }
@@ -521,7 +530,7 @@
 }
 
 .receive-list li::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 7px;
@@ -673,8 +682,8 @@
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: radial-gradient(900px 480px at 85% -10%, var(--lav-tint) 0%, transparent 60%),
-    var(--paper);
+  background:
+    radial-gradient(900px 480px at 85% -10%, var(--lav-tint) 0%, transparent 60%), var(--paper);
 }
 
 .take-bar {
@@ -702,7 +711,9 @@
   color: var(--ink-2);
   background: var(--surface);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  transition: color 0.2s, transform 0.2s;
+  transition:
+    color 0.2s,
+    transform 0.2s;
 }
 
 .take-exit:hover {
@@ -738,7 +749,9 @@
   box-shadow: var(--shadow-lift);
   padding: 44px 48px;
   animation: cardIn 0.45s var(--ease-out) both;
-  transition: opacity 0.3s, transform 0.3s;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
 }
 
 @keyframes cardIn {
@@ -813,7 +826,10 @@
   font-weight: 700;
   color: var(--ink-2);
   background: var(--surface);
-  transition: transform 0.2s var(--ease-out), border-color 0.2s, background 0.2s,
+  transition:
+    transform 0.2s var(--ease-out),
+    border-color 0.2s,
+    background 0.2s,
     color 0.2s;
 }
 
@@ -836,31 +852,31 @@
   align-self: center;
 }
 
-.likert-dot[data-strength="0"] {
+.likert-dot[data-strength='0'] {
   width: 8px;
   height: 8px;
   opacity: 0.35;
 }
 
-.likert-dot[data-strength="1"] {
+.likert-dot[data-strength='1'] {
   width: 11px;
   height: 11px;
   opacity: 0.5;
 }
 
-.likert-dot[data-strength="2"] {
+.likert-dot[data-strength='2'] {
   width: 14px;
   height: 14px;
   opacity: 0.65;
 }
 
-.likert-dot[data-strength="3"] {
+.likert-dot[data-strength='3'] {
   width: 17px;
   height: 17px;
   opacity: 0.82;
 }
 
-.likert-dot[data-strength="4"] {
+.likert-dot[data-strength='4'] {
   width: 20px;
   height: 20px;
   opacity: 1;
@@ -895,7 +911,9 @@
   color: var(--ink-2);
   padding: 8px 12px;
   border-radius: 999px;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
 }
 
 .take-back:hover {
@@ -948,7 +966,9 @@
   border-radius: 14px;
   padding: 14px 18px;
   max-width: 340px;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .take-name input:focus {
@@ -980,8 +1000,7 @@
   justify-content: center;
   gap: 8px;
   padding: 40px 24px;
-  background: radial-gradient(900px 500px at 50% -10%, #332a66 0%, transparent 60%),
-    var(--night);
+  background: radial-gradient(900px 500px at 50% -10%, #332a66 0%, transparent 60%), var(--night);
   color: var(--night-ink);
   text-align: center;
 }
@@ -1020,7 +1039,9 @@
   font-weight: 600;
   color: var(--night-ink-2);
   opacity: 0.45;
-  transition: opacity 0.4s, color 0.4s;
+  transition:
+    opacity 0.4s,
+    color 0.4s;
 }
 
 .gen-steps li.active {
@@ -1042,7 +1063,9 @@
   place-items: center;
   border: 1.5px solid rgba(255, 255, 255, 0.25);
   color: #0f2b1d;
-  transition: background 0.3s, border-color 0.3s;
+  transition:
+    background 0.3s,
+    border-color 0.3s;
 }
 
 .gen-steps li.done .gen-check {
@@ -1076,8 +1099,8 @@
 /* ------- report page ------- */
 .reportpage {
   min-height: 100dvh;
-  background: radial-gradient(800px 420px at 90% -5%, var(--lav-tint) 0%, transparent 55%),
-    var(--paper);
+  background:
+    radial-gradient(800px 420px at 90% -5%, var(--lav-tint) 0%, transparent 55%), var(--paper);
   padding-bottom: 80px;
 }
 
@@ -1359,8 +1382,7 @@
 }
 
 .rp-plan {
-  background: radial-gradient(700px 320px at 85% -20%, #332a66 0%, transparent 60%),
-    var(--night);
+  background: radial-gradient(700px 320px at 85% -20%, #332a66 0%, transparent 60%), var(--night);
   border-radius: var(--r-xl);
   padding: 34px;
   color: var(--night-ink);
@@ -1450,7 +1472,9 @@
   border-radius: var(--r-md);
   padding: 20px;
   box-shadow: var(--shadow-soft);
-  transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
+  transition:
+    transform 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out);
 }
 
 .rp-next-card:hover {
@@ -1533,9 +1557,9 @@
   .cat-featured {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "head"
-      "chips"
-      "foot";
+      'head'
+      'chips'
+      'foot';
     padding: 32px 26px;
   }
 

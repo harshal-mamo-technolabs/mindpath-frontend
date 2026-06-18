@@ -1,16 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {
-  ArrowRight,
-  Check,
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Mail,
-  Sparkles,
-  User,
-} from 'lucide-react'
+import { ArrowRight, Check, Eye, EyeOff, Loader2, Lock, Mail, Sparkles, User } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -85,9 +75,7 @@ export default function AuthPage({ mode }) {
             </div>
           ) : (
             <>
-              <p className="auth-kicker">
-                {isLogin ? 'Log in' : 'Create your account'}
-              </p>
+              <p className="auth-kicker">{isLogin ? 'Log in' : 'Create your account'}</p>
               <h1 className="auth-title">
                 {isLogin ? (
                   <>
@@ -216,7 +204,7 @@ export default function AuthPage({ mode }) {
               </p>
 
               <Link to="/" className="auth-guest">
-                ← Just browsing  back to MindPath
+                ← Just browsing back to MindPath
               </Link>
             </>
           )}

@@ -1,16 +1,48 @@
-# React + Vite
+# MindPath
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An assessment-led mental-wellness web app (demo build). Take a short self-assessment,
+get a deterministic scored report, and follow a matching daily-audio plan, ebooks,
+counselling, and free music. React + Vite single-page app with no backend — all content
+is served from static data modules.
 
-Currently, two official plugins are available:
+## Getting started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev      # http://localhost:5173
+```
 
-## React Compiler
+## Scripts
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Command                | What it does                                          |
+| ---------------------- | ----------------------------------------------------- |
+| `npm run dev`          | Start the Vite dev server with HMR                    |
+| `npm run build`        | Production build to `dist/`                           |
+| `npm run preview`      | Preview the production build locally                  |
+| `npm run lint`         | Run ESLint                                            |
+| `npm run format`       | Format `src/` with Prettier (data files excluded)     |
+| `npm run format:check` | Check formatting without writing                      |
 
-## Expanding the ESLint configuration
+## Project layout
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+src/
+  main.jsx      Entry point — mounts <App/> and imports stylesheets
+  App.jsx       Routes and layout
+  components/   Reusable UI components
+  pages/        One component per route
+  data/         Static content + pure helpers (hand-curated)
+  hooks/        Custom React hooks (useTheme)
+  lib/          Framework-agnostic helpers
+  styles/       Design tokens (index.css) + per-feature CSS in styles/pages/
+public/         Static assets
+```
+
+## Tech stack
+
+React 19 · Vite 8 · react-router-dom 7 · lucide-react · plain CSS (token-driven theming).
+
+## Contributing
+
+See [`CLAUDE.md`](./CLAUDE.md) for architecture, conventions, the theming system, and
+domain rules (non-clinical framing, deterministic scoring) before making changes.

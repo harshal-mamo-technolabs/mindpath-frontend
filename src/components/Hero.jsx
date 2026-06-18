@@ -66,9 +66,9 @@ export default function Hero() {
           </Reveal>
 
           <Reveal as="p" className="hero-sub" delay={0.16}>
-            Take a guided self-assessment, get a personal report that actually reads like
-            you  then follow a daily audio plan, ebooks, and counselling shaped around
-            your scores. Ten quiet minutes a day.
+            Take a guided self-assessment, get a personal report that actually reads like you then
+            follow a daily audio plan, ebooks, and counselling shaped around your scores. Ten quiet
+            minutes a day.
           </Reveal>
 
           <Reveal className="hero-actions" delay={0.24}>

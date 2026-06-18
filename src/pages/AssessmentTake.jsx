@@ -92,9 +92,9 @@ export default function AssessmentTake() {
             </span>
             <h1>Answer as this week&rsquo;s you.</h1>
             <p>
-              Not your best week, not your worst  just the one you&rsquo;re in. Each
-              statement asks how often it&rsquo;s true for you lately. There are no right
-              answers, only honest ones.
+              Not your best week, not your worst just the one you&rsquo;re in. Each statement asks
+              how often it&rsquo;s true for you lately. There are no right answers, only honest
+              ones.
             </p>
             <label className="take-name">
               What should your report call you? <small>(optional)</small>
@@ -111,8 +111,8 @@ export default function AssessmentTake() {
               Start <ArrowRight size={18} />
             </button>
             <p className="take-legal">
-              <ShieldCheck size={13} /> Self-reflection instrument  not a clinical or
-              diagnostic tool.
+              <ShieldCheck size={13} /> Self-reflection instrument not a clinical or diagnostic
+              tool.
             </p>
           </div>
         </main>

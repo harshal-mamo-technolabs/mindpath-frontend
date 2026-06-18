@@ -16,9 +16,8 @@ export default function Assessments() {
               Start where it <em>hurts most.</em>
             </Reveal>
             <Reveal as="p" className="lede" delay={0.16}>
-              Psychometric-style self-report instruments  thoughtful questions scored
-              across real dimensions, never a five-question quiz. Twenty topics, one
-              honest starting point.
+              Psychometric-style self-report instruments thoughtful questions scored across real
+              dimensions, never a five-question quiz. Twenty topics, one honest starting point.
             </Reveal>
           </div>
           <Reveal delay={0.2}>
@@ -73,7 +72,7 @@ export default function Assessments() {
                   </span>
                 </div>
               </Reveal>
-            )
+            ),
           )}
 
           <Reveal as={Link} to="/assessments" className="topic-card" delay={0.2}>
@@ -97,8 +96,8 @@ export default function Assessments() {
         </div>
 
         <Reveal as="p" className="bundle-note" delay={0.1}>
-          <strong>Bundle &amp; save</strong> Pair linked assessments  like Stress &amp;
-          Burnout → Emotional Intelligence  and save 30% on the chain.
+          <strong>Bundle &amp; save</strong> Pair linked assessments like Stress &amp; Burnout →
+          Emotional Intelligence and save 30% on the chain.
         </Reveal>
       </div>
     </section>

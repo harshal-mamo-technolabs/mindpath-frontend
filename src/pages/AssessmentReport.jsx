@@ -197,10 +197,10 @@ export default function AssessmentReport() {
               <Anchor size={18} />
             </span>
             <div>
-              <h3>Your anchor  {anchor.label}</h3>
+              <h3>Your anchor {anchor.label}</h3>
               <p>
-                At {scores.dims[anchor.key]}, this is the dimension holding you steadiest
-                right now. Your plan leans on it deliberately.
+                At {scores.dims[anchor.key]}, this is the dimension holding you steadiest right now.
+                Your plan leans on it deliberately.
               </p>
             </div>
           </article>
@@ -209,10 +209,10 @@ export default function AssessmentReport() {
               <Crosshair size={18} />
             </span>
             <div>
-              <h3>Your focus  {focus.label}</h3>
+              <h3>Your focus {focus.label}</h3>
               <p>
-                At {scores.dims[focus.key]}, this is where the work starts. The first
-                week of your plan is built around it.
+                At {scores.dims[focus.key]}, this is where the work starts. The first week of your
+                plan is built around it.
               </p>
             </div>
           </article>
@@ -235,9 +235,7 @@ export default function AssessmentReport() {
                   </div>
                   <div className="rp-dim-score">
                     <strong>{score}</strong>
-                    <span className={`band-chip ${bandMeta[band].cls}`}>
-                      {bandMeta[band].chip}
-                    </span>
+                    <span className={`band-chip ${bandMeta[band].cls}`}>{bandMeta[band].chip}</span>
                   </div>
                 </header>
                 <div className="rc-bar rp-bar">
@@ -266,7 +264,7 @@ export default function AssessmentReport() {
             <Headphones size={19} /> Your {a.plan.days}-day plan, sequenced from this report
           </h2>
           <p className="rp-plan-welcome">
-            <Mic size={15} /> &ldquo;Hi {name}  {a.plan.welcome}&rdquo;
+            <Mic size={15} /> &ldquo;Hi {name} {a.plan.welcome}&rdquo;
           </p>
           <div className="rp-sessions">
             {a.plan.sessions.map((s) => (
@@ -280,7 +278,9 @@ export default function AssessmentReport() {
               <span className="rp-session-day">
                 <Lock size={12} />
               </span>
-              <p>Days {a.plan.sessions.length + 1}–{a.plan.days}</p>
+              <p>
+                Days {a.plan.sessions.length + 1}–{a.plan.days}
+              </p>
               <small>one each morning</small>
             </div>
           </div>
@@ -298,7 +298,9 @@ export default function AssessmentReport() {
             <Link to="/#explore" className="rp-next-card">
               <BookOpen size={20} />
               <div>
-                <strong>&ldquo;{a.ebook}: {name}&rsquo;s {a.plan.days} Days&rdquo;</strong>
+                <strong>
+                  &ldquo;{a.ebook}: {name}&rsquo;s {a.plan.days} Days&rdquo;
+                </strong>
                 <small>Your personalized ebook, generated from these scores</small>
               </div>
             </Link>
@@ -313,7 +315,7 @@ export default function AssessmentReport() {
               <CalendarCheck size={20} />
               <div>
                 <strong>Retake in 60–90 days</strong>
-                <small>Watch these numbers move  that&rsquo;s the proof</small>
+                <small>Watch these numbers move that&rsquo;s the proof</small>
               </div>
             </Link>
           </div>
@@ -321,10 +323,10 @@ export default function AssessmentReport() {
 
         <footer className="rp-foot">
           <p>
-            <ShieldCheck size={14} /> This report is a self-reflection tool generated
-            from your answers by a fixed scoring framework. It is not a clinical
-            assessment, diagnosis, or treatment plan. If you&rsquo;re struggling, a
-            licensed professional is the right next step  and a brave one.
+            <ShieldCheck size={14} /> This report is a self-reflection tool generated from your
+            answers by a fixed scoring framework. It is not a clinical assessment, diagnosis, or
+            treatment plan. If you&rsquo;re struggling, a licensed professional is the right next
+            step and a brave one.
           </p>
           <div className="rp-foot-actions">
             <Link to="/assessments" className="btn btn-ghost">

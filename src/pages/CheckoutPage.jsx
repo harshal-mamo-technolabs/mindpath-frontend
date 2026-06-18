@@ -82,8 +82,8 @@ export default function CheckoutPage() {
           </Link>
           <h1>Start your {plan.name} plan</h1>
           <p className="checkout-lede">
-            {cycle === 'yearly' ? 'Billed yearly' : 'Billed monthly'} · cancel anytime from
-            your billing page.
+            {cycle === 'yearly' ? 'Billed yearly' : 'Billed monthly'} · cancel anytime from your
+            billing page.
           </p>
 
           <form onSubmit={pay} className="checkout-form">
@@ -141,7 +141,9 @@ export default function CheckoutPage() {
                 <span className="auth-input">
                   <input
                     value={card.cvc}
-                    onChange={(e) => setCard({ ...card, cvc: e.target.value.replace(/\D/g, '').slice(0, 4) })}
+                    onChange={(e) =>
+                      setCard({ ...card, cvc: e.target.value.replace(/\D/g, '').slice(0, 4) })
+                    }
                     placeholder="123"
                     inputMode="numeric"
                     required
@@ -163,7 +165,7 @@ export default function CheckoutPage() {
             </button>
 
             <p className="checkout-secure">
-              <ShieldCheck size={14} /> Demo checkout  no card is charged. Real payments are
+              <ShieldCheck size={14} /> Demo checkout no card is charged. Real payments are
               processed by Stripe.
             </p>
           </form>

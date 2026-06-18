@@ -2,8 +2,8 @@
    MindPath  /dashboard (the home hub, light theme)
    ============================================================ */
 .dash {
-  background: radial-gradient(720px 460px at 88% -8%, var(--lav-tint) 0%, transparent 58%),
-    var(--paper);
+  background:
+    radial-gradient(720px 460px at 88% -8%, var(--lav-tint) 0%, transparent 58%), var(--paper);
   min-height: 100dvh;
   padding: 124px 0 110px;
 }
@@ -91,7 +91,9 @@
   background: var(--surface);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   box-shadow: var(--shadow-soft);
-  transition: border-color 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 }
 
 .dash-theme-toggle:hover {
@@ -254,7 +256,7 @@
 }
 
 .dash-feature-scene::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 28px;
   right: 34px;
@@ -266,7 +268,7 @@
 }
 
 .dash-feature-scene::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -60px;
   left: -8%;
@@ -339,7 +341,11 @@
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.1);
   color: var(--ink-3);
-  transition: transform 0.2s var(--ease-out), background 0.2s, border-color 0.2s, color 0.2s;
+  transition:
+    transform 0.2s var(--ease-out),
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
 
 .dash-mood-btn:hover {
@@ -605,7 +611,7 @@
 }
 
 .dash-book::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 4px;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -686,7 +692,9 @@
   flex-direction: column;
   min-height: 200px;
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
 }
 
 .dash-upsell:hover {
@@ -825,7 +833,10 @@
   color: var(--ink);
   background: var(--surface);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s,
+    background 0.2s;
 }
 
 .dash-jump-chip svg:first-child {
@@ -842,7 +853,9 @@
   margin-left: -2px;
   opacity: 0;
   transform: translate(-4px, 0);
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 
 .dash-jump-chip:hover .dash-jump-arrow {

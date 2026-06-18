@@ -17,8 +17,8 @@ export default function Cta() {
             <em>Arrive somewhere lighter.</em>
           </h2>
           <p>
-            Twelve minutes of honest answers today. A clearer picture of yourself
-            tomorrow morning  and a path that walks with you after that.
+            Twelve minutes of honest answers today. A clearer picture of yourself tomorrow morning
+            and a path that walks with you after that.
           </p>
           <div className="cta-actions">
             <Link to="/assessments" className="btn btn-light">
@@ -34,7 +34,7 @@ export default function Cta() {
           </div>
           <span className="cta-referral">
             <Gift size={16} />
-            Walking with a friend helps  invite one, you both get a free session.
+            Walking with a friend helps invite one, you both get a free session.
           </span>
         </Reveal>
       </div>

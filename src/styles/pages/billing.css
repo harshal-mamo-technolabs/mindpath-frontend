@@ -51,7 +51,9 @@
   color: var(--ink-2);
   padding: 10px 22px;
   border-radius: 999px;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .pricing-toggle button.active {
@@ -93,7 +95,9 @@
   padding: 30px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
 }
 
 .plan-card:hover {
@@ -338,8 +342,8 @@
    ============================================================ */
 .checkout {
   min-height: 100dvh;
-  background: radial-gradient(800px 460px at 85% -10%, var(--lav-tint) 0%, transparent 58%),
-    var(--paper);
+  background:
+    radial-gradient(800px 460px at 85% -10%, var(--lav-tint) 0%, transparent 58%), var(--paper);
   display: flex;
   flex-direction: column;
 }
@@ -498,8 +502,8 @@
   text-align: center;
   gap: 12px;
   padding: 40px 24px;
-  background: radial-gradient(800px 460px at 50% -10%, var(--lav-tint) 0%, transparent 60%),
-    var(--paper);
+  background:
+    radial-gradient(800px 460px at 50% -10%, var(--lav-tint) 0%, transparent 60%), var(--paper);
 }
 
 .checkout-done h1 {
@@ -525,8 +529,8 @@
    Billing dashboard
    ============================================================ */
 .billing {
-  background: radial-gradient(700px 440px at 90% -8%, var(--lav-tint) 0%, transparent 58%),
-    var(--paper);
+  background:
+    radial-gradient(700px 440px at 90% -8%, var(--lav-tint) 0%, transparent 58%), var(--paper);
   min-height: 100dvh;
   padding: 130px 0 110px;
 }
@@ -768,7 +772,9 @@
   background: var(--ink);
   border-radius: 999px;
   padding: 10px 16px;
-  transition: background 0.2s, transform 0.2s var(--ease-out);
+  transition:
+    background 0.2s,
+    transform 0.2s var(--ease-out);
 }
 
 .bl-payg-btn:hover {
@@ -976,7 +982,9 @@
   place-items: center;
   color: var(--ink-3);
   flex: none;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .bl-inv-dl:hover {
@@ -1010,7 +1018,9 @@
   background: var(--danger);
   border-radius: 999px;
   padding: 13px 22px;
-  transition: filter 0.2s, transform 0.2s var(--ease-out);
+  transition:
+    filter 0.2s,
+    transform 0.2s var(--ease-out);
 }
 
 .bl-cancel-confirm:hover {

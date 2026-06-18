@@ -1,0 +1,8 @@
+dist
+node_modules
+package-lock.json
+
+# Hand-curated demo content laid out as compact one-row-per-line tables.
+# Auto-formatting either explodes the rows or collapses the wrapped prose,
+# so it is maintained by hand instead.
+src/data

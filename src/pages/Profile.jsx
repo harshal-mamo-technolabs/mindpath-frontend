@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   Bell,
   Check,
@@ -38,7 +38,9 @@ function TimePicker({ value, onChange }) {
 
   useEffect(() => {
     if (!open) return
-    const handle = (e) => { if (!ref.current?.contains(e.target)) setOpen(false) }
+    const handle = (e) => {
+      if (!ref.current?.contains(e.target)) setOpen(false)
+    }
     document.addEventListener('mousedown', handle)
     return () => document.removeEventListener('mousedown', handle)
   }, [open])
@@ -82,7 +84,10 @@ function TimePicker({ value, onChange }) {
               <button
                 key={t}
                 className={`pf-time-slot ${value === t ? 'active' : ''}`}
-                onClick={() => { onChange(t); setOpen(false) }}
+                onClick={() => {
+                  onChange(t)
+                  setOpen(false)
+                }}
               >
                 {t.replace(` ${tab}`, '')}
               </button>
@@ -145,7 +150,7 @@ export default function Profile() {
           if (e.isIntersecting) setActive(e.target.id)
         })
       },
-      { rootMargin: '-45% 0px -50% 0px' }
+      { rootMargin: '-45% 0px -50% 0px' },
     )
     SECTIONS.forEach(([id]) => {
       const el = sectionRefs.current[id]
@@ -231,7 +236,7 @@ export default function Profile() {
                 <h2>
                   <User size={18} /> Account
                 </h2>
-                <p>The basics  and the name your reports and audio greet you by.</p>
+                <p>The basics and the name your reports and audio greet you by.</p>
               </div>
 
               <div className="pf-avatar-row">
@@ -294,14 +299,14 @@ export default function Profile() {
                 <h2>
                   <Bell size={18} /> Notifications &amp; reminders
                 </h2>
-                <p>Gentle nudges keep the daily habit alive  set them to fit your life.</p>
+                <p>Gentle nudges keep the daily habit alive set them to fit your life.</p>
               </div>
 
               <div className="pf-rows">
                 <div className="pf-row">
                   <div>
                     <strong>Daily session reminder</strong>
-                    <small>“Day 5 is ready”  a nudge when your next session unlocks.</small>
+                    <small>“Day 5 is ready” a nudge when your next session unlocks.</small>
                   </div>
                   <div className="pf-row-control">
                     {prefs.dailyReminder && (
@@ -318,9 +323,15 @@ export default function Profile() {
                 <div className="pf-row">
                   <div>
                     <strong>Mood check-in nudge</strong>
-                    <small>A quiet prompt to log how you&rsquo;re arriving, before each session.</small>
+                    <small>
+                      A quiet prompt to log how you&rsquo;re arriving, before each session.
+                    </small>
                   </div>
-                  <Toggle on={prefs.moodNudge} onChange={setPref('moodNudge')} label="Mood check-in nudge" />
+                  <Toggle
+                    on={prefs.moodNudge}
+                    onChange={setPref('moodNudge')}
+                    label="Mood check-in nudge"
+                  />
                 </div>
 
                 <div className="pf-row">
@@ -328,7 +339,11 @@ export default function Profile() {
                     <strong>Weekly progress email</strong>
                     <small>Your mood trend and streak, summed up every Sunday.</small>
                   </div>
-                  <Toggle on={prefs.weeklyEmail} onChange={setPref('weeklyEmail')} label="Weekly progress email" />
+                  <Toggle
+                    on={prefs.weeklyEmail}
+                    onChange={setPref('weeklyEmail')}
+                    label="Weekly progress email"
+                  />
                 </div>
 
                 <div className="pf-row">
@@ -336,7 +351,11 @@ export default function Profile() {
                     <strong>Day-unlock push</strong>
                     <small>A push notification the moment tomorrow&rsquo;s session opens.</small>
                   </div>
-                  <Toggle on={prefs.dayUnlock} onChange={setPref('dayUnlock')} label="Day-unlock push" />
+                  <Toggle
+                    on={prefs.dayUnlock}
+                    onChange={setPref('dayUnlock')}
+                    label="Day-unlock push"
+                  />
                 </div>
 
                 <div className="pf-row">
@@ -344,7 +363,11 @@ export default function Profile() {
                     <strong>Product news</strong>
                     <small>New assessment topics and features. Rare, never noisy.</small>
                   </div>
-                  <Toggle on={prefs.productNews} onChange={setPref('productNews')} label="Product news" />
+                  <Toggle
+                    on={prefs.productNews}
+                    onChange={setPref('productNews')}
+                    label="Product news"
+                  />
                 </div>
               </div>
             </section>
@@ -359,7 +382,7 @@ export default function Profile() {
                 <h2>
                   <Gift size={18} /> Referrals
                 </h2>
-                <p>Walking with a friend helps  and you both get a free counselling session.</p>
+                <p>Walking with a friend helps and you both get a free counselling session.</p>
               </div>
 
               <div className="pf-referral">
@@ -403,7 +426,10 @@ export default function Profile() {
               </div>
 
               <div className="pf-rows">
-                <button className="pf-row pf-row-btn" onClick={() => say('Export started  a demo.')}>
+                <button
+                  className="pf-row pf-row-btn"
+                  onClick={() => say('Export started  a demo.')}
+                >
                   <div>
                     <strong>Export my data</strong>
                     <small>Download every report, score, and mood log as a file.</small>
@@ -413,15 +439,17 @@ export default function Profile() {
               </div>
 
               <p className="pf-disclaimer">
-                <Shield size={14} /> MindPath assessments are self-reflection tools, not clinical
-                or diagnostic services. Your data is never sold. If you&rsquo;re in crisis, please
+                <Shield size={14} /> MindPath assessments are self-reflection tools, not clinical or
+                diagnostic services. Your data is never sold. If you&rsquo;re in crisis, please
                 reach out to local emergency services or a crisis line.
               </p>
 
               <div className="pf-danger">
                 <div>
                   <strong>Delete account</strong>
-                  <small>Permanently removes your reports, plans, and shelf. This cannot be undone.</small>
+                  <small>
+                    Permanently removes your reports, plans, and shelf. This cannot be undone.
+                  </small>
                 </div>
                 <button className="pf-danger-btn" onClick={() => setConfirmDelete(true)}>
                   <Trash2 size={15} /> Delete
@@ -456,8 +484,8 @@ export default function Profile() {
             </span>
             <h3>Delete your account?</h3>
             <p>
-              This would permanently erase your reports, audio progress, and shelf. In this
-              demo, nothing is actually deleted.
+              This would permanently erase your reports, audio progress, and shelf. In this demo,
+              nothing is actually deleted.
             </p>
             <div className="ap-modal-actions">
               <button
@@ -473,7 +501,11 @@ export default function Profile() {
                 Keep my account
               </button>
             </div>
-            <button className="ap-modal-close" onClick={() => setConfirmDelete(false)} aria-label="Close">
+            <button
+              className="ap-modal-close"
+              onClick={() => setConfirmDelete(false)}
+              aria-label="Close"
+            >
               <X size={18} />
             </button>
           </div>

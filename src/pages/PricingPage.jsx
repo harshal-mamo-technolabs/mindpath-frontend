@@ -51,8 +51,8 @@ export default function PricingPage() {
             Choose how you <em>walk the path.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.14}>
-            A monthly plan unlocks a set number of assessments, ebooks, and counselling
-            minutes. Run out? You only ever pay for the extras you choose.
+            A monthly plan unlocks a set number of assessments, ebooks, and counselling minutes. Run
+            out? You only ever pay for the extras you choose.
           </Reveal>
 
           <Reveal className="pricing-toggle" delay={0.2}>
@@ -87,10 +87,7 @@ export default function PricingPage() {
                 >
                   {plan.popular && <span className="plan-tag">Most popular</span>}
                   <header className="plan-card-head">
-                    <span
-                      className="plan-dot"
-                      style={{ background: plan.bg, color: plan.fg }}
-                    >
+                    <span className="plan-dot" style={{ background: plan.bg, color: plan.fg }}>
                       <Sparkles size={18} />
                     </span>
                     <h2>{plan.name}</h2>
@@ -151,8 +148,8 @@ export default function PricingPage() {
               <div>
                 <h3>Prefer to pay as you go?</h3>
                 <p>
-                  No plan needed  and when a plan&rsquo;s allowance runs out, this is exactly
-                  what kicks in. Buy only what you need.
+                  No plan needed and when a plan&rsquo;s allowance runs out, this is exactly what
+                  kicks in. Buy only what you need.
                 </p>
               </div>
             </div>

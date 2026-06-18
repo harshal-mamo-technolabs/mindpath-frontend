@@ -1,16 +1,5 @@
 import { useState } from 'react'
-import {
-  Annoyed,
-  Bell,
-  Frown,
-  Laugh,
-  Meh,
-  Mic,
-  Pause,
-  Play,
-  Smile,
-  Sparkles,
-} from 'lucide-react'
+import { Annoyed, Bell, Frown, Laugh, Meh, Mic, Pause, Play, Smile, Sparkles } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
 const MOODS = [
@@ -97,7 +86,13 @@ function DayTrail() {
               cy={nd.y}
               r={nd.state === 'today' ? 17 : nd.state === 'done' ? 13 : 9}
             />
-            <text className="dt-num" x={nd.x} y={nd.y} textAnchor="middle" dominantBaseline="central">
+            <text
+              className="dt-num"
+              x={nd.x}
+              y={nd.y}
+              textAnchor="middle"
+              dominantBaseline="central"
+            >
               {nd.n}
             </text>
           </g>
@@ -152,9 +147,8 @@ export default function AudioPlan() {
             Then, every day, <em>a small ritual.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.16}>
-            Your report sequences a day-by-day plan of calming sessions  chosen and
-            ordered for your scores. One unlocks each morning, so the path becomes a
-            habit, not a binge.
+            Your report sequences a day-by-day plan of calming sessions chosen and ordered for your
+            scores. One unlocks each morning, so the path becomes a habit, not a binge.
           </Reveal>
         </div>
 
@@ -188,7 +182,7 @@ export default function AudioPlan() {
               <MoodSpark />
               <p className="mood-spark-note">
                 <Sparkles size={14} />
-                Your mood trend, mapped over the plan  <strong>up 32% since day 1.</strong>
+                Your mood trend, mapped over the plan <strong>up 32% since day 1.</strong>
               </p>
             </Reveal>
           </div>
@@ -197,8 +191,8 @@ export default function AudioPlan() {
             <div className={`player ${playing ? 'playing' : ''}`}>
               <p className="player-welcome">
                 <Mic size={17} />
-                &ldquo;Hi Maya  this plan begins with your evenings, because that&rsquo;s
-                where your report says rest slips away…&rdquo;
+                &ldquo;Hi Maya this plan begins with your evenings, because that&rsquo;s where your
+                report says rest slips away…&rdquo;
               </p>
 
               <div className="player-cover" aria-hidden="true">
@@ -242,8 +236,7 @@ export default function AudioPlan() {
               <p className="player-foot">
                 <Bell size={15} />
                 <span>
-                  <strong>Day 5 is ready tomorrow at 7:00.</strong> We&rsquo;ll nudge you,
-                  gently.
+                  <strong>Day 5 is ready tomorrow at 7:00.</strong> We&rsquo;ll nudge you, gently.
                 </span>
               </p>
             </div>

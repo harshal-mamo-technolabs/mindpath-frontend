@@ -41,7 +41,11 @@ export function DawnScene(p) {
 export function RainScene(p) {
   return (
     <Scene tint="#e6e4f5" line="#4d3da8" {...p}>
-      <path d="M120 86 a26 26 0 0 1 52 -6 a22 22 0 0 1 36 18 a20 20 0 0 1 -8 38 H132 a24 24 0 0 1 -12 -50 z" fill="#fff" fillOpacity="0.55" />
+      <path
+        d="M120 86 a26 26 0 0 1 52 -6 a22 22 0 0 1 36 18 a20 20 0 0 1 -8 38 H132 a24 24 0 0 1 -12 -50 z"
+        fill="#fff"
+        fillOpacity="0.55"
+      />
       <path d="M120 86 a26 26 0 0 1 52 -6 a22 22 0 0 1 36 18 a20 20 0 0 1 -8 38 H132 a24 24 0 0 1 -12 -50 z" />
       {[0, 1, 2, 3, 4, 5, 6].map((i) => (
         <line key={i} x1={120 + i * 26} y1="150" x2={112 + i * 26} y2="180" />
@@ -76,7 +80,10 @@ export function ForestScene(p) {
         [250, 196, 64],
         [320, 196, 40],
       ].map(([x, base, h], i) => (
-        <path key={i} d={`M${x} ${base} L${x} ${base - h} M${x - 16} ${base - h * 0.4} L${x} ${base - h} L${x + 16} ${base - h * 0.4} M${x - 12} ${base - h * 0.72} L${x} ${base - h} L${x + 12} ${base - h * 0.72}`} />
+        <path
+          key={i}
+          d={`M${x} ${base} L${x} ${base - h} M${x - 16} ${base - h * 0.4} L${x} ${base - h} L${x + 16} ${base - h * 0.4} M${x - 12} ${base - h * 0.72} L${x} ${base - h} L${x + 12} ${base - h * 0.72}`}
+        />
       ))}
     </Scene>
   )
@@ -96,10 +103,24 @@ export function MountainScene(p) {
 export function NightScene(p) {
   return (
     <Scene tint="#dedcef" line="#2c2654" {...p}>
-      <path d="M300 56 a30 30 0 1 0 26 46 a24 24 0 0 1 -26 -46 z" fill="#f7e3c4" fillOpacity="0.5" />
+      <path
+        d="M300 56 a30 30 0 1 0 26 46 a24 24 0 0 1 -26 -46 z"
+        fill="#f7e3c4"
+        fillOpacity="0.5"
+      />
       <path d="M300 56 a30 30 0 1 0 26 46 a24 24 0 0 1 -26 -46 z" />
-      {[[80, 70], [140, 50], [110, 110], [200, 80], [60, 130]].map(([x, y], i) => (
-        <path key={i} d={`M${x} ${y - 5} L${x} ${y + 5} M${x - 5} ${y} L${x + 5} ${y}`} strokeOpacity="0.7" />
+      {[
+        [80, 70],
+        [140, 50],
+        [110, 110],
+        [200, 80],
+        [60, 130],
+      ].map(([x, y], i) => (
+        <path
+          key={i}
+          d={`M${x} ${y - 5} L${x} ${y + 5} M${x - 5} ${y} L${x + 5} ${y}`}
+          strokeOpacity="0.7"
+        />
       ))}
       <path d="M0 200 C 90 168 150 170 220 196 S 340 214 400 190" fill="#fff" fillOpacity="0.25" />
     </Scene>
@@ -109,7 +130,11 @@ export function NightScene(p) {
 export function EmberScene(p) {
   return (
     <Scene tint="#f6e6d6" line="#b05f2c" {...p}>
-      <path d="M200 70 c 22 26 30 44 30 60 a30 30 0 0 1 -60 0 c 0 -14 8 -26 16 -36 c 2 9 7 13 13 15 c -8 -14 -6 -27 1 -39 z" fill="#f7d3a8" fillOpacity="0.5" />
+      <path
+        d="M200 70 c 22 26 30 44 30 60 a30 30 0 0 1 -60 0 c 0 -14 8 -26 16 -36 c 2 9 7 13 13 15 c -8 -14 -6 -27 1 -39 z"
+        fill="#f7d3a8"
+        fillOpacity="0.5"
+      />
       <path d="M200 70 c 22 26 30 44 30 60 a30 30 0 0 1 -60 0 c 0 -14 8 -26 16 -36 c 2 9 7 13 13 15 c -8 -14 -6 -27 1 -39 z" />
       <line x1="150" y1="196" x2="250" y2="196" />
       <line x1="160" y1="204" x2="240" y2="188" strokeOpacity="0.6" />
@@ -133,7 +158,15 @@ export function FocusScene(p) {
   return (
     <Scene tint="#ece8f8" line="#4d3da8" {...p}>
       {[0, 1, 2, 3].map((i) => (
-        <line key={i} x1="60" y1={80 + i * 30} x2="340" y2={80 + i * 30} strokeOpacity={0.3 + i * 0.18} strokeDasharray={i % 2 ? '2 10' : '0'} />
+        <line
+          key={i}
+          x1="60"
+          y1={80 + i * 30}
+          x2="340"
+          y2={80 + i * 30}
+          strokeOpacity={0.3 + i * 0.18}
+          strokeDasharray={i % 2 ? '2 10' : '0'}
+        />
       ))}
       <circle cx="200" cy="125" r="8" fill="#4d3da8" stroke="none" />
     </Scene>

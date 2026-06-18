@@ -184,12 +184,3 @@ export const AUDIO_PLANS = [
     ],
   },
 ]
-
-/** "7 min" -> 420 (seconds) for the player timeline. */
-export const lenToSeconds = (len) => parseInt(len, 10) * 60
-
-export const fmtTime = (secs) => {
-  const m = Math.floor(secs / 60)
-  const s = Math.round(secs % 60)
-  return `${m}:${String(s).padStart(2, '0')}`
-}

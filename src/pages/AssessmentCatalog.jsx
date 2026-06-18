@@ -1,5 +1,13 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, BellRing, Clock, Layers, ListChecks, ShieldCheck, Sparkles } from 'lucide-react'
+import {
+  ArrowRight,
+  BellRing,
+  Clock,
+  Layers,
+  ListChecks,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import { ASSESSMENTS, COMING_SOON } from '../data/assessments.js'
 
@@ -20,16 +28,16 @@ export default function AssessmentCatalog() {
             Twenty paths. <em>Start with the one that aches.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.16}>
-            Every MindPath journey begins with one honest assessment  a
-            psychometric-style questionnaire scored across real dimensions. Pick the
-            topic that names what you&rsquo;re carrying.
+            Every MindPath journey begins with one honest assessment a psychometric-style
+            questionnaire scored across real dimensions. Pick the topic that names what you&rsquo;re
+            carrying.
           </Reveal>
           <Reveal className="catalog-trust" delay={0.24}>
             <span>
               <ShieldCheck size={15} /> Self-report instruments, not diagnosis
             </span>
             <span>
-              <Sparkles size={15} /> Deterministic reports  no AI guesswork
+              <Sparkles size={15} /> Deterministic reports no AI guesswork
             </span>
             <span>
               <Layers size={15} /> Bundles save 30%
@@ -103,7 +111,7 @@ export default function AssessmentCatalog() {
             On the path ahead
           </Reveal>
           <Reveal as="p" className="lede" delay={0.08}>
-            The next topics being calibrated  one new assessment lands each month.
+            The next topics being calibrated one new assessment lands each month.
           </Reveal>
           <div className="soon-grid">
             {COMING_SOON.map(({ title, icon: Icon, dims }, i) => (
