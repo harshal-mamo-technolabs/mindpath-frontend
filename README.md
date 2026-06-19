@@ -42,6 +42,24 @@ public/         Static assets
 
 React 19 · Vite 8 · react-router-dom 7 · lucide-react · plain CSS (token-driven theming).
 
+## Deploying to Vercel
+
+Vercel auto-detects Vite (build `vite build`, output `dist`). The repo includes a
+[`vercel.json`](./vercel.json) that rewrites all routes to `index.html` so client-side
+routes (`/dashboard`, `/pricing`, …) work on refresh and deep links.
+
+Set these **Environment Variables** in the Vercel project (Settings → Environment
+Variables) — they are inlined at build time, so a change requires a redeploy:
+
+| Variable | Example | Notes |
+| --- | --- | --- |
+| `VITE_API_BASE_URL` | `https://api.yourdomain.com` | Production backend URL (no trailing slash, no `/api`). |
+| `VITE_STRIPE_PUBLISHABLE_KEY` | `pk_live_…` / `pk_test_…` | Stripe **publishable** key only. |
+
+Then make sure the backend **allows the Vercel domain in CORS** and that Stripe’s
+**webhook** points at the production backend (so subscriptions activate). The Node
+version is pinned to 22 via [`.nvmrc`](./.nvmrc) / `package.json` `engines`.
+
 ## Contributing
 
 See [`CLAUDE.md`](./CLAUDE.md) for architecture, conventions, the theming system, and
