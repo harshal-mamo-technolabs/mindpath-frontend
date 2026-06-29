@@ -112,6 +112,100 @@
   text-decoration: underline;
 }
 
+/* exhausted-on-Stripe banner — pay-as-you-go has kicked in */
+.pricing-current-banner.exhausted {
+  background: var(--peach-soft);
+  border-color: rgba(217, 139, 80, 0.4);
+}
+
+.pricing-current-banner.exhausted > svg {
+  color: #a85a22;
+}
+
+.pricing-current-banner.exhausted .pricing-current-link {
+  color: #a85a22;
+}
+
+/* covered — active plan with assessments left, so pricing is hidden */
+.pricing-covered,
+.pricing-blocked {
+  max-width: 620px;
+  margin: 10px auto 0;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-soft);
+  padding: 42px 38px;
+}
+
+.pricing-covered-ico,
+.pricing-blocked-ico {
+  display: inline-grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  margin-bottom: 16px;
+}
+
+.pricing-covered-ico {
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+}
+
+.pricing-blocked-ico {
+  background: var(--peach-soft);
+  color: #a85a22;
+}
+
+.pricing-covered h2,
+.pricing-blocked h2 {
+  font-family: var(--font-display);
+  font-weight: 480;
+  font-size: clamp(24px, 3vw, 30px);
+  letter-spacing: -0.01em;
+  line-height: 1.12;
+}
+
+.pricing-covered p,
+.pricing-blocked p {
+  margin-top: 12px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.pricing-covered-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pricing-blocked-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px !important;
+  font-weight: 700;
+  color: var(--ink) !important;
+}
+
+.pricing-blocked-reset svg {
+  color: #a85a22;
+}
+
+.pricing-blocked-note {
+  font-size: 14px !important;
+  color: var(--ink-3) !important;
+}
+
+.pricing-blocked .btn {
+  margin-top: 22px;
+}
+
 .plan-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -974,6 +1068,10 @@
   font-size: 12.5px;
   font-weight: 800;
   color: var(--ink-3);
+}
+
+.bl-allowance-left.bl-used-up {
+  color: var(--danger);
 }
 
 .bl-badge-payg {

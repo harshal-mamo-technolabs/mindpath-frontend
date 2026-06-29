@@ -26,6 +26,21 @@ export function login({ email, password }) {
   return apiPost('/api/auth/login', { email, password })
 }
 
+/**
+ * MSISDN (carrier-billing) signup. Requires name (2–50), gender
+ * (male/female/other), age (1–120) and msisdn (8–15 digits, optional +).
+ * Creates the account AND an active subscription in one call. Resolves to
+ * { token, user, subscription }.
+ */
+export function msisdnSignup({ name, gender, age, msisdn }) {
+  return apiPost('/api/auth/msisdn/signup', { name, gender, age, msisdn })
+}
+
+/** MSISDN (carrier-billing) login by mobile number. Resolves to { token, user }. */
+export function msisdnLogin({ msisdn }) {
+  return apiPost('/api/auth/msisdn/login', { msisdn })
+}
+
 // ---------- reactive session store ----------
 
 function readFromStorage() {

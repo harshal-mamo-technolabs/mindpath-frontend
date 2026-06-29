@@ -21,6 +21,8 @@ import {
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import { useAuth } from '../hooks/useAuth.js'
+import { isMsisdnMode } from '../lib/billingMode.js'
+import { getMyMsisdnSubscription } from '../lib/msisdn.js'
 import { stripeConfigured, stripePromise } from '../lib/stripe.js'
 import { formatPrice } from '../lib/plans.js'
 import {
@@ -164,16 +166,19 @@ export default function BillingPage() {
     let alive = true
     ;(async () => {
       try {
-        const me = await getMySubscription()
+        const me = await (isMsisdnMode ? getMyMsisdnSubscription() : getMySubscription())
         if (!alive) return
         if (!me) {
           setStatus('none')
           return
         }
-        const [cardList, inv] = await Promise.all([
-          getPaymentMethods().catch(() => []),
-          getInvoices().catch(() => []),
-        ])
+        // MSISDN has no card/invoice management — skip those calls.
+        const [cardList, inv] = isMsisdnMode
+          ? [[], []]
+          : await Promise.all([
+              getPaymentMethods().catch(() => []),
+              getInvoices().catch(() => []),
+            ])
         if (!alive) return
         setSub(me)
         setCards(cardList || [])
@@ -325,10 +330,21 @@ export default function BillingPage() {
             <Sparkles size={22} />
           </span>
           <h1>No active subscription</h1>
-          <p>Choose a plan to unlock assessments, ebooks, and counselling each month.</p>
-          <Link to="/pricing" className="btn btn-primary">
-            View plans <ArrowRight size={16} />
-          </Link>
+          {isMsisdnMode ? (
+            <>
+              <p>Sign up with your mobile number to start your plan  it&rsquo;s billed to your phone.</p>
+              <Link to="/signup" className="btn btn-primary">
+                Create your account <ArrowRight size={16} />
+              </Link>
+            </>
+          ) : (
+            <>
+              <p>Choose a plan to unlock assessments, ebooks, and counselling each month.</p>
+              <Link to="/pricing" className="btn btn-primary">
+                View plans <ArrowRight size={16} />
+              </Link>
+            </>
+          )}
         </div>
       </main>
     )
@@ -367,7 +383,9 @@ export default function BillingPage() {
             </div>
           </div>
           <div className="bl-plan-actions">
-            {sub.cancelAtPeriodEnd ? (
+            {isMsisdnMode ? (
+              <span className="bl-cancel-note">Billed to your mobile</span>
+            ) : sub.cancelAtPeriodEnd ? (
               <span className="bl-cancel-note">Cancels {endsOn}</span>
             ) : (
               sub.status !== 'canceled' && (
@@ -383,7 +401,10 @@ export default function BillingPage() {
         <section className="bl-section">
           <h2 className="bl-section-title">This cycle&rsquo;s allowance</h2>
           <p className="bl-section-sub">
-            Resets {endsOn}. When an allowance is used up, that item switches to pay-as-you-go.
+            Resets {endsOn}.{' '}
+            {isMsisdnMode
+              ? 'When an allowance is used up it refreshes next cycle  mobile billing has no pay-as-you-go.'
+              : 'When an allowance is used up, that item switches to pay-as-you-go.'}
           </p>
 
           <div className="bl-allowance-grid">
@@ -405,9 +426,13 @@ export default function BillingPage() {
                     </span>
                     <h3>{row.label}</h3>
                     {exhausted ? (
-                      <span className="bl-badge-payg">
-                        <Zap size={12} /> Pay-as-you-go
-                      </span>
+                      isMsisdnMode ? (
+                        <span className="bl-allowance-left bl-used-up">Used up</span>
+                      ) : (
+                        <span className="bl-badge-payg">
+                          <Zap size={12} /> Pay-as-you-go
+                        </span>
+                      )
                     ) : (
                       <span className="bl-allowance-left">{unlimited ? '∞' : left} left</span>
                     )}
@@ -434,11 +459,17 @@ export default function BillingPage() {
                   </p>
 
                   {exhausted ? (
-                    <div className="bl-payg-cta">
-                      <Link to={row.to} className="bl-payg-btn">
-                        <Plus size={14} /> {row.cta}
-                      </Link>
-                    </div>
+                    isMsisdnMode ? (
+                      <p className="bl-allowance-ok">
+                        <RefreshCcw size={13} /> Refreshes {endsOn}
+                      </p>
+                    ) : (
+                      <div className="bl-payg-cta">
+                        <Link to={row.to} className="bl-payg-btn">
+                          <Plus size={14} /> {row.cta}
+                        </Link>
+                      </div>
+                    )
                   ) : (
                     <p className="bl-allowance-ok">
                       <Check size={13} /> Included in your plan
@@ -450,7 +481,8 @@ export default function BillingPage() {
           </div>
         </section>
 
-        {/* payment methods */}
+        {/* payment methods (Stripe only) */}
+        {!isMsisdnMode && (
         <section className="bl-section bl-pay">
           <div className="bl-invoices-head">
             <h2 className="bl-section-title">Payment methods</h2>
@@ -502,8 +534,10 @@ export default function BillingPage() {
           )}
           <p className="bl-pay-note">Securely stored by Stripe.</p>
         </section>
+        )}
 
-        {/* billing history */}
+        {/* billing history (Stripe only) */}
+        {!isMsisdnMode && (
         <section className="bl-section">
           <div className="bl-invoices-head">
             <h2 className="bl-section-title">Billing history</h2>
@@ -556,6 +590,7 @@ export default function BillingPage() {
             </div>
           )}
         </section>
+        )}
       </div>
 
       {/* toast */}

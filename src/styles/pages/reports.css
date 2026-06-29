@@ -6,6 +6,57 @@
   min-height: 100dvh;
 }
 
+/* ------- loading / error / empty states ------- */
+.reports-state {
+  min-height: 70dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+  padding: 120px 24px 60px;
+  color: var(--ink-2);
+}
+
+.reports-state svg {
+  color: var(--violet);
+}
+
+.reports-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 48px 28px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+.reports-empty svg {
+  color: var(--violet);
+}
+
+.reports-empty h2 {
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 26px;
+}
+
+.reports-empty p {
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.reports-empty .btn {
+  margin-top: 8px;
+}
+
 /* ------- hero ------- */
 .reports-hero {
   position: relative;

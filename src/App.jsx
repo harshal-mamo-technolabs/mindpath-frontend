@@ -6,6 +6,7 @@ import AssessmentCatalog from './pages/AssessmentCatalog.jsx'
 import AssessmentDetail from './pages/AssessmentDetail.jsx'
 import AssessmentTake from './pages/AssessmentTake.jsx'
 import AssessmentReport from './pages/AssessmentReport.jsx'
+import ReportView from './pages/ReportView.jsx'
 import AudioLibrary from './pages/AudioLibrary.jsx'
 import ReportsLibrary from './pages/ReportsLibrary.jsx'
 import EbooksLibrary from './pages/EbooksLibrary.jsx'
@@ -67,6 +68,7 @@ export default function App() {
         {/* Focused, chrome-free flows */}
         <Route path="/assessments/:id/take" element={<AssessmentTake />} />
         <Route path="/assessments/:id/report" element={<AssessmentReport />} />
+        <Route path="/reports/:scoreId" element={<ReportView />} />
         <Route path="/login" element={<AuthPage mode="login" />} />
         <Route path="/signup" element={<AuthPage mode="signup" />} />
         <Route path="/checkout" element={<CheckoutPage />} />

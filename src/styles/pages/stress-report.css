@@ -1,0 +1,1335 @@
+/* ============================================================
+   Stress & Burnout report (rendered after submit in the take flow)
+   ============================================================ */
+
+.take-report-stage {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 28px 20px 96px;
+}
+
+.srep {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ---- toolbar ---- */
+.srep-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.srep-tool-btn {
+  padding: 9px 16px;
+  font-size: 13.5px;
+}
+
+/* ---- shared card ---- */
+.srep-card {
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: 22px;
+  padding: 26px 28px;
+  box-shadow: var(--shadow-soft);
+}
+
+.srep-h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: clamp(20px, 2.5vw, 25px);
+  letter-spacing: -0.01em;
+  margin-bottom: 18px;
+}
+
+.srep-h2 svg {
+  color: var(--violet);
+}
+
+.srep-sub,
+.srep-foot-note {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  margin-top: 10px;
+}
+
+.srep-sub {
+  margin-top: -8px;
+  margin-bottom: 18px;
+}
+
+/* ---- 1. header ---- */
+.srep-head {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 30px 30px 26px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(100, 80, 207, 0.12), rgba(100, 80, 207, 0.03));
+  border: 1px solid rgba(100, 80, 207, 0.16);
+}
+
+.srep-avatar {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--violet);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 24px;
+}
+
+.srep-kicker {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.srep-head-text h1 {
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: clamp(24px, 3.4vw, 34px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 6px 0 10px;
+}
+
+.srep-head-meta {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.srep-head-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 12px;
+}
+
+.srep-head-note svg {
+  color: var(--sage);
+}
+
+/* ---- 2. snapshot ---- */
+.srep-snapshot {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.srep-snapshot-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.srep-gauge {
+  position: relative;
+  width: 220px;
+}
+
+.srep-gauge-track {
+  stroke: rgba(var(--line-rgb), 0.14);
+}
+
+.srep-gauge-val {
+  transition: stroke-dashoffset 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.srep-gauge-num {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  text-align: center;
+}
+
+.srep-gauge-num strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 46px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.srep-gauge-num small {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+.srep-archetype {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.srep-archetype svg {
+  color: var(--violet);
+}
+
+.srep-snapshot-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.srep-mini {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.srep-mini-stat {
+  background: var(--surface-2);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.srep-mini-stat svg {
+  color: var(--violet);
+  margin-bottom: 4px;
+}
+
+.srep-mini-stat strong {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.srep-mini-stat small {
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+/* ---- band chips (shared palette) ---- */
+.band-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  border-radius: 999px;
+  padding: 4px 11px;
+  white-space: nowrap;
+}
+
+.band-good {
+  background: rgba(95, 153, 122, 0.16);
+  color: #3f7256;
+}
+
+.band-mid {
+  background: rgba(224, 162, 60, 0.18);
+  color: #9a6a1c;
+}
+
+.band-hot {
+  background: rgba(210, 101, 74, 0.16);
+  color: #b34e35;
+}
+
+/* growth (all-strength profiles, e.g. EI) — a calm blue, never alarm */
+.band-blue {
+  background: rgba(90, 120, 201, 0.16);
+  color: #41589e;
+}
+
+/* ---- 3. radar + drivers ---- */
+.srep-radar-wrap {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 26px;
+  align-items: center;
+}
+
+.srep-radar-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.srep-radar {
+  width: 260px;
+  height: 260px;
+}
+
+.srep-radar-grid {
+  fill: none;
+  stroke: rgba(var(--line-rgb), 0.12);
+}
+
+.srep-radar-spoke {
+  stroke: rgba(var(--line-rgb), 0.1);
+}
+
+.srep-radar-shape {
+  fill: rgba(100, 80, 207, 0.26);
+  stroke: var(--violet);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  transition: all 0.8s ease;
+}
+
+.srep-radar-dot {
+  fill: var(--violet);
+  stroke: #fff;
+  stroke-width: 1.5;
+}
+
+.srep-radar-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  fill: var(--ink-2);
+}
+
+.srep-radar-cap {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 6px;
+  text-align: center;
+}
+
+.srep-drivers h3 {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+
+.srep-driver {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.srep-driver:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.srep-driver-num {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--violet);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.srep-driver-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.srep-driver-top strong {
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.srep-driver-text p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.srep-driver-none {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* ---- 4. category detail ---- */
+.srep-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: -8px 0 18px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.srep-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.srep-key {
+  width: 22px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.srep-key-warm {
+  background: linear-gradient(90deg, #e7a06f, #d2654a);
+}
+
+.srep-key-green {
+  background: linear-gradient(90deg, #8fc0a3, #5f997a);
+}
+
+.srep-cats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.srep-cat {
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: 16px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+}
+
+.srep-cat-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.srep-cat-ico {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: rgba(100, 80, 207, 0.1);
+  color: var(--violet);
+}
+
+.srep-cat-title {
+  flex: 1;
+}
+
+.srep-cat-title h3 {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.srep-cat-title p {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+.srep-cat-score {
+  flex: none;
+  text-align: right;
+}
+
+.srep-cat-score strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.srep-cat-score small {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+/* bars */
+.srep-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(var(--line-rgb), 0.1);
+  overflow: hidden;
+}
+
+.srep-bar.slim {
+  height: 8px;
+}
+
+.srep-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.srep-bar i.warm {
+  background: linear-gradient(90deg, #e7a06f, #d2654a);
+}
+
+.srep-bar i.green {
+  background: linear-gradient(90deg, #8fc0a3, #5f997a);
+}
+
+.srep-cat-foot {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.srep-cat-foot p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* ---- 5. dials ---- */
+.srep-dials {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.srep-dial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface-2);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: 16px;
+  padding: 16px 8px;
+}
+
+.srep-dial-track {
+  stroke: rgba(var(--line-rgb), 0.12);
+}
+
+.srep-dial-val {
+  transition: stroke-dashoffset 0.9s ease;
+}
+
+.srep-dial-val.steady {
+  stroke: var(--sage);
+}
+.srep-dial-val.building {
+  stroke: #e0a23c;
+}
+.srep-dial-val.low {
+  stroke: #d2654a;
+}
+
+.srep-dial-pct {
+  font-size: 17px;
+  font-weight: 800;
+  fill: var(--ink);
+}
+
+.srep-dial strong {
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.srep-dial-state {
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.srep-dial-state.steady {
+  color: #3f7256;
+}
+.srep-dial-state.building {
+  color: #9a6a1c;
+}
+.srep-dial-state.low {
+  color: #b34e35;
+}
+
+/* ---- 6. insights ---- */
+.srep-insights {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.srep-insight {
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  background: var(--surface-2);
+}
+
+.srep-insight.is-focus {
+  border-color: rgba(210, 101, 74, 0.22);
+}
+
+.srep-insight.is-strength {
+  border-color: rgba(95, 153, 122, 0.24);
+}
+
+.srep-insight.is-growth {
+  border-color: rgba(90, 120, 201, 0.26);
+}
+
+.srep-insight.is-building {
+  border-color: rgba(224, 162, 60, 0.26);
+}
+
+.srep-insight-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.srep-insight-head h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.srep-insight-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.srep-insight-bullets li {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.srep-insight-bullets svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--violet);
+}
+
+.srep-try {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 12px 13px;
+  border-radius: 12px;
+  background: rgba(100, 80, 207, 0.07);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.srep-try svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--violet);
+}
+
+/* ---- 7. life impact ---- */
+.srep-life {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.srep-life-card {
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: 14px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+}
+
+.srep-life-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.srep-life-top strong {
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+/* ---- 8. heatmap ---- */
+.srep-heat {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.srep-heat-chip {
+  border-radius: 14px;
+  padding: 16px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.srep-heat-pct {
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.srep-heat-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.srep-heat-band {
+  font-size: 10.5px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+/* ---- 9. action plan ---- */
+.srep-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.srep-action {
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: 16px;
+  padding: 18px;
+  background: var(--surface-2);
+}
+
+.srep-action.use-strength {
+  background: rgba(95, 153, 122, 0.07);
+  border-color: rgba(95, 153, 122, 0.22);
+}
+
+.srep-action-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #b34e35;
+  margin-bottom: 8px;
+}
+
+.srep-action-tag.strength {
+  color: #3f7256;
+}
+
+.srep-action h3 {
+  font-size: 15.5px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.srep-action p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+/* ---- 10. leverage ---- */
+.srep-leverage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.srep-lev {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.srep-lev-num {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--violet);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 17px;
+}
+
+.srep-lev strong {
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.srep-lev p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin-top: 2px;
+}
+
+/* ---- 11. strengths ---- */
+.srep-strengths {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.srep-strength {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(95, 153, 122, 0.07);
+  border: 1px solid rgba(95, 153, 122, 0.18);
+}
+
+.srep-strength svg {
+  flex: none;
+  margin-top: 2px;
+  color: #5f997a;
+}
+
+.srep-strength strong {
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.srep-strength p {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin-top: 3px;
+}
+
+/* ---- 12. habits ---- */
+.srep-habits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  counter-reset: none;
+}
+
+.srep-habits li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.srep-habit-num {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: rgba(100, 80, 207, 0.1);
+  color: var(--violet);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* ---- 13. toolkit ---- */
+.srep-toolkit {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.srep-tool {
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: 14px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+}
+
+.srep-tool strong {
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.srep-tool p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin-top: 5px;
+}
+
+/* ---- 14. closing ---- */
+.srep-closing {
+  text-align: center;
+  background: linear-gradient(160deg, rgba(100, 80, 207, 0.1), rgba(100, 80, 207, 0.02));
+  border-color: rgba(100, 80, 207, 0.16);
+}
+
+.srep-quote-ico {
+  color: var(--violet);
+  opacity: 0.5;
+  margin-bottom: 4px;
+}
+
+.srep-closing-text {
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: clamp(18px, 2.4vw, 23px);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  max-width: 600px;
+  margin: 0 auto 22px;
+  color: var(--ink);
+}
+
+.srep-doors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.srep-door {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  box-shadow: var(--shadow-soft);
+}
+
+.srep-door svg:first-child {
+  color: var(--violet);
+}
+
+.srep-disclaimer {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 620px;
+  margin: 0 auto 22px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-3);
+  text-align: left;
+}
+
+.srep-disclaimer svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--sage);
+}
+
+.srep-closing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* ---- load spectrum (in the snapshot) ---- */
+.srep-spectrum {
+  margin-top: 18px;
+}
+
+.srep-spectrum-track {
+  position: relative;
+  display: flex;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.srep-spectrum-seg {
+  flex: 1;
+}
+.seg-low {
+  background: linear-gradient(90deg, #8fc0a3, #6aa886);
+}
+.seg-mid {
+  background: linear-gradient(90deg, #ebc06b, #e0a23c);
+}
+.seg-high {
+  background: linear-gradient(90deg, #e08a63, #d2654a);
+}
+.seg-growth {
+  background: linear-gradient(90deg, #8aa0d8, #5a78c9);
+}
+
+.srep-spectrum-mark {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--ink);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.srep-spectrum-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+/* ---- burnout pattern (quadrant + balance) ---- */
+.srep-pattern-wrap {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.srep-quad-box {
+  display: flex;
+  justify-content: center;
+}
+
+.srep-quad {
+  width: 240px;
+  height: 240px;
+}
+
+.srep-quad-cell {
+  fill: var(--surface-2);
+  opacity: 0.7;
+}
+.srep-quad-cell.q-BR {
+  fill: rgba(210, 101, 74, 0.1); /* danger corner: high difficulty, low recovery */
+}
+.srep-quad-cell.q-TL {
+  fill: rgba(95, 153, 122, 0.1); /* healthiest corner: low difficulty, high recovery */
+}
+.srep-quad-cell.active {
+  opacity: 1;
+  fill: rgba(100, 80, 207, 0.16);
+}
+
+.srep-quad-div {
+  stroke: rgba(var(--line-rgb), 0.18);
+  stroke-width: 1;
+}
+
+.srep-quad-label {
+  font-size: 8.5px;
+  font-weight: 700;
+  fill: var(--ink-3);
+}
+.srep-quad-label.active {
+  fill: var(--violet-deep);
+}
+
+.srep-quad-axis {
+  font-size: 8.5px;
+  font-weight: 700;
+  fill: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.srep-quad-halo {
+  fill: rgba(100, 80, 207, 0.22);
+}
+
+.srep-quad-dot {
+  fill: var(--violet);
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.srep-pattern-name {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 21px;
+  color: var(--violet-deep);
+  margin-bottom: 8px;
+}
+
+.srep-pattern-text > p {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+.srep-pattern-foot {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 14px;
+}
+
+.srep-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.srep-balance-row {
+  display: grid;
+  grid-template-columns: 76px 1fr 28px;
+  align-items: center;
+  gap: 10px;
+}
+
+.srep-balance-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+.srep-balance-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(var(--line-rgb), 0.1);
+  overflow: hidden;
+}
+
+.srep-balance-track i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+.srep-balance-track i.warm {
+  background: linear-gradient(90deg, #e7a06f, #d2654a);
+}
+.srep-balance-track i.green {
+  background: linear-gradient(90deg, #8fc0a3, #5f997a);
+}
+
+.srep-balance-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: right;
+}
+
+/* ---- profile spread (all-strength pattern: ranked dimension bars) ---- */
+.srep-spread-box {
+  display: flex;
+  align-items: center;
+}
+
+.srep-spread {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.srep-spread-row {
+  display: grid;
+  grid-template-columns: 1fr 22px;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.srep-spread-label {
+  grid-column: 1 / -1;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+.srep-spread-track {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(var(--line-rgb), 0.1);
+  overflow: hidden;
+}
+
+.srep-spread-track i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+.srep-spread-track i.green {
+  background: linear-gradient(90deg, #8fc0a3, #5f997a);
+}
+.srep-spread-track i.amber {
+  background: linear-gradient(90deg, #ebc06b, #e0a23c);
+}
+.srep-spread-track i.blue {
+  background: linear-gradient(90deg, #8aa0d8, #5a78c9);
+}
+
+.srep-spread-val {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: right;
+}
+
+/* ---- responsive ---- */
+@media (max-width: 720px) {
+  .srep-snapshot,
+  .srep-radar-wrap,
+  .srep-pattern-wrap {
+    grid-template-columns: 1fr;
+  }
+  .srep-snapshot-gauge,
+  .srep-quad-box {
+    margin-bottom: 6px;
+  }
+  .srep-mini {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .srep-insights,
+  .srep-actions-grid {
+    grid-template-columns: 1fr;
+  }
+  .srep-head {
+    flex-direction: column;
+  }
+}
+
+/* ---- print → PDF ---- */
+@page {
+  margin: 12mm;
+}
+
+@media print {
+  /* Force browsers to actually print our background colours / gradients —
+     without this Chrome & Safari drop every fill and the report goes blank. */
+  .take,
+  .take * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Always print on a clean light theme, even if the app is in dark mode.
+     Custom properties inherit, so re-pinning them on .take recolours the
+     whole report for print without touching the on-screen theme. */
+  .take {
+    --surface: #fff;
+    --surface-2: #faf8f3;
+    --ink: #232038;
+    --ink-2: #57536e;
+    --ink-3: #807c96;
+    --line-rgb: 35, 32, 56;
+    --violet: #6450cf;
+    --violet-deep: #4d3da8;
+    --sage: #3c7a5e;
+    background: #fff !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  .take-bar,
+  .take-progress,
+  .srep-toolbar,
+  .srep-closing-actions,
+  .srep-doors {
+    display: none !important;
+  }
+  .take-report-stage {
+    max-width: none;
+    padding: 0;
+  }
+  .srep {
+    gap: 12px;
+  }
+  /* The A4 print width (~700px) is below the 720px mobile breakpoint, so the
+     responsive single-column rules would otherwise fire and stack everything,
+     wasting half the page. Re-assert the full multi-column layout for print. */
+  .srep-snapshot {
+    grid-template-columns: auto 1fr;
+  }
+  .srep-radar-wrap,
+  .srep-pattern-wrap {
+    grid-template-columns: 240px 1fr;
+  }
+  .srep-mini {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .srep-insights,
+  .srep-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .srep-head {
+    flex-direction: row;
+  }
+  .srep-card {
+    box-shadow: none;
+    border: 1px solid rgba(35, 32, 56, 0.1);
+  }
+  /* Let long cards flow across page breaks so pages pack densely, but never
+     strand a heading at the foot of a page (break-after) and never split an
+     individual row/card across a break (break-inside on the inner blocks). */
+  .srep-h2,
+  .srep-sub,
+  .srep-legend,
+  .srep-drivers h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  .srep-cat,
+  .srep-insight,
+  .srep-action,
+  .srep-driver,
+  .srep-mini-stat,
+  .srep-habits li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  /* cohesive blocks that look wrong split mid-way — keep these whole */
+  .srep-head,
+  .srep-snapshot,
+  .srep-radar-section,
+  .srep-pattern,
+  .srep-closing {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

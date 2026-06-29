@@ -78,6 +78,33 @@
   gap: 22px;
 }
 
+/* loading / error / empty states for the live list */
+.catalog-state {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 48px 24px;
+  color: var(--ink-2);
+}
+
+.catalog-state svg {
+  color: var(--violet);
+}
+
+.catalog-state h3 {
+  font-family: var(--font-display);
+  font-weight: 520;
+  font-size: 22px;
+  color: var(--ink);
+}
+
+.catalog-state .btn {
+  margin-top: 6px;
+}
+
 .cat-card {
   position: relative;
   display: flex;
@@ -748,22 +775,232 @@
   border-radius: var(--r-xl);
   box-shadow: var(--shadow-lift);
   padding: 44px 48px;
-  animation: cardIn 0.45s var(--ease-out) both;
+  animation: cardIn 0.5s var(--ease-out) both;
   transition:
-    opacity 0.3s,
-    transform 0.3s;
+    opacity 0.32s ease,
+    transform 0.32s ease;
 }
 
 @keyframes cardIn {
   from {
     opacity: 0;
-    transform: translateY(22px);
+    transform: translateY(9px);
   }
 }
 
 .take-card.leaving {
   opacity: 0;
-  transform: translateY(-14px);
+  transform: translateY(-7px);
+}
+
+/* ---- live take-flow states ---- */
+.take-center {
+  flex: 1;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+  padding: 40px 24px;
+  color: var(--ink-2);
+}
+
+.take-center svg {
+  color: var(--violet);
+}
+
+.take-center h1 {
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 28px;
+  color: var(--ink);
+}
+
+/* intro scale preview */
+.take-scale-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 22px 0 28px;
+}
+
+.take-scale-preview span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+/* payment + denied + result share a centered card feel */
+.take-pay h1,
+.take-denied h1,
+.take-result h1 {
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: clamp(26px, 3.4vw, 34px);
+  letter-spacing: -0.01em;
+}
+
+.take-pay-sub {
+  margin-top: 8px;
+  margin-bottom: 22px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
+.take-pay-body {
+  margin-top: 4px;
+}
+
+/* card-entry form (CardElement — no Stripe Link block) */
+.take-card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.take-card-field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+  letter-spacing: 0.01em;
+  margin-bottom: -4px;
+}
+
+.take-card-field {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: var(--surface);
+  transition: border-color 0.18s;
+}
+
+.take-card-field.focused {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px rgba(100, 80, 207, 0.12);
+}
+
+.take-card-field .StripeElement {
+  width: 100%;
+}
+
+.take-pay-btn {
+  margin-top: 6px;
+}
+
+/* result */
+.take-result {
+  text-align: center;
+}
+
+.take-result-check {
+  margin: 0 auto 8px;
+}
+
+.take-result-sub {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+
+.take-result-overall {
+  margin: 22px 0 26px;
+}
+
+.take-result-overall strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 56px;
+  line-height: 1;
+  color: var(--violet-deep);
+}
+
+.take-result-overall small {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+.take-result-dims {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  text-align: left;
+  margin: 0 auto 28px;
+  max-width: 460px;
+}
+
+.take-result-dims li {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.take-result-dim-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.take-result-dim-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--paper-deep);
+  overflow: hidden;
+}
+
+.take-result-dim-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--violet);
+}
+
+.take-result-dim-pct {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.take-result-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* denied / out-of-allowance */
+.take-denied {
+  text-align: center;
+}
+
+.take-denied-ico {
+  display: inline-grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 17px;
+  background: var(--peach-soft);
+  color: #a85a22;
+  margin-bottom: 14px;
+}
+
+.take-denied p {
+  margin: 12px auto 24px;
+  max-width: 46ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
 }
 
 .take-card-top {
@@ -850,6 +1087,42 @@
   border-radius: 50%;
   background: var(--topic, var(--violet));
   align-self: center;
+}
+
+/* "how you'll answer" scale on the detail page */
+.detail-scale-section {
+  padding-top: 56px;
+}
+
+.detail-scale-row {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 14px;
+  max-width: 760px;
+}
+
+.detail-scale-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-soft);
+  padding: 22px 12px 16px;
+}
+
+.detail-scale-step .likert-dot {
+  align-self: center;
+}
+
+.detail-scale-step strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
 }
 
 .likert-dot[data-strength='0'] {

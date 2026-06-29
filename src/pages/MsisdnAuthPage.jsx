@@ -5,46 +5,35 @@ import {
   Cake,
   Check,
   ChevronDown,
-  Eye,
-  EyeOff,
   Loader2,
-  Lock,
-  Mail,
+  Smartphone,
   Sparkles,
   User,
   Users,
 } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
-import { login, saveSession, signup } from '../lib/auth.js'
-import { isMsisdnMode } from '../lib/billingMode.js'
-import MsisdnAuthPage from './MsisdnAuthPage.jsx'
+import { msisdnLogin, msisdnSignup, saveSession } from '../lib/auth.js'
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+/* Carrier-billing auth (VITE_BILLING_MODE=msisdn): no email/password.
+   Login = mobile number only. Signup = name, gender, age + mobile number,
+   which also provisions an active subscription server-side. */
 
-export default function AuthPage({ mode }) {
-  // Carrier-billing build: swap the whole email/password flow for the
-  // mobile-number-only one.
-  if (isMsisdnMode) return <MsisdnAuthPage mode={mode} />
+const cleanMsisdn = (s) => s.replace(/[^\d+]/g, '')
+const validMsisdn = (s) => /^\+?\d{8,15}$/.test(s)
 
-  return <EmailAuthPage mode={mode} />
-}
-
-function EmailAuthPage({ mode }) {
+export default function MsisdnAuthPage({ mode }) {
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const isLogin = mode === 'login'
 
-  // Where to go after success — e.g. checkout sends users here with ?next=/checkout?plan=...
   const next = params.get('next') || '/dashboard'
   const swapTo = (path) =>
     next === '/dashboard' ? path : `${path}?next=${encodeURIComponent(next)}`
 
-  const [form, setForm] = useState({ name: '', email: '', password: '', gender: '', age: '' })
+  const [form, setForm] = useState({ name: '', gender: '', age: '', msisdn: '' })
   const [errors, setErrors] = useState({})
   const [submitError, setSubmitError] = useState(null) // { message, items[] } | null
-  const [showPw, setShowPw] = useState(false)
   const [status, setStatus] = useState('idle') // idle | loading | success
-  const [account, setAccount] = useState(null) // user returned by the API
 
   const set = (key) => (e) => {
     const { value } = e.target
@@ -58,15 +47,13 @@ function EmailAuthPage({ mode }) {
     if (!isLogin) {
       const name = form.name.trim()
       if (name.length < 2 || name.length > 50) er.name = 'Use between 2 and 50 characters.'
-    }
-    if (!EMAIL_RE.test(form.email)) er.email = 'That email doesn’t look complete.'
-    // No password rules on the client — the backend is the source of truth.
-    if (!isLogin) {
       if (!form.gender) er.gender = 'Choose one.'
       const age = Number(form.age)
       if (!form.age || !Number.isInteger(age) || age < 1 || age > 120)
         er.age = 'Enter an age from 1 to 120.'
     }
+    if (!validMsisdn(cleanMsisdn(form.msisdn)))
+      er.msisdn = 'Enter a valid mobile number (8–15 digits).'
     return er
   }
 
@@ -78,35 +65,40 @@ function EmailAuthPage({ mode }) {
     setErrors(er)
     if (Object.keys(er).length) return
 
+    const msisdn = cleanMsisdn(form.msisdn)
     setStatus('loading')
     try {
-      const session = isLogin
-        ? await login({ email: form.email.trim(), password: form.password })
-        : await signup({
+      const data = isLogin
+        ? await msisdnLogin({ msisdn })
+        : await msisdnSignup({
             name: form.name.trim(),
-            email: form.email.trim(),
-            password: form.password,
             gender: form.gender,
             age: Number(form.age),
+            msisdn,
           })
-      saveSession(session)
-      setAccount(session.user)
+      saveSession({ token: data.token, user: data.user })
       setStatus('success')
       setTimeout(() => navigate(next), 1300)
     } catch (err) {
       setStatus('idle')
-      // 409 (email already in use) reads best pinned to the email field; every
-      // other failure (401 invalid creds, 422 validation, 500, network) shows
-      // as a banner above the form, with any server `errors` listed.
       if (err.status === 409) {
-        setErrors((prev) => ({ ...prev, email: err.message }))
+        setErrors((prev) => ({
+          ...prev,
+          msisdn: 'This number already has an account — log in instead.',
+        }))
+      } else if (err.status === 401) {
+        setErrors((prev) => ({
+          ...prev,
+          msisdn: 'No account found for this number — create one first.',
+        }))
       } else {
+        // 422 validation (any field) and 404 default-plan-missing → banner.
         setSubmitError({ message: err.message, items: err.errors || [] })
       }
     }
   }
 
-  const firstName = (account?.name || form.name).trim().split(' ')[0] || 'there'
+  const firstName = form.name.trim().split(' ')[0] || 'there'
 
   return (
     <div className="auth">
@@ -115,13 +107,14 @@ function EmailAuthPage({ mode }) {
           <div className="auth-card-logo">
             <Logo />
           </div>
+
           {status === 'success' ? (
             <div className="auth-success" role="status">
               <span className="ap-done-check auth-check">
                 <Check size={26} />
               </span>
               <h1>
-                {isLogin ? `Welcome back, ${firstName}.` : `Welcome to the path, ${firstName}.`}
+                {isLogin ? 'Welcome back.' : `Welcome to the path, ${firstName}.`}
               </h1>
               <p>Opening your dashboard…</p>
             </div>
@@ -141,8 +134,8 @@ function EmailAuthPage({ mode }) {
               </h1>
               <p className="auth-subtitle">
                 {isLogin
-                  ? 'Your sessions, your mood trend, and tomorrow’s unlock are exactly where you left them.'
-                  : 'One honest assessment, a report that reads you back, and ten quiet minutes a day.'}
+                  ? 'Enter the mobile number you signed up with to continue.'
+                  : 'A few details and your number — that’s it. Your plan is billed to your phone and set up automatically.'}
               </p>
 
               <form className="auth-form" onSubmit={submit} noValidate>
@@ -175,51 +168,6 @@ function EmailAuthPage({ mode }) {
                     {errors.name && <em className="auth-error">{errors.name}</em>}
                   </label>
                 )}
-
-                <label className={`auth-field ${errors.email ? 'has-error' : ''}`}>
-                  <span className="auth-label">Email</span>
-                  <span className="auth-input">
-                    <Mail size={16} />
-                    <input
-                      type="email"
-                      value={form.email}
-                      onChange={set('email')}
-                      placeholder="you@somewhere.com"
-                      autoComplete="email"
-                    />
-                  </span>
-                  {errors.email && <em className="auth-error">{errors.email}</em>}
-                </label>
-
-                <label className={`auth-field ${errors.password ? 'has-error' : ''}`}>
-                  <span className="auth-label">
-                    Password
-                    {isLogin && (
-                      <Link to="#" className="auth-forgot">
-                        Forgot?
-                      </Link>
-                    )}
-                  </span>
-                  <span className="auth-input">
-                    <Lock size={16} />
-                    <input
-                      type={showPw ? 'text' : 'password'}
-                      value={form.password}
-                      onChange={set('password')}
-                      placeholder={isLogin ? 'Your password' : 'Choose a password'}
-                      autoComplete={isLogin ? 'current-password' : 'new-password'}
-                    />
-                    <button
-                      type="button"
-                      className="auth-eye"
-                      onClick={() => setShowPw((s) => !s)}
-                      aria-label={showPw ? 'Hide password' : 'Show password'}
-                    >
-                      {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </span>
-                  {errors.password && <em className="auth-error">{errors.password}</em>}
-                </label>
 
                 {!isLogin && (
                   <div className="auth-row">
@@ -260,6 +208,22 @@ function EmailAuthPage({ mode }) {
                   </div>
                 )}
 
+                <label className={`auth-field ${errors.msisdn ? 'has-error' : ''}`}>
+                  <span className="auth-label">Mobile number</span>
+                  <span className="auth-input">
+                    <Smartphone size={16} />
+                    <input
+                      type="tel"
+                      value={form.msisdn}
+                      onChange={set('msisdn')}
+                      placeholder="9876543210"
+                      autoComplete="tel"
+                      inputMode="tel"
+                    />
+                  </span>
+                  {errors.msisdn && <em className="auth-error">{errors.msisdn}</em>}
+                </label>
+
                 <button className="btn btn-primary auth-submit" disabled={status === 'loading'}>
                   {status === 'loading' ? (
                     <>
@@ -280,7 +244,8 @@ function EmailAuthPage({ mode }) {
               {!isLogin && (
                 <p className="auth-legal">
                   By continuing you agree to our Terms and acknowledge that MindPath is a
-                  self-reflection tool, not a clinical service.
+                  self-reflection tool, not a clinical service. Your subscription is charged to your
+                  mobile bill.
                 </p>
               )}
 
@@ -300,7 +265,7 @@ function EmailAuthPage({ mode }) {
               </p>
 
               <Link to="/" className="auth-guest">
-                ← Just browsing back to MindPath
+                ← Just browsing — back to MindPath
               </Link>
             </>
           )}

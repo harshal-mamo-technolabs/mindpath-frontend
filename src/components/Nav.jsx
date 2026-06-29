@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import Logo from './Logo.jsx'
 import { useAuth } from '../hooks/useAuth.js'
+import { isMsisdnMode } from '../lib/billingMode.js'
 
 /* Primary product sections — desktop top nav + the mobile bottom tab bar.
    4th item is a short label for the narrow bottom bar. */
@@ -30,11 +31,12 @@ const EXPLORE = [
   ['Counselling', '/counselling', MessageCircle],
   ['Free music', '/music', Music],
 ]
-/* Account & billing. */
+/* Account & billing. In carrier-billing (MSISDN) mode there's no plan/pricing
+   page — the subscription is provisioned at signup. */
 const ACCOUNT = [
   ['Profile', '/profile', User],
   ['Subscription', '/subscription', CreditCard],
-  ['Plans & pricing', '/pricing', Tag],
+  ...(isMsisdnMode ? [] : [['Plans & pricing', '/pricing', Tag]]),
 ]
 
 export default function Nav() {
