@@ -15,9 +15,47 @@ import {
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
+import AudioPrograms from '../components/audio/AudioPrograms.jsx'
 import { useAuth } from '../hooks/useAuth.js'
 import { getAudioPlans, markPlayed } from '../lib/audioApi.js'
+import { getMyPrograms, markProgramPlayed } from '../lib/audioProgramsApi.js'
 import { formatTime } from '../lib/time.js'
+
+/* Map an added audio-library program (from GET /audio-programs/mine) into the SAME shape
+   as a generated plan, so it flows through shapePlan → the hero, the side session panel,
+   the detail modal and the shared player exactly like an assessment plan. Its play log
+   (keyed by clip order) is rekeyed to "day-<order>" to match the plan's daily unlock; it
+   has no welcome clip, so track 1 opens right away. `kind: 'program'` marks it so play
+   progress is saved via the program endpoint. */
+function mapProgramToPlan(p) {
+  const playedAt = {}
+  Object.entries(p.playedAt || {}).forEach(([order, date]) => {
+    playedAt[`day-${order}`] = date
+  })
+  return {
+    id: p.id,
+    kind: 'program',
+    programId: p.id,
+    archetype: p.title, // shapePlan uses this as the card/hero title
+    welcomeAudioUrl: null,
+    welcomeScript: null,
+    status: p.status,
+    durationDays: p.total,
+    playedAt,
+    days: (p.clips || []).map((c) => ({
+      day: c.order,
+      title: c.title,
+      focus: c.category || 'session',
+      session: {
+        _id: `prog-${p.id}-${c.order}`,
+        title: c.title,
+        audioUrl: c.audioUrl,
+        durationSeconds: c.durationSeconds,
+        category: c.category,
+      },
+    })),
+  }
+}
 
 /* today as a UTC calendar day ("YYYY-MM-DD") — the same basis the server stamps
    plays with, so the two never disagree on where the day boundary falls. */
@@ -114,6 +152,7 @@ export default function AudioLibrary() {
   const [duration, setDuration] = useState(0)
   const [toast, setToast] = useState(null)
   const [detailPlanId, setDetailPlanId] = useState(null) // plan whose session list is open
+  const [pathKey, setPathKey] = useState(0) // bump to resync added-program state across sections
   const autoWelcome = useRef(false) // guard: only auto-open the welcome once per visit
   const audioRef = useRef(null)
   const toastTimer = useRef(null)
@@ -135,17 +174,21 @@ export default function AudioLibrary() {
     }
     let alive = true
     setState({ status: 'loading', plans: [] })
-    getAudioPlans()
-      .then((list) => {
+    // Generated plans + the user's added library programs, merged into one "paths" list
+    // so both render through the same hero / side panel / modal / player.
+    Promise.all([getAudioPlans(), getMyPrograms().catch(() => [])])
+      .then(([list, progs]) => {
         if (!alive) return
-        const plans = Array.isArray(list) ? list : []
+        const generated = (Array.isArray(list) ? list : []).map((p) => ({ ...p, kind: 'plan' }))
+        const programs = (Array.isArray(progs) ? progs : []).map(mapProgramToPlan)
+        const plans = [...generated, ...programs]
         setState({ status: plans.length ? 'ready' : 'empty', plans })
       })
       .catch((err) => alive && setState({ status: 'error', error: err.message, plans: [] }))
     return () => {
       alive = false
     }
-  }, [isAuthenticated, reloadKey])
+  }, [isAuthenticated, reloadKey, pathKey])
 
   const plans = useMemo(() => state.plans.map(shapePlan), [state.plans])
   // The hero follows whatever's playing (so playing a clip from "Your paths"
@@ -185,13 +228,28 @@ export default function AudioLibrary() {
     if (p && p.catch) p.catch(() => setPlaying(false))
   }, [nowPlaying])
 
-  // Record a clip as played (day 0 = welcome, 1..N = sessions) and fold the
-  // updated plan back into state. The server stamps the date into playedAt.
+  // Record a clip as played (day 0 = welcome, 1..N = sessions) and fold the updated
+  // path back into state. Generated plans hit the audio-plan endpoint; added library
+  // programs hit the audio-program endpoint (kind === 'program'). Both stamp the date
+  // into playedAt server-side and enforce the same daily unlock (423 when locked).
   const recordPlayed = useCallback(
     async (planId, day) => {
+      const target = state.plans.find((p) => p.id === planId)
+      const isProgram = target?.kind === 'program'
       try {
+        if (isProgram) {
+          const prog = await markProgramPlayed(planId, day)
+          patchPlan(mapProgramToPlan(prog))
+          const total = prog.total || (prog.clips || []).length
+          say(
+            prog.status === 'completed'
+              ? `Path complete — all ${total} sessions done. Beautiful work.`
+              : `Day ${day} done — Day ${day + 1} opens tomorrow.`,
+          )
+          return
+        }
         const updated = await markPlayed(planId, day)
-        patchPlan(updated)
+        patchPlan({ ...updated, kind: 'plan' })
         if (day === 0) {
           say('Welcome played — Day 1 is unlocked.')
           return
@@ -208,7 +266,7 @@ export default function AudioLibrary() {
         say(e?.message || 'Couldn’t save your progress — check your connection and try again.')
       }
     },
-    [patchPlan, say],
+    [state.plans, patchPlan, say],
   )
 
   const onEnded = () => {
@@ -393,7 +451,7 @@ export default function AudioLibrary() {
 
   if (state.status === 'empty') {
     return (
-      <main className="ap ap-state-wrap">
+      <main className="ap">
         <div className="ap-state">
           <Headphones size={30} />
           <h1>No audio plan yet</h1>
@@ -405,6 +463,8 @@ export default function AudioLibrary() {
             Explore assessments <ArrowRight size={16} />
           </Link>
         </div>
+        {/* standalone purchasable audio library — always available, even with no plan */}
+        <AudioPrograms pathKey={pathKey} onChange={() => setPathKey((k) => k + 1)} />
       </main>
     )
   }
@@ -751,6 +811,9 @@ export default function AudioLibrary() {
           </div>
         </div>
       )}
+
+      {/* ===== standalone purchasable audio library ===== */}
+      <AudioPrograms pathKey={pathKey} onChange={() => setPathKey((k) => k + 1)} />
 
       {/* real audio element (hidden) */}
       <audio
