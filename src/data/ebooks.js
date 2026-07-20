@@ -241,7 +241,7 @@ export const GENERAL_EBOOKS = [
   G({
     id: 'five-minutes',
     title: 'Five Minutes of Quiet',
-    author: 'MindPath Press',
+    author: 'Daybreak Press',
     category: 'Mindfulness',
     pages: 64,
     readMin: 48,

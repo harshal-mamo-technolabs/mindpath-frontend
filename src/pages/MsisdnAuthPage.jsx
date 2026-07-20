@@ -243,7 +243,7 @@ export default function MsisdnAuthPage({ mode }) {
 
               {!isLogin && (
                 <p className="auth-legal">
-                  By continuing you agree to our Terms and acknowledge that MindPath is a
+                  By continuing you agree to our Terms and acknowledge that Daybreak is a
                   self-reflection tool, not a clinical service. Your subscription is charged to your
                   mobile bill.
                 </p>
@@ -265,7 +265,7 @@ export default function MsisdnAuthPage({ mode }) {
               </p>
 
               <Link to="/" className="auth-guest">
-                ← Just browsing — back to MindPath
+                ← Just browsing — back to Daybreak
               </Link>
             </>
           )}

@@ -79,7 +79,7 @@ export default function AssessmentCatalog() {
             Start with the one <em>that aches.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.16}>
-            Every MindPath journey begins with one honest assessment a psychometric-style
+            Every Daybreak journey begins with one honest assessment a psychometric-style
             questionnaire scored across real dimensions. Pick the topic that names what you&rsquo;re
             carrying.
           </Reveal>

@@ -1,5 +1,5 @@
 /* ============================================================
-   MindPath  /audio library (night theme)
+   Daybreak  /audio library (night theme)
    ============================================================ */
 .ap {
   min-height: 100dvh;
@@ -526,6 +526,32 @@
   flex-wrap: wrap;
 }
 
+/* whole card opens the library detail; the play/view controls sit on top */
+.ap-plan-card {
+  cursor: pointer;
+}
+
+.ap-plan-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink-3);
+  transition: color 0.2s;
+}
+
+.ap-plan-view:hover,
+.ap-plan-card:hover .ap-plan-view {
+  color: var(--ink);
+}
+
+/* the session list runs taller inside the detail modal than in the hero panel */
+.ap-detail-modal .ap-also-list {
+  max-height: 48vh;
+  margin-top: 18px;
+}
+
 .ap-btn-play {
   display: inline-flex;
   align-items: center;
@@ -544,6 +570,135 @@
 .ap-btn-play:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 26px -8px rgba(238, 179, 129, 0.5);
+}
+
+/* locked plan-card action: opens on a future day */
+.ap-btn-play.locked {
+  background: rgba(var(--line-rgb), 0.09);
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+
+.ap-btn-play.locked:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---- daily-pace controls on the hero (dark) ---- */
+.ap-mark-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #c8b9f8;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 9px 15px;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.ap-mark-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.ap-locked-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--night-ink-2);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 11px 18px;
+  cursor: not-allowed;
+}
+
+.ap-locked-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #eec9a8;
+}
+
+.ap-locked-note svg {
+  flex: none;
+}
+
+/* ---- hero card while a clip is playing ---- */
+.ap-kicker-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.ap-now-eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.ap-now-eq i {
+  width: 3px;
+  height: 35%;
+  border-radius: 2px;
+  background: #f3d4b4;
+}
+
+.ap-now-eq.on i {
+  animation: apEqBar 0.9s ease-in-out infinite;
+}
+
+.ap-now-eq.on i:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.ap-now-eq.on i:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+@keyframes apEqBar {
+  0%,
+  100% {
+    height: 30%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+.ap-now-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  margin: 16px 0 2px;
+}
+
+.ap-now-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #f3d4b4;
+  transition: width 0.2s linear;
+}
+
+.ap-now-time {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--night-ink-2);
+  font-variant-numeric: tabular-nums;
 }
 
 .ap-btn-unlock {

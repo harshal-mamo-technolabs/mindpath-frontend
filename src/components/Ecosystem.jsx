@@ -37,7 +37,7 @@ export default function Ecosystem() {
               Visit the shop <ArrowRight size={16} />
             </Link>
             <div className="eco-book-mock" aria-hidden="true">
-              <small>MindPath Press</small>
+              <small>Daybreak Press</small>
               <h5>Quiet the Static: Maya&rsquo;s 30 Days of Recovery</h5>
               <span className="for">written for Maya K.</span>
             </div>

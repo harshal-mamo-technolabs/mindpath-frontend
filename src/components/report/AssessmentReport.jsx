@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Activity,
   ArrowRight,
@@ -7,14 +7,17 @@ import {
   Compass,
   Download,
   Gauge,
+  Headphones,
   Lightbulb,
+  Loader2,
   Quote,
   RefreshCcw,
   ShieldCheck,
   Sparkles,
   Target,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { getAudioPlanForAssessment } from '../../lib/audioApi.js'
 
 /* gauge / pill colour keyed by health (good = green, whatever the direction).
    'growth' (blue) is the all-strength case — a low score is upside, not alarm. */
@@ -38,7 +41,13 @@ function GaugeArc({ value, healthKey, label }) {
   return (
     <div className="srep-gauge">
       <svg viewBox="0 0 160 96" width="220" aria-hidden="true">
-        <path className="srep-gauge-track" d={d} fill="none" strokeWidth="14" strokeLinecap="round" />
+        <path
+          className="srep-gauge-track"
+          d={d}
+          fill="none"
+          strokeWidth="14"
+          strokeLinecap="round"
+        />
         <path
           className="srep-gauge-val"
           d={d}
@@ -46,7 +55,11 @@ function GaugeArc({ value, healthKey, label }) {
           strokeWidth="14"
           strokeLinecap="round"
           pathLength="100"
-          style={{ stroke: HEALTH_COLOR[healthKey], strokeDasharray: 100, strokeDashoffset: 100 - value }}
+          style={{
+            stroke: HEALTH_COLOR[healthKey],
+            strokeDasharray: 100,
+            strokeDashoffset: 100 - value,
+          }}
         />
       </svg>
       <div className="srep-gauge-num">
@@ -71,7 +84,12 @@ function Radar({ dims }) {
   const shape = dims.map((d, i) => pt(d.radarValue / 100, i).join(',')).join(' ')
 
   return (
-    <svg className="srep-radar" viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Profile across the five categories">
+    <svg
+      className="srep-radar"
+      viewBox={`0 0 ${size} ${size}`}
+      role="img"
+      aria-label="Profile across the five categories"
+    >
       {[0.25, 0.5, 0.75, 1].map((f) => (
         <polygon key={f} className="srep-radar-grid" points={ring(f)} />
       ))}
@@ -87,7 +105,14 @@ function Radar({ dims }) {
       {dims.map((d, i) => {
         const [x, y] = pt(1.16, i)
         return (
-          <text key={d.key} className="srep-radar-label" x={x} y={y} textAnchor="middle" dominantBaseline="middle">
+          <text
+            key={d.key}
+            className="srep-radar-label"
+            x={x}
+            y={y}
+            textAnchor="middle"
+            dominantBaseline="middle"
+          >
             {d.label.split(' ')[0]}
           </text>
         )
@@ -117,7 +142,12 @@ function Quadrant({ difficulty, resource, active, quads, xLabel, yLabel }) {
   const y = pad + (1 - resource / 100) * inner // invert: more resource = higher
 
   return (
-    <svg className="srep-quad" viewBox={`0 0 ${S} ${S}`} role="img" aria-label="Your pattern across the two axes">
+    <svg
+      className="srep-quad"
+      viewBox={`0 0 ${S} ${S}`}
+      role="img"
+      aria-label="Your pattern across the two axes"
+    >
       {QUAD_POS.map((q) => (
         <rect
           key={q.pos}
@@ -132,11 +162,24 @@ function Quadrant({ difficulty, resource, active, quads, xLabel, yLabel }) {
         const cx = pad + q.col * half + half / 2
         const cy = pad + q.row * half + half / 2
         const words = (quads[q.pos] || '').split(' ')
-        const lines = words.length > 2 ? [words.slice(0, 2).join(' '), words.slice(2).join(' ')] : [words.join(' ')]
+        const lines =
+          words.length > 2
+            ? [words.slice(0, 2).join(' '), words.slice(2).join(' ')]
+            : [words.join(' ')]
         return (
-          <text key={q.pos} className={`srep-quad-label ${active === q.pos ? 'active' : ''}`} x={cx} y={cy} textAnchor="middle">
+          <text
+            key={q.pos}
+            className={`srep-quad-label ${active === q.pos ? 'active' : ''}`}
+            x={cx}
+            y={cy}
+            textAnchor="middle"
+          >
             {lines.map((ln, i) => (
-              <tspan key={ln} x={cx} dy={i === 0 ? (lines.length > 1 ? '-0.3em' : '0.3em') : '1.1em'}>
+              <tspan
+                key={ln}
+                x={cx}
+                dy={i === 0 ? (lines.length > 1 ? '-0.3em' : '0.3em') : '1.1em'}
+              >
                 {ln}
               </tspan>
             ))}
@@ -148,7 +191,13 @@ function Quadrant({ difficulty, resource, active, quads, xLabel, yLabel }) {
       <text className="srep-quad-axis" x={pad + inner} y={pad + inner + 20} textAnchor="end">
         {xLabel}
       </text>
-      <text className="srep-quad-axis" x={14} y={S / 2} textAnchor="middle" transform={`rotate(-90 14 ${S / 2})`}>
+      <text
+        className="srep-quad-axis"
+        x={14}
+        y={S / 2}
+        textAnchor="middle"
+        transform={`rotate(-90 14 ${S / 2})`}
+      >
         {yLabel}
       </text>
       <circle className="srep-quad-halo" cx={x} cy={y} r="9" />
@@ -220,13 +269,78 @@ function ProfileSpread({ dims }) {
 }
 
 /* ===================================================================== */
-export default function AssessmentReport({ report, ui, name = 'You', attempt, onRetake }) {
+export default function AssessmentReport({
+  report,
+  ui,
+  name = 'You',
+  attempt,
+  onRetake,
+  assessmentId,
+}) {
   const r = report
-  const today = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })
+  const today = new Date().toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
   // third snapshot stat: the strongest dimension (EI) or the heaviest driver (load profiles)
   const spotlight = ui.miniThirdKey === 'dominant' ? r.dominant : r.topDriver
   const planFocus = r.priorities.length ? r.priorities : r.topByLoad.slice(0, 2)
   const leanOn = r.strengths[0] || r.brightSpot
+  const navigate = useNavigate()
+
+  // The "Audio" button hands off to the audio library, which plays this
+  // assessment's welcome clip.
+  const openWelcomeAudio = () => navigate('/audio', { state: { welcomeFor: assessmentId } })
+
+  // Audio-plan availability for the toolbar button:
+  //  - 'ready'       → a plan exists → the button links to /audio.
+  //  - 'preparing'   → attempt 1, plan still generating server-side → poll for it.
+  //  - 'unavailable' → no plan and none coming (a retake never generates one, or
+  //                    this assessment produces no audio) → hide the button.
+  // The plan is created atomically once generation finishes (welcome included),
+  // so "a plan exists" is the single, reliable readiness signal.
+  const [audioState, setAudioState] = useState(assessmentId ? 'preparing' : 'unavailable')
+  const pollRef = useRef(null)
+
+  useEffect(() => {
+    if (!assessmentId) return // initial state is already 'unavailable' in this case
+    let alive = true
+    let tries = 0
+    const MAX_TRIES = 12 // ~48s of polling while a first attempt generates
+
+    const check = async () => {
+      let plans = []
+      try {
+        plans = await getAudioPlanForAssessment(assessmentId)
+      } catch {
+        // treat a failed lookup like "not ready yet" and retry within budget
+      }
+      if (!alive) return
+      if (Array.isArray(plans) && plans.length > 0) {
+        setAudioState('ready')
+        return
+      }
+      // No plan. A retake (attempt > 1) never triggers generation, so it's final.
+      if (attempt && attempt > 1) {
+        setAudioState('unavailable')
+        return
+      }
+      tries += 1
+      if (tries >= MAX_TRIES) {
+        setAudioState('unavailable') // first attempt but nothing generated (e.g. no audio for this assessment)
+        return
+      }
+      setAudioState('preparing')
+      pollRef.current = setTimeout(check, 4000)
+    }
+
+    check()
+    return () => {
+      alive = false
+      clearTimeout(pollRef.current)
+    }
+  }, [assessmentId, attempt])
 
   // Always print in light mode, even if the app is in dark mode — guarantees a
   // clean PDF. Catches the button and the browser's own Print (Ctrl/Cmd-P).
@@ -257,6 +371,21 @@ export default function AssessmentReport({ report, ui, name = 'You', attempt, on
     <div className="srep">
       {/* toolbar (hidden in print) */}
       <div className="srep-toolbar">
+        {audioState === 'ready' && (
+          <button className="btn btn-ghost srep-tool-btn" onClick={openWelcomeAudio}>
+            <Headphones size={16} /> Audio
+          </button>
+        )}
+        {audioState === 'preparing' && (
+          <button
+            className="btn btn-ghost srep-tool-btn"
+            disabled
+            aria-disabled="true"
+            title="Your audio plan is still being prepared"
+          >
+            <Loader2 size={15} className="ap-spin" /> Preparing audio…
+          </button>
+        )}
         <button className="btn btn-ghost srep-tool-btn" onClick={() => window.print()}>
           <Download size={16} /> Download PDF
         </button>
@@ -277,8 +406,8 @@ export default function AssessmentReport({ report, ui, name = 'You', attempt, on
             Completed {today} · {ui.assessmentName}
           </p>
           <p className="srep-head-note">
-            <ShieldCheck size={13} /> A self-awareness tool generated from your answers — not a clinical or diagnostic
-            assessment.
+            <ShieldCheck size={13} /> A self-awareness tool generated from your answers — not a
+            clinical or diagnostic assessment.
           </p>
         </div>
       </header>
@@ -286,7 +415,11 @@ export default function AssessmentReport({ report, ui, name = 'You', attempt, on
       {/* 2 — snapshot */}
       <section className="srep-card srep-snapshot">
         <div className="srep-snapshot-gauge">
-          <GaugeArc value={r.headline.value} healthKey={r.headline.healthKey} label={ui.gaugeLabel} />
+          <GaugeArc
+            value={r.headline.value}
+            healthKey={r.headline.healthKey}
+            label={ui.gaugeLabel}
+          />
           <BandPill cls={healthPill(r.headline.healthKey)}>
             {r.headline.bandText}
             {ui.headlinePillSuffix}
@@ -299,7 +432,11 @@ export default function AssessmentReport({ report, ui, name = 'You', attempt, on
           <p className="srep-snapshot-text">
             {r.archetype.summary} {ui.scoreSentence(r.headline.value)}
           </p>
-          <Spectrum value={r.headline.value} segments={ui.spectrum.segments} scale={ui.spectrum.scale} />
+          <Spectrum
+            value={r.headline.value}
+            segments={ui.spectrum.segments}
+            scale={ui.spectrum.scale}
+          />
           <div className="srep-mini">
             <div className="srep-mini-stat">
               <Gauge size={16} />
@@ -433,7 +570,10 @@ export default function AssessmentReport({ report, ui, name = 'You', attempt, on
                   </div>
                 </div>
                 <div className="srep-bar">
-                  <i className={d.direction === 'problem' ? 'warm' : 'green'} style={{ width: `${d.pct}%` }} />
+                  <i
+                    className={d.direction === 'problem' ? 'warm' : 'green'}
+                    style={{ width: `${d.pct}%` }}
+                  />
                 </div>
                 <div className="srep-cat-foot">
                   <BandPill cls={d.tagClass}>{d.tagText}</BandPill>
@@ -495,8 +635,8 @@ export default function AssessmentReport({ report, ui, name = 'You', attempt, on
               <span className="srep-action-tag strength">Lean on this</span>
               <h3>Lean on your {leanOn.strengthLabel}</h3>
               <p>
-                This is what’s working for you right now. Spend it deliberately on the focus areas above — it’s what
-                makes the rest of the plan stick.
+                This is what’s working for you right now. Spend it deliberately on the focus areas
+                above — it’s what makes the rest of the plan stick.
               </p>
             </article>
           )}
@@ -532,8 +672,9 @@ export default function AssessmentReport({ report, ui, name = 'You', attempt, on
           ))}
         </div>
         <p className="srep-disclaimer">
-          <ShieldCheck size={14} /> MindPath is a self-reflection tool, not a clinical assessment, diagnosis, or
-          treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.
+          <ShieldCheck size={14} /> Daybreak is a self-reflection tool, not a clinical assessment,
+          diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is
+          a brave and worthwhile next step.
         </p>
         <div className="srep-closing-actions">
           <button className="btn btn-primary" onClick={() => window.print()}>

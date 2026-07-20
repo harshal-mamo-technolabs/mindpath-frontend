@@ -34,7 +34,7 @@ function Cover({ book, size = 'md' }) {
       style={{ '--accent': book.accent, '--bg': book.bg }}
     >
       <span className="bk-spine" />
-      <span className="bk-press">MindPath Press</span>
+      <span className="bk-press">Daybreak Press</span>
       <span className="bk-title">{book.title}</span>
       {book.kind === 'personal' ? (
         <span className="bk-for">written for {book.forName}</span>
@@ -132,7 +132,7 @@ export default function EbooksLibrary() {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${esc(book.title)} — MindPath Press</title>
+<title>${esc(book.title)} — Daybreak Press</title>
 <style>
   body { font-family: Georgia, 'Times New Roman', serif; color: #232038; line-height: 1.7; max-width: 660px; margin: 0 auto; padding: 64px 28px; background: #f7f3ec; }
   .cover { text-align: center; padding-bottom: 40px; margin-bottom: 40px; border-bottom: 1px solid #d8d0c2; }
@@ -148,12 +148,12 @@ export default function EbooksLibrary() {
 </head>
 <body>
   <div class="cover">
-    <p class="press">MindPath Press</p>
+    <p class="press">Daybreak Press</p>
     <h1>${esc(book.title)}</h1>
     <p class="by">${esc(author)}</p>
   </div>
 ${chaptersHtml}
-  <footer>© MindPath Press · This copy was prepared for your personal reading.</footer>
+  <footer>© Daybreak Press · This copy was prepared for your personal reading.</footer>
 </body>
 </html>`
     const blob = new Blob([html], { type: 'text/html' })
@@ -663,7 +663,7 @@ ${chaptersHtml}
                     <Check size={15} /> Yours forever, across every device
                   </li>
                   <li>
-                    <Check size={15} /> Read in the MindPath app or export to your reader
+                    <Check size={15} /> Read in the Daybreak app or export to your reader
                   </li>
                 </ul>
                 <div className="ap-modal-actions">

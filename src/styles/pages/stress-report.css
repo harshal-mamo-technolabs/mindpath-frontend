@@ -27,6 +27,13 @@
   font-size: 13.5px;
 }
 
+/* audio plan still generating — non-clickable, quietly working */
+.srep-tool-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* ---- shared card ---- */
 .srep-card {
   background: var(--surface);

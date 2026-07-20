@@ -7,8 +7,13 @@
  * is attached automatically by api.js).
  *
  * Plan shape: { id, archetype, welcomeScript, welcomeAudioUrl, status,
- * durationDays, days: [{ day, title, focus, reason, completed, completedAt,
+ * durationDays, playedAt: { 'day-0': 'YYYY-MM-DD', ... },
+ * days: [{ day, title, focus, reason,
  * session: { _id, title, audioUrl, durationSeconds, category } }] }.
+ *
+ * `playedAt` is the whole play log — "day-0" is the welcome clip, "day-1".."day-N"
+ * the sessions, each mapped to the date it was played. The frontend derives which
+ * clip is unlocked from it (next opens once today is past the last played date).
  *
  * The plan may not exist (later attempt / no clips / generation failed) — the
  * list then comes back empty, which callers handle as an empty state.
@@ -26,9 +31,10 @@ export const getAudioPlanForAssessment = (assessmentId) =>
 export const getAudioPlan = (id) => apiGet(`/api/audio-plans/${id}`)
 
 /**
- * Mark day `day` (1…durationDays) complete. Idempotent — re-completing keeps
- * the original completedAt. Resolves to the updated, populated plan. When every
- * day is done the plan's status flips to 'completed' server-side.
+ * Record that a clip was played — `day` 0 is the welcome, 1…durationDays the
+ * sessions. Stamps today's date into the plan's `playedAt` map. Idempotent (a
+ * replay keeps the first date). A new play is gated to the daily pace server-side;
+ * a locked clip rejects (ApiError 423) with a "come back tomorrow" message.
+ * Resolves to the updated plan.
  */
-export const completeAudioDay = (planId, day) =>
-  apiPost(`/api/audio-plans/${planId}/days/${day}/complete`)
+export const markPlayed = (planId, day) => apiPost(`/api/audio-plans/${planId}/clips/${day}/played`)

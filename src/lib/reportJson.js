@@ -16,7 +16,7 @@ const HEADER_NOTE =
 const LEAN_ON_TEXT =
   'This is what’s working for you right now. Spend it deliberately on the focus areas above — it’s what makes the rest of the plan stick.'
 const DISCLAIMER =
-  'MindPath is a self-reflection tool, not a clinical assessment, diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.'
+  'Daybreak is a self-reflection tool, not a clinical assessment, diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.'
 
 const dateLabel = (iso) =>
   iso ? new Date(iso).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : null

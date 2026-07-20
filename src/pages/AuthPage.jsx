@@ -279,7 +279,7 @@ function EmailAuthPage({ mode }) {
 
               {!isLogin && (
                 <p className="auth-legal">
-                  By continuing you agree to our Terms and acknowledge that MindPath is a
+                  By continuing you agree to our Terms and acknowledge that Daybreak is a
                   self-reflection tool, not a clinical service.
                 </p>
               )}
@@ -300,7 +300,7 @@ function EmailAuthPage({ mode }) {
               </p>
 
               <Link to="/" className="auth-guest">
-                ← Just browsing back to MindPath
+                ← Just browsing back to Daybreak
               </Link>
             </>
           )}

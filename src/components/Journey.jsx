@@ -44,7 +44,7 @@ export default function Journey() {
             One loop. <em>Lasting change.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.16}>
-            Everything at MindPath begins with understanding yourself and everything after is built
+            Everything at Daybreak begins with understanding yourself and everything after is built
             from that understanding.
           </Reveal>
         </div>

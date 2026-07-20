@@ -1,5 +1,5 @@
 /**
- * MindPath topic glyphs  bespoke, hand-drawn SVGs in the brand's organic
+ * Daybreak topic glyphs  bespoke, hand-drawn SVGs in the brand's organic
  * line style (rounded caps/joins, ~1.6 stroke), each a meaningful metaphor
  * for its topic rather than a generic stock icon. Drop-in for Lucide:
  * they accept the same `size` / `strokeWidth` props.

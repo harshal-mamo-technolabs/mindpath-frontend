@@ -1,4 +1,4 @@
-# MindPath
+# Daybreak
 
 An assessment-led mental-wellness web app (demo build). Take a short self-assessment,
 get a deterministic scored report, and follow a matching daily-audio plan, ebooks,

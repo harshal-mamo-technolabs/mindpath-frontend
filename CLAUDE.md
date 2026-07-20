@@ -4,7 +4,7 @@ Guidance for Claude Code (and humans) working in this repository.
 
 ## What this is
 
-**MindPath** is an assessment-led mental-wellness web app (demo/marketing build). A
+**Daybreak** is an assessment-led mental-wellness web app (demo/marketing build). A
 visitor takes a short self-assessment, gets a **deterministic** scored report, and is
 guided into a matching daily-audio plan, ebooks, counselling, and free music. It is a
 React single-page app with no backend — all content lives in static data modules under

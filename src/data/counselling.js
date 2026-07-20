@@ -16,7 +16,7 @@ import { getPlan, PAYG, SUBSCRIPTION } from './billing.js'
 
 export const ADVISOR = {
   name: 'Sol',
-  role: 'Your MindPath advisor',
+  role: 'Your Daybreak advisor',
   blurb:
     'Pick whatever’s weighing on you and talk it through, out loud, with a speech-to-speech advisor. Anyone can — no report required. Have one? It just gives Sol more context to work from.',
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   ArrowRight,
   BadgeCheck,
@@ -12,275 +12,608 @@ import {
   Pause,
   Play,
   Sparkles,
-  TrendingUp,
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
-import { AUDIO_PLANS } from '../data/audioPlans.js'
-import { formatTime, minutesToSeconds } from '../lib/time.js'
+import { useAuth } from '../hooks/useAuth.js'
+import { getAudioPlans, markPlayed } from '../lib/audioApi.js'
+import { formatTime } from '../lib/time.js'
 
-/* Demo time runs faster than the clock so sessions can be finished. */
-const DEMO_SPEED = 14
+/* today as a UTC calendar day ("YYYY-MM-DD") — the same basis the server stamps
+   plays with, so the two never disagree on where the day boundary falls. */
+const todayUTC = () => new Date().toISOString().slice(0, 10)
 
 const EQ_BARS = [44, 70, 52, 88, 63, 95, 58, 78, 49, 84, 66, 91]
+const COVERS = ['cover-violet', 'cover-tide', 'cover-meadow', 'cover-dusk', 'cover-ember']
+const ACCENTS = {
+  'cover-violet': '#6450cf',
+  'cover-tide': '#2f8f9d',
+  'cover-meadow': '#4f9a6a',
+  'cover-dusk': '#c56b57',
+  'cover-ember': '#c98a2c',
+}
 
-function MoodSpark({ data, accent }) {
-  const w = 92
-  const h = 30
-  const pts = data
-    .map((v, i) => `${(i / (data.length - 1)) * (w - 8) + 4},${h - 4 - ((v - 1) / 4) * (h - 9)}`)
-    .join(' ')
-  return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
-      <polyline points={pts} fill="none" stroke={accent} strokeWidth="2.5" strokeLinecap="round" />
-    </svg>
-  )
+/* Derive the view model from a raw API plan, computing the daily unlock from its
+   `playedAt` log: "day-0" is the welcome, "day-1".."day-N" the sessions. The next
+   clip opens once today is PAST the last played date — welcome + Day 1 share the
+   first day, every later session needs a fresh day. */
+function shapePlan(plan, i) {
+  const played = plan.playedAt || {}
+  const today = todayUTC()
+  const dates = Object.values(played)
+  const lastPlayedDate = dates.length ? dates.slice().sort().at(-1) : null
+  const hasWelcome = !!plan.welcomeAudioUrl
+  const welcomePlayed = !!played['day-0']
+  const welcomeSatisfied = welcomePlayed || !hasWelcome
+
+  // completion of each session day comes straight from the play log
+  const sorted = [...(plan.days || [])]
+    .map((d) => ({ ...d, completed: !!played[`day-${d.day}`] }))
+    .sort((a, b) => a.day - b.day)
+  const next = sorted.find((d) => !d.completed) || null
+
+  // why the next clip is locked (or null → it's playable right now)
+  let reason = null // 'welcome' | 'tomorrow' | null
+  if (next) {
+    if (!welcomeSatisfied) reason = 'welcome'
+    else if (next.day >= 2 && !(lastPlayedDate && today > lastPlayedDate)) reason = 'tomorrow'
+  }
+
+  const days = sorted.map((d) => {
+    if (d.completed) return { ...d, available: false, locked: false }
+    const isNext = next && d.day === next.day
+    const available = isNext && reason === null
+    return { ...d, available, locked: !available }
+  })
+
+  const nextDay = days.find((d) => !d.completed) || null
+  const doneCount = days.filter((d) => d.completed).length
+  const total = plan.durationDays || days.length
+  const cover = COVERS[i % COVERS.length]
+  return {
+    ...plan,
+    days,
+    doneCount,
+    nextDay,
+    total,
+    playedAt: played,
+    welcomePlayed,
+    gate: {
+      welcomePlayed,
+      nextDay: next?.day ?? null,
+      nextAvailable: !!next && reason === null,
+      reason,
+      lastPlayedDate,
+    },
+    isComplete: plan.status === 'completed' || (total > 0 && doneCount >= total),
+    cover,
+    accent: ACCENTS[cover],
+    title: plan.archetype || 'Your daily audio plan',
+  }
+}
+
+/* Message for a locked session row / button. */
+function lockReason(plan, d) {
+  if (plan.nextDay && d.day === plan.nextDay.day) {
+    return plan.gate?.reason === 'welcome'
+      ? 'Play the welcome clip first to open Day 1.'
+      : 'You’ve already unlocked today’s session — the next one opens tomorrow.'
+  }
+  return 'Finish the earlier sessions to unlock this one.'
 }
 
 export default function AudioLibrary() {
-  const [unlocked, setUnlocked] = useState(
-    () => new Set(AUDIO_PLANS.filter((p) => !p.locked).map((p) => p.id)),
-  )
-  const [progress, setProgress] = useState(() =>
-    Object.fromEntries(AUDIO_PLANS.map((p) => [p.id, p.completed || 0])),
-  )
-  const [nowPlaying, setNowPlaying] = useState(null) // {planId, day, title, len}
+  const { user, isAuthenticated } = useAuth()
+  const firstName = (user?.name || '').split(' ')[0] || 'there'
+
+  const [state, setState] = useState({ status: 'loading', plans: [] })
+  const [reloadKey, setReloadKey] = useState(0)
+  const [nowPlaying, setNowPlaying] = useState(null) // { planId, kind, day, title, subtitle, url, cover, accent, durationSeconds }
   const [playing, setPlaying] = useState(false)
   const [elapsed, setElapsed] = useState(0)
-  const [modal, setModal] = useState(null) // {plan, step}
+  const [duration, setDuration] = useState(0)
   const [toast, setToast] = useState(null)
+  const [detailPlanId, setDetailPlanId] = useState(null) // plan whose session list is open
+  const autoWelcome = useRef(false) // guard: only auto-open the welcome once per visit
+  const audioRef = useRef(null)
   const toastTimer = useRef(null)
-
-  const plans = useMemo(
-    () =>
-      AUDIO_PLANS.map((p) => ({
-        ...p,
-        isUnlocked: unlocked.has(p.id),
-        done: progress[p.id] ?? 0,
-      })),
-    [unlocked, progress],
-  )
-  const active = plans.filter((p) => p.isUnlocked && p.done < p.days)
-  const completedPlans = plans.filter((p) => p.isUnlocked && p.done >= p.days)
-  const lockedPlans = plans.filter((p) => !p.isUnlocked)
-  const primary = active[0]
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const say = useCallback((msg) => {
     clearTimeout(toastTimer.current)
     setToast(msg)
-    toastTimer.current = setTimeout(() => setToast(null), 4200)
+    toastTimer.current = setTimeout(() => setToast(null), 4600)
   }, [])
-
-  const duration = nowPlaying ? minutesToSeconds(nowPlaying.len) : 0
-
-  const finishSession = useCallback(() => {
-    setPlaying(false)
-    const { planId, day } = nowPlaying
-    const plan = plans.find((p) => p.id === planId)
-    if (day === plan.done + 1) {
-      setProgress((prev) => ({ ...prev, [planId]: day }))
-      say(
-        day >= plan.days
-          ? `Path complete  all ${plan.days} days walked. Time for a retake?`
-          : `Day ${day} complete. Day ${day + 1} unlocks tomorrow at 7:00.`,
-      )
-    } else {
-      say(`Day ${day} replayed  revisiting is part of the practice.`)
-    }
-  }, [nowPlaying, plans, say])
-
-  useEffect(() => {
-    if (!playing || !nowPlaying) return
-    const id = setInterval(() => {
-      setElapsed((e) => Math.min(duration, e + DEMO_SPEED))
-    }, 1000)
-    return () => clearInterval(id)
-  }, [playing, nowPlaying, duration])
-
-  useEffect(() => {
-    if (nowPlaying && elapsed >= duration && duration > 0) finishSession()
-  }, [elapsed, duration, nowPlaying, finishSession])
-
   useEffect(() => () => clearTimeout(toastTimer.current), [])
 
-  function play(plan, session) {
-    if (session.day > plan.done + 1) {
-      const wait = session.day - plan.done - 1
-      say(
-        wait === 1
-          ? `Day ${session.day} unlocks tomorrow at 7:00  one day at a time.`
-          : `Day ${session.day} is ${wait} mornings away  one day at a time.`,
-      )
+  /* fetch the user's plans */
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setState({ status: 'unauth', plans: [] })
       return
     }
-    setNowPlaying({
-      planId: plan.id,
-      planTitle: plan.title,
-      cover: plan.cover,
-      accent: plan.accent,
-      ...session,
-    })
-    setElapsed(0)
-    setPlaying(true)
+    let alive = true
+    setState({ status: 'loading', plans: [] })
+    getAudioPlans()
+      .then((list) => {
+        if (!alive) return
+        const plans = Array.isArray(list) ? list : []
+        setState({ status: plans.length ? 'ready' : 'empty', plans })
+      })
+      .catch((err) => alive && setState({ status: 'error', error: err.message, plans: [] }))
+    return () => {
+      alive = false
+    }
+  }, [isAuthenticated, reloadKey])
+
+  const plans = useMemo(() => state.plans.map(shapePlan), [state.plans])
+  // The hero follows whatever's playing (so playing a clip from "Your paths"
+  // pulls that library up top); otherwise it defaults to the first active plan.
+  const primary =
+    plans.find((p) => p.id === nowPlaying?.planId) || plans.find((p) => !p.isComplete) || plans[0]
+  const detailPlan = detailPlanId ? plans.find((p) => p.id === detailPlanId) : null
+
+  /* replace one plan in state with a fresh server copy (after mark/complete) */
+  const patchPlan = useCallback((updated) => {
+    setState((s) => ({ ...s, plans: s.plans.map((p) => (p.id === updated.id ? updated : p)) }))
+  }, [])
+
+  /* bring the hero into view when a clip is launched from lower on the page */
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+
+  /* ----- playback (real <audio>) ----- */
+  const playTrack = useCallback(
+    (track) => {
+      if (!track.url) {
+        say('That session’s audio isn’t ready yet.')
+        return
+      }
+      setNowPlaying(track)
+      setElapsed(0)
+      setDuration(track.durationSeconds || 0)
+    },
+    [say],
+  )
+
+  // load + play whenever the track changes
+  useEffect(() => {
+    const el = audioRef.current
+    if (!el || !nowPlaying) return
+    el.load()
+    const p = el.play()
+    if (p && p.catch) p.catch(() => setPlaying(false))
+  }, [nowPlaying])
+
+  // Record a clip as played (day 0 = welcome, 1..N = sessions) and fold the
+  // updated plan back into state. The server stamps the date into playedAt.
+  const recordPlayed = useCallback(
+    async (planId, day) => {
+      try {
+        const updated = await markPlayed(planId, day)
+        patchPlan(updated)
+        if (day === 0) {
+          say('Welcome played — Day 1 is unlocked.')
+          return
+        }
+        const total = updated.durationDays || (updated.days || []).length
+        const sessionsDone = Object.keys(updated.playedAt || {}).filter((k) => k !== 'day-0').length
+        say(
+          sessionsDone >= total
+            ? `Path complete — all ${total} days walked. Beautiful work.`
+            : `Day ${day} done — Day ${day + 1} opens tomorrow.`,
+        )
+      } catch (e) {
+        // server rejects a locked clip with a friendly 423 message
+        say(e?.message || 'Couldn’t save your progress — check your connection and try again.')
+      }
+    },
+    [patchPlan, say],
+  )
+
+  const onEnded = () => {
+    setPlaying(false)
+    if (nowPlaying?.kind === 'day') recordPlayed(nowPlaying.planId, nowPlaying.day)
+    else if (nowPlaying?.kind === 'welcome') recordPlayed(nowPlaying.planId, 0)
   }
 
-  function togglePlay() {
-    if (elapsed >= duration) setElapsed(0)
-    setPlaying((p) => !p)
+  const togglePlay = () => {
+    const el = audioRef.current
+    if (!el) return
+    if (el.paused) el.play()
+    else el.pause()
   }
 
-  function seek(e) {
+  const seek = (e) => {
+    const el = audioRef.current
+    if (!el || !duration) return
     const rect = e.currentTarget.getBoundingClientRect()
     const ratio = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
-    setElapsed(Math.round(ratio * duration))
+    el.currentTime = ratio * duration
   }
 
-  function startUnlock(plan) {
-    setModal({ plan, step: 'offer' })
+  const playWelcome = (p) =>
+    playTrack({
+      planId: p.id,
+      kind: 'welcome',
+      title: 'Welcome from your guide',
+      subtitle: p.title,
+      url: p.welcomeAudioUrl,
+      cover: p.cover,
+      accent: p.accent,
+      durationSeconds: 0,
+    })
+
+  const playDay = (p, d) =>
+    playTrack({
+      planId: p.id,
+      kind: 'day',
+      day: d.day,
+      title: d.session?.title || d.title,
+      subtitle: `${p.title} · Day ${d.day}`,
+      url: d.session?.audioUrl,
+      cover: p.cover,
+      accent: p.accent,
+      durationSeconds: d.session?.durationSeconds || 0,
+    })
+
+  /* The welcome + day rows for a plan — shared by the hero and the library
+     detail modal. Completed and available sessions play on click; locked ones
+     explain when they open. `afterPlay` lets the modal close once one starts. */
+  const renderSessions = (plan, afterPlay) => (
+    <div className="ap-also-list">
+      {plan.welcomeAudioUrl && (
+        <button
+          className={`ap-also-row ap-also-session ${plan.welcomePlayed ? 'done' : 'today'} ${
+            nowPlaying?.planId === plan.id && nowPlaying?.kind === 'welcome' ? 'current' : ''
+          }`}
+          onClick={() => {
+            playWelcome(plan)
+            afterPlay?.()
+          }}
+        >
+          <span className="ap-also-state">
+            {plan.welcomePlayed ? <Check size={13} /> : <Sparkles size={12} />}
+          </span>
+          <span className="ap-also-text">
+            <strong>Welcome · a short hello</strong>
+          </span>
+          <span className="ap-also-len">{plan.welcomePlayed ? 'played' : 'intro'}</span>
+        </button>
+      )}
+      {plan.days.map((d) => {
+        const isCurrent =
+          nowPlaying?.planId === plan.id && nowPlaying?.kind === 'day' && nowPlaying?.day === d.day
+        const cls = d.completed ? 'done' : d.available ? 'today' : 'locked'
+        return (
+          <button
+            key={d.day}
+            className={`ap-also-row ap-also-session ${cls} ${isCurrent ? 'current' : ''}`}
+            onClick={() => {
+              if (d.locked) {
+                say(lockReason(plan, d))
+                return
+              }
+              playDay(plan, d)
+              afterPlay?.()
+            }}
+          >
+            <span
+              className="ap-also-state"
+              style={d.available ? { background: plan.accent, color: '#fff' } : undefined}
+            >
+              {d.completed ? (
+                <Check size={13} />
+              ) : d.locked ? (
+                <Lock size={12} />
+              ) : (
+                <Play size={11} fill="currentColor" strokeWidth={0} />
+              )}
+            </span>
+            <span className="ap-also-text">
+              <strong>
+                Day {d.day} · {d.session?.title || d.title}
+              </strong>
+            </span>
+            <span className="ap-also-len">
+              {d.session?.durationSeconds ? formatTime(d.session.durationSeconds) : '—'}
+            </span>
+          </button>
+        )
+      })}
+    </div>
+  )
+
+  /* Arriving from a report's "Audio" button: once the plans are in, play the
+     welcome for THAT assessment's plan only (never another one). The nav state
+     is then cleared so a refresh doesn't replay it. */
+  useEffect(() => {
+    if (autoWelcome.current || state.status !== 'ready') return
+    const target = location.state?.welcomeFor
+    if (!target) return
+    autoWelcome.current = true
+    navigate(location.pathname, { replace: true, state: null })
+    const plan = plans.find((p) => String(p.assessment) === String(target))
+    // land on the library either way; only auto-play if this plan has a welcome clip
+    if (!plan || !plan.welcomeAudioUrl) return
+    // start on the next frame (after paint) so playback flows from the click
+    const raf = requestAnimationFrame(() => playWelcome(plan))
+    return () => cancelAnimationFrame(raf)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.status, plans])
+
+  /* close the library detail modal on Escape */
+  useEffect(() => {
+    if (!detailPlanId) return
+    const onKey = (e) => e.key === 'Escape' && setDetailPlanId(null)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [detailPlanId])
+
+  /* ----- non-ready states ----- */
+  if (state.status === 'loading') {
+    return (
+      <main className="ap ap-state-wrap">
+        <div className="ap-state">
+          <Loader2 size={26} className="ap-spin" />
+          <p>Loading your audio plan…</p>
+        </div>
+      </main>
+    )
   }
 
-  function confirmUnlock() {
-    setModal((m) => ({ ...m, step: 'processing' }))
-    setTimeout(() => setModal((m) => ({ ...m, step: 'done' })), 1500)
+  if (state.status === 'unauth') {
+    return (
+      <main className="ap ap-state-wrap">
+        <div className="ap-state">
+          <Headphones size={30} />
+          <h1>Your audio plans live here</h1>
+          <p>Log in to see the daily audio plan generated from your assessment.</p>
+          <Link to="/login?next=/audio" className="btn btn-primary">
+            Log in
+          </Link>
+        </div>
+      </main>
+    )
   }
 
-  function finishUnlock(playNow) {
-    const plan = modal.plan
-    setUnlocked((prev) => new Set([...prev, plan.id]))
-    setProgress((prev) => ({ ...prev, [plan.id]: 0 }))
-    setModal(null)
-    if (playNow) {
-      setNowPlaying({
-        planId: plan.id,
-        planTitle: plan.title,
-        cover: plan.cover,
-        accent: plan.accent,
-        ...plan.sessions[0],
-      })
-      setElapsed(0)
-      setPlaying(true)
-    } else {
-      say(`${plan.title} unlocked  Day 1 is ready when you are.`)
-    }
+  if (state.status === 'error') {
+    return (
+      <main className="ap ap-state-wrap">
+        <div className="ap-state" role="alert">
+          <h1>We couldn’t load your plans</h1>
+          <p>{state.error}</p>
+          <button className="btn btn-primary" onClick={() => setReloadKey((k) => k + 1)}>
+            Try again
+          </button>
+        </div>
+      </main>
+    )
   }
 
-  const nextOf = (p) => p.sessions[p.done] // next session object
+  if (state.status === 'empty') {
+    return (
+      <main className="ap ap-state-wrap">
+        <div className="ap-state">
+          <Headphones size={30} />
+          <h1>No audio plan yet</h1>
+          <p>
+            A personalised daily-audio plan is generated from your <strong>first</strong> attempt at
+            an assessment. Take one to unlock a guided path sequenced from your report.
+          </p>
+          <Link to="/assessments" className="btn btn-primary">
+            Explore assessments <ArrowRight size={16} />
+          </Link>
+        </div>
+      </main>
+    )
+  }
+
+  /* ----- ready ----- */
+  const gate = primary?.gate || {}
+  const nextD = primary?.nextDay || null
+  // what the hero's "up next" card shows
+  const heroMode = !primary
+    ? null
+    : !primary.welcomePlayed && primary.welcomeAudioUrl
+      ? 'welcome'
+      : primary.isComplete
+        ? 'complete'
+        : nextD
+          ? gate.nextAvailable
+            ? 'day-open'
+            : 'day-locked'
+          : 'complete'
+  // while a clip is playing, the hero card shows THAT clip instead of "up next"
+  const isPlayingHero = !!nowPlaying && nowPlaying.planId === primary?.id
 
   return (
     <main className="ap">
-      {/* ===== header / up next ===== */}
+      {/* ===== hero / up next ===== */}
       <header className="ap-hero">
         <div className="container">
           <Reveal as="span" className="eyebrow on-dark">
             Your audio library
           </Reveal>
           <Reveal as="h1" className="ap-h1" delay={0.07}>
-            Good evening, Maya. <em>Day {primary ? primary.done + 1 : 1} is ready.</em>
+            {primary?.isComplete ? (
+              <>
+                Nicely done, {firstName}. <em>Your path is complete.</em>
+              </>
+            ) : heroMode === 'day-locked' ? (
+              <>
+                Good work today, {firstName}. <em>Day {nextD?.day} opens tomorrow.</em>
+              </>
+            ) : heroMode === 'welcome' ? (
+              <>
+                Welcome, {firstName}. <em>Your plan is ready.</em>
+              </>
+            ) : (
+              <>
+                Good to see you, {firstName}.{' '}
+                <em>{nextD ? `Day ${nextD.day} is ready.` : 'Your plan is ready.'}</em>
+              </>
+            )}
           </Reveal>
 
           <div className="ap-upnext">
             {primary && (
-              <Reveal className={`ap-primary cover-${primary.cover}`} delay={0.14}>
+              <Reveal className={`ap-primary ${primary.cover}`} delay={0.14}>
                 <div className="ap-primary-scene" aria-hidden="true" />
                 <div className="ap-primary-body">
-                  <p className="ap-kicker">
-                    Up next · {primary.title} · Day {primary.done + 1} of {primary.days}
-                  </p>
-                  <h2>{nextOf(primary).title}</h2>
-                  <p className="ap-primary-meta">
-                    {nextOf(primary).len} · evening session · last visited{' '}
-                    {primary.lastListened || 'just now'}
-                  </p>
-                  <div className="ap-primary-actions">
-                    <button
-                      className="btn btn-light"
-                      onClick={() => play(primary, nextOf(primary))}
-                    >
-                      <Play size={17} fill="currentColor" strokeWidth={0} /> Begin Day{' '}
-                      {primary.done + 1}
-                    </button>
-                  </div>
+                  {isPlayingHero ? (
+                    <>
+                      <p className="ap-kicker ap-kicker-live">
+                        <span className={`ap-now-eq${playing ? ' on' : ''}`} aria-hidden="true">
+                          <i />
+                          <i />
+                          <i />
+                        </span>
+                        {playing ? 'Now playing' : 'Paused'} · {primary.title}
+                      </p>
+                      <h2>{nowPlaying.title}</h2>
+                      <p className="ap-primary-meta">{nowPlaying.subtitle}</p>
+                      <div className="ap-now-bar" aria-hidden="true">
+                        <i style={{ width: `${duration ? (elapsed / duration) * 100 : 0}%` }} />
+                      </div>
+                      <div className="ap-primary-actions">
+                        <button className="btn btn-light" onClick={togglePlay}>
+                          {playing ? (
+                            <>
+                              <Pause size={17} fill="currentColor" strokeWidth={0} /> Pause
+                            </>
+                          ) : (
+                            <>
+                              <Play size={17} fill="currentColor" strokeWidth={0} /> Resume
+                            </>
+                          )}
+                        </button>
+                        <span className="ap-now-time">
+                          {formatTime(elapsed)} / {formatTime(duration)}
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {heroMode === 'welcome' && (
+                        <>
+                          <p className="ap-kicker">Start here · {primary.title}</p>
+                          <h2>Welcome from your guide</h2>
+                          <p className="ap-primary-meta">
+                            A short hello, then {primary.total} days — one session each.
+                          </p>
+                          <div className="ap-primary-actions">
+                            <button className="btn btn-light" onClick={() => playWelcome(primary)}>
+                              <Play size={17} fill="currentColor" strokeWidth={0} /> Play welcome
+                            </button>
+                            <button
+                              className="ap-mark-btn"
+                              onClick={() => recordPlayed(primary.id, 0)}
+                            >
+                              <Check size={15} /> Mark as played
+                            </button>
+                          </div>
+                        </>
+                      )}
+
+                      {heroMode === 'day-open' && nextD && (
+                        <>
+                          <p className="ap-kicker">
+                            Up next · {primary.title} · Day {nextD.day} of {primary.total}
+                          </p>
+                          <h2>{nextD.session?.title || nextD.title}</h2>
+                          <p className="ap-primary-meta">
+                            {nextD.session?.durationSeconds
+                              ? `${formatTime(nextD.session.durationSeconds)} · `
+                              : ''}
+                            {nextD.focus || 'guided session'}
+                          </p>
+                          <div className="ap-primary-actions">
+                            <button
+                              className="btn btn-light"
+                              onClick={() => playDay(primary, nextD)}
+                            >
+                              <Play size={17} fill="currentColor" strokeWidth={0} /> Begin Day{' '}
+                              {nextD.day}
+                            </button>
+                            <button
+                              className="ap-mark-btn"
+                              onClick={() => recordPlayed(primary.id, nextD.day)}
+                            >
+                              <Check size={15} /> Mark as completed
+                            </button>
+                          </div>
+                        </>
+                      )}
+
+                      {heroMode === 'day-locked' && nextD && (
+                        <>
+                          <p className="ap-kicker">
+                            Up next · {primary.title} · Day {nextD.day} of {primary.total}
+                          </p>
+                          <h2>{nextD.session?.title || nextD.title}</h2>
+                          <p className="ap-primary-meta">
+                            {nextD.session?.durationSeconds
+                              ? `${formatTime(nextD.session.durationSeconds)} · `
+                              : ''}
+                            {nextD.focus || 'guided session'}
+                          </p>
+                          <div className="ap-primary-actions">
+                            <span className="ap-locked-btn">
+                              <Lock size={16} /> Opens tomorrow
+                            </span>
+                          </div>
+                          <p className="ap-locked-note">
+                            <Sparkles size={13} /> One session a day — you’ve done today’s. Come
+                            back tomorrow for Day {nextD.day}.
+                          </p>
+                        </>
+                      )}
+
+                      {heroMode === 'complete' && (
+                        <>
+                          <p className="ap-kicker">Complete · {primary.title}</p>
+                          <h2>Every day walked.</h2>
+                          <p className="ap-primary-meta">
+                            All {primary.total} sessions done. Replay any of them any time.
+                          </p>
+                          <div className="ap-primary-actions">
+                            <button
+                              className="btn btn-light"
+                              onClick={() => playDay(primary, primary.days[0])}
+                            >
+                              <Play size={17} fill="currentColor" strokeWidth={0} /> Replay Day 1
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
               </Reveal>
             )}
 
-            <Reveal className="ap-alsotoday" delay={0.22}>
-              <div className="ap-also-inner">
-                {primary ? (
-                  <>
-                    <p className="panel-title">
-                      Session by session{' '}
-                      <em>
-                        {primary.done}/{primary.days}
-                      </em>
-                    </p>
-                    <div className="ap-also-list">
-                      {primary.sessions.map((s) => {
-                        const state =
-                          s.day <= primary.done
-                            ? 'done'
-                            : s.day === primary.done + 1
-                              ? 'today'
-                              : 'locked'
-                        const isCurrent =
-                          nowPlaying?.planId === primary.id && nowPlaying?.day === s.day
-                        return (
-                          <button
-                            key={s.day}
-                            className={`ap-also-row ap-also-session ${state} ${isCurrent ? 'current' : ''}`}
-                            onClick={() => play(primary, s)}
-                            aria-label={`Day ${s.day}: ${s.title}, ${
-                              state === 'locked'
-                                ? 'locked'
-                                : state === 'done'
-                                  ? 'completed, replay'
-                                  : 'play'
-                            }`}
-                          >
-                            <span
-                              className="ap-also-state"
-                              style={
-                                state === 'today'
-                                  ? { background: primary.accent, color: '#fff' }
-                                  : undefined
-                              }
-                            >
-                              {state === 'done' ? (
-                                <Check size={13} />
-                              ) : state === 'today' ? (
-                                <Play size={11} fill="currentColor" strokeWidth={0} />
-                              ) : (
-                                <Lock size={11} />
-                              )}
-                            </span>
-                            <span className="ap-also-text">
-                              <strong>
-                                Day {s.day} · {s.title}
-                              </strong>
-                            </span>
-                            <span className="ap-also-len">
-                              {state === 'locked' ? `+${s.day - primary.done - 1}d` : s.len}
-                            </span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                    <p className="ap-also-note">
-                      <Sparkles size={13} /> One new session unlocks each morning.
-                    </p>
-                  </>
-                ) : (
-                  <p className="ap-also-empty">
-                    No active path right now unlock one below to begin.
+            {primary && (
+              <Reveal className="ap-alsotoday" delay={0.22}>
+                <div className="ap-also-inner">
+                  <p className="panel-title">
+                    Session by session{' '}
+                    <em>
+                      {primary.doneCount}/{primary.total}
+                    </em>
                   </p>
-                )}
-              </div>
-            </Reveal>
+                  {renderSessions(primary)}
+                  <p className="ap-also-note">
+                    <Sparkles size={13} /> One new session unlocks each day.
+                  </p>
+                </div>
+              </Reveal>
+            )}
           </div>
         </div>
       </header>
 
-      {/* ===== your paths ===== */}
+      {/* ===== all plans ===== */}
       <section className="ap-section">
         <div className="container">
           <div className="ap-section-head">
@@ -288,118 +621,91 @@ export default function AudioLibrary() {
               <Headphones size={19} /> Your paths
             </h2>
             <span className="ap-section-count">
-              {active.length} active · {completedPlans.length} complete
+              {plans.filter((p) => !p.isComplete).length} active ·{' '}
+              {plans.filter((p) => p.isComplete).length} complete
             </span>
           </div>
           <div className="ap-plans-grid">
-            {[...active, ...completedPlans].map((p, i) => {
-              const isDone = p.done >= p.days
-              return (
-                <Reveal as="article" key={p.id} className="ap-plan-card" delay={(i % 3) * 0.08}>
-                  <div className={`ap-plan-cover cover-${p.cover}`}>
-                    {isDone ? (
-                      <span className="ap-done-badge">
-                        <BadgeCheck size={14} /> Completed
-                      </span>
-                    ) : (
-                      <span className="ap-day-badge">
-                        Day {p.done + 1} of {p.days}
-                      </span>
-                    )}
-                    {p.free && <span className="ap-free-badge">Free</span>}
-                  </div>
-                  <div className="ap-plan-body">
-                    <h3>{p.title}</h3>
-                    <div className="ap-progress">
-                      <div className="ap-progress-track">
-                        <i style={{ width: `${(p.done / p.days) * 100}%`, background: p.accent }} />
-                      </div>
-                      <span>
-                        {p.done}/{p.days}
-                      </span>
-                    </div>
-                    {p.moodTrend ? (
-                      <div className="ap-plan-mood">
-                        <MoodSpark data={p.moodTrend} accent={p.accent} />
-                        <span className="ap-mood-delta">
-                          <TrendingUp size={12} /> mood {p.moodDelta}
-                        </span>
-                      </div>
-                    ) : (
-                      <p className="ap-mood-pending">
-                        Your mood trend appears after the first check-ins.
-                      </p>
-                    )}
-                    <div className="ap-plan-actions">
-                      {isDone ? (
-                        <>
-                          <button className="ap-btn-play" onClick={() => play(p, p.sessions[0])}>
-                            <Play size={14} fill="currentColor" strokeWidth={0} /> Replay Day 1
-                          </button>
-                          <Link className="ap-ghostlink" to={`/assessments/${p.id}`}>
-                            Retake <ArrowRight size={14} />
-                          </Link>
-                        </>
-                      ) : (
-                        <button className="ap-btn-play" onClick={() => play(p, nextOf(p))}>
-                          <Play size={14} fill="currentColor" strokeWidth={0} /> Begin Day{' '}
-                          {p.done + 1}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </Reveal>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== locked plans ===== */}
-      <section className="ap-section ap-locked-section">
-        <div className="container">
-          <div className="ap-section-head">
-            <h2 className="rp-h2 on-night">
-              <Lock size={18} /> Paths waiting for you
-            </h2>
-            <span className="ap-section-count">{lockedPlans.length} paths</span>
-          </div>
-          <p className="ap-locked-sub">
-            Each plan is sequenced from its assessment report or unlock the plan alone and start
-            with the standard sequence.
-          </p>
-          <div className="ap-plans-grid">
-            {lockedPlans.map((p, i) => (
+            {plans.map((p, i) => (
               <Reveal
                 as="article"
                 key={p.id}
-                className="ap-plan-card ap-locked-card"
+                className="ap-plan-card"
                 delay={(i % 3) * 0.08}
+                onClick={() => setDetailPlanId(p.id)}
               >
-                <div className={`ap-plan-cover cover-${p.cover} is-locked`}>
-                  <span className="ap-lock-overlay">
-                    <Lock size={18} />
-                  </span>
-                  <span className="ap-day-badge">{p.days} days</span>
+                <div className={`ap-plan-cover ${p.cover}`}>
+                  {p.isComplete ? (
+                    <span className="ap-done-badge">
+                      <BadgeCheck size={14} /> Completed
+                    </span>
+                  ) : (
+                    <span className="ap-day-badge">
+                      Day {p.doneCount + 1} of {p.total}
+                    </span>
+                  )}
                 </div>
                 <div className="ap-plan-body">
                   <h3>{p.title}</h3>
-                  <p className="ap-pitch">{p.pitch}</p>
-                  <ul className="ap-preview">
-                    {p.sessions.slice(0, 3).map((s) => (
-                      <li key={s.day}>
-                        <Lock size={11} /> Day {s.day} · {s.title}
-                      </li>
-                    ))}
-                    <li className="ap-preview-more">…and {p.days - 3} more, one each morning</li>
-                  </ul>
+                  <div className="ap-progress">
+                    <div className="ap-progress-track">
+                      <i
+                        style={{ width: `${(p.doneCount / p.total) * 100}%`, background: p.accent }}
+                      />
+                    </div>
+                    <span>
+                      {p.doneCount}/{p.total}
+                    </span>
+                  </div>
                   <div className="ap-plan-actions">
-                    <button className="ap-btn-unlock" onClick={() => startUnlock(p)}>
-                      Unlock · {p.price}
+                    {p.isComplete ? (
+                      <button
+                        className="ap-btn-play"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          playDay(p, p.days[0])
+                          scrollToTop()
+                        }}
+                      >
+                        <Play size={14} fill="currentColor" strokeWidth={0} /> Replay Day 1
+                      </button>
+                    ) : !p.welcomePlayed && p.welcomeAudioUrl ? (
+                      <button
+                        className="ap-btn-play"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          playWelcome(p)
+                          scrollToTop()
+                        }}
+                      >
+                        <Play size={14} fill="currentColor" strokeWidth={0} /> Play welcome
+                      </button>
+                    ) : p.gate?.nextAvailable ? (
+                      <button
+                        className="ap-btn-play"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          playDay(p, p.nextDay || p.days[0])
+                          scrollToTop()
+                        }}
+                      >
+                        <Play size={14} fill="currentColor" strokeWidth={0} /> Begin Day{' '}
+                        {p.doneCount + 1}
+                      </button>
+                    ) : (
+                      <span className="ap-btn-play locked">
+                        <Lock size={14} /> Opens tomorrow
+                      </span>
+                    )}
+                    <button
+                      className="ap-plan-view"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setDetailPlanId(p.id)
+                      }}
+                    >
+                      View sessions <ArrowRight size={14} />
                     </button>
-                    <Link className="ap-ghostlink" to={`/assessments/${p.assessmentId}`}>
-                      Or take the assessment <ArrowRight size={14} />
-                    </Link>
                   </div>
                 </div>
               </Reveal>
@@ -417,16 +723,60 @@ export default function AudioLibrary() {
         )}
       </div>
 
+      {/* ===== library detail: what's in this path + play any unlocked session ===== */}
+      {detailPlan && (
+        <div className="ap-modal-overlay" onClick={() => setDetailPlanId(null)}>
+          <div className="ap-modal ap-detail-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="ap-modal-close"
+              onClick={() => setDetailPlanId(null)}
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+            <div className={`ap-modal-cover ${detailPlan.cover}`} aria-hidden="true" />
+            <p className="ap-kicker">
+              {detailPlan.isComplete
+                ? `Complete · ${detailPlan.total} sessions`
+                : `${detailPlan.doneCount}/${detailPlan.total} done · Day ${detailPlan.doneCount + 1} up next`}
+            </p>
+            <h3>{detailPlan.title}</h3>
+            <p className="ap-modal-pitch">
+              Everything in this path. Play any session you’ve unlocked — new ones open one a day.
+            </p>
+            {renderSessions(detailPlan, () => {
+              setDetailPlanId(null)
+              scrollToTop()
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* real audio element (hidden) */}
+      <audio
+        ref={audioRef}
+        src={nowPlaying?.url || undefined}
+        preload="metadata"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onEnded={onEnded}
+        onTimeUpdate={(e) => setElapsed(e.currentTarget.currentTime)}
+        onLoadedMetadata={(e) => {
+          // some streams report Infinity until fully buffered — keep the known
+          // durationSeconds (set in playTrack) unless the audio gives a real one
+          const d = e.currentTarget.duration
+          if (Number.isFinite(d) && d > 0) setDuration(d)
+        }}
+      />
+
       {/* ===== player bar ===== */}
       {nowPlaying && (
         <div className={`ap-player ${playing ? 'playing' : ''}`}>
           <div className="container ap-player-inner">
-            <span className={`ap-mini-cover lg cover-${nowPlaying.cover}`} aria-hidden="true" />
+            <span className={`ap-mini-cover lg ${nowPlaying.cover}`} aria-hidden="true" />
             <div className="ap-player-meta">
-              <strong>
-                Day {nowPlaying.day} · {nowPlaying.title}
-              </strong>
-              <small>{nowPlaying.planTitle}</small>
+              <strong>{nowPlaying.title}</strong>
+              <small>{nowPlaying.subtitle}</small>
             </div>
             <div className="ap-player-eq" aria-hidden="true">
               {EQ_BARS.map((h, i) => (
@@ -450,10 +800,10 @@ export default function AudioLibrary() {
               onClick={togglePlay}
               aria-label={playing ? 'Pause' : 'Play'}
             >
-              {elapsed >= duration ? (
-                <CheckCheck size={20} />
-              ) : playing ? (
+              {playing ? (
                 <Pause size={20} fill="currentColor" strokeWidth={0} />
+              ) : elapsed > 0 && duration && elapsed >= duration ? (
+                <CheckCheck size={20} />
               ) : (
                 <Play size={20} fill="currentColor" strokeWidth={0} style={{ marginLeft: 2 }} />
               )}
@@ -461,97 +811,13 @@ export default function AudioLibrary() {
             <button
               className="ap-player-close"
               onClick={() => {
-                setPlaying(false)
+                audioRef.current?.pause()
                 setNowPlaying(null)
               }}
               aria-label="Close player"
             >
               <X size={17} />
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* ===== unlock modal ===== */}
-      {modal && (
-        <div
-          className="ap-modal-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Unlock ${modal.plan.title}`}
-          onClick={(e) => {
-            if (e.target === e.currentTarget && modal.step !== 'processing') setModal(null)
-          }}
-        >
-          <div className="ap-modal">
-            {modal.step === 'offer' && (
-              <>
-                <div className={`ap-modal-cover cover-${modal.plan.cover}`} aria-hidden="true" />
-                <h3>{modal.plan.title}</h3>
-                <p className="ap-modal-pitch">{modal.plan.pitch}</p>
-                <ul className="ap-modal-list">
-                  <li>
-                    <Check size={15} /> {modal.plan.days} sessions, 5–10 minutes each
-                  </li>
-                  <li>
-                    <Check size={15} /> One new session unlocks every morning
-                  </li>
-                  <li>
-                    <Check size={15} /> Welcome audio recorded with your name
-                  </li>
-                  <li>
-                    <Check size={15} /> Mood check-ins &amp; trend tracking
-                  </li>
-                </ul>
-                <p className="ap-modal-reco">
-                  <Sparkles size={14} /> Best results: take the{' '}
-                  {modal.plan.days >= 21 ? '12' : '11'}-minute assessment first your sessions get
-                  sequenced from your report, and the plan is included.
-                </p>
-                <div className="ap-modal-actions">
-                  <Link to={`/assessments/${modal.plan.assessmentId}`} className="btn btn-light">
-                    Take the assessment · $19
-                  </Link>
-                  <button className="ap-btn-unlock lg" onClick={confirmUnlock}>
-                    Unlock plan only · {modal.plan.price}
-                  </button>
-                </div>
-                <button
-                  className="ap-modal-close"
-                  onClick={() => setModal(null)}
-                  aria-label="Close"
-                >
-                  <X size={18} />
-                </button>
-              </>
-            )}
-            {modal.step === 'processing' && (
-              <div className="ap-modal-processing">
-                <Loader2 size={34} className="ap-spin" />
-                <h3>Securing your sessions…</h3>
-                <p>Demo checkout no card, no charge.</p>
-              </div>
-            )}
-            {modal.step === 'done' && (
-              <div className="ap-modal-done">
-                <span className="ap-done-check">
-                  <Check size={26} />
-                </span>
-                <h3>{modal.plan.title} unlocked</h3>
-                <p>
-                  Day 1 is ready right now. Day 2 arrives tomorrow at 7:00 the path works one
-                  morning at a time.
-                </p>
-                <div className="ap-modal-actions">
-                  <button className="btn btn-light" onClick={() => finishUnlock(true)}>
-                    <Play size={16} fill="currentColor" strokeWidth={0} /> Play Day 1 now
-                  </button>
-                  <button className="ap-ghostlink" onClick={() => finishUnlock(false)}>
-                    Later tonight
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}

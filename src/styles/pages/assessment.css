@@ -1,5 +1,5 @@
 /* ============================================================
-   MindPath  assessment routes (catalog, detail, take, report)
+   Daybreak  assessment routes (catalog, detail, take, report)
    ============================================================ */
 
 /* ------- catalog ------- */
@@ -763,9 +763,12 @@
 
 .take-stage {
   flex: 1;
-  display: grid;
-  place-items: center;
-  padding: 40px 20px 64px;
+  display: flex;
+  justify-content: center;
+  /* top-aligned, not centered: a longer question grows the card downward
+     instead of re-centering it, so the card never jumps between questions */
+  align-items: flex-start;
+  padding: clamp(36px, 7vh, 92px) 20px 64px;
 }
 
 .take-card {
@@ -775,22 +778,36 @@
   border-radius: var(--r-xl);
   box-shadow: var(--shadow-lift);
   padding: 44px 48px;
-  animation: cardIn 0.5s var(--ease-out) both;
-  transition:
-    opacity 0.32s ease,
-    transform 0.32s ease;
+  /* one gentle fade when the card first appears — the FRAME then stays put for
+     the whole assessment; only the inner content changes per question */
+  animation: qFade 0.5s ease both;
 }
 
-@keyframes cardIn {
+@keyframes qFade {
   from {
     opacity: 0;
-    transform: translateY(9px);
   }
 }
 
-.take-card.leaving {
-  opacity: 0;
-  transform: translateY(-7px);
+/* gentle rise-and-fade entrance, used by the generating screen and audio cards */
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* Per-question change: the card frame holds steady; only this inner block
+   settles in, fading from 60% (never to empty), so there's no blink and no
+   jump — calm and easy on the eyes. */
+.take-q-body {
+  animation: qSettle 0.45s ease both;
+}
+
+@keyframes qSettle {
+  from {
+    opacity: 0.6;
+  }
 }
 
 /* ---- live take-flow states ---- */
@@ -1041,7 +1058,8 @@
   line-height: 1.18;
   letter-spacing: -0.01em;
   margin: 28px 0 34px;
-  min-height: 2.4em;
+  /* reserve room for up to ~3 lines so the answer buttons below never shift */
+  min-height: 3.4em;
   text-wrap: balance;
 }
 
@@ -1276,6 +1294,20 @@
   background: radial-gradient(900px 500px at 50% -10%, #332a66 0%, transparent 60%), var(--night);
   color: var(--night-ink);
   text-align: center;
+}
+
+/* full-screen overlay variant (audio-plan ceremony over the library) */
+.genscreen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  animation: genOverlayIn 0.4s ease both;
+}
+
+@keyframes genOverlayIn {
+  from {
+    opacity: 0;
+  }
 }
 
 .gen-orb {

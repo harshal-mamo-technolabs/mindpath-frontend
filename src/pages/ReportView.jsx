@@ -65,7 +65,11 @@ export default function ReportView() {
 
   const firstName = (user?.name || '').split(' ')[0] || 'You'
   const taken = score.createdAt
-    ? new Date(score.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })
+    ? new Date(score.createdAt).toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
     : null
 
   return (
@@ -85,6 +89,7 @@ export default function ReportView() {
           name={firstName}
           attempt={score.attemptNumber}
           onRetake={() => navigate(`/assessments/${slug}/take`)}
+          assessmentId={score.assessment?.id}
         />
       </main>
     </div>

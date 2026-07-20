@@ -111,7 +111,7 @@ export default function Dashboard() {
   })
 
   function copyInvite() {
-    const link = 'mindpath.app/invite/MAYA-CALM'
+    const link = 'daybreak.app/invite/MAYA-CALM'
     navigator.clipboard?.writeText(link).catch(() => {})
     say('Invite link copied  you both get a free session.')
   }

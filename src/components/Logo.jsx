@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 export default function Logo() {
   return (
-    <Link to="/" className="logo" aria-label="MindPath home">
+    <Link to="/" className="logo" aria-label="Daybreak home">
       <span className="logo-mark" aria-hidden="true">
         <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
           <path
@@ -14,7 +14,7 @@ export default function Logo() {
           <circle cx="49" cy="18" r="5" fill="#EEB381" />
         </svg>
       </span>
-      MindPath
+      Daybreak
     </Link>
   )
 }

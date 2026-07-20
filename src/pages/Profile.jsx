@@ -175,7 +175,7 @@ export default function Profile() {
   }
 
   function copyInvite() {
-    navigator.clipboard?.writeText('mindpath.app/invite/MAYA-CALM').catch(() => {})
+    navigator.clipboard?.writeText('daybreak.app/invite/MAYA-CALM').catch(() => {})
     say('Invite link copied to clipboard.')
   }
 
@@ -389,7 +389,7 @@ export default function Profile() {
                 <div className="pf-referral-code">
                   <span className="pf-code-label">Your invite link</span>
                   <div className="pf-code-row">
-                    <code>mindpath.app/invite/MAYA-CALM</code>
+                    <code>daybreak.app/invite/MAYA-CALM</code>
                     <button className="pf-copy-btn" onClick={copyInvite}>
                       <Copy size={15} /> Copy
                     </button>
@@ -439,7 +439,7 @@ export default function Profile() {
               </div>
 
               <p className="pf-disclaimer">
-                <Shield size={14} /> MindPath assessments are self-reflection tools, not clinical or
+                <Shield size={14} /> Daybreak assessments are self-reflection tools, not clinical or
                 diagnostic services. Your data is never sold. If you&rsquo;re in crisis, please
                 reach out to local emergency services or a crisis line.
               </p>

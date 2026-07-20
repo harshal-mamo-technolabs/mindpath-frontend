@@ -333,7 +333,7 @@ export default function AssessmentReport() {
               Explore another path
             </Link>
             <Link to="/" className="btn btn-primary">
-              Back to MindPath
+              Back to Daybreak
             </Link>
           </div>
         </footer>

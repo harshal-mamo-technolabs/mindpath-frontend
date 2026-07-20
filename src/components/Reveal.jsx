@@ -1,9 +1,13 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * Adds the "in" class once the element scrolls into view.
  * Pairs with [data-reveal] styles; `as` lets sections reuse it
  * for non-translating triggers (path draw, bar fills).
+ *
+ * The "in" class is applied through React (not classList) so it survives a
+ * className change on the same element — e.g. an .ap-primary card whose cover
+ * class swaps when the hero follows a different plan.
  */
 export default function Reveal({
   as: Tag = 'div',
@@ -14,22 +18,23 @@ export default function Reveal({
   ...rest
 }) {
   const ref = useRef(null)
+  const [shown, setShown] = useState(false)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    // Already in view when it mounts? Reveal immediately. The IntersectionObserver's
-    // initial callback can be missed for above-the-fold content (it never "crosses"
-    // the threshold), which would leave the element stuck at opacity 0.
+    // Already in view when it mounts? Reveal on the next frame. The
+    // IntersectionObserver's initial callback can be missed for above-the-fold
+    // content (it never "crosses" the threshold), which would leave it stuck.
     const r = el.getBoundingClientRect()
     if (r.top < window.innerHeight && r.bottom > 0) {
-      el.classList.add('in')
-      return
+      const raf = requestAnimationFrame(() => setShown(true))
+      return () => cancelAnimationFrame(raf)
     }
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.classList.add('in')
+          setShown(true)
           io.disconnect()
         }
       },
@@ -42,7 +47,7 @@ export default function Reveal({
   return (
     <Tag
       ref={ref}
-      className={className}
+      className={shown ? `${className} in` : className}
       style={delay ? { '--d': `${delay}s` } : undefined}
       {...(reveal ? { 'data-reveal': '' } : {})}
       {...rest}

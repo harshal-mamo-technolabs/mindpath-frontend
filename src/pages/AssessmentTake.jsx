@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
+import GeneratingScreen from '../components/GeneratingScreen.jsx'
 import { useAuth } from '../hooks/useAuth.js'
 import { useTheme } from '../hooks/useTheme.js'
 import { isMsisdnMode } from '../lib/billingMode.js'
@@ -33,6 +34,17 @@ import { RICH_REPORTS } from '../components/report/registry.js'
 const ACCENT = '#6450cf'
 const titleCase = (s) => (s || '').replace(/\b\w/g, (c) => c.toUpperCase())
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
+// The post-submit "generating your report" ceremony: its steps, and the floor
+// on how long it shows (4 steps × 1350ms + a 700ms beat ≈ the component's own
+// run, so a fast API still gets the full ~6s ceremony).
+const REPORT_GEN_STEPS = [
+  'Scoring your answers',
+  'Mapping your dimensions',
+  'Writing your interpretation',
+  'Sequencing your audio plan',
+]
+const GEN_MIN_MS = 6100
 
 const cardStyle = (isDark) => ({
   base: {
@@ -379,13 +391,23 @@ export default function AssessmentTake() {
   }
 
   async function submitAll(finalAnswers) {
+    setScore(null)
     setPhase('submitting')
     const payload = questions.map((q) => ({ questionId: q._id, weight: finalAnswers[q._id] }))
     try {
-      const s = await submitAssessment(slug, payload)
+      // Score the attempt while the ceremony plays. GEN_MIN_MS keeps the report
+      // from flashing up instantly on a fast API — the wait lands at ~6s even
+      // then, and simply extends if scoring takes longer. The moment scoring
+      // returns we fire the report POST (fire-and-forget), which also kicks off
+      // the server-side audio-plan generation — so the plan is already on its
+      // way well before the user reaches /audio.
+      const scored = submitAssessment(slug, payload).then((s) => {
+        persistReport(s)
+        return s
+      })
+      const [s] = await Promise.all([scored, sleep(GEN_MIN_MS)])
       setScore(s)
       setPhase('result')
-      persistReport(s) // fire-and-forget: store the full report JSON server-side
     } catch (err) {
       setFlowError(err.message)
       setPhase('error')
@@ -450,6 +472,18 @@ export default function AssessmentTake() {
           </Link>
         </div>
       </div>
+    )
+  }
+
+  // Post-submit: a full-screen "generating your report" ceremony that replaces
+  // the take chrome (same treatment as the standalone report page).
+  if (phase === 'submitting') {
+    return (
+      <GeneratingScreen
+        title="Reading your answers…"
+        steps={REPORT_GEN_STEPS}
+        note="Deterministic framework · same answers, same report, every time"
+      />
     )
   }
 
@@ -536,50 +570,43 @@ export default function AssessmentTake() {
         </main>
       )}
 
-      {/* questions */}
+      {/* questions — the frame stays put; only the inner content settles in,
+          so nothing jumps or blinks between questions */}
       {phase === 'questions' && q && (
-        <main className="take-stage" key={step}>
-          <div className={`take-card ${leaving ? 'leaving' : ''}`}>
-            <div className="take-card-top">
-              <span className="dim-tag">{titleCase(q.subCategory || a.category || 'Reflect')}</span>
-              <span className="take-count">
-                {step + 1} <em>/ {total}</em>
-              </span>
-            </div>
-            <h1 className="take-q">{q.text}</h1>
-            <div className="likert" role="group" aria-label="How often is this true for you?">
-              {labels.map((label, i) => (
-                <button
-                  key={label}
-                  className={`likert-btn ${answers[q._id] === weights[i] ? 'picked' : ''}`}
-                  onClick={() => select(weights[i])}
-                >
-                  <span className="likert-dot" data-strength={i} />
-                  {label}
-                  <kbd>{i + 1}</kbd>
-                </button>
-              ))}
-            </div>
-            <div className="take-foot">
-              {step > 0 ? (
-                <button className="take-back" onClick={back}>
-                  <ArrowLeft size={15} /> Previous
-                </button>
-              ) : (
-                <span />
-              )}
-              <p className="take-hint">Lately = the last two weeks</p>
-            </div>
-          </div>
-        </main>
-      )}
-
-      {/* submitting */}
-      {phase === 'submitting' && (
         <main className="take-stage">
-          <div className="take-center">
-            <Loader2 size={28} className="ap-spin" />
-            <p>Scoring your answers…</p>
+          <div className="take-card take-card-q">
+            <div className={`take-q-body ${leaving ? 'is-dim' : ''}`} key={step}>
+              <div className="take-card-top">
+                <span className="dim-tag">{titleCase(q.subCategory || a.category || 'Reflect')}</span>
+                <span className="take-count">
+                  {step + 1} <em>/ {total}</em>
+                </span>
+              </div>
+              <h1 className="take-q">{q.text}</h1>
+              <div className="likert" role="group" aria-label="How often is this true for you?">
+                {labels.map((label, i) => (
+                  <button
+                    key={label}
+                    className={`likert-btn ${answers[q._id] === weights[i] ? 'picked' : ''}`}
+                    onClick={() => select(weights[i])}
+                  >
+                    <span className="likert-dot" data-strength={i} />
+                    {label}
+                    <kbd>{i + 1}</kbd>
+                  </button>
+                ))}
+              </div>
+              <div className="take-foot">
+                {step > 0 ? (
+                  <button className="take-back" onClick={back}>
+                    <ArrowLeft size={15} /> Previous
+                  </button>
+                ) : (
+                  <span />
+                )}
+                <p className="take-hint">Lately = the last two weeks</p>
+              </div>
+            </div>
           </div>
         </main>
       )}
@@ -593,6 +620,7 @@ export default function AssessmentTake() {
             name={(user?.name || '').split(' ')[0] || 'You'}
             attempt={score.attemptNumber}
             onRetake={retake}
+            assessmentId={score.assessment?.id || a?._id}
           />
         </main>
       )}
