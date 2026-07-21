@@ -77,5 +77,8 @@ export const apiGet = (path) => request(path)
 /** POST a JSON `body` to `path`. Resolves with the response `data`. */
 export const apiPost = (path, body) => request(path, { method: 'POST', body })
 
+/** PUT a JSON `body` to `path`. Resolves with the response `data`. */
+export const apiPut = (path, body) => request(path, { method: 'PUT', body })
+
 /** DELETE `path`. Resolves with the response `data`. */
 export const apiDelete = (path) => request(path, { method: 'DELETE' })

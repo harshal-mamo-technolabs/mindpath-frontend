@@ -686,14 +686,10 @@ export default function AudioLibrary() {
             </span>
           </div>
           <div className="ap-plans-grid">
-            {plans.map((p, i) => (
-              <Reveal
-                as="article"
-                key={p.id}
-                className="ap-plan-card"
-                delay={(i % 3) * 0.08}
-                onClick={() => setDetailPlanId(p.id)}
-              >
+            {plans.map((p) => (
+              // plain article (not Reveal): a scroll-reveal here can sit at opacity:0
+              // below the fold and leave a large empty gap above the Audio library.
+              <article key={p.id} className="ap-plan-card" onClick={() => setDetailPlanId(p.id)}>
                 <div className={`ap-plan-cover ${p.cover}`}>
                   {p.isComplete ? (
                     <span className="ap-done-badge">
@@ -768,7 +764,7 @@ export default function AudioLibrary() {
                     </button>
                   </div>
                 </div>
-              </Reveal>
+              </article>
             ))}
           </div>
         </div>

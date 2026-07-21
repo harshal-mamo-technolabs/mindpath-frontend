@@ -912,3 +912,23 @@
     transition: none;
   }
 }
+
+/* dynamic-dashboard helpers */
+.dash-mood-note {
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.dash-empty-note {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+.dash-empty-note a {
+  color: var(--violet);
+  font-weight: 700;
+}
+.dash-empty-note a:hover {
+  text-decoration: underline;
+}

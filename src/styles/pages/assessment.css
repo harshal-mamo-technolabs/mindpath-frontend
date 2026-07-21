@@ -1095,7 +1095,9 @@
 }
 
 .likert-btn.picked {
-  background: color-mix(in srgb, var(--topic, var(--violet)) 12%, #fff);
+  /* Tint the card's own surface (theme-aware) instead of white, so the selected state
+     reads as a soft accent wash in light mode AND dark mode. */
+  background: color-mix(in srgb, var(--topic, var(--violet)) 16%, var(--surface));
   border-color: var(--topic, var(--violet));
   color: var(--ink);
   transform: translateY(-3px);

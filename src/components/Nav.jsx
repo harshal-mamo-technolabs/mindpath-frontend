@@ -9,12 +9,15 @@ import {
   LayoutDashboard,
   LogOut,
   MessageCircle,
+  Moon,
   Music,
+  Sun,
   Tag,
   User,
 } from 'lucide-react'
 import Logo from './Logo.jsx'
 import { useAuth } from '../hooks/useAuth.js'
+import { useTheme } from '../hooks/useTheme.js'
 import { isMsisdnMode } from '../lib/billingMode.js'
 
 /* Primary product sections — desktop top nav + the mobile bottom tab bar.
@@ -46,6 +49,7 @@ export default function Nav() {
   const userRef = useRef(null)
 
   const { user, logout } = useAuth()
+  const { theme, toggle } = useTheme()
   const displayName = user?.name || 'Maya Kapoor'
   const email = user?.email || 'maya@example.com'
   const initial = displayName.trim().charAt(0).toUpperCase() || 'M'
@@ -105,6 +109,15 @@ export default function Nav() {
           </nav>
 
           <div className="nav-cta">
+            <button
+              type="button"
+              className="nav-theme"
+              onClick={toggle}
+              aria-label={theme === 'dark' ? 'Switch to day mode' : 'Switch to night mode'}
+              title={theme === 'dark' ? 'Day mode' : 'Night mode'}
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             <div className="nav-user" ref={userRef}>
               <button
                 className={`nav-avatar ${menuOpen ? 'open' : ''}`}

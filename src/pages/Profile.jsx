@@ -19,6 +19,13 @@ import {
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
+import { ensurePushSubscription, pushSupported } from '../lib/push.js'
+import {
+  getNotificationPrefs,
+  sendTestPush,
+  subscribePush,
+  updateNotificationPrefs,
+} from '../lib/notificationsApi.js'
 
 const SECTIONS = [
   ['account', 'Account', User],
@@ -122,13 +129,11 @@ export default function Profile() {
     email: 'maya@example.com',
   })
   const [prefs, setPrefs] = useState({
-    dailyReminder: true,
+    dailyReminder: false,
     reminderTime: '7:00 AM',
-    moodNudge: true,
-    weeklyEmail: false,
-    dayUnlock: true,
     productNews: false,
   })
+  const vapid = useRef({ key: null, configured: false })
   const [active, setActive] = useState('account')
   const [toast, setToast] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -159,9 +164,80 @@ export default function Profile() {
     return () => io.disconnect()
   }, [])
 
-  const setPref = (key) => (val) => {
-    setPrefs((p) => ({ ...p, [key]: val }))
-    say('Preference saved.')
+  // load the user's saved notification settings + the server's VAPID key
+  useEffect(() => {
+    let alive = true
+    getNotificationPrefs()
+      .then((d) => {
+        if (!alive || !d) return
+        vapid.current = { key: d.vapidPublicKey, configured: d.pushConfigured }
+        setPrefs({
+          dailyReminder: !!d.dailyReminder,
+          reminderTime: d.reminderTime || '7:00 AM',
+          productNews: !!d.productNews,
+        })
+      })
+      .catch(() => {})
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  const tzOffset = () => new Date().getTimezoneOffset()
+
+  // Turn a push channel on: create/store a browser subscription + the pref on the backend,
+  // then have the BACKEND fire an immediate confirmation push.
+  const enableChannel = async (key, confirmBody) => {
+    if (!pushSupported()) {
+      say('Push notifications aren’t supported in this browser.')
+      return
+    }
+    if (!vapid.current.configured || !vapid.current.key) {
+      say('Push isn’t configured on the server.')
+      return
+    }
+    try {
+      const subscription = await ensurePushSubscription(vapid.current.key)
+      await subscribePush({ ...subscription, tzOffsetMinutes: tzOffset() })
+      const patch = { [key]: true, tzOffsetMinutes: tzOffset() }
+      if (key === 'dailyReminder') patch.reminderTime = prefs.reminderTime
+      await updateNotificationPrefs(patch)
+      setPrefs((p) => ({ ...p, [key]: true }))
+      await sendTestPush({ title: 'Daybreak', body: confirmBody })
+      say(confirmBody)
+    } catch (e) {
+      if (e.message === 'permission-denied') {
+        say('Allow notifications in your browser to turn this on.')
+      } else {
+        say(e.message || 'Couldn’t enable notifications.')
+      }
+    }
+  }
+
+  const disableChannel = async (key, offMsg) => {
+    setPrefs((p) => ({ ...p, [key]: false }))
+    say(offMsg)
+    try {
+      await updateNotificationPrefs({ [key]: false })
+    } catch {
+      /* keep the UI state; it'll re-sync on next load */
+    }
+  }
+
+  const toggleReminder = (on) =>
+    on
+      ? enableChannel('dailyReminder', `Daily reminder on — you'll be nudged at ${prefs.reminderTime}.`)
+      : disableChannel('dailyReminder', 'Daily reminder turned off.')
+
+  const toggleProductNews = (on) =>
+    on
+      ? enableChannel('productNews', 'Product news on — you’ll hear about new features.')
+      : disableChannel('productNews', 'Product news turned off.')
+
+  const changeTime = (t) => {
+    setPrefs((p) => ({ ...p, reminderTime: t }))
+    say(prefs.dailyReminder ? `Reminder set for ${t}.` : 'Reminder time saved.')
+    updateNotificationPrefs({ reminderTime: t, tzOffsetMinutes: tzOffset() }).catch(() => {})
   }
 
   const initials = form.name
@@ -297,65 +373,27 @@ export default function Profile() {
             >
               <div className="pf-section-head">
                 <h2>
-                  <Bell size={18} /> Notifications &amp; reminders
+                  <Bell size={18} /> Notifications
                 </h2>
-                <p>Gentle nudges keep the daily habit alive set them to fit your life.</p>
+                <p>Choose the nudges you want — we only ping you with your permission.</p>
               </div>
 
               <div className="pf-rows">
                 <div className="pf-row">
                   <div>
                     <strong>Daily session reminder</strong>
-                    <small>“Day 5 is ready” a nudge when your next session unlocks.</small>
+                    <small>A push notification at your chosen time when your session is ready.</small>
                   </div>
                   <div className="pf-row-control">
                     {prefs.dailyReminder && (
-                      <TimePicker value={prefs.reminderTime} onChange={setPref('reminderTime')} />
+                      <TimePicker value={prefs.reminderTime} onChange={changeTime} />
                     )}
                     <Toggle
                       on={prefs.dailyReminder}
-                      onChange={setPref('dailyReminder')}
+                      onChange={toggleReminder}
                       label="Daily session reminder"
                     />
                   </div>
-                </div>
-
-                <div className="pf-row">
-                  <div>
-                    <strong>Mood check-in nudge</strong>
-                    <small>
-                      A quiet prompt to log how you&rsquo;re arriving, before each session.
-                    </small>
-                  </div>
-                  <Toggle
-                    on={prefs.moodNudge}
-                    onChange={setPref('moodNudge')}
-                    label="Mood check-in nudge"
-                  />
-                </div>
-
-                <div className="pf-row">
-                  <div>
-                    <strong>Weekly progress email</strong>
-                    <small>Your mood trend and streak, summed up every Sunday.</small>
-                  </div>
-                  <Toggle
-                    on={prefs.weeklyEmail}
-                    onChange={setPref('weeklyEmail')}
-                    label="Weekly progress email"
-                  />
-                </div>
-
-                <div className="pf-row">
-                  <div>
-                    <strong>Day-unlock push</strong>
-                    <small>A push notification the moment tomorrow&rsquo;s session opens.</small>
-                  </div>
-                  <Toggle
-                    on={prefs.dayUnlock}
-                    onChange={setPref('dayUnlock')}
-                    label="Day-unlock push"
-                  />
                 </div>
 
                 <div className="pf-row">
@@ -365,7 +403,7 @@ export default function Profile() {
                   </div>
                   <Toggle
                     on={prefs.productNews}
-                    onChange={setPref('productNews')}
+                    onChange={toggleProductNews}
                     label="Product news"
                   />
                 </div>

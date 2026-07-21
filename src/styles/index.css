@@ -411,6 +411,30 @@ a {
   box-shadow: 0 0 0 4px rgba(100, 80, 207, 0.18);
 }
 
+/* day/night toggle in the top nav */
+.nav-theme {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  color: var(--ink-2);
+  background: rgba(var(--line-rgb), 0.06);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    transform 0.2s var(--ease-out);
+}
+
+.nav-theme:hover {
+  color: var(--ink);
+  background: rgba(var(--line-rgb), 0.12);
+  transform: translateY(-1px);
+}
+
 /* ------- account dropdown ------- */
 .nav-user {
   position: relative;

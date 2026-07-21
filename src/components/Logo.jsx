@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth.js'
 
 export default function Logo() {
+  const { isAuthenticated } = useAuth()
+  // Logged-in users land on their dashboard; visitors go to the marketing home.
+  const to = isAuthenticated ? '/dashboard' : '/'
+
   return (
-    <Link to="/" className="logo" aria-label="Daybreak home">
+    <Link to={to} className="logo" aria-label={isAuthenticated ? 'Daybreak dashboard' : 'Daybreak home'}>
       <span className="logo-mark" aria-hidden="true">
         <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
           <path

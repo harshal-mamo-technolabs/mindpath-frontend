@@ -1,66 +1,285 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import {
   BadgeCheck,
   BookOpen,
   Check,
   ChevronLeft,
   ChevronRight,
+  Circle,
   Clock,
+  CreditCard,
+  Crown,
   Download,
   FileText,
   Loader2,
   Lock,
+  Plus,
   Search,
+  ShieldCheck,
   Sparkles,
-  Star,
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
-import {
-  CATEGORIES,
-  chapterContent,
-  GENERAL_EBOOKS,
-  INITIAL_OWNED,
-  PERSONAL_EBOOKS,
-  READING_PROGRESS,
-} from '../data/ebooks.js'
+import { useAuth } from '../hooks/useAuth.js'
+import { isStripeMode } from '../lib/billingMode.js'
+import { stripeConfigured, stripePromise } from '../lib/stripe.js'
+import { getPaymentMethods } from '../lib/payments.js'
+import { getEbook, listEbooks, markEbookProgress, startEbook } from '../lib/ebooksApi.js'
+
+/* The ebook shop — real catalog from the backend. Free books are readable by anyone but
+   only land on "Your shelf" once added; paid books are a one-time card charge for Stripe
+   users (or covered by a plan / MSISDN allowance). "Explore" holds everything not yet on
+   the shelf; "Your shelf" holds what you've added or bought. */
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+const idOf = (b) => b._id || b.id
+const titleCase = (s) => (s || '').replace(/\b\w/g, (c) => c.toUpperCase())
+const priceTag = (b) => `€${Number(b.cost || 0).toFixed(2)}`
+
+// Style Stripe's Payment Element to match the dark ebook modal.
+const STRIPE_APPEARANCE = {
+  theme: 'night',
+  variables: {
+    colorPrimary: '#6450cf',
+    fontFamily: 'Manrope, sans-serif',
+    borderRadius: '12px',
+  },
+}
+
+/* Named cover palettes, cycled by position so the shelf looks varied. */
+const COVER_THEMES = [
+  { accent: '#6450cf', bg: '#efeafc', fg: '#5637bf' },
+  { accent: '#2f8f9d', bg: '#e3f1f3', fg: '#22707c' },
+  { accent: '#4f9a6a', bg: '#e7f3eb', fg: '#3c7c53' },
+  { accent: '#c56b57', bg: '#f8ebe6', fg: '#a5503d' },
+  { accent: '#c98a2c', bg: '#f7f0dc', fg: '#9c6812' },
+]
+const themeFor = (i) =>
+  COVER_THEMES[((i % COVER_THEMES.length) + COVER_THEMES.length) % COVER_THEMES.length]
+
+/* Split a chapter body (blank-line separated) into paragraphs for the reader. */
+const toParas = (body) =>
+  (body || '')
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+
+/* Shelf badge shown on a card the caller has added/bought (null otherwise). */
+const shelfBadge = (b) => {
+  if (!b.onShelf) return null
+  if (b.isFree) return 'Free'
+  return isStripeMode ? 'Owned' : 'Included'
+}
+
+/* The action label for acquiring a book not yet on the shelf. */
+const acquireLabel = (b) => (b.isFree || !isStripeMode ? 'Add to shelf' : `Buy · ${priceTag(b)}`)
 
 /* A reusable CSS book cover. */
-function Cover({ book, size = 'md' }) {
+function Cover({ book, theme, size = 'md' }) {
   return (
-    <div
-      className={`bk-cover bk-${size} ${book.kind === 'personal' ? 'bk-personal' : ''}`}
-      style={{ '--accent': book.accent, '--bg': book.bg }}
-    >
+    <div className={`bk-cover bk-${size}`} style={{ '--accent': theme.accent, '--bg': theme.bg }}>
       <span className="bk-spine" />
       <span className="bk-press">Daybreak Press</span>
-      <span className="bk-title">{book.title}</span>
-      {book.kind === 'personal' ? (
-        <span className="bk-for">written for {book.forName}</span>
-      ) : (
-        <span className="bk-author">{book.author}</span>
-      )}
+      <span className="bk-title">{book.coverText || book.title}</span>
+      <span className="bk-author">{book.author}</span>
     </div>
   )
 }
 
-const GEN_STEPS = [
-  'Reading your report',
-  'Writing your chapters',
-  'Designing your cover',
-  'Binding it together',
-]
+/* ---- new-card form: Stripe's modern Payment Element (must live inside <Elements>) ---- */
+function NewCardForm({ priceLabel, onPaid, onError }) {
+  const stripe = useStripe()
+  const elements = useElements()
+  const [busy, setBusy] = useState(false)
+
+  async function submit(e) {
+    e.preventDefault()
+    if (!stripe || !elements) return
+    setBusy(true)
+    onError('')
+    // Confirm the PaymentIntent; Stripe.js shows the 3D Secure step automatically when
+    // the bank requires it. redirect: 'if_required' keeps us on the page otherwise.
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: { return_url: `${window.location.origin}/ebooks` },
+      redirect: 'if_required',
+    })
+    if (error) {
+      onError(error.message || 'Your card could not be charged. Please try another card.')
+      setBusy(false)
+      return
+    }
+    await onPaid()
+    setBusy(false)
+  }
+
+  return (
+    <form onSubmit={submit} className="apl-payform">
+      <PaymentElement options={{ paymentMethodOrder: ['card'] }} />
+      <button className="btn btn-primary apl-paybtn" disabled={!stripe || busy}>
+        {busy ? (
+          <>
+            <Loader2 size={15} className="ap-spin" /> Processing…
+          </>
+        ) : (
+          <>
+            <Lock size={15} /> Pay {priceLabel}
+          </>
+        )}
+      </button>
+    </form>
+  )
+}
+
+/* ---- payment step: one-click with a saved card, or a new card (Payment Element) ---- */
+function EbookPay({ clientSecret, amount, onPaid }) {
+  const [cards, setCards] = useState(null) // null = loading
+  const [selected, setSelected] = useState(null)
+  const [useNew, setUseNew] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const label = `€${Number(amount || 0).toFixed(2)}`
+
+  useEffect(() => {
+    let alive = true
+    getPaymentMethods()
+      .then((list) => {
+        if (!alive) return
+        const arr = list || []
+        setCards(arr)
+        setSelected(arr.find((c) => c.isDefault)?.id || arr[0]?.id || null)
+        setUseNew(arr.length === 0)
+      })
+      .catch(() => {
+        if (alive) {
+          setCards([])
+          setUseNew(true)
+        }
+      })
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  async function paySaved() {
+    if (!selected) return
+    setBusy(true)
+    setError('')
+    try {
+      const stripe = await stripePromise
+      if (!stripe) throw new Error('Payments are not configured (missing Stripe key).')
+      const { error: err } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: selected,
+      })
+      if (err) throw new Error(err.message || 'Your card could not be charged.')
+      await onPaid()
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (!stripeConfigured) {
+    return (
+      <p className="apl-error">
+        Payments aren’t configured — add VITE_STRIPE_PUBLISHABLE_KEY and restart.
+      </p>
+    )
+  }
+  if (cards === null) {
+    return (
+      <div className="apl-pay-loading">
+        <Loader2 size={18} className="ap-spin" /> Preparing secure checkout…
+      </div>
+    )
+  }
+
+  return (
+    <div className="apl-pay">
+      {error && <p className="apl-error">{error}</p>}
+
+      {!useNew && cards.length > 0 ? (
+        <>
+          <div className="apl-pay-cards">
+            {cards.map((c) => (
+              <button
+                type="button"
+                key={c.id}
+                className={`apl-pay-card ${selected === c.id ? 'selected' : ''}`}
+                onClick={() => setSelected(c.id)}
+                aria-pressed={selected === c.id}
+              >
+                <CreditCard size={17} />
+                <span className="apl-pay-card-info">
+                  <strong>
+                    {titleCase(c.brand)} •••• {c.last4}
+                  </strong>
+                  <small>
+                    Expires {String(c.expMonth).padStart(2, '0')}/{c.expYear}
+                    {c.isDefault ? ' · default' : ''}
+                  </small>
+                </span>
+                {selected === c.id && <Check size={15} className="apl-pay-check" />}
+              </button>
+            ))}
+          </div>
+          <button
+            className="btn btn-primary apl-paybtn"
+            onClick={paySaved}
+            disabled={busy || !selected}
+          >
+            {busy ? (
+              <>
+                <Loader2 size={15} className="ap-spin" /> Processing…
+              </>
+            ) : (
+              <>
+                <Lock size={15} /> Pay {label}
+              </>
+            )}
+          </button>
+          <button type="button" className="apl-pay-switch" onClick={() => setUseNew(true)}>
+            Use a new card instead
+          </button>
+        </>
+      ) : (
+        <>
+          <Elements stripe={stripePromise} options={{ clientSecret, appearance: STRIPE_APPEARANCE }}>
+            <NewCardForm priceLabel={label} onPaid={onPaid} onError={setError} />
+          </Elements>
+          {cards.length > 0 && (
+            <button type="button" className="apl-pay-switch" onClick={() => setUseNew(false)}>
+              ← Use a saved card
+            </button>
+          )}
+        </>
+      )}
+
+      <p className="apl-pay-secure">
+        <ShieldCheck size={13} /> Secured by Stripe. Test mode — use card 4242 4242 4242 4242.
+      </p>
+    </div>
+  )
+}
 
 export default function EbooksLibrary() {
-  const [owned, setOwned] = useState(() => new Set(INITIAL_OWNED))
-  const [progress] = useState(READING_PROGRESS)
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+
+  const [books, setBooks] = useState(null) // null = loading
+  const [listError, setListError] = useState('')
   const [category, setCategory] = useState('All')
   const [query, setQuery] = useState('')
-  const [reader, setReader] = useState(null) // ebook being read
+
+  const [reader, setReader] = useState(null) // full ebook (with chapters)
+  const [readerBusy, setReaderBusy] = useState(false)
   const [openChapter, setOpenChapter] = useState(null) // null = contents view, number = reading
-  const [buy, setBuy] = useState(null) // { book, step }
-  const [gen, setGen] = useState(null) // { book, step, reached }
+
+  const [buy, setBuy] = useState(null) // { book, step: 'loading'|'pay'|'done', clientSecret, amount }
+  const [busy, setBusy] = useState(false)
   const [toast, setToast] = useState(null)
   const toastTimer = useRef(null)
   const readerRef = useRef(null)
@@ -68,81 +287,238 @@ export default function EbooksLibrary() {
   const say = useCallback((msg) => {
     clearTimeout(toastTimer.current)
     setToast(msg)
-    toastTimer.current = setTimeout(() => setToast(null), 4000)
+    toastTimer.current = setTimeout(() => setToast(null), 4200)
   }, [])
   useEffect(() => () => clearTimeout(toastTimer.current), [])
 
-  const shelfCount = owned.size
+  /* fetch the catalog (JWT auto-attached → cards carry `onShelf`/`unlocked`) */
+  useEffect(() => {
+    let alive = true
+    listEbooks()
+      .then((d) => alive && setBooks(d || []))
+      .catch((e) => alive && setListError(e.message))
+    return () => {
+      alive = false
+    }
+  }, [])
 
+  const shelfCount = useMemo(() => (books || []).filter((b) => b.onShelf).length, [books])
+
+  const categories = useMemo(() => {
+    const set = new Set((books || []).map((b) => b.category).filter(Boolean))
+    return ['All', ...set]
+  }, [books])
+
+  // Category/search apply to the "Explore" browse section.
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return GENERAL_EBOOKS.filter(
+    return (books || []).filter(
       (b) =>
         (category === 'All' || b.category === category) &&
-        (!q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)),
+        (!q || b.title.toLowerCase().includes(q) || (b.author || '').toLowerCase().includes(q)),
     )
-  }, [category, query])
+  }, [books, category, query])
 
-  // ----- personalized generation ceremony -----
-  useEffect(() => {
-    if (!gen || gen.step !== 'generating') return
-    if (gen.reached >= GEN_STEPS.length) {
-      const t = setTimeout(() => setGen((g) => ({ ...g, step: 'done' })), 600)
-      return () => clearTimeout(t)
-    }
-    const t = setTimeout(() => setGen((g) => ({ ...g, reached: g.reached + 1 })), 950)
-    return () => clearTimeout(t)
-  }, [gen])
-
-  function openReader(book, chapter = null) {
-    setReader(book)
-    setOpenChapter(chapter)
-  }
-
-  function closeReader() {
-    setReader(null)
-    setOpenChapter(null)
-  }
-
-  const isOwned = (b) => owned.has(b.id)
-  const canRead = (book, idx) => isOwned(book) || idx === 0
-  const continueChapter = (book) => {
-    const pct = (progress[book.id] ?? 0) / 100
-    return Math.min(book.chapters.length - 1, Math.max(0, Math.floor(pct * book.chapters.length)))
-  }
+  const gIndex = useCallback(
+    (book) => (books || []).findIndex((b) => idOf(b) === idOf(book)),
+    [books],
+  )
 
   // scroll the reader back to the top whenever the chapter changes
   useEffect(() => {
     readerRef.current?.scrollTo({ top: 0 })
   }, [openChapter, reader])
 
-  function downloadBook(book) {
+  // Mark a book as on the shelf in both the grid and the open reader.
+  const patchOwned = (id) => {
+    setBooks((list) =>
+      (list || []).map((b) => (idOf(b) === id ? { ...b, onShelf: true, unlocked: true } : b)),
+    )
+    setReader((r) => (r && idOf(r) === id ? { ...r, onShelf: true, unlocked: true } : r))
+  }
+
+  const openReader = async (book, chapter = null) => {
+    setReaderBusy(true)
+    setReader({ ...book, chapters: null }) // open the drawer in its loading (contents) state
+    setOpenChapter(null)
+    try {
+      const full = await getEbook(idOf(book))
+      setReader(full)
+      setOpenChapter(chapter) // only enter the reading view once chapters are loaded
+    } catch (e) {
+      say(e.message || 'Couldn’t open this book — try again.')
+      setReader(null)
+    } finally {
+      setReaderBusy(false)
+    }
+  }
+
+  const closeReader = () => {
+    setReader(null)
+    setOpenChapter(null)
+  }
+
+  const refreshDetail = async (id) => {
+    const fresh = await getEbook(id)
+    setReader((r) => (r && idOf(r) === id ? fresh : r))
+    return fresh
+  }
+
+  // Toggle a chapter's read state, recompute progress locally, and persist it.
+  const markRead = async (order, read) => {
+    const id = idOf(reader)
+    setReader((r) => {
+      if (!r || idOf(r) !== id) return r
+      const chapters = (r.chapters || []).map((c) => (c.order === order ? { ...c, read } : c))
+      const total = chapters.length || 1
+      const done = chapters.filter((c) => c.read).length
+      return { ...r, chapters, chaptersRead: done, progress: Math.round((done / total) * 100) }
+    })
+    try {
+      const res = await markEbookProgress(id, order, read)
+      setBooks((list) =>
+        (list || []).map((b) =>
+          idOf(b) === id ? { ...b, progress: res.progress, chaptersRead: res.chaptersRead } : b,
+        ),
+      )
+    } catch (e) {
+      say(e.message || 'Couldn’t save your progress.')
+      // revert the optimistic toggle
+      setReader((r) =>
+        r && idOf(r) === id
+          ? {
+              ...r,
+              chapters: (r.chapters || []).map((c) =>
+                c.order === order ? { ...c, read: !read } : c,
+              ),
+            }
+          : r,
+      )
+    }
+  }
+
+  /* ----- add / unlock / buy ----- */
+  const startGet = (book) => {
+    if (!isAuthenticated) {
+      navigate('/login?next=/ebooks')
+      return
+    }
+    if (book.isFree) {
+      addToShelf(book)
+      return
+    }
+    // Stripe: open real checkout. MSISDN: unlock straight from the plan allowance.
+    if (isStripeMode) {
+      beginPurchase(book)
+    } else {
+      unlockWithPlan(book)
+    }
+  }
+
+  // Free book → put it on the shelf (a "free" access record). It was already readable.
+  const addToShelf = async (book) => {
+    setBusy(true)
+    try {
+      await startEbook(idOf(book))
+      patchOwned(idOf(book))
+      say(`“${book.title}” added to your shelf.`)
+    } catch (e) {
+      say(e.message || 'Couldn’t add this book to your shelf.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const unlockWithPlan = async (book) => {
+    setBusy(true)
+    try {
+      const res = await startEbook(idOf(book))
+      if (res.requiresPayment) {
+        setBuy({ book, step: 'pay', clientSecret: res.clientSecret, amount: res.amount })
+      } else {
+        patchOwned(idOf(book))
+        say(`“${book.title}” is on your shelf.`)
+      }
+    } catch (e) {
+      say(e.message || 'Couldn’t add this book to your shelf.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // Open checkout: ask the backend for a PaymentIntent. If a plan allowance covers it,
+  // there's no charge; otherwise we show the real Stripe payment form.
+  const beginPurchase = async (book) => {
+    setBuy({ book, step: 'loading' })
+    try {
+      const res = await startEbook(idOf(book))
+      if (res.requiresPayment) {
+        setBuy({ book, step: 'pay', clientSecret: res.clientSecret, amount: res.amount })
+      } else {
+        // covered by a plan allowance — no charge needed
+        patchOwned(idOf(book))
+        setBuy({ book, step: 'done' })
+      }
+    } catch (e) {
+      say(e.message || 'Couldn’t start checkout — try again.')
+      setBuy(null)
+    }
+  }
+
+  const onPaid = async () => {
+    const id = idOf(buy.book)
+    for (let i = 0; i < 10; i += 1) {
+      const res = await startEbook(id)
+      if (!res.requiresPayment) break
+      await sleep(1200)
+    }
+    patchOwned(id)
+    setBuy((b) => ({ ...b, step: 'done' }))
+  }
+
+  const finishBuy = async (read) => {
+    const book = buy.book
+    setBuy(null)
+    if (read) openReader(book, 0)
+    else {
+      await refreshDetail(idOf(book)).catch(() => {})
+      say(`“${book.title}” added to your shelf.`)
+    }
+  }
+
+  /* ----- download an owned book as a PDF via the browser's print-to-PDF, keeping the
+     same cream look as the styled HTML. Matches how the app's reports do "Download PDF"
+     (window.print + print-color-adjust: exact). Renders in a hidden iframe so only the
+     book prints, not the app. ----- */
+  const downloadBook = (book) => {
     const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    const author = book.kind === 'personal' ? `Written for ${book.forName}` : book.author
-    const chaptersHtml = book.chapters
+    const theme = themeFor(gIndex(book))
+    const chaptersHtml = (book.chapters || [])
       .map((ch, i) => {
-        const paras = chapterContent(book, i)
+        const paras = toParas(ch.body)
           .map((p) => `      <p>${esc(p)}</p>`)
           .join('\n')
-        return `    <section class="ch">\n      <span class="kic">Chapter ${i + 1}</span>\n      <h2>${esc(ch)}</h2>\n${paras}\n    </section>`
+        return `    <section class="ch">\n      <span class="kic">Chapter ${i + 1}</span>\n      <h2>${esc(ch.title)}</h2>\n${paras}\n    </section>`
       })
       .join('\n')
     const html = `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${esc(book.title)} — Daybreak Press</title>
 <style>
-  body { font-family: Georgia, 'Times New Roman', serif; color: #232038; line-height: 1.7; max-width: 660px; margin: 0 auto; padding: 64px 28px; background: #f7f3ec; }
+  @page { margin: 18mm 0; }
+  /* Plain white page. print-color-adjust: exact keeps it white regardless of any dark UI. */
+  html { background: #ffffff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #232038; line-height: 1.7; margin: 0 auto; max-width: 640px; padding: 0 24px; background: #ffffff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .cover { text-align: center; padding-bottom: 40px; margin-bottom: 40px; border-bottom: 1px solid #d8d0c2; }
   .cover h1 { font-size: 34px; margin: 0 0 10px; line-height: 1.15; }
   .cover .by { color: #6b6680; font-style: italic; }
-  .cover .press { letter-spacing: .2em; text-transform: uppercase; font-size: 11px; color: ${book.accent}; font-family: Arial, sans-serif; }
-  .ch { margin: 0 0 56px; }
-  .ch .kic { letter-spacing: .18em; text-transform: uppercase; font-size: 11px; color: ${book.accent}; font-family: Arial, sans-serif; }
-  .ch h2 { font-size: 25px; margin: 4px 0 20px; }
-  .ch p { margin: 0 0 16px; }
+  .cover .press { letter-spacing: .2em; text-transform: uppercase; font-size: 11px; color: ${theme.accent}; font-family: Arial, sans-serif; }
+  .ch { margin: 0 0 44px; }
+  .ch .kic { letter-spacing: .18em; text-transform: uppercase; font-size: 11px; color: ${theme.accent}; font-family: Arial, sans-serif; }
+  .ch h2 { font-size: 24px; margin: 4px 0 18px; break-after: avoid; }
+  .ch p { margin: 0 0 15px; orphans: 2; widows: 2; }
   footer { text-align: center; color: #9a93a8; font-size: 13px; font-family: Arial, sans-serif; padding-top: 24px; border-top: 1px solid #d8d0c2; }
 </style>
 </head>
@@ -150,64 +526,115 @@ export default function EbooksLibrary() {
   <div class="cover">
     <p class="press">Daybreak Press</p>
     <h1>${esc(book.title)}</h1>
-    <p class="by">${esc(author)}</p>
+    <p class="by">${esc(book.author || 'Daybreak Press')}</p>
   </div>
 ${chaptersHtml}
-  <footer>© Daybreak Press · This copy was prepared for your personal reading.</footer>
+  <footer>© Daybreak Press · Prepared for your personal reading.</footer>
 </body>
 </html>`
-    const blob = new Blob([html], { type: 'text/html' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${book.title
-      .replace(/[^a-z0-9]+/gi, '-')
-      .replace(/^-|-$/g, '')
-      .toLowerCase()}.html`
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    URL.revokeObjectURL(url)
-    say(`“${book.title}” downloaded — yours to keep.`)
-  }
 
-  function startGenerate(book) {
-    setGen({ book, step: 'offer', reached: 0 })
-  }
-
-  function runGenerate() {
-    setGen((g) => ({ ...g, step: 'generating', reached: 0 }))
-  }
-
-  function finishGenerate(read) {
-    const book = gen.book
-    setOwned((prev) => new Set([...prev, book.id]))
-    setGen(null)
-    if (read) openReader(book, 0)
-    else say(`“${book.title}” is on your shelf  written just for you.`)
-  }
-
-  function startBuy(book) {
-    if (book.free) {
-      setOwned((prev) => new Set([...prev, book.id]))
-      say(`“${book.title}” added to your shelf  free, forever.`)
-      return
+    const iframe = document.createElement('iframe')
+    iframe.setAttribute('aria-hidden', 'true')
+    iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;'
+    iframe.onload = () => {
+      const w = iframe.contentWindow
+      w.focus()
+      w.print()
+      w.onafterprint = () => iframe.remove()
+      // safety cleanup if afterprint never fires (e.g. dialog dismissed)
+      setTimeout(() => document.body.contains(iframe) && iframe.remove(), 120000)
     }
-    setBuy({ book, step: 'offer' })
+    iframe.srcdoc = html
+    document.body.appendChild(iframe)
+    say(`Preparing “${book.title}” — choose “Save as PDF” in the print dialog.`)
   }
 
-  function confirmBuy() {
-    setBuy((b) => ({ ...b, step: 'processing' }))
-    setTimeout(() => setBuy((b) => ({ ...b, step: 'done' })), 1400)
+  /* A single catalog card — used by both the shelf and explore grids. */
+  const renderCard = (book, i) => {
+    const theme = themeFor(gIndex(book))
+    const badge = shelfBadge(book)
+    return (
+      <Reveal as="article" key={idOf(book)} className="eb-card" delay={(i % 4) * 0.06}>
+        <button
+          className="eb-card-cover"
+          onClick={() => openReader(book)}
+          aria-label={`Preview ${book.title}`}
+        >
+          <Cover book={book} theme={theme} size="md" />
+          {!book.isFree && (
+            <span className="eb-premium">
+              <Crown size={11} /> Premium
+            </span>
+          )}
+          {badge && (
+            <span className="eb-card-owned">
+              <BadgeCheck size={13} /> {badge}
+            </span>
+          )}
+        </button>
+        <div className="eb-card-body">
+          {book.category && (
+            <span className="eb-cat" style={{ color: theme.fg, background: theme.bg }}>
+              {book.category}
+            </span>
+          )}
+          <h3>{book.title}</h3>
+          <p className="eb-author">{book.author}</p>
+          <div className="eb-meta">
+            <span className="eb-pages">
+              <FileText size={12} /> {book.chaptersCount} ch
+            </span>
+            {book.readMinutes ? (
+              <span className="eb-pages">
+                <Clock size={12} /> {book.readMinutes} min
+              </span>
+            ) : null}
+          </div>
+          {book.onShelf && book.chaptersCount ? (
+            <div className="eb-card-progress">
+              <div className="bar">
+                <i style={{ width: `${book.progress || 0}%`, background: theme.accent }} />
+              </div>
+              <span>{book.progress || 0}%</span>
+            </div>
+          ) : null}
+          <div className="eb-card-foot">
+            {book.onShelf ? (
+              <button className="eb-btn-read" onClick={() => openReader(book, 0)}>
+                <BookOpen size={15} /> Read
+              </button>
+            ) : (
+              <>
+                <button className="eb-btn-buy" onClick={() => startGet(book)}>
+                  {acquireLabel(book)}
+                </button>
+                <button className="eb-textlink sm" onClick={() => openReader(book)}>
+                  {book.isFree ? 'Read' : 'Preview'}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </Reveal>
+    )
   }
 
-  function finishBuy(read) {
-    const book = buy.book
-    setOwned((prev) => new Set([...prev, book.id]))
-    setBuy(null)
-    if (read) openReader(book, 0)
-    else say(`“${book.title}” added to your shelf.`)
+  /* ----- states ----- */
+  if (listError) {
+    return (
+      <main className="eb">
+        <div className="eb-section">
+          <div className="container">
+            <p className="eb-empty">Couldn’t load the ebook shop — {listError}</p>
+          </div>
+        </div>
+      </main>
+    )
   }
+
+  const shelf = (books || []).filter((b) => b.onShelf)
+  const explore = filtered.filter((b) => !b.onShelf)
+  const readerTheme = reader ? themeFor(Math.max(0, gIndex(reader))) : COVER_THEMES[0]
 
   return (
     <main className="eb">
@@ -222,11 +649,11 @@ ${chaptersHtml}
             The ebook shop
           </Reveal>
           <Reveal as="h1" className="h1 eb-title" delay={0.07}>
-            Words for your <em>exact chapter.</em>
+            Short reads for a <em>calmer mind.</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.14}>
-            Short, specific books some written for everyone, and some generated from your own
-            report, with your name on the cover.
+            Gentle books on the things that weigh on us — anxiety, sleep, self-doubt, grief. Some
+            are free to read; others unlock with a one-time purchase.
           </Reveal>
           <Reveal className="eb-shelf-pill" delay={0.2}>
             <BookOpen size={15} /> {shelfCount} on your shelf
@@ -234,96 +661,30 @@ ${chaptersHtml}
         </div>
       </header>
 
-      {/* ===== personalized ===== */}
-      <section className="eb-section">
-        <div className="container">
-          <div className="eb-section-head">
-            <h2 className="rp-h2">
-              <Sparkles size={19} /> Written for you
-            </h2>
-            <span className="eb-section-count">
-              {PERSONAL_EBOOKS.length} companions · {shelfCount} on your shelf
-            </span>
+      {/* ===== your shelf ===== */}
+      {books !== null && shelf.length > 0 && (
+        <section className="eb-section">
+          <div className="container">
+            <div className="eb-section-head">
+              <h2 className="rp-h2">
+                <Sparkles size={19} /> Your shelf
+              </h2>
+              <span className="eb-section-count">
+                {shelf.length} {shelf.length === 1 ? 'book' : 'books'}
+              </span>
+            </div>
+            <p className="eb-section-sub">Books you’ve added or bought — open any time.</p>
+            <div className="eb-grid">{shelf.map((b, i) => renderCard(b, i))}</div>
           </div>
-          <p className="eb-section-sub">
-            One companion per report you&rsquo;ve unlocked free, because your assessment already
-            paid for it.
-          </p>
+        </section>
+      )}
 
-          <div className="eb-personal-grid">
-            {PERSONAL_EBOOKS.map((book, i) => {
-              const ready = isOwned(book)
-              return (
-                <Reveal as="article" key={book.id} className="eb-personal-card" delay={i * 0.08}>
-                  <Cover book={book} size="lg" />
-                  <div className="eb-personal-body">
-                    <span className="eb-from">
-                      <FileText size={13} /> {book.fromReport}
-                    </span>
-                    <h3>{book.title}</h3>
-                    <p className="eb-personal-sub">
-                      {book.subtitle} · {book.pages} pages · {book.readMin} min read
-                    </p>
-                    {ready ? (
-                      <div className="eb-personal-actions">
-                        <button
-                          className="btn btn-primary eb-btn"
-                          onClick={() => openReader(book, continueChapter(book))}
-                        >
-                          <BookOpen size={16} /> Continue · {progress[book.id] ?? 0}%
-                        </button>
-                        <span className="eb-owned-tag">
-                          <BadgeCheck size={14} /> On your shelf
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="eb-personal-actions">
-                        <button
-                          className="btn btn-primary eb-btn"
-                          onClick={() => startGenerate(book)}
-                        >
-                          <Sparkles size={16} /> Generate · free
-                        </button>
-                        <button className="eb-textlink" onClick={() => openReader(book)}>
-                          Preview contents
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </Reveal>
-              )
-            })}
-
-            <Reveal
-              as={Link}
-              to="/assessments"
-              className="eb-personal-card eb-locked-personal"
-              delay={0.24}
-            >
-              <div className="eb-locked-cover" aria-hidden="true">
-                <Lock size={22} />
-              </div>
-              <div className="eb-personal-body">
-                <span className="eb-from">
-                  <Lock size={13} /> Unlocks with an assessment
-                </span>
-                <h3>More personal books</h3>
-                <p className="eb-personal-sub">
-                  Take another assessment and a new companion is written from that report.
-                </p>
-                <span className="eb-textlink">Browse assessments →</span>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== general library ===== */}
+      {/* ===== explore ===== */}
       <section className="eb-section eb-library">
         <div className="container">
           <div className="eb-section-head">
             <h2 className="rp-h2">
-              <BookOpen size={19} /> The general library
+              <Search size={19} /> Explore
             </h2>
             <label className="eb-search">
               <Search size={16} />
@@ -336,81 +697,38 @@ ${chaptersHtml}
               />
             </label>
           </div>
-          <p className="eb-section-sub">Topic books anyone can read no assessment required.</p>
+          <p className="eb-section-sub">
+            Add a free book to your shelf, or read chapter one and unlock the rest.
+          </p>
 
-          <div className="eb-filters" role="tablist" aria-label="Categories">
-            {CATEGORIES.map((c) => (
-              <button
-                key={c}
-                role="tab"
-                aria-selected={category === c}
-                className={`eb-chip ${category === c ? 'active' : ''}`}
-                onClick={() => setCategory(c)}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-
-          {filtered.length === 0 ? (
-            <p className="eb-empty">No books match that yet try another category or search.</p>
-          ) : (
-            <div className="eb-grid">
-              {filtered.map((book, i) => {
-                const ready = isOwned(book)
-                return (
-                  <Reveal as="article" key={book.id} className="eb-card" delay={(i % 4) * 0.06}>
-                    <button
-                      className="eb-card-cover"
-                      onClick={() => openReader(book)}
-                      aria-label={`Preview ${book.title}`}
-                    >
-                      <Cover book={book} size="md" />
-                      {ready && (
-                        <span className="eb-card-owned">
-                          <BadgeCheck size={13} /> Owned
-                        </span>
-                      )}
-                    </button>
-                    <div className="eb-card-body">
-                      <span className="eb-cat" style={{ color: book.fg, background: book.bg }}>
-                        {book.category}
-                      </span>
-                      <h3>{book.title}</h3>
-                      <p className="eb-author">{book.author}</p>
-                      <div className="eb-meta">
-                        <span className="eb-rating">
-                          <Star size={13} fill="currentColor" strokeWidth={0} /> {book.rating}
-                          <small>({book.ratings})</small>
-                        </span>
-                        <span className="eb-pages">
-                          <Clock size={12} /> {Math.round((book.readMin / 60) * 10) / 10}h
-                        </span>
-                      </div>
-                      <div className="eb-card-foot">
-                        {ready ? (
-                          <button
-                            className="eb-btn-read"
-                            onClick={() => openReader(book, continueChapter(book))}
-                          >
-                            <BookOpen size={15} /> Read
-                          </button>
-                        ) : (
-                          <>
-                            <button className="eb-btn-buy" onClick={() => startBuy(book)}>
-                              {book.free ? 'Get free' : `Buy · ${book.price}`}
-                            </button>
-                            <button className="eb-textlink sm" onClick={() => openReader(book)}>
-                              Preview
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </Reveal>
-                )
-              })}
+          {categories.length > 1 && (
+            <div className="eb-filters" role="tablist" aria-label="Categories">
+              {categories.map((c) => (
+                <button
+                  key={c}
+                  role="tab"
+                  aria-selected={category === c}
+                  className={`eb-chip ${category === c ? 'active' : ''}`}
+                  onClick={() => setCategory(c)}
+                >
+                  {c}
+                </button>
+              ))}
             </div>
+          )}
+
+          {books === null ? (
+            <div className="eb-empty">
+              <Loader2 size={20} className="ap-spin" /> Loading the library…
+            </div>
+          ) : explore.length === 0 ? (
+            <p className="eb-empty">
+              {shelf.length > 0
+                ? 'You’ve added everything here — enjoy your shelf.'
+                : 'No books match that yet — try another category or search.'}
+            </p>
+          ) : (
+            <div className="eb-grid">{explore.map((b, i) => renderCard(b, i))}</div>
           )}
         </div>
       </section>
@@ -445,46 +763,51 @@ ${chaptersHtml}
               <>
                 {/* ---- contents view ---- */}
                 <div className="eb-reader-top">
-                  <Cover book={reader} size="lg" />
+                  <Cover book={reader} theme={readerTheme} size="lg" />
                   <div className="eb-reader-info">
-                    <span className="eb-cat" style={{ color: reader.fg, background: reader.bg }}>
-                      {reader.kind === 'personal' ? 'Personalized' : reader.category}
-                    </span>
+                    {reader.category && (
+                      <span
+                        className="eb-cat"
+                        style={{ color: readerTheme.fg, background: readerTheme.bg }}
+                      >
+                        {reader.category}
+                      </span>
+                    )}
                     <h2>{reader.title}</h2>
-                    <p className="eb-reader-author">
-                      {reader.kind === 'personal' ? `Written for ${reader.forName}` : reader.author}
-                    </p>
+                    <p className="eb-reader-author">{reader.author}</p>
                     <div className="eb-meta">
-                      <span className="eb-pages">
-                        <FileText size={13} /> {reader.pages} pages
-                      </span>
-                      <span className="eb-pages">
-                        <Clock size={13} /> {reader.readMin} min
-                      </span>
-                      {reader.rating && (
-                        <span className="eb-rating">
-                          <Star size={13} fill="currentColor" strokeWidth={0} /> {reader.rating}
+                      {reader.pages ? (
+                        <span className="eb-pages">
+                          <FileText size={13} /> {reader.pages} pages
                         </span>
-                      )}
+                      ) : null}
+                      {reader.readMinutes ? (
+                        <span className="eb-pages">
+                          <Clock size={13} /> {reader.readMinutes} min
+                        </span>
+                      ) : null}
                     </div>
-                    {isOwned(reader) ? (
+                    {reader.onShelf && reader.chapters ? (
                       <div className="eb-reader-progress">
                         <div className="eb-reader-bar">
                           <i
-                            style={{
-                              width: `${progress[reader.id] ?? 4}%`,
-                              background: reader.accent,
-                            }}
+                            style={{ width: `${reader.progress || 0}%`, background: readerTheme.accent }}
                           />
                         </div>
-                        <span>{progress[reader.id] ?? 4}% read</span>
+                        <span>{reader.progress || 0}% read</span>
                       </div>
+                    ) : null}
+                    {reader.onShelf ? (
+                      <p className="eb-reader-locked" style={{ color: readerTheme.accent }}>
+                        <BadgeCheck size={13} /> On your shelf
+                      </p>
+                    ) : reader.isFree ? (
+                      <p className="eb-reader-locked" style={{ color: readerTheme.accent }}>
+                        <BookOpen size={13} /> Free to read · add it to keep it on your shelf
+                      </p>
                     ) : (
                       <p className="eb-reader-locked">
-                        <Lock size={13} />{' '}
-                        {reader.kind === 'personal'
-                          ? 'Generate to read the full book'
-                          : 'Read chapter one free · buy to keep reading'}
+                        <Lock size={13} /> Read chapter one free · unlock to keep reading
                       </p>
                     )}
                   </div>
@@ -492,62 +815,69 @@ ${chaptersHtml}
 
                 <div className="eb-reader-body">
                   <h3 className="eb-toc-head">Contents</h3>
-                  <ol className="eb-toc">
-                    {reader.chapters.map((ch, idx) => {
-                      const open = canRead(reader, idx)
-                      return (
-                        <li key={ch} className={open ? 'readable' : 'locked'}>
-                          <button
-                            className="eb-toc-row"
-                            disabled={!open}
-                            onClick={() => open && setOpenChapter(idx)}
-                          >
-                            <span className="eb-toc-num">{String(idx + 1).padStart(2, '0')}</span>
-                            <span className="eb-toc-title">{ch}</span>
-                            {open ? (
-                              idx === 0 && !isOwned(reader) ? (
-                                <em className="eb-toc-tag">Free</em>
+                  {readerBusy && !reader.chapters ? (
+                    <p className="eb-empty">
+                      <Loader2 size={16} className="ap-spin" /> Loading…
+                    </p>
+                  ) : (
+                    <ol className="eb-toc">
+                      {(reader.chapters || []).map((ch, idx) => {
+                        const open = !ch.locked
+                        return (
+                          <li key={ch.order} className={open ? 'readable' : 'locked'}>
+                            <button
+                              className="eb-toc-row"
+                              disabled={!open}
+                              onClick={() => open && setOpenChapter(idx)}
+                            >
+                              <span className="eb-toc-num">
+                                {String(idx + 1).padStart(2, '0')}
+                              </span>
+                              <span className="eb-toc-title">{ch.title}</span>
+                              {ch.read ? (
+                                <Check
+                                  size={15}
+                                  className="eb-toc-go"
+                                  style={{ color: readerTheme.accent }}
+                                />
+                              ) : open ? (
+                                idx === 0 && !reader.unlocked ? (
+                                  <em className="eb-toc-tag">Free</em>
+                                ) : (
+                                  <ChevronRight size={15} className="eb-toc-go" />
+                                )
                               ) : (
-                                <ChevronRight size={15} className="eb-toc-go" />
-                              )
-                            ) : (
-                              <Lock size={13} className="eb-toc-lock" />
-                            )}
-                          </button>
-                        </li>
-                      )
-                    })}
-                  </ol>
+                                <Lock size={13} className="eb-toc-lock" />
+                              )}
+                            </button>
+                          </li>
+                        )
+                      })}
+                    </ol>
+                  )}
                 </div>
 
                 <div className="eb-reader-foot">
-                  {isOwned(reader) ? (
-                    <>
-                      <button
-                        className="btn btn-primary eb-btn"
-                        onClick={() => setOpenChapter(continueChapter(reader))}
-                      >
-                        <BookOpen size={16} />{' '}
-                        {(progress[reader.id] ?? 0) > 0 ? 'Continue reading' : 'Start reading'}
-                      </button>
-                      <button className="eb-download" onClick={() => downloadBook(reader)}>
-                        <Download size={15} /> Download
-                      </button>
-                    </>
-                  ) : reader.kind === 'personal' ? (
+                  {reader.onShelf ? (
                     <>
                       <button className="btn btn-primary eb-btn" onClick={() => setOpenChapter(0)}>
-                        <BookOpen size={16} /> Read chapter one
+                        <BookOpen size={16} /> Start reading
+                      </button>
+                      <button className="eb-download" onClick={() => downloadBook(reader)}>
+                        <Download size={15} /> Download PDF
+                      </button>
+                    </>
+                  ) : reader.isFree ? (
+                    <>
+                      <button className="btn btn-primary eb-btn" onClick={() => setOpenChapter(0)}>
+                        <BookOpen size={16} /> Start reading
                       </button>
                       <button
                         className="eb-textlink"
-                        onClick={() => {
-                          const b = reader
-                          closeReader()
-                          startGenerate(b)
-                        }}
+                        onClick={() => startGet(reader)}
+                        disabled={busy}
                       >
-                        <Sparkles size={14} /> Generate · free
+                        <Plus size={14} /> Add to shelf
                       </button>
                     </>
                   ) : (
@@ -560,10 +890,10 @@ ${chaptersHtml}
                         onClick={() => {
                           const b = reader
                           closeReader()
-                          startBuy(b)
+                          startGet(b)
                         }}
                       >
-                        {reader.free ? 'Add free to shelf' : `Buy · ${reader.price}`}
+                        {isStripeMode ? `Unlock · ${priceTag(reader)}` : 'Add to shelf'}
                       </button>
                     </>
                   )}
@@ -577,19 +907,39 @@ ${chaptersHtml}
                     <ChevronLeft size={16} /> Contents
                   </button>
                   <span className="eb-read-of">
-                    Chapter {openChapter + 1} of {reader.chapters.length}
+                    Chapter {openChapter + 1} of {reader.chapters?.length || 0}
                   </span>
                 </div>
 
                 <article className="eb-read-body">
-                  <span className="eb-read-eyebrow">
-                    {reader.kind === 'personal' ? `Written for ${reader.forName}` : reader.title}
-                  </span>
-                  <h2 className="eb-read-title">{reader.chapters[openChapter]}</h2>
-                  {chapterContent(reader, openChapter).map((p, i) => (
+                  <span className="eb-read-eyebrow">{reader.title}</span>
+                  <h2 className="eb-read-title">{reader.chapters?.[openChapter]?.title}</h2>
+                  {toParas(reader.chapters?.[openChapter]?.body).map((p, i) => (
                     <p key={i}>{p}</p>
                   ))}
                 </article>
+
+                {reader.onShelf && reader.chapters?.[openChapter] && (
+                  <button
+                    className={`eb-mark-read ${reader.chapters[openChapter].read ? 'done' : ''}`}
+                    onClick={() =>
+                      markRead(
+                        reader.chapters[openChapter].order,
+                        !reader.chapters[openChapter].read,
+                      )
+                    }
+                  >
+                    {reader.chapters[openChapter].read ? (
+                      <>
+                        <Check size={15} /> Marked as read
+                      </>
+                    ) : (
+                      <>
+                        <Circle size={15} /> Mark as read
+                      </>
+                    )}
+                  </button>
+                )}
 
                 <div className="eb-read-nav">
                   <button
@@ -600,8 +950,8 @@ ${chaptersHtml}
                     <ChevronLeft size={16} /> Previous
                   </button>
 
-                  {openChapter < reader.chapters.length - 1 ? (
-                    canRead(reader, openChapter + 1) ? (
+                  {openChapter < (reader.chapters?.length || 0) - 1 ? (
+                    !reader.chapters?.[openChapter + 1]?.locked ? (
                       <button
                         className="eb-read-step primary"
                         onClick={() => setOpenChapter((c) => c + 1)}
@@ -614,18 +964,14 @@ ${chaptersHtml}
                         onClick={() => {
                           const b = reader
                           closeReader()
-                          b.kind === 'personal' ? startGenerate(b) : startBuy(b)
+                          startGet(b)
                         }}
                       >
-                        <Lock size={14} />{' '}
-                        {reader.kind === 'personal' ? 'Generate to continue' : 'Buy to continue'}
+                        <Lock size={14} /> {isStripeMode ? 'Unlock to continue' : 'Add to shelf'}
                       </button>
                     )
                   ) : (
-                    <span className="eb-read-end">
-                      The end ·{' '}
-                      {reader.kind === 'personal' ? `for ${reader.forName}` : reader.author}
-                    </span>
+                    <span className="eb-read-end">The end · {reader.author}</span>
                   )}
                 </div>
               </>
@@ -641,153 +987,45 @@ ${chaptersHtml}
           role="dialog"
           aria-modal="true"
           aria-label={`Buy ${buy.book.title}`}
-          onClick={(e) => e.target === e.currentTarget && buy.step !== 'processing' && setBuy(null)}
+          onClick={(e) => e.target === e.currentTarget && buy.step !== 'pay' && setBuy(null)}
         >
           <div className="ap-modal eb-modal">
-            {buy.step === 'offer' && (
+            {buy.step === 'loading' && (
+              <div className="apl-pay-loading">
+                <Loader2 size={22} className="ap-spin" /> Preparing secure checkout…
+              </div>
+            )}
+
+            {buy.step === 'pay' && (
               <>
                 <div className="eb-modal-top">
-                  <Cover book={buy.book} size="md" />
+                  <Cover book={buy.book} theme={themeFor(gIndex(buy.book))} size="md" />
                   <div>
                     <h3>{buy.book.title}</h3>
                     <p className="eb-modal-author">{buy.book.author}</p>
-                    <span className="eb-modal-price">{buy.book.price}</span>
+                    <span className="eb-modal-price">{priceTag(buy.book)}</span>
                   </div>
                 </div>
-                <p className="ap-modal-pitch">{buy.book.blurb}</p>
-                <ul className="ap-modal-list">
-                  <li>
-                    <Check size={15} /> {buy.book.pages} pages · {buy.book.readMin} min read
-                  </li>
-                  <li>
-                    <Check size={15} /> Yours forever, across every device
-                  </li>
-                  <li>
-                    <Check size={15} /> Read in the Daybreak app or export to your reader
-                  </li>
-                </ul>
-                <div className="ap-modal-actions">
-                  <button className="btn btn-primary eb-btn-wide" onClick={confirmBuy}>
-                    Buy now · {buy.book.price}
-                  </button>
-                </div>
-                <p className="eb-modal-demo">Demo checkout no card, no charge.</p>
+                <EbookPay clientSecret={buy.clientSecret} amount={buy.amount} onPaid={onPaid} />
                 <button className="ap-modal-close" onClick={() => setBuy(null)} aria-label="Close">
                   <X size={18} />
                 </button>
               </>
             )}
-            {buy.step === 'processing' && (
-              <div className="ap-modal-processing">
-                <Loader2 size={34} className="ap-spin" />
-                <h3>Adding to your shelf…</h3>
-                <p>Demo checkout no card, no charge.</p>
-              </div>
-            )}
+
             {buy.step === 'done' && (
               <div className="ap-modal-done">
                 <span className="ap-done-check">
                   <Check size={26} />
                 </span>
                 <h3>{buy.book.title} is yours</h3>
-                <p>It&rsquo;s on your shelf now start whenever you like.</p>
+                <p>It’s on your shelf now — start whenever you like.</p>
                 <div className="ap-modal-actions">
                   <button className="btn btn-light" onClick={() => finishBuy(true)}>
                     <BookOpen size={16} /> Read now
                   </button>
                   <button className="ap-ghostlink" onClick={() => finishBuy(false)}>
                     To my shelf
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ===== personalized generation ===== */}
-      {gen && (
-        <div
-          className="ap-modal-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Generate ${gen.book.title}`}
-          onClick={(e) => e.target === e.currentTarget && gen.step === 'offer' && setGen(null)}
-        >
-          <div className="ap-modal eb-modal">
-            {gen.step === 'offer' && (
-              <>
-                <div className="eb-modal-top">
-                  <Cover book={gen.book} size="md" />
-                  <div>
-                    <h3>{gen.book.title}</h3>
-                    <p className="eb-modal-author">A book written for {gen.book.forName}</p>
-                    <span className="eb-modal-price free">Free · included</span>
-                  </div>
-                </div>
-                <p className="ap-modal-pitch">
-                  {gen.book.fromReport}. Your scores shape the chapters; your name goes on the
-                  cover. It takes a few seconds to write.
-                </p>
-                <ul className="ap-modal-list">
-                  <li>
-                    <Check size={15} /> {gen.book.chapters.length} chapters from your dimensions
-                  </li>
-                  <li>
-                    <Check size={15} /> Personalized cover with your name
-                  </li>
-                  <li>
-                    <Check size={15} /> Short and specific {gen.book.readMin} minutes
-                  </li>
-                </ul>
-                <div className="ap-modal-actions">
-                  <button className="btn btn-primary eb-btn-wide" onClick={runGenerate}>
-                    <Sparkles size={16} /> Generate my book
-                  </button>
-                </div>
-                <button className="ap-modal-close" onClick={() => setGen(null)} aria-label="Close">
-                  <X size={18} />
-                </button>
-              </>
-            )}
-            {gen.step === 'generating' && (
-              <div className="eb-gen">
-                <div className="eb-gen-cover">
-                  <Cover book={gen.book} size="md" />
-                  <span className="eb-gen-shine" />
-                </div>
-                <h3>Writing your book…</h3>
-                <ul className="gen-steps" aria-live="polite">
-                  {GEN_STEPS.map((s, i) => (
-                    <li
-                      key={s}
-                      className={i < gen.reached ? 'done' : i === gen.reached ? 'active' : ''}
-                    >
-                      <span className="gen-check">
-                        {i < gen.reached ? <Check size={13} /> : null}
-                      </span>
-                      {s}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {gen.step === 'done' && (
-              <div className="ap-modal-done">
-                <span className="ap-done-check">
-                  <Check size={26} />
-                </span>
-                <h3>{gen.book.title} is written</h3>
-                <p>
-                  {gen.book.chapters.length} chapters, just for {gen.book.forName} it&rsquo;s on
-                  your shelf.
-                </p>
-                <div className="ap-modal-actions">
-                  <button className="btn btn-light" onClick={() => finishGenerate(true)}>
-                    <BookOpen size={16} /> Read it now
-                  </button>
-                  <button className="ap-ghostlink" onClick={() => finishGenerate(false)}>
-                    Later
                   </button>
                 </div>
               </div>
