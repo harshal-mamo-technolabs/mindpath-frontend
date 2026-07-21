@@ -63,6 +63,15 @@ export function getInvoices() {
   return apiGet('/api/subscriptions/invoices')
 }
 
+/**
+ * Complete billing history — subscription charges PLUS every one-time purchase
+ * (assessments, ebooks, audio programs, counselling top-ups). Newest first. Each row:
+ * { id, date, amount, currency, status, type, label, description, receiptUrl }.
+ */
+export function getTransactions() {
+  return apiGet('/api/subscriptions/transactions')
+}
+
 // ---------- saved cards ----------
 
 /** Saved cards: [{ id, brand, last4, expMonth, expYear, isDefault }]. */

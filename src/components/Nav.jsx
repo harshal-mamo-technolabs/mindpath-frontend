@@ -25,15 +25,13 @@ import { isMsisdnMode } from '../lib/billingMode.js'
 const PRIMARY = [
   ['Dashboard', '/dashboard', LayoutDashboard, 'Dashboard'],
   ['Assessments', '/assessments', ClipboardList, 'Assess'],
+  ['Counselling', '/counselling', MessageCircle, 'Talk'],
   ['Your reports', '/reports', FileHeart, 'Reports'],
   ['Daily audio', '/audio', Headphones, 'Audio'],
   ['Ebooks', '/ebooks', BookOpen, 'Ebooks'],
 ]
 /* Secondary features — live in the account menu. */
-const EXPLORE = [
-  ['Counselling', '/counselling', MessageCircle],
-  ['Free music', '/music', Music],
-]
+const EXPLORE = [['Free music', '/music', Music]]
 /* Account & billing. In carrier-billing (MSISDN) mode there's no plan/pricing
    page — the subscription is provisioned at signup. */
 const ACCOUNT = [

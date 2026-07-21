@@ -30,12 +30,22 @@ import {
   CANCEL_REASONS,
   createSetupIntent,
   deletePaymentMethod,
-  getInvoices,
   getMySubscription,
   getPaymentMethods,
+  getTransactions,
   setDefaultPaymentMethod,
   WOULD_STAY_FOR,
 } from '../lib/payments.js'
+
+// Billing-history category → label + badge class.
+const TX_KIND = {
+  subscription: { label: 'Subscription', cls: 'subscription' },
+  assessment: { label: 'Assessment', cls: 'assessment' },
+  ebook: { label: 'Ebook', cls: 'ebook' },
+  audio: { label: 'Audio program', cls: 'audio' },
+  counselling: { label: 'Counselling', cls: 'counselling' },
+  payg: { label: 'Pay-as-you-go', cls: 'payg' },
+}
 
 const ACCENT = '#6450cf'
 
@@ -138,7 +148,7 @@ export default function BillingPage() {
   const [status, setStatus] = useState('loading') // loading | ready | none | error
   const [sub, setSub] = useState(null)
   const [cards, setCards] = useState([])
-  const [invoices, setInvoices] = useState([])
+  const [transactions, setTransactions] = useState([])
   const [error, setError] = useState('')
   const [reloadKey, setReloadKey] = useState(0)
 
@@ -172,17 +182,17 @@ export default function BillingPage() {
           setStatus('none')
           return
         }
-        // MSISDN has no card/invoice management — skip those calls.
-        const [cardList, inv] = isMsisdnMode
+        // MSISDN has no card/Stripe billing history — skip those calls.
+        const [cardList, txns] = isMsisdnMode
           ? [[], []]
           : await Promise.all([
               getPaymentMethods().catch(() => []),
-              getInvoices().catch(() => []),
+              getTransactions().catch(() => []),
             ])
         if (!alive) return
         setSub(me)
         setCards(cardList || [])
-        setInvoices(inv || [])
+        setTransactions(txns || [])
         setStatus('ready')
       } catch (err) {
         if (alive) {
@@ -536,48 +546,47 @@ export default function BillingPage() {
         </section>
         )}
 
-        {/* billing history (Stripe only) */}
+        {/* billing history — subscription + every one-time purchase (Stripe only) */}
         {!isMsisdnMode && (
         <section className="bl-section">
           <div className="bl-invoices-head">
             <h2 className="bl-section-title">Billing history</h2>
-            {invoices.length > 0 && (
+            {transactions.length > 0 && (
               <button
                 className="bl-link-btn"
                 onClick={() =>
-                  invoices.forEach(
-                    (i) => i.hostedInvoiceUrl && window.open(i.hostedInvoiceUrl, '_blank'),
-                  )
+                  transactions.forEach((t) => t.receiptUrl && window.open(t.receiptUrl, '_blank'))
                 }
               >
                 <Download size={14} /> Export all
               </button>
             )}
           </div>
-          {invoices.length === 0 ? (
-            <p className="bl-empty">No invoices yet.</p>
+          <p className="bl-section-sub">
+            Subscription renewals plus every one-time purchase — assessments, ebooks, audio
+            programs, and counselling top-ups.
+          </p>
+          {transactions.length === 0 ? (
+            <p className="bl-empty">No charges yet.</p>
           ) : (
             <div className="bl-invoices">
-              {invoices.map((inv) => {
-                // Open the Stripe-hosted invoice (fall back to the PDF link).
-                const link = inv.hostedInvoiceUrl || inv.pdfUrl
+              {transactions.map((tx) => {
+                const kind = TX_KIND[tx.type] || { label: tx.label, cls: 'payg' }
                 return (
-                  <div className="bl-invoice" key={inv.id}>
-                    <span className="bl-inv-date">{formatDate(inv.date)}</span>
+                  <div className="bl-invoice" key={tx.id}>
+                    <span className="bl-inv-date">{formatDate(tx.date)}</span>
                     <span className="bl-inv-desc">
-                      {inv.description}
-                      <em className={`bl-inv-kind ${inv.kind}`}>
-                        {inv.kind === 'plan' ? 'Subscription' : 'Pay-as-you-go'}
-                      </em>
+                      {tx.description || kind.label}
+                      <em className={`bl-inv-kind ${kind.cls}`}>{kind.label}</em>
                     </span>
-                    <span className="bl-inv-amount">{formatPrice(inv.amount, inv.currency)}</span>
-                    {link ? (
+                    <span className="bl-inv-amount">{formatPrice(tx.amount, tx.currency)}</span>
+                    {tx.receiptUrl ? (
                       <a
                         className="bl-inv-dl"
-                        href={link}
+                        href={tx.receiptUrl}
                         target="_blank"
                         rel="noreferrer"
-                        aria-label="View invoice on Stripe"
+                        aria-label="View receipt"
                       >
                         <ArrowUpRight size={16} />
                       </a>

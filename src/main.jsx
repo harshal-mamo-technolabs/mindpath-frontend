@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import { ConversationProvider } from '@elevenlabs/react'
 import './styles/index.css'
 import './styles/pages/assessment.css'
 import './styles/pages/stress-report.css'
@@ -18,7 +19,10 @@ import App from './App.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      {/* Powers voice counselling (Sol) — useConversation must live inside this. */}
+      <ConversationProvider>
+        <App />
+      </ConversationProvider>
     </BrowserRouter>
   </StrictMode>,
 )

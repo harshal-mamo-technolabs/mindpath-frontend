@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useConversation } from '@elevenlabs/react'
+import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import {
   ArrowRight,
   BookOpen,
@@ -8,6 +10,7 @@ import {
   Clock,
   Headphones,
   Loader2,
+  Lock,
   Mic,
   MicOff,
   PhoneCall,
@@ -19,21 +22,25 @@ import {
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import Logo from '../components/Logo.jsx'
+import { useAuth } from '../hooks/useAuth.js'
+import { isMsisdnMode } from '../lib/billingMode.js'
+import { stripePromise } from '../lib/stripe.js'
+import { getPaymentMethods } from '../lib/payments.js'
+import { ADVISOR, getSession, MINUTE_PACKS, TOPICS } from '../data/counselling.js'
 import {
-  ADVISOR,
-  fmtSessionDate,
-  getSession,
-  includedMinutes,
-  MINUTE_PACKS,
-  PAST_SESSIONS,
-  TOPICS,
-} from '../data/counselling.js'
+  endCounsellingSession,
+  getCounsellingTopics,
+  startCounsellingSession,
+  topUpCounselling,
+} from '../lib/counsellingApi.js'
 
 const SUGGEST_META = {
   ebook: { icon: BookOpen, label: 'Suggested ebook' },
   plan: { icon: Headphones, label: 'Suggested session' },
   assessment: { icon: ClipboardList, label: 'Suggested assessment' },
 }
+
+const LANG_LABELS = { en: 'English', hi: 'हिन्दी', de: 'Deutsch', fr: 'Français', es: 'Español' }
 
 /* Premium living voice orb for the live call — a soft 3D blob whose internal
    light swirls, edge morphs, and halo pulses as the advisor speaks. */
@@ -59,28 +66,29 @@ function VoiceBlob({ speaking = false, connecting = false }) {
 const fmtClock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 
 export default function CounsellingPage() {
-  const [phase, setPhase] = useState('lobby') // lobby | connecting | call | summary
+  const navigate = useNavigate()
+  const { isAuthenticated, token } = useAuth()
+
+  const [phase, setPhase] = useState('lobby') // lobby | call | summary
   const [topicId, setTopicId] = useState(TOPICS[0].id)
-  const [minutes, setMinutes] = useState(() => {
-    const m = includedMinutes()
-    return m === Infinity ? 120 : m
-  })
-  const [revealed, setRevealed] = useState(0)
+  const [data, setData] = useState(null) // backend topics response
+  const [language, setLanguage] = useState(null)
+  const [resume, setResume] = useState(false)
+  const [messages, setMessages] = useState([]) // { who: 'advisor' | 'you', text }
   const [elapsed, setElapsed] = useState(0)
-  const [muted, setMuted] = useState(false)
   const [buyOpen, setBuyOpen] = useState(false)
-  const [buyStep, setBuyStep] = useState('offer')
   const [pack, setPack] = useState(MINUTE_PACKS[1])
   const [toast, setToast] = useState(null)
-  const timers = useRef([])
+  const [minutesAtStart, setMinutesAtStart] = useState(0)
+
+  const startedAtRef = useRef(null)
+  const convIdRef = useRef(null)
+  const sessionRef = useRef(null)
+  const finishingRef = useRef(false)
+  const endingRef = useRef(false)
+  const warnedRef = useRef(false)
   const transcriptRef = useRef(null)
   const toastTimer = useRef(null)
-
-  const topic = TOPICS.find((t) => t.id === topicId)
-  const script = useMemo(() => getSession(topic), [topic])
-  const lines = script.lines
-  const speaking = phase === 'call' && revealed > 0 && lines[revealed - 1]?.from === 'advisor'
-  const ended = revealed >= lines.length
 
   const say = useCallback((msg) => {
     clearTimeout(toastTimer.current)
@@ -88,75 +96,207 @@ export default function CounsellingPage() {
     toastTimer.current = setTimeout(() => setToast(null), 3600)
   }, [])
 
-  const clearTimers = () => {
-    timers.current.forEach(clearTimeout)
-    timers.current = []
-  }
-  useEffect(
-    () => () => {
-      clearTimers()
-      clearTimeout(toastTimer.current)
+  // ---- backend topics (public; richer when signed in) ----
+  const refreshTopics = useCallback(() => {
+    getCounsellingTopics()
+      .then(setData)
+      .catch(() => {})
+  }, [])
+
+  // Finalize a call exactly once — report the end (so minutes reconcile) and move to the
+  // summary. Runs whether the USER ends it or SOL / the connection ends it (onDisconnect),
+  // guarded so the two triggers don't double-fire.
+  const finalizeCall = useCallback(() => {
+    if (finishingRef.current) return
+    if (!sessionRef.current && !startedAtRef.current) return
+    finishingRef.current = true
+    const s = sessionRef.current
+    if (s?.sessionId) {
+      const durationSeconds = startedAtRef.current
+        ? Math.round((Date.now() - startedAtRef.current) / 1000)
+        : undefined
+      endCounsellingSession(s.sessionId, {
+        conversationId: convIdRef.current || undefined,
+        durationSeconds,
+      }).catch(() => {})
+    }
+    sessionRef.current = null
+    startedAtRef.current = null
+    convIdRef.current = null
+    setPhase('summary')
+    refreshTopics()
+  }, [refreshTopics])
+
+  // ---- ElevenLabs voice conversation ----
+  const conversation = useConversation({
+    onConnect: (p) => {
+      startedAtRef.current = Date.now()
+      if (p?.conversationId) convIdRef.current = p.conversationId
     },
-    [],
+    onMessage: (p) => {
+      if (p?.message)
+        setMessages((prev) => [...prev, { who: p.source === 'user' ? 'you' : 'advisor', text: p.message }])
+    },
+    // Sol can hang up itself (end-call tool), or the connection can drop — end the UI too.
+    onDisconnect: () => finalizeCall(),
+    onError: (e) => say(typeof e === 'string' ? e : e?.message || 'The voice connection dropped.'),
+  })
+  const status = conversation.status
+  const connected = status === 'connected'
+
+  useEffect(() => {
+    refreshTopics()
+  }, [refreshTopics, token])
+
+  const backendByKey = useMemo(() => {
+    const map = {}
+    for (const t of data?.topics ?? []) map[t.key] = t
+    return map
+  }, [data])
+
+  // Merge the rich static visuals (glyphs, colors, authored summaries) with live backend
+  // signal (hasReport, the real opening line, resume availability).
+  const topics = useMemo(
+    () =>
+      TOPICS.map((t) => {
+        const b = backendByKey[t.key]
+        return {
+          ...t,
+          hasReport: b ? b.hasReport : t.hasReport,
+          canResume: b?.canResume ?? false,
+          opening: b?.opening ?? getSession(t).lines[0].text,
+        }
+      }),
+    [backendByKey],
   )
 
-  // auto-play transcript while in call
-  useEffect(() => {
-    if (phase !== 'call' || revealed >= lines.length) return
-    const line = lines[revealed]
-    const dur = line.from === 'advisor' ? Math.min(5200, 1500 + line.text.length * 30) : 2600
-    const t = setTimeout(() => setRevealed((r) => r + 1), dur)
-    timers.current.push(t)
-    return () => clearTimeout(t)
-  }, [phase, revealed, lines])
+  const topic = topics.find((t) => t.id === topicId) || topics[0]
+  const script = useMemo(() => getSession(topic), [topic])
+  const languages = data?.languages ?? ['en']
+  const lang = language ?? languages[0]
+  const pricing = data?.pricing ?? null
+  const minutesAvail = data?.minutes?.available ?? null // number when signed in, else null
+  // MSISDN users buy minutes via their carrier plan, not here — no counselling top-ups.
+  const canTopUp = isAuthenticated && !isMsisdnMode
 
-  // call timer
+  const speaking = phase === 'call' && connected && conversation.isSpeaking
+  const remaining = Math.max(0, (minutesAtStart || 0) - Math.ceil(elapsed / 60))
+
+  // call timer (only while actually connected)
   useEffect(() => {
-    if (phase !== 'call') return
+    if (phase !== 'call' || !connected) return
     const id = setInterval(() => setElapsed((e) => e + 1), 1000)
     return () => clearInterval(id)
-  }, [phase])
+  }, [phase, connected])
+
+  // About a minute left → nudge Sol to bring the conversation to a warm close (once).
+  useEffect(() => {
+    if (phase !== 'call' || !connected || warnedRef.current || remaining > 1) return
+    warnedRef.current = true
+    try {
+      conversation.sendContextualUpdate?.(
+        "The user's session time is almost up — about a minute left. Gently begin bringing the conversation to a warm close and say your goodbyes soon.",
+      )
+    } catch {
+      /* SDK not ready — the hard stop below still applies */
+    }
+  }, [phase, connected, remaining, conversation])
+
+  // Allowance spent → gracefully end the call (backstop if Sol hasn't wrapped up itself).
+  // Deferred so a same-tick top-up (which lifts `remaining`) cancels it via the cleanup.
+  useEffect(() => {
+    if (phase !== 'call' || !connected || remaining > 0) return
+    const t = setTimeout(() => {
+      say('Your minutes are up — the session has ended.')
+      endCall()
+    }, 0)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, connected, remaining])
 
   // autoscroll transcript
   useEffect(() => {
     transcriptRef.current?.scrollTo({ top: transcriptRef.current.scrollHeight, behavior: 'smooth' })
-  }, [revealed])
+  }, [messages])
 
-  function startCall() {
-    setRevealed(0)
+  useEffect(() => () => clearTimeout(toastTimer.current), [])
+
+  async function startCall() {
+    if (!isAuthenticated) {
+      navigate('/login?next=/counselling')
+      return
+    }
+    if (minutesAvail != null && minutesAvail < 1) {
+      if (canTopUp) setBuyOpen(true)
+      return
+    }
+    setMessages([])
     setElapsed(0)
-    setPhase('connecting')
-    const t = setTimeout(() => setPhase('call'), 1600)
-    timers.current.push(t)
+    setMinutesAtStart(minutesAvail ?? 0)
+    finishingRef.current = false
+    endingRef.current = false
+    warnedRef.current = false
+    setPhase('call')
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true })
+      const res = await startCounsellingSession({ topic: topic.key, language: lang, resume })
+      sessionRef.current = res
+      await conversation.startSession({
+        signedUrl: res.signedUrl,
+        connectionType: 'websocket',
+        dynamicVariables: res.dynamicVariables,
+        overrides: res.overrides,
+      })
+    } catch (err) {
+      sessionRef.current = null
+      setPhase('lobby')
+      say(
+        err?.name === 'NotAllowedError'
+          ? 'Microphone access is needed to talk with Sol.'
+          : err?.message || 'Could not start the session.',
+      )
+    }
   }
 
-  function endCall() {
-    clearTimers()
-    setPhase('summary')
+  async function endCall() {
+    if (endingRef.current) return
+    endingRef.current = true
+    try {
+      await conversation.endSession()
+    } catch {
+      /* already closed */
+    }
+    finalizeCall()
   }
 
   function backToLobby() {
     setPhase('lobby')
-    setRevealed(0)
     setElapsed(0)
+    setMessages([])
   }
 
-  function confirmBuy() {
-    setBuyStep('processing')
-    setTimeout(() => setBuyStep('done'), 1300)
-  }
-
+  // ---- top-up ----
   function finishBuy() {
-    setMinutes((m) => m + pack.minutes)
     setBuyOpen(false)
-    setBuyStep('offer')
-    say(`${pack.minutes} minutes added  talk as long as you need.`)
+    // Topped up mid-call → extend the live allowance so the session keeps going.
+    if (phase === 'call') {
+      setMinutesAtStart((m) => m + pack.minutes)
+      warnedRef.current = false
+    }
+    refreshTopics()
+    say(`${pack.minutes} minutes added — talk as long as you need.`)
   }
 
-  const remaining = Math.max(0, minutes - Math.ceil(elapsed / 60))
+  const buyProps = {
+    pack,
+    setPack,
+    pricing,
+    onFinish: finishBuy,
+    onClose: () => setBuyOpen(false),
+  }
 
-  // ---------- CONNECTING / CALL / SUMMARY (focused, chrome-free) ----------
-  if (phase === 'connecting' || phase === 'call' || phase === 'summary') {
+  // ---------- CALL / SUMMARY (focused, chrome-free) ----------
+  if (phase === 'call' || phase === 'summary') {
     return (
       <div className="cn-stage" style={{ '--accent': topic.accent }}>
         <header className="take-bar cn-bar">
@@ -212,28 +352,28 @@ export default function CounsellingPage() {
               <button className="btn btn-light" onClick={backToLobby}>
                 <PhoneCall size={16} /> New session
               </button>
-              <button className="cn-textlink" onClick={() => setBuyOpen(true)}>
-                Buy more minutes
-              </button>
+              {canTopUp && (
+                <button className="cn-textlink" onClick={() => setBuyOpen(true)}>
+                  Buy more minutes
+                </button>
+              )}
             </div>
           </main>
         ) : (
           <main className="cn-call">
             {/* advisor */}
             <div className="cn-call-stage">
-              <VoiceBlob speaking={speaking} connecting={phase === 'connecting'} />
+              <VoiceBlob speaking={speaking} connecting={!connected} />
               <h2 className="cn-advisor-name">{ADVISOR.name}</h2>
               <p className="cn-advisor-state">
-                {phase === 'connecting' ? (
+                {!connected ? (
                   <>
                     <Loader2 size={14} className="ap-spin" /> Connecting…
                   </>
                 ) : speaking ? (
                   'Speaking…'
-                ) : ended ? (
-                  'Listening — take your time'
                 ) : (
-                  'Listening…'
+                  'Listening — take your time'
                 )}
               </p>
             </div>
@@ -248,42 +388,14 @@ export default function CounsellingPage() {
                     ? `No report, no agenda — just start talking, ${ADVISOR.name} will follow.`
                     : `No report needed — ${ADVISOR.name} will get to know this as you talk.`}
               </p>
-              {lines.slice(0, revealed).map((line, i) => (
-                <div key={i} className={`cn-msg ${line.from}`}>
-                  <span className="cn-msg-who">
-                    {line.from === 'advisor' ? ADVISOR.name : 'You'}
-                  </span>
+              {messages.map((line, i) => (
+                <div key={i} className={`cn-msg ${line.who}`}>
+                  <span className="cn-msg-who">{line.who === 'advisor' ? ADVISOR.name : 'You'}</span>
                   <p>{line.text}</p>
                 </div>
               ))}
-              {speaking && (
-                <div className="cn-msg advisor">
-                  <span className="cn-msg-who">{ADVISOR.name}</span>
-                  <p className="cn-typing">
-                    <i />
-                    <i />
-                    <i />
-                  </p>
-                </div>
-              )}
-
-              {/* mid-call suggestion */}
-              {revealed >= lines.length - 1 && (
-                <Link to={script.suggest.to} className="cn-suggest">
-                  <span className="cn-suggest-ico">
-                    {(() => {
-                      const Ico = SUGGEST_META[script.suggest.type].icon
-                      return <Ico size={18} />
-                    })()}
-                  </span>
-                  <div>
-                    <small>
-                      {ADVISOR.name} suggests · {SUGGEST_META[script.suggest.type].label}
-                    </small>
-                    <strong>{script.suggest.title}</strong>
-                  </div>
-                  <ArrowRight size={16} />
-                </Link>
+              {connected && messages.length === 0 && (
+                <p className="cn-grounded-note">Say hello whenever you’re ready.</p>
               )}
             </div>
 
@@ -295,48 +407,50 @@ export default function CounsellingPage() {
                 <span>· {remaining} min left</span>
               </div>
               <div className="cn-control-btns">
-                <button
-                  className={`cn-ctrl ${muted ? 'active' : ''}`}
-                  onClick={() => setMuted((m) => !m)}
-                  aria-label={muted ? 'Unmute' : 'Mute'}
-                >
-                  {muted ? <MicOff size={20} /> : <Mic size={20} />}
-                </button>
-                <button className="cn-ctrl cn-end" onClick={endCall} aria-label="End session">
-                  <PhoneOff size={22} />
-                </button>
-                <button
-                  className="cn-ctrl"
-                  onClick={() => setBuyOpen(true)}
-                  aria-label="Buy minutes"
-                >
-                  <Plus size={20} />
-                </button>
+                <div className="cn-ctrl-wrap">
+                  <button
+                    className={`cn-ctrl ${conversation.isMuted ? 'active' : ''}`}
+                    onClick={() => conversation.setMuted(!conversation.isMuted)}
+                    aria-label={conversation.isMuted ? 'Unmute' : 'Mute'}
+                  >
+                    {conversation.isMuted ? <MicOff size={20} /> : <Mic size={20} />}
+                  </button>
+                  <span className="cn-ctrl-label">{conversation.isMuted ? 'Unmute' : 'Mute'}</span>
+                </div>
+                <div className="cn-ctrl-wrap">
+                  <button className="cn-ctrl cn-end" onClick={endCall} aria-label="End session">
+                    <PhoneOff size={22} />
+                  </button>
+                  <span className="cn-ctrl-label">End</span>
+                </div>
+                {canTopUp && (
+                  <div className="cn-ctrl-wrap">
+                    <button className="cn-ctrl" onClick={() => setBuyOpen(true)} aria-label="Add minutes">
+                      <Plus size={20} />
+                    </button>
+                    <span className="cn-ctrl-label">Minutes</span>
+                  </div>
+                )}
               </div>
               {remaining <= 5 && (
                 <p className="cn-low">
-                  <Zap size={13} /> Running low top up to keep talking.
+                  <Zap size={13} />{' '}
+                  {remaining <= 1 ? 'Almost out of minutes — ' : 'Running low — '}
+                  {canTopUp ? (
+                    <button className="cn-low-topup" onClick={() => setBuyOpen(true)}>
+                      add minutes to keep talking
+                    </button>
+                  ) : (
+                    'Sol will bring things to a gentle close.'
+                  )}
                 </p>
               )}
             </div>
           </main>
         )}
 
-        {/* toast + buy modal shared below */}
         <Toasts toast={toast} />
-        {buyOpen && (
-          <BuyMinutes
-            pack={pack}
-            setPack={setPack}
-            step={buyStep}
-            onConfirm={confirmBuy}
-            onFinish={finishBuy}
-            onClose={() => {
-              setBuyOpen(false)
-              setBuyStep('offer')
-            }}
-          />
-        )}
+        {buyOpen && <BuyMinutes {...buyProps} />}
       </div>
     )
   }
@@ -353,163 +467,186 @@ export default function CounsellingPage() {
   const contextLink = topic.hasReport
     ? { to: '/reports', label: `View your ${topic.title} report` }
     : topic.assessmentId
-      ? {
-          to: `/assessments/${topic.assessmentId}`,
-          label: `Take the ${topic.title} assessment first`,
-        }
+      ? { to: `/assessments/${topic.assessmentId}`, label: `Take the ${topic.title} assessment first` }
       : null
+
+  const minutesLabel = !isAuthenticated ? null : minutesAvail == null ? '—' : minutesAvail
 
   return (
     <main className="cn">
       <div className="container">
         <Reveal as="header" className="cn-hero">
-          <span className="eyebrow on-dark">AI counselling</span>
-          <h1 className="cn-title">
-            Talk it through, <em>out loud.</em>
-          </h1>
-          <p className="cn-lede">{ADVISOR.blurb}</p>
-          <div className="cn-minutes-pill">
-            <Clock size={15} />
-            <strong>{minutes === Infinity ? '∞' : minutes} minutes</strong> available this cycle
-            <button onClick={() => setBuyOpen(true)}>
-              <Plus size={13} /> Top up
-            </button>
+          <div className="cn-hero-text">
+            <span className="eyebrow on-dark">AI counselling</span>
+            <h1 className="cn-title">
+              Talk it through, <em>out loud.</em>
+            </h1>
+            <p className="cn-lede">{ADVISOR.blurb}</p>
+            <div className="cn-minutes-pill">
+              <Clock size={15} />
+              {isAuthenticated ? (
+                <>
+                  <strong>{minutesLabel} minutes</strong> available this cycle
+                </>
+              ) : (
+                <>
+                  <Link to="/login?next=/counselling" style={{ color: 'inherit', fontWeight: 700 }}>
+                    Sign in
+                  </Link>{' '}
+                  to see your minutes
+                </>
+              )}
+              {canTopUp && (
+                <button onClick={() => setBuyOpen(true)}>
+                  <Plus size={13} /> Top up
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="cn-hero-orb" aria-hidden="true">
+            <VoiceBlob />
+            <span className="cn-hero-orb-label">{ADVISOR.name} · {ADVISOR.role}</span>
           </div>
         </Reveal>
 
-        <section className="cn-section">
-          <h2 className="rp-h2 on-night">
-            <Sparkles size={18} /> What would you like to talk about?
-          </h2>
-          <p className="cn-section-sub">
-            Pick whatever you&rsquo;re carrying — no report required — and we&rsquo;ll show you how
-            that session goes before you start.
-          </p>
-          <div className="cn-topics">
-            {TOPICS.map((t) => {
-              const Icon = t.icon
-              return (
-                <button
-                  key={t.id}
-                  className={`cn-topic ${topicId === t.id ? 'active' : ''}`}
-                  onClick={() => setTopicId(t.id)}
-                  style={{ '--accent': t.accent }}
-                >
-                  <span className="cn-topic-ico" style={{ background: t.bg, color: t.fg }}>
-                    <Icon size={22} strokeWidth={1.8} />
-                  </span>
-                  <span className="cn-topic-text">
-                    <strong>{t.title}</strong>
-                    <small>{t.line}</small>
-                  </span>
-                  {t.hasReport ? (
-                    <span className="cn-topic-tag has-report">+ your report</span>
-                  ) : (
-                    <span className="cn-topic-tag open">Open</span>
-                  )}
-                </button>
-              )
-            })}
+        <section className="cn-studio">
+          <div className="cn-studio-topics">
+            <h2 className="rp-h2 on-night">
+              <Sparkles size={18} /> What would you like to talk about?
+            </h2>
+            <p className="cn-section-sub">
+              Pick whatever you&rsquo;re carrying — no report required. We&rsquo;ll show you exactly
+              how the session opens before you start.
+            </p>
+            <div className="cn-topics">
+              {topics.map((t, i) => {
+                const TIcon = t.icon
+                return (
+                  <button
+                    key={t.id}
+                    className={`cn-topic ${topicId === t.id ? 'active' : ''}`}
+                    onClick={() => {
+                      setTopicId(t.id)
+                      setResume(false)
+                    }}
+                    style={{ '--accent': t.accent, animationDelay: `${Math.min(i, 8) * 40}ms` }}
+                  >
+                    <span className="cn-topic-ico" style={{ background: t.bg, color: t.fg }}>
+                      <TIcon size={22} strokeWidth={1.8} />
+                    </span>
+                    <span className="cn-topic-text">
+                      <strong>{t.title}</strong>
+                      <small>{t.line}</small>
+                    </span>
+                    {t.hasReport ? (
+                      <span className="cn-topic-tag has-report">Your report</span>
+                    ) : (
+                      <span className="cn-topic-tag open">Open</span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
-          <div className="cn-pick" key={topic.id} style={{ '--accent': topic.accent }}>
-            <div className="cn-pick-main">
-              <div className="cn-pick-head">
-                <span className="cn-pick-ico" style={{ background: topic.bg, color: topic.fg }}>
-                  <Icon size={26} strokeWidth={1.8} />
+          <aside className="cn-setup">
+            <div className="cn-setup-card" key={topic.id} style={{ '--accent': topic.accent }}>
+              <div className="cn-setup-head">
+                <span className="cn-setup-ico" style={{ background: topic.bg, color: topic.fg }}>
+                  <Icon size={24} strokeWidth={1.8} />
                 </span>
-                <div className="cn-pick-headtext">
-                  <small>You chose</small>
+                <div className="cn-setup-headtext">
+                  <small>Your session</small>
                   <h3>{topic.title}</h3>
-                  <p>{topic.line}</p>
                 </div>
                 {topic.hasReport ? (
-                  <span className="cn-topic-tag has-report">+ your report</span>
+                  <span className="cn-topic-tag has-report">Your report</span>
                 ) : (
                   <span className="cn-topic-tag open">Open</span>
                 )}
               </div>
 
-              <p className="cn-pick-note">{reportNote}</p>
+              <p className="cn-setup-note">{reportNote}</p>
 
               <div className="cn-pick-preview">
                 <span className="cn-pick-label">
                   <Sparkles size={13} /> How {ADVISOR.name} opens
                 </span>
-                <p>&ldquo;{script.lines[0].text}&rdquo;</p>
+                <p>&ldquo;{topic.opening}&rdquo;</p>
               </div>
 
-              {contextLink && (
-                <Link className="cn-pick-link" to={contextLink.to}>
-                  {contextLink.label} <ArrowRight size={14} />
-                </Link>
-              )}
-            </div>
-
-            <aside className="cn-pick-side">
-              <div className="cn-pick-cost">
-                <Clock size={16} />
-                <div>
-                  <strong>{minutes === Infinity ? '∞' : minutes} min</strong>
-                  <small>available this cycle</small>
+              {languages.length > 1 && (
+                <div className="cn-lang">
+                  <span className="cn-lang-label">Talk in</span>
+                  <div className="cn-lang-opts">
+                    {languages.map((code) => (
+                      <button
+                        key={code}
+                        className={`cn-lang-opt ${lang === code ? 'active' : ''}`}
+                        onClick={() => setLanguage(code)}
+                      >
+                        {LANG_LABELS[code] || code.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <p className="cn-pick-costnote">
-                Sessions draw from your minutes · ~15 min is typical · stop anytime.
-              </p>
-              <button
-                className="btn btn-primary cn-start"
-                onClick={startCall}
-                disabled={minutes <= 0}
-              >
-                <PhoneCall size={18} /> Start session with {ADVISOR.name}
-              </button>
-              <button className="cn-pick-topup" onClick={() => setBuyOpen(true)}>
-                {minutes <= 0 ? (
-                  'Out of minutes — top up to start'
+              )}
+
+              {topic.canResume && (
+                <label className="cn-resume">
+                  <input type="checkbox" checked={resume} onChange={(e) => setResume(e.target.checked)} />
+                  Pick up where we left off last time
+                </label>
+              )}
+
+              <div className="cn-setup-foot">
+                <button
+                  className="btn btn-primary cn-start"
+                  onClick={startCall}
+                  disabled={isAuthenticated && minutesAvail != null && minutesAvail < 1}
+                >
+                  <PhoneCall size={18} /> Start session with {ADVISOR.name}
+                </button>
+                <p className="cn-setup-meta">
+                  {isAuthenticated && minutesLabel != null && minutesLabel !== '—' ? (
+                    <>
+                      <strong>{minutesLabel} min</strong> available · ~15 min is typical · stop anytime
+                    </>
+                  ) : (
+                    'Sessions draw from your minutes · ~15 min is typical · stop anytime'
+                  )}
+                </p>
+                {canTopUp ? (
+                  <button className="cn-pick-topup" onClick={() => setBuyOpen(true)}>
+                    {minutesAvail != null && minutesAvail < 1 ? (
+                      'Out of minutes — top up to start'
+                    ) : (
+                      <>
+                        <Plus size={13} /> Top up minutes
+                      </>
+                    )}
+                  </button>
                 ) : (
-                  <>
-                    <Plus size={13} /> Top up minutes
-                  </>
+                  isAuthenticated &&
+                  minutesAvail != null &&
+                  minutesAvail < 1 && (
+                    <p className="cn-setup-out">You&rsquo;re out of minutes this cycle.</p>
+                  )
                 )}
-              </button>
-            </aside>
-          </div>
+                {contextLink && (
+                  <Link className="cn-pick-link" to={contextLink.to}>
+                    {contextLink.label} <ArrowRight size={14} />
+                  </Link>
+                )}
+              </div>
+            </div>
+          </aside>
         </section>
 
-        {PAST_SESSIONS.length > 0 && (
-          <section className="cn-section">
-            <h2 className="rp-h2 on-night">Past sessions</h2>
-            <div className="cn-past">
-              {PAST_SESSIONS.map((s) => (
-                <div className="cn-past-row" key={s.id}>
-                  <span className="cn-past-date">{fmtSessionDate(s.date)}</span>
-                  <div className="cn-past-info">
-                    <strong>{s.topic}</strong>
-                    <small>{s.note}</small>
-                  </div>
-                  <span className="cn-past-min">{s.minutes} min</span>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
       </div>
 
       <Toasts toast={toast} />
-      {buyOpen && (
-        <BuyMinutes
-          pack={pack}
-          setPack={setPack}
-          step={buyStep}
-          onConfirm={confirmBuy}
-          onFinish={finishBuy}
-          onClose={() => {
-            setBuyOpen(false)
-            setBuyStep('offer')
-          }}
-        />
-      )}
+      {buyOpen && <BuyMinutes {...buyProps} />}
     </main>
   )
 }
@@ -526,7 +663,136 @@ function Toasts({ toast }) {
   )
 }
 
-function BuyMinutes({ pack, setPack, step, onConfirm, onFinish, onClose }) {
+/* Stripe card confirmation for a top-up (Stripe billing mode only). */
+function TopUpCard({ onDone, onError }) {
+  const stripe = useStripe()
+  const elements = useElements()
+  const [submitting, setSubmitting] = useState(false)
+
+  async function pay(e) {
+    e.preventDefault()
+    if (!stripe || !elements) return
+    setSubmitting(true)
+    onError('')
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: { return_url: `${window.location.origin}/counselling` },
+      redirect: 'if_required',
+    })
+    if (error) {
+      onError(error.message || 'Your card could not be charged.')
+      setSubmitting(false)
+      return
+    }
+    onDone()
+  }
+
+  return (
+    <form onSubmit={pay} className="checkout-form">
+      <PaymentElement options={{ paymentMethodOrder: ['card'] }} />
+      <button className="btn btn-primary cn-buy-btn" disabled={!stripe || submitting}>
+        {submitting ? (
+          <>
+            <Loader2 size={17} className="ap-spin" /> Processing…
+          </>
+        ) : (
+          <>
+            <Lock size={16} /> Pay & add minutes
+          </>
+        )}
+      </button>
+    </form>
+  )
+}
+
+function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
+  const [step, setStep] = useState('offer') // offer | processing | card | done
+  const [err, setErr] = useState('')
+  const [clientSecret, setClientSecret] = useState('')
+  const [cards, setCards] = useState([])
+  const [selectedCardId, setSelectedCardId] = useState(null)
+  const [useNewCard, setUseNewCard] = useState(false)
+  const [cardsLoaded, setCardsLoaded] = useState(isMsisdnMode) // MSISDN needs no card lookup
+
+  // Load the cards already on file (from plan purchase) so top-up is one-click. The pay
+  // button stays disabled until this resolves — otherwise a fast click would fall through
+  // to the card form before we know a saved card exists.
+  useEffect(() => {
+    if (isMsisdnMode) return
+    let alive = true
+    getPaymentMethods()
+      .then((list) => {
+        if (!alive) return
+        const saved = list || []
+        setCards(saved)
+        setSelectedCardId(saved.find((c) => c.isDefault)?.id || saved[0]?.id || null)
+        setUseNewCard(saved.length === 0)
+        setCardsLoaded(true)
+      })
+      .catch(() => {
+        if (!alive) return
+        setUseNewCard(true)
+        setCardsLoaded(true)
+      })
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  const priceOf = (min) => {
+    if (pricing?.perMinute != null) {
+      const cur = (pricing.currency || 'eur').toUpperCase()
+      return `${cur} ${(min * pricing.perMinute).toFixed(2)}`
+    }
+    const p = MINUTE_PACKS.find((x) => x.minutes === min)
+    return `$${p?.price ?? min}`
+  }
+
+  const selectedCard = cards.find((c) => c.id === selectedCardId)
+
+  async function confirm() {
+    setErr('')
+    setStep('processing')
+    try {
+      const res = await topUpCounselling({ minutes: pack.minutes })
+
+      // MSISDN (carrier) — credited instantly, no card.
+      if (res.credited) {
+        setStep('done')
+        return
+      }
+
+      if (res.requiresPayment && res.clientSecret) {
+        // Reuse the card on file → one-click, no re-entry.
+        if (!useNewCard && selectedCardId) {
+          const stripe = await stripePromise
+          if (!stripe) throw new Error('Payments are not configured (missing Stripe key).')
+          const { error } = await stripe.confirmCardPayment(res.clientSecret, {
+            payment_method: selectedCardId,
+          })
+          if (error) throw new Error(error.message || 'Your card could not be charged.')
+          setStep('done')
+          return
+        }
+        // No saved card (or "use a different card") → collect one with the Payment Element.
+        setClientSecret(res.clientSecret)
+        setStep('card')
+        return
+      }
+
+      setStep('done')
+    } catch (e) {
+      setErr(e?.message || 'Could not complete the top-up.')
+      setStep('offer')
+    }
+  }
+
+  const payLabel = isMsisdnMode
+    ? `Buy ${pack.minutes} min · ${priceOf(pack.minutes)}`
+    : !useNewCard && selectedCard
+      ? `Pay ${priceOf(pack.minutes)} · ${selectedCard.brand} •••• ${selectedCard.last4}`
+      : `Continue to payment · ${priceOf(pack.minutes)}`
+
   return (
     <div
       className="ap-modal-overlay"
@@ -540,8 +806,13 @@ function BuyMinutes({ pack, setPack, step, onConfirm, onFinish, onClose }) {
           <>
             <h3>Add counselling minutes</h3>
             <p className="ap-modal-pitch">
-              Use them whenever they stack on top of your plan&rsquo;s included minutes.
+              Top up whenever you need — even mid-conversation. Minutes never expire.
             </p>
+            {err && (
+              <p className="checkout-error" role="alert">
+                {err}
+              </p>
+            )}
             <div className="cn-packs">
               {MINUTE_PACKS.map((p) => (
                 <button
@@ -551,16 +822,43 @@ function BuyMinutes({ pack, setPack, step, onConfirm, onFinish, onClose }) {
                 >
                   {p.popular && <span className="cn-pack-tag">Popular</span>}
                   <strong>{p.minutes} min</strong>
-                  <span>${p.price}</span>
+                  <span>{priceOf(p.minutes)}</span>
                 </button>
               ))}
             </div>
+
+            {!isMsisdnMode && !useNewCard && selectedCard && (
+              <div className="cn-paywith">
+                <span>
+                  Paying with {selectedCard.brand} •••• {selectedCard.last4}
+                </span>
+                <button type="button" onClick={() => setUseNewCard(true)}>
+                  Use a different card
+                </button>
+              </div>
+            )}
+            {!isMsisdnMode && useNewCard && cards.length > 0 && (
+              <div className="cn-paywith">
+                <button type="button" onClick={() => setUseNewCard(false)}>
+                  ← Use saved card
+                </button>
+              </div>
+            )}
+
             <div className="ap-modal-actions">
-              <button className="btn btn-primary cn-buy-btn" onClick={onConfirm}>
-                Buy {pack.minutes} min · ${pack.price}
+              <button className="btn btn-primary cn-buy-btn" onClick={confirm} disabled={!cardsLoaded}>
+                {cardsLoaded ? (
+                  payLabel
+                ) : (
+                  <>
+                    <Loader2 size={16} className="ap-spin" /> Checking your saved card…
+                  </>
+                )}
               </button>
             </div>
-            <p className="cn-buy-demo">Demo checkout no card is charged.</p>
+            <p className="cn-buy-demo">
+              {isMsisdnMode ? 'Charged to your mobile bill.' : 'Secured by Stripe.'}
+            </p>
             <button className="ap-modal-close" onClick={onClose} aria-label="Close">
               <X size={18} />
             </button>
@@ -570,8 +868,39 @@ function BuyMinutes({ pack, setPack, step, onConfirm, onFinish, onClose }) {
           <div className="ap-modal-processing">
             <Loader2 size={34} className="ap-spin" />
             <h3>Adding minutes…</h3>
-            <p>Demo checkout no card, no charge.</p>
+            <p>{isMsisdnMode ? 'Confirming with your carrier.' : 'Confirming your payment.'}</p>
           </div>
+        )}
+        {step === 'card' && clientSecret && (
+          <>
+            <h3>Pay for {pack.minutes} minutes</h3>
+            {err && (
+              <p className="checkout-error" role="alert">
+                {err}
+              </p>
+            )}
+            <div style={{ marginTop: 16 }}>
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <TopUpCard onDone={() => setStep('done')} onError={setErr} />
+              </Elements>
+            </div>
+            {cards.length > 0 && (
+              <button
+                type="button"
+                className="cn-textlink"
+                style={{ marginTop: 12 }}
+                onClick={() => {
+                  setUseNewCard(false)
+                  setStep('offer')
+                }}
+              >
+                ← Use saved card instead
+              </button>
+            )}
+            <button className="ap-modal-close" onClick={onClose} aria-label="Close">
+              <X size={18} />
+            </button>
+          </>
         )}
         {step === 'done' && (
           <div className="ap-modal-done">

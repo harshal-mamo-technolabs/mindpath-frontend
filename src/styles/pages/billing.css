@@ -1444,6 +1444,31 @@
   color: #8a5420;
 }
 
+.bl-inv-kind.subscription {
+  background: var(--violet-ghost);
+  color: var(--violet-deep);
+}
+
+.bl-inv-kind.assessment {
+  background: color-mix(in srgb, #6a57c9 16%, transparent);
+  color: #6a57c9;
+}
+
+.bl-inv-kind.ebook {
+  background: color-mix(in srgb, #c07a2e 16%, transparent);
+  color: #c07a2e;
+}
+
+.bl-inv-kind.audio {
+  background: color-mix(in srgb, #4d8a9e 16%, transparent);
+  color: #4d8a9e;
+}
+
+.bl-inv-kind.counselling {
+  background: color-mix(in srgb, #3c8f6e 18%, transparent);
+  color: #3c8f6e;
+}
+
 .bl-inv-amount {
   font-weight: 800;
   font-variant-numeric: tabular-nums;

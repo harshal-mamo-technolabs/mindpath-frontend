@@ -44,16 +44,16 @@ const reportExists = (id) => REPORT_GROUPS.some((g) => g.id === id)
  * (the "edge"); if not, it's still a wide-open conversation.
  */
 const RAW_TOPICS = [
-  { id: 'stress', title: 'Stress & Pressure', icon: StressGlyph, accent: '#d98b50', bg: '#f9e3cd', fg: '#8a5420', line: 'When everything feels like too much at once.', assessmentId: 'stress-burnout' },
-  { id: 'anxiety', title: 'Anxiety & Worry', icon: AnxietyGlyph, accent: '#3c7a5e', bg: '#dde9dd', fg: '#2e5f49', line: 'A mind that runs ahead to what might go wrong.', assessmentId: 'anxiety-worry' },
-  { id: 'sleep', title: 'Sleep & Rest', icon: SleepGlyph, accent: '#6450cf', bg: '#e2dcf8', fg: '#4d3da8', line: 'Tired-but-wired nights, heavy mornings.', assessmentId: 'sleep-rest' },
-  { id: 'feelings', title: 'Understanding My Feelings', icon: EQGlyph, accent: '#cf6450', bg: '#fbe5e0', fg: '#a04a35', line: 'Naming what’s going on inside, and why.', assessmentId: 'emotional-intelligence' },
-  { id: 'focus', title: 'Focus & Overwhelm', icon: FocusGlyph, accent: '#8a76e8', bg: '#f0edfb', fg: '#4d3da8', line: 'Scattered days that end busy but blurry.', assessmentId: 'focus-clarity' },
-  { id: 'relationships', title: 'Relationships', icon: RelationshipsGlyph, accent: '#c2607f', bg: '#f7e1ea', fg: '#8f3d5c', line: 'The people close to you — and the friction.', assessmentId: null },
-  { id: 'self-worth', title: 'Self-Worth', icon: SelfEsteemGlyph, accent: '#d99c3a', bg: '#f7e8cf', fg: '#8a6418', line: 'The voice that says you’re not enough.', assessmentId: null },
-  { id: 'direction', title: 'Work & Direction', icon: TransitionsGlyph, accent: '#4d8a9e', bg: '#dceaf0', fg: '#2c5a6b', line: 'Feeling stuck, or unsure what’s next.', assessmentId: null },
-  { id: 'grief', title: 'Grief & Loss', icon: GriefGlyph, accent: '#7d72b0', bg: '#e8e4f3', fg: '#4a4280', line: 'Carrying something, or someone, you’ve lost.', assessmentId: null },
-  { id: 'open', title: 'Something on my mind', icon: MessageCircle, accent: '#6450cf', bg: '#e2dcf8', fg: '#4d3da8', line: 'Not sure how to name it yet? Just start talking.', assessmentId: null, open: true },
+  { id: 'stress', key: 'stress-and-pressure', title: 'Stress & Pressure', icon: StressGlyph, accent: '#d98b50', bg: '#f9e3cd', fg: '#8a5420', line: 'When everything feels like too much at once.', assessmentId: 'stress-burnout' },
+  { id: 'anxiety', key: 'anxiety-and-worry', title: 'Anxiety & Worry', icon: AnxietyGlyph, accent: '#3c7a5e', bg: '#dde9dd', fg: '#2e5f49', line: 'A mind that runs ahead to what might go wrong.', assessmentId: 'anxiety-worry' },
+  { id: 'sleep', key: 'sleep-and-rest', title: 'Sleep & Rest', icon: SleepGlyph, accent: '#6450cf', bg: '#e2dcf8', fg: '#4d3da8', line: 'Tired-but-wired nights, heavy mornings.', assessmentId: 'sleep-rest' },
+  { id: 'feelings', key: 'understanding-my-feelings', title: 'Understanding My Feelings', icon: EQGlyph, accent: '#cf6450', bg: '#fbe5e0', fg: '#a04a35', line: 'Naming what’s going on inside, and why.', assessmentId: 'emotional-intelligence' },
+  { id: 'focus', key: 'focus-and-overwhelm', title: 'Focus & Overwhelm', icon: FocusGlyph, accent: '#8a76e8', bg: '#f0edfb', fg: '#4d3da8', line: 'Scattered days that end busy but blurry.', assessmentId: 'focus-clarity' },
+  { id: 'relationships', key: 'relationships', title: 'Relationships', icon: RelationshipsGlyph, accent: '#c2607f', bg: '#f7e1ea', fg: '#8f3d5c', line: 'The people close to you — and the friction.', assessmentId: null },
+  { id: 'self-worth', key: 'self-worth', title: 'Self-Worth', icon: SelfEsteemGlyph, accent: '#d99c3a', bg: '#f7e8cf', fg: '#8a6418', line: 'The voice that says you’re not enough.', assessmentId: null },
+  { id: 'direction', key: 'work-and-direction', title: 'Work & Direction', icon: TransitionsGlyph, accent: '#4d8a9e', bg: '#dceaf0', fg: '#2c5a6b', line: 'Feeling stuck, or unsure what’s next.', assessmentId: null },
+  { id: 'grief', key: 'grief-and-loss', title: 'Grief & Loss', icon: GriefGlyph, accent: '#7d72b0', bg: '#e8e4f3', fg: '#4a4280', line: 'Carrying something, or someone, you’ve lost.', assessmentId: null },
+  { id: 'open', key: 'something-on-my-mind', title: 'Something on my mind', icon: MessageCircle, accent: '#6450cf', bg: '#e2dcf8', fg: '#4d3da8', line: 'Not sure how to name it yet? Just start talking.', assessmentId: null, open: true },
 ]
 
 export const TOPICS = RAW_TOPICS.map((t) => ({
