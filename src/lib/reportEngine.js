@@ -13,6 +13,7 @@
  * 100−pct); the headline is flipped to a score when the assessment is positive.
  * Reports stay deterministic — same answers, same numbers.
  */
+import i18n from '../i18n/index.js'
 
 const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0)
 
@@ -44,6 +45,12 @@ export const TAG_CLASS = {
   strength: 'band-good',
   growth: 'band-blue', // distinct, non-alarming colour for growth areas
 }
+
+/* i18n-aware lookups — the English maps above are the inline fallbacks, so the
+   report reads correctly in English even before translations are loaded. */
+const bandTextOf = (group, band) =>
+  i18n.t(`report.band.${group}.${band}`, { defaultValue: BAND_TEXT[group][band] })
+const tagTextOf = (tag) => i18n.t(`report.tag.${tag}`, { defaultValue: TAG_TEXT[tag] })
 
 /* generic quadrant position from the two archetype axes (x = difficulty/bad,
    y = resource/good). Positions map to per-assessment names in the UI config. */
@@ -111,8 +118,8 @@ export function buildAssessmentReport(data, config) {
         band,
         bandText: config.bandTextFor
           ? config.bandTextFor(pct, dir)
-          : BAND_TEXT[dir === 'problem' ? 'load' : 'strength'][band],
-        tagText: TAG_TEXT[tag],
+          : bandTextOf(dir === 'problem' ? 'load' : 'strength', band),
+        tagText: tagTextOf(tag),
         tagClass: TAG_CLASS[tag],
         blurb: c.blurb || '',
         strengthLabel: c.strengthLabel || (label[s.subCategory] || '').toLowerCase(),
@@ -134,7 +141,7 @@ export function buildAssessmentReport(data, config) {
     healthKey = hb.healthKey
   } else {
     const key = higher ? strengthBandToPos(headlineValue) : loadBand(headlineValue)
-    headlineBandText = higher ? BAND_TEXT.positive[key] : BAND_TEXT.load[key]
+    headlineBandText = higher ? bandTextOf('positive', key) : bandTextOf('load', key)
     // gauge/pill colour: good=green when healthy
     healthKey = higher
       ? key === 'high'

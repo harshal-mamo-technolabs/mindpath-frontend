@@ -48,9 +48,14 @@
 }
 
 /* ---- store section: reuses the plan .ap-section / .ap-plan-card / .ap-modal look ---- */
+/* heading + subtitle grouped above the section divider */
+.apl-store-head {
+  margin-bottom: 24px;
+}
+
 .apl-store-sub {
   max-width: 640px;
-  margin: -6px 0 24px;
+  margin: 8px 0 0;
   color: #a49ec8;
   font-size: 0.96rem;
   line-height: 1.5;

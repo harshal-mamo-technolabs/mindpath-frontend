@@ -70,7 +70,9 @@ export function deriveAttempt(score) {
   return {
     id: score.id,
     slug,
-    name: score.assessment?.name || titleCase(slug),
+    // Prefer the rich report's localized assessment name (matches the report UI in
+    // the active language); fall back to the score's stored name, then the slug.
+    name: (rich ? rich.ui().assessmentName : score.assessment?.name) || titleCase(slug),
     attemptNumber: score.attemptNumber,
     maxAttempts: score.maxAttempts,
     createdAt: score.createdAt,

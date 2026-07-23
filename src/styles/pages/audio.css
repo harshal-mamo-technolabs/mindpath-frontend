@@ -18,6 +18,7 @@
 
 .ap-state {
   max-width: 460px;
+  margin: 0 auto;
   padding: 0 20px;
   text-align: center;
   display: flex;
@@ -67,9 +68,15 @@
   color: #f3cda1;
 }
 
-/* ------- covers (shared) ------- */
+/* ------- covers (shared) -------
+   Each theme layers its atmospheric image (/public/audio/cover/<theme>.png) on top of the
+   original gradient. The gradient stays underneath as a graceful fallback: if the image is
+   missing it just shows the gradient. Applied on .cover-* so every usage picks it up —
+   plan/program card strips, the featured hero, the detail modal, and the mini player. */
 .cover-dusk {
-  background: radial-gradient(circle at 72% 18%, #f0b787 0%, #b06a9b 42%, #4d3da8 100%);
+  background:
+    url('/audio/cover/dusk.png') center / cover no-repeat,
+    radial-gradient(circle at 72% 18%, #f0b787 0%, #b06a9b 42%, #4d3da8 100%);
 }
 
 .cover-night {
@@ -77,19 +84,27 @@
 }
 
 .cover-meadow {
-  background: radial-gradient(circle at 70% 22%, #b5e3c8 0%, #5fae85 50%, #2c5f49 100%);
+  background:
+    url('/audio/cover/meadow.png') center / cover no-repeat,
+    radial-gradient(circle at 70% 22%, #b5e3c8 0%, #5fae85 50%, #2c5f49 100%);
 }
 
 .cover-tide {
-  background: radial-gradient(circle at 70% 20%, #9adfc3 0%, #3e8e7a 50%, #1f4a44 100%);
+  background:
+    url('/audio/cover/tide.png') center / cover no-repeat,
+    radial-gradient(circle at 70% 20%, #9adfc3 0%, #3e8e7a 50%, #1f4a44 100%);
 }
 
 .cover-violet {
-  background: radial-gradient(circle at 70% 20%, #c4b3fb 0%, #7a63d6 50%, #3a2e7e 100%);
+  background:
+    url('/audio/cover/violet.png') center / cover no-repeat,
+    radial-gradient(circle at 70% 20%, #c4b3fb 0%, #7a63d6 50%, #3a2e7e 100%);
 }
 
 .cover-ember {
-  background: radial-gradient(circle at 70% 20%, #f6c3a4 0%, #d77f6b 50%, #6e3550 100%);
+  background:
+    url('/audio/cover/ember.png') center / cover no-repeat,
+    radial-gradient(circle at 70% 20%, #f6c3a4 0%, #d77f6b 50%, #6e3550 100%);
 }
 
 /* ------- up next ------- */

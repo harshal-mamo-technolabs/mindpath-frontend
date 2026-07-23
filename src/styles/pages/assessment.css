@@ -704,6 +704,16 @@
   max-width: 48ch;
 }
 
+/* Dark mode flips --ink/--paper, so this panel becomes a light "spotlight" block.
+   Its gold accent + body text were tuned for the dark (light-mode) panel and wash
+   out on the light surface — darken them here for readable contrast. */
+:root[data-theme='dark'] .detail-cta-panel h2 em {
+  color: #9c6a1c;
+}
+:root[data-theme='dark'] .detail-cta-panel p {
+  color: #57506e;
+}
+
 /* ------- take flow ------- */
 .take {
   min-height: 100dvh;

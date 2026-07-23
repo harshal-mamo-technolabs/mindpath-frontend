@@ -15,19 +15,24 @@
  *   - { access, requiresPayment: true, clientSecret, amount, currency } → pay, then poll start
  */
 import { apiGet, apiPost } from './api.js'
+import { ebookLang } from '../i18n/index.js'
 
-/** All active ebooks (cards), newest first. */
-export const listEbooks = () => apiGet('/api/ebooks')
+// Ebooks ship in English + German editions. The catalogue/detail follow the UI
+// language, but only German has its own edition — every other language (en/fr/it)
+// reads English (product rule). ebookLang() maps the UI language accordingly.
 
-/** One ebook with its table of contents (by id or slug). */
-export const getEbook = (idOrSlug) => apiGet(`/api/ebooks/${idOrSlug}`)
+/** All active ebooks (cards), newest first, in the active edition language. */
+export const listEbooks = () => apiGet(`/api/ebooks?language=${ebookLang()}`)
+
+/** One ebook with its table of contents (by id or slug), in the active edition language. */
+export const getEbook = (idOrSlug) => apiGet(`/api/ebooks/${idOrSlug}?language=${ebookLang()}`)
 
 /** Unlock/purchase an ebook (or reuse an existing unlock). */
 export const startEbook = (idOrSlug) => apiPost(`/api/ebooks/${idOrSlug}/start`)
 
-/** Read one chapter's body (locked chapters 403 without access). */
+/** Read one chapter's body (locked chapters 403 without access), in the active edition language. */
 export const getEbookChapter = (idOrSlug, order) =>
-  apiGet(`/api/ebooks/${idOrSlug}/chapters/${order}`)
+  apiGet(`/api/ebooks/${idOrSlug}/chapters/${order}?language=${ebookLang()}`)
 
 /**
  * Mark a chapter read (or unread). Requires the book on the shelf. Resolves to

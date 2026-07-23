@@ -1,0 +1,2854 @@
+{
+  "lang": {
+    "label": "Language",
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "it": "Italiano"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "assessments": "Assessments",
+    "counselling": "Counselling",
+    "reports": "Your reports",
+    "audio": "Daily audio",
+    "ebooks": "Ebooks",
+    "shortDashboard": "Dashboard",
+    "shortAssessments": "Assess",
+    "shortCounselling": "Talk",
+    "shortReports": "Reports",
+    "shortAudio": "Audio",
+    "shortEbooks": "Ebooks",
+    "explore": "Explore",
+    "freeMusic": "Free music",
+    "account": "Account",
+    "profile": "Profile",
+    "subscription": "Subscription",
+    "pricing": "Plans & pricing",
+    "logout": "Log out",
+    "accountMenu": "Account & menu",
+    "dayMode": "Day mode",
+    "nightMode": "Night mode",
+    "switchToDay": "Switch to day mode",
+    "switchToNight": "Switch to night mode",
+    "ariaPrimary": "Primary"
+  },
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "next": "Next",
+    "back": "Back",
+    "continue": "Continue",
+    "retry": "Try again",
+    "signIn": "Sign in",
+    "getStarted": "Get started"
+  },
+  "home": {
+    "hero": {
+      "badge": "Wellness that starts with an assessment",
+      "h1a": "You have",
+      "h1swash": "a path",
+      "h1b": "Let’s walk it together.",
+      "sub": "Take a short assessment. Get a report made just for you. Then follow a daily audio plan, ebooks, and counselling built around your results. Just ten quiet minutes a day.",
+      "findPath": "Find your path",
+      "listenFree": "Listen free first",
+      "starsAria": "Rated 4.9 out of 5 stars",
+      "ratingFrom": "from 12,000+ people",
+      "ratingCalmer": "feel calmer in the morning by day 14",
+      "imageAlt": "A calm person sitting at a tidy desk with a hand on their heart, next to a plant, a cup of tea, an open journal and books",
+      "fcReportLabel": "Energy to recover",
+      "fcReportDelta": "+21 since last time",
+      "fcDayLabel": "Today on your path",
+      "fcDayTitle": "Day 4 · Letting go",
+      "fcDayMeta": "7 min · opened this morning",
+      "fcMoodLabel": "Mood trend"
+    },
+    "marquee": {
+      "topics": [
+        "Stress & Burnout",
+        "Sleep & Rest",
+        "Anxiety & Worry",
+        "Focus & Clarity",
+        "Self-Esteem",
+        "Emotional Intelligence",
+        "Relationships",
+        "Life Transitions",
+        "Resilience",
+        "Mindful Habits"
+      ]
+    },
+    "journey": {
+      "eyebrow": "How it works",
+      "h2a": "One loop.",
+      "h2em": "Lasting change.",
+      "lede": "At Daybreak, it all starts with understanding yourself and everything after is built on that.",
+      "step": "Step",
+      "steps": [
+        {
+          "title": "Take your assessment",
+          "text": "Pick a topic that feels hard right now. Answer honestly. It takes about 12 quiet minutes."
+        },
+        {
+          "title": "See your report",
+          "text": "Your scores in each area, explained in plain words: what they mean for you, and what to do next."
+        },
+        {
+          "title": "Do it daily",
+          "text": "A 7–30 day audio plan built from your report. One session opens each day. Five to ten minutes."
+        },
+        {
+          "title": "Take it again & see the change",
+          "text": "After 60–90 days, take the assessment again and see your before and after side by side."
+        }
+      ],
+      "loopNote": "Then the path repeats a deeper topic, a new plan, and progress you can see."
+    },
+    "ecosystem": {
+      "eyebrow": "Around your path",
+      "h2a": "Made for",
+      "h2em": "exactly one person.",
+      "lede": "Once you have your report, everything else can be shaped around it and the music is free for everyone, always.",
+      "ebookTag": "Ebooks made for you",
+      "ebookTitle": "A short book with your name on the cover",
+      "ebookText": "Made from your report about your scores, your habits, and your next 30 days. General books are open to everyone.",
+      "ebookLink": "Visit the shop",
+      "ebookMockTitle": "Quiet the Noise: Maya’s 30 Days to Recover",
+      "ebookMockFor": "written for Maya K.",
+      "voiceTag": "AI counselling",
+      "voiceTitle": "Talk it through, out loud",
+      "voiceText": "A talking helper that has already read your report, so you never start from “tell me about yourself.”",
+      "voiceLink": "How sessions work",
+      "musicTag": "Free · no account",
+      "musicTitle": "Yoga & meditation music",
+      "musicText": "Press play right now. No paywall, no sign-up just somewhere calm to start.",
+      "musicLink": "Open the library",
+      "tracks": [
+        "Morning yoga flow",
+        "Deep rest · rain on leaves",
+        "Calm breathing tones"
+      ],
+      "min": "min"
+    },
+    "proof": {
+      "eyebrow": "Proof, not promises",
+      "h2a": "The path is real",
+      "h2em": "when you can see it change.",
+      "progressTag": "Take it again after 60–90 days",
+      "progressTitle": "Maya’s before & after",
+      "rowExhaustion": "Exhaustion",
+      "rowEnergy": "Energy to recover",
+      "progressFoot": "Same questions, same scoring, so the change you see is real, not a change in the test.",
+      "testimonials": [
+        {
+          "quote": "The report put words to something I couldn’t. “Your energy isn’t broken, your rest is.”  I think about that line every night.",
+          "role": "Stress & Burnout path · day 41"
+        },
+        {
+          "quote": "Ten minutes a day felt too small to matter. Then I took the assessment again and my numbers went up.",
+          "role": "Sleep & Rest path · +27 the second time"
+        }
+      ]
+    },
+    "cta": {
+      "h2a": "Start where you are.",
+      "h2em": "End up feeling lighter.",
+      "text": "Twelve minutes of honest answers today. A clearer picture of yourself tomorrow and a path that stays with you after that.",
+      "primary": "Take your first assessment",
+      "secondary": "Just the free music, for now",
+      "referral": "It helps to have a friend along. Invite one and you both get a free session."
+    },
+    "report": {
+      "eyebrow": "Your personal report",
+      "h2a": "A report that",
+      "h2em": "really gets you.",
+      "lede": "Not just a number and a pat on the back — a full picture of where you are, written like a kind, honest friend.",
+      "points": [
+        {
+          "title": "Plain words, no jargon",
+          "text": "Every score is explained for you — what it means, why it shows up, and what usually helps."
+        },
+        {
+          "title": "Consistent and reliable",
+          "text": "Your results use a fixed scoring method, so the same answers always give the same result. No AI guessing."
+        },
+        {
+          "title": "It shapes everything after",
+          "text": "Your audio plan, your ebook, and your counselling sessions are all built from this one report."
+        }
+      ],
+      "reportTitle": "{{name}}’s Report",
+      "complete": "Complete",
+      "planDays": "{{days}}-day audio plan",
+      "builds": "This report builds",
+      "ebook": "Personal ebook",
+      "counsellingNotes": "Counselling notes",
+      "dotAria": "{{name}}’s report",
+      "samples": [
+        {
+          "topic": "Stress & Burnout",
+          "date": "June 2026",
+          "ringLabel": "Overall level",
+          "bars": [
+            "Exhaustion",
+            "Negativity",
+            "Sense of control",
+            "Energy to recover"
+          ],
+          "quote": [
+            "Maya, your exhaustion is high and your energy to recover is running low — ",
+            "your energy isn’t broken, your rest is.",
+            " Your 14-day plan starts there: evenings first."
+          ]
+        },
+        {
+          "topic": "Sleep & Rest",
+          "date": "May 2026",
+          "ringLabel": "Sleep trouble",
+          "bars": [
+            "Sleepiness",
+            "Wind-down",
+            "Routine",
+            "Worry at night"
+          ],
+          "quote": [
+            "Jonas, your wind-down really works — it’s staying regular that slips. ",
+            "Pick one fixed wake-up time",
+            " and let bedtime meet it. You can sleep better."
+          ]
+        },
+        {
+          "topic": "Emotional Intelligence",
+          "date": "June 2026",
+          "ringLabel": "EQ score",
+          "bars": [
+            "Self-awareness",
+            "Managing feelings",
+            "Empathy",
+            "Sharing feelings"
+          ],
+          "quote": [
+            "Aisha, you read other people really well — empathy is a real strength. ",
+            "Now try turning that inward",
+            ", one honest sentence a day."
+          ]
+        }
+      ],
+      "ariaExamples": "Example personal reports",
+      "ariaTablist": "Sample report"
+    },
+    "audioPlan": {
+      "eyebrow": "Your daily audio path",
+      "h2a": "Then, every day,",
+      "h2em": "a small routine.",
+      "lede": "Your report builds a day-by-day plan of calming sessions, picked and ordered for your scores. One opens each morning, so it becomes a habit, not a binge.",
+      "moods": [
+        "Heavy",
+        "Low",
+        "Okay",
+        "Good",
+        "Light"
+      ],
+      "planTitle": "Your 14-day plan",
+      "planDone": "3 of 14 done",
+      "trailAria": "Your 14-day plan — 3 days done, day 4 is today, the rest open one each morning",
+      "beforeTitle": "Before today’s session",
+      "beforeEm": "one tap, that’s all",
+      "moodQuestion": "How do you feel today?",
+      "moodNote": "How your mood is going over the plan",
+      "moodNoteStrong": "up 32% since day 1.",
+      "welcome": "“Hi Maya, this plan starts with your evenings, because that’s where your report says rest slips away…”",
+      "sessionTitle": "Day 4 · Letting go",
+      "sessionMeta": "Stress & Burnout path · 7 min · evening session",
+      "playAria": "Play session preview",
+      "pauseAria": "Pause session preview",
+      "footStrong": "Day 5 is ready tomorrow at 7:00.",
+      "footRest": "We’ll nudge you, gently."
+    },
+    "assess": {
+      "eyebrow": "The assessments",
+      "h2A": "Start where it",
+      "h2Em": "hurts most.",
+      "lede": "Careful, well-made assessments thoughtful questions scored across real areas, not a quick five-question quiz. Twenty topics, one honest place to start.",
+      "browseAll": "Browse all 20 topics",
+      "mostTaken": "Most taken",
+      "min": "min",
+      "questions": "questions",
+      "begin": "Begin assessment",
+      "more": "+15 more",
+      "moreTitle": "Relationships, self-esteem, life transitions…",
+      "moreMeta": "New topics added monthly",
+      "seeAll": "See the full list",
+      "bundleStrong": "Bundle & save",
+      "bundleText": "Take linked assessments like Stress & Burnout → Emotional Intelligence together and save 30%."
+    }
+  },
+  "auth": {
+    "kickerLogin": "Log in",
+    "kickerSignup": "Create your account",
+    "titleBackA": "Welcome",
+    "titleBackEm": "back.",
+    "titleStartA": "Start",
+    "titleStartEm": "here.",
+    "successBack": "Welcome back, {{name}}.",
+    "successName": "Welcome, {{name}}.",
+    "successBackPlain": "Welcome back.",
+    "opening": "Opening your dashboard…",
+    "subtitleLogin": "Your sessions, your mood, and tomorrow’s audio are right where you left them.",
+    "subtitleSignup": "Take one assessment, get a report about you, and ten quiet minutes a day.",
+    "subtitleLoginMsisdn": "Enter the mobile number you signed up with.",
+    "subtitleSignupMsisdn": "Just a few details and your number. Your plan is charged to your phone and set up for you.",
+    "nameLabel": "Your name",
+    "namePlaceholder": "What should we call you?",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@somewhere.com",
+    "passwordLabel": "Password",
+    "forgot": "Forgot?",
+    "passwordPlaceholderLogin": "Your password",
+    "passwordPlaceholderSignup": "Choose a password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "genderLabel": "Gender",
+    "select": "Select",
+    "female": "Female",
+    "male": "Male",
+    "other": "Other",
+    "ageLabel": "Age",
+    "agePlaceholder": "28",
+    "mobileLabel": "Mobile number",
+    "mobilePlaceholder": "9876543210",
+    "submitLoading": "One moment…",
+    "submitLogin": "Log in",
+    "submitCreate": "Create account",
+    "legalEmail": "By continuing you agree to our Terms. Daybreak is a self-help tool, not medical care.",
+    "legalMsisdn": "By continuing you agree to our Terms. Daybreak is a self-help tool, not medical care. Your plan is charged to your phone bill.",
+    "swapNew": "New here?",
+    "createLink": "Create an account",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Log in",
+    "guest": "← Just looking? Back to Daybreak",
+    "defaultName": "there",
+    "errName": "Use 2 to 50 characters.",
+    "errEmail": "That email doesn’t look right.",
+    "errGender": "Please pick one.",
+    "errAge": "Enter an age from 1 to 120.",
+    "errMsisdn": "Enter a real mobile number (8 to 15 digits).",
+    "errMsisdnExists": "This number already has an account. Please log in.",
+    "errMsisdnNoAccount": "No account for this number. Please sign up first."
+  },
+  "assess": {
+    "catalog": {
+      "eyebrow": "The catalog",
+      "h1a": "Start with the one",
+      "h1em": "that hurts most.",
+      "lede": "Every Daybreak path starts with one honest set of questions about real parts of your life. Pick the topic that fits what you’re going through.",
+      "trust1": "Questions you answer yourself — not a diagnosis",
+      "trust2": "Consistent results — never guessed by AI",
+      "trust3": "Each one gives you a report, an audio plan, and an ebook",
+      "availableNow": "Available now",
+      "count": "{{count}} assessments · scored, never guessed",
+      "loading": "Loading assessments…",
+      "errorTitle": "We couldn’t load the assessments",
+      "retry": "Try again",
+      "emptyTitle": "No assessments available yet",
+      "emptyText": "Please check back soon.",
+      "mostTaken": "Most taken",
+      "minAbbr": "~{{min}} min",
+      "questions": "{{count}} questions",
+      "explore": "Explore this path",
+      "soonTitle": "Coming soon",
+      "soonLede": "The next topics we’re working on — a new assessment comes out each month.",
+      "notifyMe": "Notify me",
+      "comingSoon": [
+        {
+          "title": "Self-Esteem",
+          "dims": [
+            "Inner critic",
+            "Self-worth",
+            "Limits"
+          ]
+        },
+        {
+          "title": "Relationships",
+          "dims": [
+            "Closeness",
+            "Conflict",
+            "Making up"
+          ]
+        },
+        {
+          "title": "Resilience",
+          "dims": [
+            "Setbacks",
+            "Bouncing back",
+            "Outlook"
+          ]
+        },
+        {
+          "title": "Life Transitions",
+          "dims": [
+            "Who you are",
+            "Not knowing",
+            "Direction"
+          ]
+        },
+        {
+          "title": "Mindful Habits",
+          "dims": [
+            "Sticking with it",
+            "Being present",
+            "Triggers"
+          ]
+        },
+        {
+          "title": "Grief & Loss",
+          "dims": [
+            "Waves",
+            "Meaning",
+            "Support"
+          ]
+        }
+      ]
+    },
+    "detail": {
+      "loading": "Loading assessment…",
+      "errorTitle": "We couldn’t load this assessment",
+      "retry": "Try again",
+      "allAssessments": "All assessments",
+      "minutes": "~{{mins}} minutes",
+      "questions": "{{count}} questions",
+      "areas": "{{count}} areas",
+      "tries": "{{count}} tries included",
+      "begin": "Begin assessment",
+      "note": "A tool to help you reflect. Not a medical test or diagnosis.",
+      "whatWeMeasure": "What we measure",
+      "scaleEyebrow": "How you’ll answer",
+      "scaleH2a": "Rate each one on a",
+      "scaleH2em": "{{n}}-point scale.",
+      "scaleLede": "Say how often each one is true for you lately. There are no right or wrong answers — just honest ones.",
+      "receiveEyebrow": "What you get back",
+      "receiveH2a": "Fifteen honest minutes,",
+      "receiveH2em": "three things back.",
+      "reportTitle": "Your personal report",
+      "reportDesc": "A score for each area, in plain words — what each number means for you and what tends to help. The same answers always give the same result, every time.",
+      "reportList1": "Your overall result & a score for each area",
+      "reportList2": "What’s helping you, and what’s wearing you down",
+      "reportList3": "Clear next steps, in order of what helps most",
+      "planTitle": "A daily audio plan",
+      "planDesc": "Short audio sessions picked from your scores — a new one opens each morning, 5–10 minutes each. It starts with a hello made just for you, using your name.",
+      "planBuilt": "Built from this exact report",
+      "planDayLabel": "Day {{n}}",
+      "planDay1": "Letting the day go",
+      "planDay1Min": "6 min",
+      "planDay2": "Naming what wears you out",
+      "planDay2Min": "7 min",
+      "planLocked": "A new session each morning",
+      "unlockTitle": "Opened after your report",
+      "unlockDesc": "Your report opens more for you — each one made from your own scores, not a copy.",
+      "unlockEbook": "An ebook made for you",
+      "unlockEbookSmall": "Written from your results, with your name on the cover",
+      "unlockCounselling": "AI counselling chats",
+      "unlockCounsellingSmall": "A voice helper that has already read your report",
+      "unlockRetake": "Take it again in 60–90 days",
+      "unlockRetakeSmall": "Compare before and after to see how far you’ve come",
+      "ctaH2a": "Ready when you are.",
+      "ctaH2em": "It takes about {{mins}} quiet minutes.",
+      "ctaDesc": "Answer as you are this week — not your best week, not your worst. Honest answers give useful results."
+    },
+    "take": {
+      "loading": "Loading assessment…",
+      "errorTitle": "We couldn’t load this assessment",
+      "allAssessments": "All assessments",
+      "exitAria": "Exit assessment",
+      "genTitle": "Reading your answers…",
+      "genNote": "Same answers, same report, every time",
+      "genSteps": [
+        "Scoring your answers",
+        "Looking at each area",
+        "Writing what it means",
+        "Building your audio plan"
+      ],
+      "introTag": "{{count}} questions",
+      "introH1": "Answer as you are this week.",
+      "introP": "Not your best week, not your worst — just the one you’re in. Each one asks how often it’s true for you lately. There are no right or wrong answers, only honest ones.",
+      "start": "Start",
+      "legal": "A tool to help you reflect. Not a medical test or diagnosis.",
+      "checking": "Checking your access…",
+      "unlockH1": "Unlock this assessment",
+      "unlockSub": "{{name}} · {{price}} · one assessment, with up to {{tries}} tries.",
+      "reflect": "Reflect",
+      "likertAria": "How often is this true for you?",
+      "previous": "Previous",
+      "hint": "Lately = the last two weeks",
+      "resultH1": "Your answers are scored.",
+      "resultTry": "try {{n}}",
+      "resultOverall": "overall",
+      "viewReports": "View my reports",
+      "another": "Another assessment",
+      "deniedH1": "You’ve used up your assessments for now.",
+      "deniedMsisdn": "You’ve used all the assessments your plan gives you. You get more at the start of your next billing period — with carrier billing, there is no pay-as-you-go.",
+      "deniedStripe": "You’ve used all the assessments your plan gives you. You get more at the start of your next billing period.",
+      "viewSubscription": "View subscription",
+      "backToAssessments": "Back to assessments",
+      "errorH1": "Something went wrong",
+      "retry": "Try again",
+      "back": "Back",
+      "you": "You",
+      "pendingError": "We got your payment — still finishing up. Wait a moment and try again.",
+      "pay": {
+        "cardDetails": "Card details",
+        "chargeFail": "We could not charge your card. Try another card.",
+        "chargeFailSaved": "We could not charge your card.",
+        "notConfigured": "Payments are not set up (missing Stripe key).",
+        "notConfiguredLong": "Payments aren’t set up yet. Add VITE_STRIPE_PUBLISHABLE_KEY to .env and restart the dev server.",
+        "gettingReady": "Getting checkout ready…",
+        "processing": "Processing…",
+        "payBtn": "Pay {{price}}",
+        "expires": "Expires {{exp}}",
+        "newCard": "Pay with a new card instead",
+        "savedCard": "← Use a saved card",
+        "secure": "Kept safe by Stripe · extra card checks handled for you."
+      }
+    }
+  },
+  "dash": {
+    "loading": "Loading your dashboard…",
+    "moods": [
+      "Bad",
+      "Low",
+      "Okay",
+      "Good",
+      "Great"
+    ],
+    "greetingMorning": "Good morning",
+    "greetingAfternoon": "Good afternoon",
+    "greetingEvening": "Good evening",
+    "greeting": "{{greeting}}, {{name}}.",
+    "min": "min",
+    "linkCopied": "Link copied. You both get a free session.",
+    "night": "Night",
+    "day": "Day",
+    "switchToDay": "Switch to day mode",
+    "switchToNight": "Switch to night mode",
+    "dayMode": "Day mode",
+    "nightMode": "Night mode",
+    "planFallback": "Daily audio plan",
+    "sublineReady": "Day {{day}} of your {{title}} is ready.",
+    "sublineReports_one": "{{count}} report so far. Keep going.",
+    "sublineReports_other": "{{count}} reports so far. Keep going.",
+    "sublineFirst": "Take your first assessment to get started.",
+    "todaysSession": "Today’s session · {{title}} · Day {{day}} of {{total}}",
+    "complete": "Complete · {{title}}",
+    "allSessionsDone": "All sessions done",
+    "guidedSession": "guided session",
+    "startSession": "Start session",
+    "playAgain": "Play again",
+    "yourDailyAudio": "Your daily audio",
+    "getPlan": "Get a plan made just for you",
+    "madeFromFirst": "Made from your first assessment",
+    "takeAnAssessment": "Take an assessment",
+    "moodTitle": "How are you feeling?",
+    "moodDaily": "Daily",
+    "moodAria": "Mood check",
+    "moodTapOne": "Tap one before you start.",
+    "moodThanks": "Thanks for checking in, {{name}}.",
+    "moodToast": "Thanks. Be kind to yourself today.",
+    "notTakenTitle": "Topics you haven’t tried yet",
+    "notTakenSub": "Each new assessment gives you a new report and a new audio plan.",
+    "questions": "{{count}} questions",
+    "ledgerReports_one": "report saved",
+    "ledgerReports_other": "reports saved",
+    "ledgerTopics": "topics tried",
+    "ledgerSessions": "sessions done",
+    "ledgerBooks_one": "book on shelf",
+    "ledgerBooks_other": "books on shelf",
+    "yourProgress": "Your progress",
+    "audioProgress": "Audio progress",
+    "open": "Open",
+    "done": "Done",
+    "noAudioPre": "No audio plan yet.",
+    "noAudioPost": "to get a daily plan.",
+    "progressRetake": "Progress & retake",
+    "reportsLink": "Reports",
+    "better": "better",
+    "reportNoteMulti": "From {{count}} check-ins. It’s been {{days}} days. Take it again to see what has changed.",
+    "reportNoteFirst": "Your first report. Take it again in a few weeks to see it change.",
+    "reportNoteEmpty": "No reports yet. Take your first assessment and it’ll show up here. Each time you take it again, you’ll see your progress.",
+    "takeAgain": "Take again",
+    "continueReading": "Continue reading",
+    "shelfLink": "Shelf",
+    "continuePct": "Continue · {{pct}}%",
+    "startReading": "Start reading",
+    "shelfEmptyPre": "Your shelf is empty.",
+    "shelfEmptyLink": "Browse the ebook shop",
+    "shelfEmptyPost": "to add a book.",
+    "moreForYou": "More for you",
+    "counselTitle": "Talk it through",
+    "counselDesc": "An AI helper that has read your report. Talk about how you feel.",
+    "seeCounselling": "See counselling",
+    "referTitle": "Bring a friend",
+    "referDesc": "Invite a friend. You both get a free counselling session.",
+    "copyInvite": "Copy invite link",
+    "musicTitle": "Free music",
+    "musicDesc": "Yoga & meditation tracks. Play them anytime you want to feel calm.",
+    "openLibrary": "Open the library",
+    "jumpLabel": "Everything, one tap away",
+    "chipAssessments": "Assessments",
+    "chipReports": "Your reports",
+    "chipAudio": "Daily audio",
+    "chipEbookShop": "Ebook shop",
+    "chipCounselling": "Counselling",
+    "chipMusic": "Free music",
+    "noChange": "no change",
+    "dir_higher": "higher",
+    "dir_lower": "lower"
+  },
+  "sound": {
+    "kicker": "Free · open to all · no account",
+    "titleA": "A quiet place",
+    "titleB": "to",
+    "titleEm": "rest.",
+    "lede": "Yoga & meditation sounds. Pick a calm scene to sit in, or mix your own. Free, always.",
+    "index": "{{sounds}} sounds · {{layers}} sound layers · 0 sign-ups",
+    "playAria": "Play {{title}}",
+    "startHere": "Start here",
+    "makeMix": "Make your own mix",
+    "makeMixSub": "Tap to add sounds. They play together, so every mix is different.",
+    "nothingPlaying": "Nothing playing yet",
+    "layersPlaying_one": "{{count}} layer playing",
+    "layersPlaying_other": "{{count}} layers playing",
+    "theSounds": "The sounds",
+    "moodsAria": "Moods",
+    "moods": {
+      "all": "All",
+      "sleep": "Sleep",
+      "yoga": "Yoga",
+      "focus": "Focus",
+      "nature": "Nature",
+      "breathwork": "Breathwork"
+    },
+    "plays": "{{plays}} plays",
+    "like": "Like",
+    "ctaA": "The music is just the start.",
+    "ctaEm": "Your path is right here.",
+    "ctaP": "When you’re ready for sessions made for you, start with one short assessment.",
+    "findPath": "Find your path",
+    "yourMix": "Your mix",
+    "silence": "silence",
+    "free": "free",
+    "pause": "Pause",
+    "play": "Play",
+    "next": "Next",
+    "looping": "∞ looping",
+    "closePlayer": "Close player",
+    "addLayer": "Add {{label}}",
+    "removeLayer": "Remove {{label}}",
+    "scenes": {
+      "dawn-flow": {
+        "title": "Sunrise Flow",
+        "mood": "Yoga · morning"
+      },
+      "rain-roof": {
+        "title": "Rain on a Tin Roof",
+        "mood": "Sleep · rainfall"
+      },
+      "ocean-far": {
+        "title": "Ocean, Far Off",
+        "mood": "Nature · tide"
+      },
+      "forest-dawn": {
+        "title": "Forest at Dawn",
+        "mood": "Nature · birdsong"
+      },
+      "mountain-stream": {
+        "title": "Mountain Stream",
+        "mood": "Nature · water"
+      },
+      "night-drift": {
+        "title": "Drifting Off",
+        "mood": "Sleep · deep"
+      },
+      "embers": {
+        "title": "Low Embers",
+        "mood": "Focus · warmth"
+      },
+      "box-breath": {
+        "title": "Box-Breathing Tones",
+        "mood": "Breathwork"
+      },
+      "deep-work": {
+        "title": "Deep Work Drones",
+        "mood": "Focus · steady"
+      }
+    },
+    "layers": {
+      "rain": "Rain",
+      "waves": "Waves",
+      "forest": "Birdsong",
+      "wind": "Wind",
+      "fire": "Crackle",
+      "drone": "Drone"
+    }
+  },
+  "audio": {
+    "sessionFocus": "session",
+    "dailyPlanTitle": "Your daily audio plan",
+    "thereFallback": "there",
+    "lockWelcomeFirst": "Play the welcome clip first to open Day 1.",
+    "lockDoneToday": "You’ve already done today’s session — the next one opens tomorrow.",
+    "lockFinishEarlier": "Finish the earlier sessions to open this one.",
+    "sessionAudioNotReady": "That session’s audio isn’t ready yet.",
+    "programAllDone_one": "All done — {{count}} session finished. Great job.",
+    "programAllDone_other": "All done — {{count}} sessions finished. Great job.",
+    "dayDoneTomorrow": "Day {{day}} done — Day {{next}} opens tomorrow.",
+    "welcomePlayedToast": "Welcome played — Day 1 is now open.",
+    "planAllDone_one": "All done — {{count}} day finished. Great job.",
+    "planAllDone_other": "All done — {{count}} days finished. Great job.",
+    "saveProgressError": "Couldn’t save your progress — check your connection and try again.",
+    "welcomeFromGuide": "Welcome from your guide",
+    "playDaySubtitle": "{{title}} · Day {{day}}",
+    "welcomeRow": "Welcome · a short hello",
+    "playedLabel": "played",
+    "introLabel": "intro",
+    "dayRow": "Day {{day}} · {{title}}",
+    "loadingPlan": "Loading your audio plan…",
+    "unauthTitle": "Your audio plans live here",
+    "unauthBody": "Log in to see the daily audio plan we made from your assessment.",
+    "logIn": "Log in",
+    "errorTitle": "We couldn’t load your plans",
+    "tryAgain": "Try again",
+    "emptyTitle": "No audio plan yet",
+    "emptyBodyPre": "We make a daily audio plan from your ",
+    "emptyBodyStrong": "first",
+    "emptyBodyPost": " try at an assessment. Take one to open a guided path built from your report.",
+    "exploreAssessments": "Explore assessments",
+    "yourAudioLibrary": "Your audio library",
+    "heroDoneA": "Nice work, {{name}}.",
+    "heroDoneEm": "Your path is done.",
+    "heroLockedA": "Good work today, {{name}}.",
+    "heroLockedEm": "Day {{day}} opens tomorrow.",
+    "heroWelcomeA": "Welcome, {{name}}.",
+    "heroWelcomeEm": "Your plan is ready.",
+    "heroDefaultA": "Good to see you, {{name}}.",
+    "heroDayReadyEm": "Day {{day}} is ready.",
+    "nowPlaying": "Now playing",
+    "paused": "Paused",
+    "pause": "Pause",
+    "resume": "Resume",
+    "startHere": "Start here",
+    "welcomeDays_one": "A short hello, then {{count}} day — one session each.",
+    "welcomeDays_other": "A short hello, then {{count}} days — one session each.",
+    "playWelcomeBtn": "Play welcome",
+    "markAsPlayed": "Mark as played",
+    "upNext": "Up next",
+    "dayOfTotal": "Day {{day}} of {{total}}",
+    "guidedSession": "guided session",
+    "beginDay": "Begin Day {{day}}",
+    "markAsDone": "Mark as done",
+    "opensTomorrow": "Opens tomorrow",
+    "lockedNote": "One session a day — you’ve done today’s. Come back tomorrow for Day {{day}}.",
+    "complete": "Complete",
+    "everyDayDone": "Every day done.",
+    "completeMeta_one": "All {{count}} session done. Replay any of them any time.",
+    "completeMeta_other": "All {{count}} sessions done. Replay any of them any time.",
+    "replayDay1": "Replay Day 1",
+    "sessionBySession": "Session by session",
+    "oneNewSessionDaily": "One new session opens each day.",
+    "yourPaths": "Your paths",
+    "activeCount_one": "{{count}} active",
+    "activeCount_other": "{{count}} active",
+    "completeCount_one": "{{count}} complete",
+    "completeCount_other": "{{count}} complete",
+    "completed": "Completed",
+    "viewSessions": "View sessions",
+    "close": "Close",
+    "detailCompleteKicker_one": "Complete · {{count}} session",
+    "detailCompleteKicker_other": "Complete · {{count}} sessions",
+    "detailProgressKicker": "{{done}}/{{total}} done · Day {{next}} up next",
+    "planDetailPitch": "Everything in this path. Play any session you’ve opened. A new one opens each day.",
+    "seekAria": "Move through the session",
+    "play": "Play",
+    "closePlayer": "Close player",
+    "free": "Free",
+    "owned": "Owned",
+    "included": "Included",
+    "cardChargeError": "Your card could not be charged. Try another card.",
+    "cardDetails": "Card details",
+    "processing": "Processing…",
+    "payAmount": "Pay {{amount}}",
+    "errNoStripeKey": "Payments are not configured (missing Stripe key).",
+    "cardChargeErrorShort": "Your card could not be charged.",
+    "paymentsNotSetUp": "Payments aren’t set up — add VITE_STRIPE_PUBLISHABLE_KEY and restart.",
+    "preparingCheckout": "Preparing secure checkout…",
+    "cardExpires": "Expires",
+    "cardDefault": "default",
+    "useNewCard": "Use a new card instead",
+    "useSavedCard": "← Use a saved card",
+    "secureNote": "Secured by Stripe · any extra card check is handled for you.",
+    "libraryLoadError": "Couldn’t load the audio library — {{error}}",
+    "audioLibrary": "Audio library",
+    "librarySub": "Guided audio you can start any time — no assessment needed. Some are free. Others need a one-time payment.",
+    "loadingLibrary": "Loading the library…",
+    "inYourPath": "In your path",
+    "tracksCount_one": "{{count}} track",
+    "tracksCount_other": "{{count}} tracks",
+    "minShort": "min",
+    "open": "Open",
+    "get": "Get",
+    "details": "Details",
+    "loading": "Loading…",
+    "preparing": "Preparing…",
+    "getFullProgram": "Get the full program",
+    "previewNote_one": "First {{count}} track free to preview.",
+    "previewNote_other": "First {{count}} tracks free to preview.",
+    "adding": "Adding…",
+    "addToPath": "Add to your path",
+    "freeLower": "free",
+    "libraryPreview": "Audio library · preview"
+  },
+  "billing": {
+    "cardDetailsLabel": "Card details",
+    "saving": "Saving…",
+    "saveCard": "Save card",
+    "cardSaveFailed": "That card could not be saved.",
+    "toastPlanEnds": "Your plan ends on {{date}}.",
+    "cancelFailed": "We couldn’t cancel just now. Please try again.",
+    "chooseReason": "Please choose a reason.",
+    "toastDefaultUpdated": "Default card updated.",
+    "toastCardRemoved": "Card removed.",
+    "paymentsNotSetup": "Payments aren’t set up (missing Stripe key).",
+    "toastCardSaved": "Card saved.",
+    "loading": "Loading your subscription…",
+    "errorTitle": "We couldn’t load your subscription",
+    "tryAgain": "Try again",
+    "noneTitle": "No active subscription",
+    "noneMsisdnBody": "Sign up with your mobile number to start your plan. It’s billed to your phone.",
+    "createAccount": "Create your account",
+    "noneBody": "Choose a plan to get assessments, ebooks, and counselling each month.",
+    "viewPlans": "View plans",
+    "eyebrow": "Subscription",
+    "title": "Your subscription",
+    "planLabel": "{{name}} plan",
+    "perYr": "yr",
+    "perMo": "mo",
+    "endsShort": "ends {{date}}",
+    "renewsShort": "renews {{date}}",
+    "billedToMobile": "Billed to your mobile",
+    "cancelsOn": "Cancels {{date}}",
+    "cancelPlan": "Cancel plan",
+    "includedTitle": "What’s included this month",
+    "resetsOn": "Resets {{date}}.",
+    "resetsMsisdn": "Once you use it up, it comes back next month — with mobile billing there are no extra charges.",
+    "resetsStripe": "Once you use up what’s included, you just pay per item after that.",
+    "usedUp": "Used up",
+    "payPerItem": "Pay per item",
+    "left_one": "{{count}} left",
+    "left_other": "{{count}} left",
+    "leftInfinite": "∞ left",
+    "unlimitedOn": "Unlimited on {{name}}",
+    "usageMeta": "{{used}} of {{total}} used this cycle",
+    "usageMetaMin": "{{used}} of {{total}} min used this cycle",
+    "comesBack": "Comes back {{date}}",
+    "includedInPlan": "Included in your plan",
+    "paymentMethods": "Payment methods",
+    "addCard": "Add card",
+    "noCards": "No saved cards yet.",
+    "default": "Default",
+    "expires": "Expires {{exp}}",
+    "makeDefault": "Make default",
+    "removeCardAria": "Remove card",
+    "securelyStored": "Securely stored by Stripe.",
+    "historyTitle": "Billing history",
+    "exportAll": "Export all",
+    "historySub": "Your plan payments and every one-time buy — assessments, ebooks, audio programs, and counselling minutes.",
+    "noCharges": "No charges yet.",
+    "viewReceiptAria": "View receipt",
+    "cancelHeading": "Before you go…",
+    "cancelLede": "You’ll keep {{name}} until {{date}}. After that you pay per item, and everything you’ve unlocked stays yours.",
+    "surveyReasonQ": "Tell us why you’re canceling",
+    "surveyStayQ": "Would you have stayed if we offered:",
+    "cancelling": "Cancelling…",
+    "yesCancel": "Yes, cancel",
+    "back": "Back",
+    "close": "Close",
+    "addCardTitle": "Add a card",
+    "preparingForm": "Preparing secure form…",
+    "status": {
+      "active": "Active",
+      "trialing": "Trial",
+      "past_due": "Past due",
+      "incomplete": "Incomplete",
+      "canceled": "Canceled"
+    },
+    "txKind": {
+      "subscription": "Subscription",
+      "assessment": "Assessment",
+      "ebook": "Ebook",
+      "audio": "Audio program",
+      "counselling": "Counselling",
+      "payg": "Pay per item"
+    },
+    "allowance": {
+      "assessments": {
+        "label": "Assessments",
+        "cta": "Buy an assessment"
+      },
+      "ebooks": {
+        "label": "Ebooks",
+        "cta": "Browse the shop"
+      },
+      "counsellingMinutes": {
+        "label": "Counselling minutes",
+        "cta": "Buy minutes"
+      }
+    },
+    "cancelReasons": {
+      "not_using_enough": "I wasn't using it often enough",
+      "too_expensive": "Too expensive.",
+      "not_worth_value": "Didn't find the value worth the cost.",
+      "unmet_needs": "It didn't meet my needs or expectations.",
+      "missing_features": "Features I needed were unavailable.",
+      "insights_too_basic": "Reports or insights were too basic.",
+      "technical_problems": "I encountered technical problems.",
+      "performance_issues": "Poor app performance or usability issues.",
+      "repetitive_content": "Information was repetitive or unhelpful.",
+      "other": "Other"
+    },
+    "wouldStayFor": {
+      "lower_cost": "Lower-cost subscription",
+      "annual_discount": "Annual discounted rates",
+      "premium_content": "Additional Premium content"
+    }
+  },
+  "checkout": {
+    "secureCheckout": "Secure checkout",
+    "backToPricingAria": "Back to pricing",
+    "loading": "Getting your checkout ready…",
+    "errorTitle": "Something went wrong",
+    "tryAgain": "Try again",
+    "backToPlans": "Back to plans",
+    "finalizingTitle": "Setting up your plan…",
+    "finalizingBody": "Confirming your payment. This only takes a moment.",
+    "doneTitle": "You’re on {{plan}}.",
+    "doneAllowances": "{{assessments}} assessments, {{ebooks}} ebooks, and {{minutes}} counselling minutes are unlocked this month.",
+    "doneActive": "Your plan is active.",
+    "pendingTitle": "We got your payment.",
+    "pendingBody": "We’re setting up your {{plan}} plan. It usually turns on within a moment. You can refresh your subscription page soon.",
+    "goToDashboard": "Go to dashboard",
+    "viewSubscription": "View subscription",
+    "changePlan": "Change plan",
+    "startPlanTitle": "Start your {{plan}} plan",
+    "lede": "Billed each month · cancel anytime on your billing page.",
+    "stripeMissingPre": "Payments aren’t set up. Add ",
+    "stripeMissingMid": " to ",
+    "stripeMissingPost": " and restart the dev server.",
+    "cardDetails": "Card details",
+    "cardExpires": "Expires {{month}}/{{year}}",
+    "processing": "Processing…",
+    "pay": "Pay {{price}}",
+    "payNewCard": "Pay with a new card instead",
+    "secureTest": "Kept safe by Stripe. Test mode — use card 4242 4242 4242 4242.",
+    "secureSaved": "Kept safe by Stripe · extra card checks handled for you.",
+    "cardFormLoading": "Getting the secure card form ready…",
+    "useSavedCard": "← Use a saved card",
+    "summaryPlan": "{{plan}} plan",
+    "summaryBilled": "Billed each month",
+    "summaryAssessments_one": "{{count}} assessment / month",
+    "summaryAssessments_other": "{{count}} assessments / month",
+    "summaryEbooks_one": "{{count}} ebook / month",
+    "summaryEbooks_other": "{{count}} ebooks / month",
+    "summaryMinutes_one": "{{count}} min counselling / month",
+    "summaryMinutes_other": "{{count}} min counselling / month",
+    "dueToday": "Due today",
+    "renew": "Renews each month · cancel anytime.",
+    "errorPlanUnavailable": "That plan is no longer available.",
+    "errorStripeMissing": "Payments are not set up (Stripe key is missing).",
+    "errorChargeFailed": "We couldn’t charge your card.",
+    "errorChargeFailedRetry": "We couldn’t charge your card. Please try another one."
+  },
+  "counsel": {
+    "advisor": {
+      "role": "Your Daybreak advisor",
+      "blurb": "Pick whatever’s on your mind and talk it through out loud with an AI advisor you actually speak to. Anyone can, no report needed. Have one? It just helps Sol get to know you better."
+    },
+    "suggest": {
+      "ebook": "Suggested ebook",
+      "plan": "Suggested session",
+      "assessment": "Suggested assessment"
+    },
+    "topics": {
+      "stress": {
+        "title": "Stress & Pressure",
+        "line": "When everything feels like too much at once."
+      },
+      "anxiety": {
+        "title": "Anxiety & Worry",
+        "line": "When your mind races ahead to what might go wrong."
+      },
+      "sleep": {
+        "title": "Sleep & Rest",
+        "line": "Tired but wired nights, heavy mornings."
+      },
+      "feelings": {
+        "title": "Understanding My Feelings",
+        "line": "Naming what’s going on inside, and why."
+      },
+      "focus": {
+        "title": "Focus & Overwhelm",
+        "line": "Scattered days that end busy but blurry."
+      },
+      "relationships": {
+        "title": "Relationships",
+        "line": "The people close to you, and the tension."
+      },
+      "self-worth": {
+        "title": "Self-Worth",
+        "line": "The voice that says you’re not enough."
+      },
+      "direction": {
+        "title": "Work & Direction",
+        "line": "Feeling stuck, or unsure what’s next."
+      },
+      "grief": {
+        "title": "Grief & Loss",
+        "line": "Carrying something, or someone, you’ve lost."
+      },
+      "open": {
+        "title": "Something on my mind",
+        "line": "Not sure how to name it yet? Just start talking."
+      }
+    },
+    "session": {
+      "stress": {
+        "suggestTitle": "“Quiet the Static” — the evenings chapter",
+        "takeaways": [
+          "Your recovery, not your effort, is the weakest link right now.",
+          "One clear limit tonight: charge your phone outside the bedroom from 9pm.",
+          "Pair it with Day 4 of your audio plan, which works on the same evening time."
+        ],
+        "lines": [
+          "Hi Maya. I’ve got your Stress & Burnout report to go on, but this is your time, so take it wherever you need. How are you feeling today?",
+          "Honestly? Tired. The kind sleep doesn’t seem to fix.",
+          "That fits what I’m seeing. Your exhaustion has eased since your first check-in, but recovery is still the weakest link. What do your evenings usually look like?",
+          "Work spills into them. I’m answering messages until I fall asleep.",
+          "So the day never really ends. That’s what we want to change, not by doing more, but by protecting the last hour. What’s one small thing you could let go of tonight?",
+          "Maybe… not checking email after dinner.",
+          "That’s a real limit. Charge your phone in another room from 9pm. Just for tonight, notice how it feels. And there’s a short chapter from your scores about exactly this. I can add it to your shelf after."
+        ]
+      },
+      "sleep": {
+        "suggestTitle": "Tonight’s Sleep & Rest session",
+        "takeaways": [
+          "Your wind-down works. It’s doing it every night that slips.",
+          "Set one fixed wake-up time, and let your bedtime follow.",
+          "Move worry to an 8pm slot, so bed stops being where you sort things out."
+        ],
+        "lines": [
+          "Evening, Maya. I’ve read your Sleep & Rest report, so I’ve got the background, but talk to me about whatever’s really on your mind. How have the nights been?",
+          "Falling asleep is fine. Staying asleep is the problem.",
+          "Your scores hint at that. Your wind-down is good, but your routine slips. When you wake at 3am, where does your mind tend to go?",
+          "Straight to tomorrow. Everything I haven’t done.",
+          "Then let’s give that thinking an earlier home. A five-minute worry time at 8pm, written down and set aside, so bed isn’t where you plan.",
+          "I could try that.",
+          "Good. Tonight’s audio session is built around exactly this wind-down. Want me to line it up for after we hang up?"
+        ]
+      },
+      "feelings": {
+        "suggestTitle": "Retake it to see how you’ve grown",
+        "takeaways": [
+          "You read others really well. Turning that inward is where you can grow.",
+          "Practice: one honest “I feel…” sentence a day, easy ones first.",
+          "Calming yourself grows fastest. Feet on the floor, one breath, then speak."
+        ],
+        "lines": [
+          "Hi Maya. I already know your EQ profile, so we can skip the basics and go wherever you like. What’s really on your mind today?",
+          "I notice everyone else’s mood but I lose track of my own.",
+          "That’s exactly what your scores show: high empathy, lower self-awareness. The good news: it’s the easiest gap to train. Can you name what you’re feeling right now, in one word?",
+          "Umm… stretched.",
+          "A perfect start. You found it in seconds. Three times a day, just ask yourself that one question. No fixing, only naming. It changes things faster than you’d think.",
+          "And when you want to see the change in numbers, a retake in a few weeks will show it."
+        ]
+      },
+      "generic": {
+        "suggestAssessment": "Take the {{topic}} assessment to learn more",
+        "suggestFallback": "Find the right place to start",
+        "takeaway1Open": "Putting words to what’s been sitting with you is already a real step.",
+        "takeaway1Named": "You named {{topic}} as the thing to look at, and that’s already a step.",
+        "takeaway2": "Small, regular steps help more than big, now-and-then efforts.",
+        "takeaway3Assessment": "A short {{topic}} assessment would turn this into something clear to track.",
+        "takeaway3None": "We can keep talking it through. No plan needed. The way can show itself.",
+        "line1Open": "Hi Maya. No topic, no report, let’s just talk. What’s been on your mind lately?",
+        "line1Named": "Hi Maya. We don’t have a report on {{topic}} yet, so I’ll get to know it as we talk. No pressure. What brings you here today?",
+        "line2": "I’ve been carrying it a while. I’m not even sure where to start.",
+        "line3": "That’s okay. Not knowing where to start is a fine place to begin. When it’s loudest, is it more in your body, your thoughts, or your energy?",
+        "line4": "Mostly in my head. It just loops.",
+        "line5": "Then let’s give the loop somewhere to land. In one sentence, what worries you most about this?",
+        "line6": "That I’ll keep going like this and nothing really changes.",
+        "line7Assessment": "That fear can be worked on, and it gets clearer with detail. A short {{topic}} assessment would turn this vague weight into something clear we can actually move. Want me to line one up?",
+        "line7None": "That fear can be worked on. Change rarely comes all at once. It’s one honest choice, made again and again. What’s the smallest one you could make before we talk again?"
+      }
+    },
+    "lobby": {
+      "eyebrow": "AI counselling",
+      "titleA": "Talk it through,",
+      "titleEm": "out loud.",
+      "lede": "Speak with {{name}}, an AI advisor, about whatever’s on your mind — no report needed.",
+      "minutesWord": "minutes",
+      "availableThisCycle": "available this cycle",
+      "signIn": "Sign in",
+      "signInPost": "to see your minutes",
+      "topUp": "Top up",
+      "whatTalk": "What would you like to talk about?",
+      "yourReport": "Your report",
+      "viewReport": "View your {{title}} report",
+      "takeAssessment": "Take the {{title}} assessment first"
+    },
+    "setup": {
+      "yourSession": "Your session",
+      "howOpens": "How {{name}} opens",
+      "talkIn": "Talk in",
+      "resume": "Pick up where we left off last time",
+      "start": "Start session with {{name}}",
+      "metaMin": "{{minutes}} min",
+      "metaAvail": "available · ~15 min is normal · stop anytime",
+      "metaNoAuth": "Uses your minutes · ~15 min is normal · stop anytime",
+      "outOfMinutes": "Out of minutes — top up to start"
+    },
+    "call": {
+      "barLive": "Live · {{title}}",
+      "closeAria": "Close session",
+      "connecting": "Connecting…",
+      "speaking": "Speaking…",
+      "listening": "Listening — take your time",
+      "groundedReport": "{{name}} has your {{title}} report to help — but talk about whatever you need.",
+      "groundedOpen": "No report, no plan — just start talking and {{name}} will follow.",
+      "groundedNone": "No report needed — {{name}} will get to know this as you talk.",
+      "you": "You",
+      "sayHello": "Say hello whenever you’re ready.",
+      "minLeft": "{{remaining}} min left",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "end": "End",
+      "endAria": "End session",
+      "minutes": "Minutes",
+      "addMinutesAria": "Add minutes",
+      "lowAlmost": "Almost out of minutes — ",
+      "lowRunning": "Running low — ",
+      "lowTopup": "add minutes to keep talking",
+      "lowWrap": "{{name}} will slowly wrap things up."
+    },
+    "summary": {
+      "barTitle": "Session summary",
+      "complete": "Session complete",
+      "meta": "{{title}} · {{clock}} · {{remaining}} min left this cycle",
+      "talkedAbout": "What you and {{name}} talked about",
+      "newSession": "New session",
+      "buyMore": "Buy more minutes"
+    },
+    "toast": {
+      "minutesUp": "Your minutes are up — the session has ended.",
+      "minutesAdded_one": "{{count}} minute added — talk as long as you need.",
+      "minutesAdded_other": "{{count}} minutes added — talk as long as you need."
+    },
+    "err": {
+      "voiceDropped": "The voice connection dropped.",
+      "micNeeded": "Microphone access is needed to talk with {{name}}.",
+      "couldNotStart": "Could not start the session."
+    },
+    "buy": {
+      "cardDetails": "Card details",
+      "processing": "Processing…",
+      "payAdd": "Pay & add minutes",
+      "cardError": "Your card could not be charged.",
+      "topupError": "Could not complete the top-up.",
+      "noStripe": "Payments are not configured (missing Stripe key).",
+      "payLabelMsisdn": "Buy {{minutes}} min · {{price}}",
+      "payLabelCard": "Pay {{price}} · {{brand}} •••• {{last4}}",
+      "payLabelContinue": "Continue to payment · {{price}}",
+      "dialogAria": "Buy counselling minutes",
+      "addMinutes": "Add counselling minutes",
+      "pitch": "Add more any time — even during a call. Minutes never run out.",
+      "popular": "Popular",
+      "packMin": "{{minutes}} min",
+      "payingWith": "Paying with {{brand}} •••• {{last4}}",
+      "differentCard": "Use a different card",
+      "savedCard": "← Use saved card",
+      "checkingCard": "Checking your saved card…",
+      "chargedMobile": "Charged to your mobile bill.",
+      "securedStripe": "Secured by Stripe.",
+      "close": "Close",
+      "addingMinutes": "Adding minutes…",
+      "checkingPhone": "Checking with your phone company.",
+      "confirmingPayment": "Confirming your payment.",
+      "payFor_one": "Pay for {{count}} minute",
+      "payFor_other": "Pay for {{count}} minutes",
+      "savedCardInstead": "← Use saved card instead",
+      "doneAdded_one": "{{count}} minute added",
+      "doneAdded_other": "{{count}} minutes added",
+      "ready": "They’re ready whenever you want to talk.",
+      "done": "Done"
+    }
+  },
+  "ebooks": {
+    "badgeFree": "Free",
+    "badgeOwned": "Owned",
+    "badgeIncluded": "Included",
+    "addToShelf": "Add to shelf",
+    "buyPrice": "Buy · {{price}}",
+    "lang": {
+      "en": "English",
+      "de": "German",
+      "hi": "Hindi",
+      "fr": "French",
+      "es": "Spanish"
+    },
+    "coverAlt": "{{title}} cover",
+    "cardNumber": "Card number",
+    "expiry": "Expiry",
+    "cvc": "CVC",
+    "processing": "Processing…",
+    "pay": "Pay {{price}}",
+    "cardChargeErrorRetry": "Your card could not be charged. Please try another card.",
+    "payNotConfigured": "Payments are not configured (missing Stripe key).",
+    "cardChargeError": "Your card could not be charged.",
+    "payNotSetUp": "Payments aren’t set up — add VITE_STRIPE_PUBLISHABLE_KEY and restart.",
+    "preparingCheckout": "Preparing secure checkout…",
+    "cardExpires": "Expires {{exp}}",
+    "cardDefaultSuffix": " · default",
+    "useNewCard": "Use a new card instead",
+    "useSavedCard": "← Use a saved card",
+    "paySecure": "Secured by Stripe. Test mode — use card 4242 4242 4242 4242.",
+    "openError": "Couldn’t open this book — try again.",
+    "saveProgressError": "Couldn’t save your progress.",
+    "addedToShelf": "“{{title}}” added to your shelf.",
+    "addShelfError": "Couldn’t add this book to your shelf.",
+    "onYourShelfToast": "“{{title}}” is on your shelf.",
+    "checkoutError": "Couldn’t start checkout — try again.",
+    "chapterKicker": "Chapter {{n}}",
+    "pdfFooter": "Made for you to read.",
+    "preparingPdf": "Preparing “{{title}}” — choose “Save as PDF” in the print window.",
+    "previewAria": "Preview {{title}}",
+    "premium": "Premium",
+    "chaptersShort_one": "{{count}} ch",
+    "chaptersShort_other": "{{count}} ch",
+    "minutesShort_one": "{{count}} min",
+    "minutesShort_other": "{{count}} min",
+    "read": "Read",
+    "preview": "Preview",
+    "loadError": "Couldn’t load the ebook shop — {{error}}",
+    "eyebrow": "The ebook shop",
+    "heroTitleA": "Short reads for a ",
+    "heroTitleEm": "calmer mind.",
+    "lede": "Short, kind books on the things that weigh on us — worry, sleep, self-doubt, grief. Some are free to read. Others need a one-time payment.",
+    "shelfPill_one": "{{count}} on your shelf",
+    "shelfPill_other": "{{count}} on your shelf",
+    "yourShelf": "Your shelf",
+    "booksCount_one": "{{count}} book",
+    "booksCount_other": "{{count}} books",
+    "shelfSub": "Books you’ve added or bought — open any time.",
+    "explore": "Explore",
+    "searchPlaceholder": "Search titles or authors",
+    "searchAria": "Search the library",
+    "exploreSub": "Add a free book to your shelf, or read chapter one and open the rest.",
+    "categoriesAria": "Categories",
+    "categoryAll": "All",
+    "loadingLibrary": "Loading the library…",
+    "emptyAllAdded": "You’ve added everything here — enjoy your shelf.",
+    "emptyNoMatch": "No books match that yet — try another category or search.",
+    "readerAria": "{{title}} reader",
+    "closeReader": "Close reader",
+    "pagesCount_one": "{{count}} page",
+    "pagesCount_other": "{{count}} pages",
+    "percentRead": "{{percent}}% read",
+    "onYourShelf": "On your shelf",
+    "freeToRead": "Free to read · add it to keep it on your shelf",
+    "readChapterOneFree": "Read chapter one free · buy the rest to keep reading",
+    "contents": "Contents",
+    "loading": "Loading…",
+    "tocFree": "Free",
+    "startReading": "Start reading",
+    "downloadPdf": "Download PDF",
+    "readChapterOne": "Read chapter one",
+    "chapterOf": "Chapter {{current}} of {{total}}",
+    "markedAsRead": "Marked as read",
+    "markAsRead": "Mark as read",
+    "previous": "Previous",
+    "next": "Next",
+    "buyToKeepReading": "Buy to keep reading",
+    "theEnd": "The end · {{author}}",
+    "buyAria": "Buy {{title}}",
+    "oneTimePurchase": "One-time purchase",
+    "lifetimeAccess": "Lifetime access — read anytime",
+    "availableIn": "Available in {{languages}}",
+    "chaptersCount_one": "{{count}} chapter",
+    "chaptersCount_other": "{{count}} chapters",
+    "paymentDetails": "Payment details",
+    "isYours": "{{title}} is yours",
+    "onShelfNow": "It’s on your shelf now — start whenever you like.",
+    "readNow": "Read now",
+    "toMyShelf": "To my shelf",
+    "close": "Close",
+    "cat": {
+      "anxiety-mental-health": "Anxiety & Mental Health",
+      "habits-routines": "Habits & Routines",
+      "leadership-management": "Leadership & Management",
+      "focus-productivity": "Focus & Productivity",
+      "purpose-personal-growth": "Purpose & Personal Growth",
+      "relationships-emotions": "Relationships & Emotions"
+    }
+  },
+  "pricing": {
+    "eyebrow": "Plans & pricing",
+    "h1a": "Pick the plan that",
+    "h1em": "fits you.",
+    "ledeBase": "A monthly plan gives you a set number of assessments, ebooks, and counselling minutes.",
+    "ledeStripe": "Run out? You only pay for the extra items you pick.",
+    "ledeMsisdn": "Charged to your phone bill — no card needed.",
+    "coveredTitle": "You’re on the {{plan}} plan.",
+    "coveredRemaining": "{{remaining}} of {{allowance}} assessments",
+    "coveredLeft": "left this month.",
+    "coveredActive": "Your plan is active.",
+    "coveredTake": "Take one whenever you’re ready. You don’t need to buy anything else until you run out.",
+    "takeAssessment": "Take an assessment",
+    "manageSubscription": "Manage subscription",
+    "blockedTitle": "You’ve used all your assessments.",
+    "blockedBody": "You’ve taken all {{allowance}} assessments on your {{plan}} plan this month.",
+    "blockedResetPre": "Resets on",
+    "blockedNote": "With phone billing you can’t buy extras, so there’s nothing to buy here. Your count starts fresh next month.",
+    "viewSubscription": "View subscription",
+    "nextMonth": "next month",
+    "exhaustedPre": "You’ve used all {{allowance}} assessments on your",
+    "exhaustedPost": "plan. Each extra assessment now costs ${{price}}, charged when you take one.",
+    "emptyTitle": "No plans right now",
+    "emptyBody": "Please check back soon.",
+    "mostPopular": "Most popular",
+    "perMonth": "/mo",
+    "rowAssessments": "assessments / month",
+    "rowEbooks": "ebooks / month",
+    "rowCounselling": "counselling / month",
+    "unitMin": "min",
+    "yourCurrentPlan": "Your current plan",
+    "choosePlan": "Choose {{plan}}",
+    "errorTitle": "We couldn’t load the plans",
+    "tryAgain": "Try again",
+    "paygTitle": "Prefer to pay as you go?",
+    "paygBody": "No plan needed. This is also what you use when a plan runs out. Buy only what you need.",
+    "paygAssessment": "Assessment",
+    "paygEbook": "Ebook",
+    "paygFrom": "from",
+    "paygCounselling": "Counselling",
+    "faqTitle": "Common questions",
+    "faq": {
+      "assessment": {
+        "q": "What counts as one assessment?",
+        "a": "Any topic you pick, like Stress & Burnout, Sleep, or Emotional Intelligence. Your plan gives you that many full assessments (with reports and audio plans) each month."
+      },
+      "runOut": {
+        "q": "What happens when I run out?",
+        "aStripe": "Nothing stops working. After that, you just pay for each item you want — an extra assessment, ebook, or counselling minutes, one at a time.",
+        "aMsisdn": "With mobile billing, you can’t buy extras one by one. You just wait for your count to reset at the start of next month. Anything you already unlocked stays yours."
+      },
+      "change": {
+        "q": "Can I change or cancel my plan?",
+        "a": "Anytime, on your billing page. A bigger plan starts right away. A smaller plan or a cancel takes effect at the end of the month."
+      },
+      "carry": {
+        "q": "Do unused items carry over to next month?",
+        "a": "No. Your count resets each month. But anything you already unlocked is yours to keep."
+      }
+    }
+  },
+  "profile": {
+    "eyebrow": "Your account",
+    "title": "Profile & settings",
+    "memberSince": "Member since {{date}}",
+    "signOut": "Sign out",
+    "aria": {
+      "settingsSections": "Settings sections",
+      "pickTime": "Pick reminder time",
+      "timePicker": "Time picker",
+      "deleteAccount": "Delete account",
+      "close": "Close"
+    },
+    "account": {
+      "title": "Account",
+      "desc": "Your details and the name we use in your reports and audio.",
+      "changePhoto": "Change photo",
+      "photoNote": "PNG or JPG. Square looks best.",
+      "fullName": "Full name",
+      "reportName": "Name in your reports",
+      "email": "Email",
+      "save": "Save changes"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "desc": "Pick the reminders you want. We only send them if you say yes.",
+      "dailyTitle": "Daily session reminder",
+      "dailyDesc": "A notification at the time you pick, when your session is ready.",
+      "productTitle": "Product news",
+      "productDesc": "New topics and features. Not very often."
+    },
+    "referrals": {
+      "title": "Referrals",
+      "desc": "It helps to go with a friend. You both get a free counselling session.",
+      "inviteLabel": "Your invite link",
+      "copy": "Copy",
+      "invited": "invited",
+      "joined": "joined",
+      "earned": "free session earned"
+    },
+    "privacy": {
+      "title": "Privacy & data",
+      "desc": "Your reports belong to you. Download them, or close your account.",
+      "exportTitle": "Export my data",
+      "exportDesc": "Download all your reports, scores, and mood logs as a file.",
+      "disclaimer": "Daybreak assessments help you think about yourself. They are not medical care. We never sell your data. If you are in crisis, please call your local emergency number or a crisis line.",
+      "deleteTitle": "Delete account",
+      "deleteDesc": "This deletes your reports, plans, and books for good. You can’t undo it.",
+      "delete": "Delete"
+    },
+    "modal": {
+      "title": "Delete your account?",
+      "body": "This would delete your reports, audio progress, and books for good. In this demo, nothing is really deleted.",
+      "confirm": "Yes, delete everything",
+      "keep": "Keep my account"
+    },
+    "toast": {
+      "browserNoNotif": "Your browser can’t show notifications.",
+      "serverNotSetup": "Notifications aren’t set up on the server yet.",
+      "allowNotif": "Allow notifications in your browser to turn this on.",
+      "turnOnFailed": "Couldn’t turn on notifications.",
+      "photoDemo": "Photo upload is just a demo.",
+      "profileUpdated": "Profile updated.",
+      "exportStarted": "Export started. This is just a demo.",
+      "inviteCopied": "Invite link copied.",
+      "accountSafe": "This is a demo. Your account is safe.",
+      "reminderOn": "Daily reminder on. We'll remind you at {{time}}.",
+      "reminderOff": "Daily reminder turned off.",
+      "productNewsOn": "Product news on. We’ll tell you about new features.",
+      "productNewsOff": "Product news turned off.",
+      "reminderSetFor": "Reminder set for {{time}}.",
+      "reminderTimeSaved": "Reminder time saved."
+    }
+  },
+  "reports": {
+    "loading": "Loading your reports…",
+    "errorTitle": "We couldn’t load your reports",
+    "browseAssessments": "Browse assessments",
+    "eyebrow": "Your reports",
+    "titleA": "See your progress ",
+    "titleEm": "over time.",
+    "lede": "Every report you’ve unlocked, grouped by topic. Each time you take one again, you can see where you started and how far you’ve come.",
+    "reportsSaved": "reports saved",
+    "topicsTried": "topics tried",
+    "biggestChange": "pts · biggest change",
+    "emptyTitle": "No reports yet",
+    "emptyBody": "Take your first assessment and your report will show up here. Each time you take it again, you build a trend.",
+    "takeAssessment": "Take an assessment",
+    "exploreTitle": "Topics you haven’t tried yet",
+    "exploreBody": "Each new assessment adds another report and another path to follow.",
+    "cardMeta": "{{areas}} areas · {{min}} min",
+    "groupMeta_one": "{{count}} report · first taken {{date}}",
+    "groupMeta_other": "{{count}} reports · first taken {{date}}",
+    "pts": "pts",
+    "noChange": "no change",
+    "better": "better",
+    "progressPre_one": "Over {{count}} check-in, your score went from ",
+    "progressPre_other": "Over {{count}} check-ins, your score went from ",
+    "progressTo": " to ",
+    "progressTailImproved": " — that change is yours, not the test’s.",
+    "progressTailFlat": ".",
+    "baLabel": "First check-in → latest, area by area",
+    "baselinePre": "This is your ",
+    "baselineStrong": "starting point",
+    "baselineMid_one": " for {{topic}}. Take it again in {{count}} day to see your numbers start to move.",
+    "baselineMid_other": " for {{topic}}. Take it again in {{count}} days to see your numbers start to move.",
+    "allReports": "All reports",
+    "latest": "Latest",
+    "start": "start",
+    "takeAgainNow": "Take it again now",
+    "retakeNote_one": "It’s been {{count}} day — taking it again now shows how far you’ve come.",
+    "retakeNote_other": "It’s been {{count}} days — taking it again now shows how far you’ve come.",
+    "retakeWait_one": "You can take it again in {{count}} day",
+    "retakeWait_other": "You can take it again in {{count}} days",
+    "daysProgress": "{{n}} / 60 days",
+    "retakeSub": "Taking it again every 60–90 days keeps the comparison useful.",
+    "viewLoading": "Loading your report…",
+    "notFoundTitle": "Report not found",
+    "viewErrorTitle": "We couldn’t load this report",
+    "backToReports": "Back to reports",
+    "you": "You",
+    "reportDate": "Report · {{date}}",
+    "yourReport": "Your report",
+    "backAria": "Back to your reports",
+    "dir_higher": "higher",
+    "dir_lower": "lower"
+  },
+  "assessData": {
+    "likert": [
+      "Never",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ],
+    "stress-burnout": {
+      "title": "Stress & Burnout",
+      "tagline": "For when life looks fine on the outside but feels heavy inside.",
+      "blurb": "A clear look at where your energy goes, and why rest stops helping. We look at four parts of your life, score your honest answers, and build a plan that starts where you feel it most.",
+      "ringLabel": "Overall load",
+      "overall": {
+        "low": "Your overall load is in a healthy range. The parts below show where pressure builds up first for you. Your plan works on keeping those clear.",
+        "mid": "You are under real pressure and still standing. But some things that should refill you are running low. Caught now, this turns around fast.",
+        "high": "Your load is high in several parts at once. None of this is a judgment. High scores just show where your plan begins, and these numbers move with practice."
+      },
+      "plan": {
+        "welcome": "this plan starts with your evenings, because that’s where your answers say your rest slips away…",
+        "sessions": [
+          "Letting the day end",
+          "Seeing what drains you",
+          "One hour that is yours",
+          "Letting go a little"
+        ]
+      },
+      "dims": {
+        "exhaustion": {
+          "label": "Exhaustion",
+          "desc": "How low your energy is, in body and mind.",
+          "rec": "Set one quiet wind-down time before 9pm, every day for two weeks. Do not skip it.",
+          "hints": {
+            "low": "Your energy is holding steady. That is a real strength, and your plan will help you keep it.",
+            "mid": "Your energy dips, but not too much yet. The goal now is to protect the hours that refill you, before the dips get worse.",
+            "high": "Your energy is running on empty. The first step is to do less, not more. Your plan starts by taking things off your plate."
+          }
+        },
+        "cynicism": {
+          "label": "Feeling distant",
+          "desc": "How far you feel from the things that used to matter to you.",
+          "rec": "Once a day, name one task that still feels worth doing, before you open anything else.",
+          "hints": {
+            "low": "You still feel connected to what you do. That helps you bounce back faster.",
+            "mid": "You are starting to feel a bit distant. This is usually a way to protect yourself, not a change in who you are. It eases as the pressure drops.",
+            "high": "Feeling distant has become your way to cope. That numb feeling is a sign. It shows where things have been too heavy for too long."
+          }
+        },
+        "control": {
+          "label": "Sense of control",
+          "desc": "How much say you feel you have over your time, speed, and choices.",
+          "rec": "Each morning, pick your first task yourself, before email picks it for you.",
+          "hints": {
+            "low": "You feel in charge of your days. Keep noticing the small choices you make. That sense of control grows.",
+            "mid": "Your days are partly yours and partly your inbox’s. Taking back even one hour you choose will move this score fast.",
+            "high": "Right now your days feel like they just happen to you. Your plan rebuilds your sense of control in tiny steps. Minutes, not big life changes."
+          }
+        },
+        "recovery": {
+          "label": "Recovery capacity",
+          "desc": "How well your rest really refreshes you.",
+          "rec": "Swap your last 20 minutes of screen time for one audio session from your plan.",
+          "hints": {
+            "low": "Your rest really refreshes you. That is rare, and worth protecting.",
+            "mid": "Your rest works, but not every time. The fix is usually a steady routine, not more hours.",
+            "high": "Your rest is not reaching you. Evenings pass, weekends pass, and you still feel empty. This is where your plan starts: evenings first."
+          }
+        }
+      },
+      "questions": [
+        "I wake up tired, even after a full night of sleep.",
+        "By mid-afternoon, I have little energy left for the things I care about.",
+        "Small tasks feel heavier than they should.",
+        "I feel distant or like I don’t care about things that used to matter to me.",
+        "I catch myself thinking “what’s the point?” about daily tasks.",
+        "My days feel like they just happen to me, instead of me shaping them.",
+        "I can choose the speed and order of my day.",
+        "Evenings and weekends really recharge me.",
+        "Even when I rest, my mind keeps working.",
+        "I keep time in my week that is just for rest."
+      ],
+      "ebook": "Quiet the Static"
+    },
+    "sleep-rest": {
+      "title": "Sleep & Rest",
+      "tagline": "For nights when you’re tired but wired, and mornings that start off rough.",
+      "blurb": "A look at four parts of your nights: sleep pressure, winding down, your routine, and the worry that shows up when the lights go out. Scored honestly, turned into a nightly plan.",
+      "ringLabel": "Sleep trouble",
+      "overall": {
+        "low": "Your sleep is basically working. The parts below are early warning signs. Your plan keeps them in the clear.",
+        "mid": "Your nights are strained in a few places you can fix. Sleep improves fast with a steady routine. Most people feel the change within two weeks.",
+        "high": "Your sleep is strained in several parts. The good news: sleep responds better than almost anything to small, repeated changes."
+      },
+      "plan": {
+        "welcome": "we start tonight. Not with rules, but with a gentle wind-down your body can learn…",
+        "sessions": [
+          "Learning to wind down",
+          "Shutting off the day",
+          "A bed just for sleep",
+          "The worry window"
+        ]
+      },
+      "dims": {
+        "debt": {
+          "label": "Sleep pressure",
+          "desc": "How much built-up tiredness you carry into each day.",
+          "rec": "Go to bed 20 minutes earlier, just 20, for the next ten nights.",
+          "hints": {
+            "low": "You’re running on a mostly full tank. You’re getting about the sleep you need.",
+            "mid": "You’re building up a small sleep debt. It’s not huge, but it adds up. Small, regular catch-ups work best.",
+            "high": "Your body badly needs to catch up. The plan aims for steady, slightly earlier nights instead of big weekend catch-ups."
+          }
+        },
+        "winddown": {
+          "label": "Wind-down",
+          "desc": "How well your evenings help you switch from doing to resting.",
+          "rec": "Pick a set time each evening to lower the lights. The audio session marks it.",
+          "hints": {
+            "low": "Your evenings already slow down well. Your sessions will build on what’s working.",
+            "mid": "Your wind-down works when you let it. The gap is doing it every night, not the method itself.",
+            "high": "You go from full speed to stopped with nothing in between. Your plan builds a 30-minute wind-down your body can learn."
+          }
+        },
+        "rhythm": {
+          "label": "A steady routine",
+          "desc": "How steady your sleep and wake times are during the week.",
+          "rec": "Set your wake-up time first. Let your bedtime follow.",
+          "hints": {
+            "low": "Your body clock keeps a steady beat. Protect it. It’s quietly doing a lot for you.",
+            "mid": "Your routine slips on weekends and busy weeks. Just keeping one fixed wake-up time steadies the rest.",
+            "high": "Your body clock gets mixed signals every day. One fixed wake-up time, even on weekends, is the single biggest change you can make."
+          }
+        },
+        "nightworry": {
+          "label": "Worry at night",
+          "desc": "How much your mind starts racing when the lights go out.",
+          "rec": "Take 5 minutes at 8pm to write down your worries, then set them aside.",
+          "hints": {
+            "low": "Your mind is mostly quiet at night. The plan keeps it that way with a little upkeep.",
+            "mid": "Worry shows up some nights. Writing it down, instead of holding it in bed, usually helps within a week.",
+            "high": "Nighttime has become when your mind works hardest. Your plan moves worry to earlier in the evening, so bed stops being the place you sort things out."
+          }
+        }
+      },
+      "questions": [
+        "I need an alarm, and the snooze button, to get up when I mean to.",
+        "I feel properly rested when I wake up.",
+        "I use screens right up until I try to sleep.",
+        "My evenings have a clear point where I start slowing down.",
+        "My sleep and wake times change by more than an hour during the week.",
+        "I get up at about the same time on weekends.",
+        "When the lights go out, my mind gets louder.",
+        "I go over conversations or plan tomorrow while trying to fall asleep.",
+        "I need caffeine to get through a normal day.",
+        "I fall asleep within twenty minutes most nights."
+      ],
+      "ebook": "The Soft Landing"
+    },
+    "anxiety-worry": {
+      "title": "Anxiety & Worry",
+      "tagline": "For when your mind jumps ahead to things that haven’t happened.",
+      "blurb": "Where your worry sits, how it shows up in your body, what it makes you avoid, and how easily you can come back to the present. Mapped gently, scored clearly.",
+      "ringLabel": "Worry level",
+      "overall": {
+        "low": "Your worry mostly stays in proportion. It’s there, but not running the show. The map below shows where it builds up when it does rise.",
+        "mid": "Worry has taken real hold in some places, while other strengths stay intact. Your plan works on the weak spots and builds on the strengths.",
+        "high": "Worry is loud in several areas right now. That’s tiring, and it can be worked on. These four parts respond well to short, daily, physical practice."
+      },
+      "plan": {
+        "welcome": "we won’t fight your worries. We’ll practise coming back from them, a little each day…",
+        "sessions": [
+          "Learning to steady yourself",
+          "A longer breath out",
+          "Naming the worry loop",
+          "The first small step"
+        ]
+      },
+      "dims": {
+        "rumination": {
+          "label": "Going in circles",
+          "desc": "How much your mind loops on the same worries without solving them.",
+          "rec": "When a loop starts, say it out loud once, like “planning again,” then get up and move.",
+          "hints": {
+            "low": "Your thoughts mostly pass through and move on. That’s worth noticing. It’s a skill you already have.",
+            "mid": "Some thoughts get stuck on repeat. Loops weaken when you catch them early. Your sessions practise exactly that.",
+            "high": "Your mind has worn deep grooves of the same thoughts. Your plan doesn’t argue with the loops. It teaches you to step off the track."
+          }
+        },
+        "body": {
+          "label": "Body signals",
+          "desc": "How strongly worry shows up in your body: chest, breath, stomach, jaw.",
+          "rec": "Twice a day, breathe out longer than you breathe in, for ten breaths. That’s the whole exercise.",
+          "hints": {
+            "low": "Your body stays mostly calm under stress. That’s a strong base for everything else.",
+            "mid": "Your body warns you before your mind notices. Learning its early signals turns them into helpful alerts.",
+            "high": "Your body is holding the worry your mind won’t put down. Your plan starts with the body: breath and muscles first, thoughts second."
+          }
+        },
+        "avoidance": {
+          "label": "Avoidance",
+          "desc": "How much worry has started to shrink what you’re willing to do.",
+          "rec": "List three things you’ve stopped doing. Pick the easiest. Do a little of it this week.",
+          "hints": {
+            "low": "Worry isn’t making your choices. Your world is staying full-sized. Keep it that way.",
+            "mid": "A few doors have quietly closed. Opening them again in small steps is the most reliable way to work on anxiety.",
+            "high": "Worry has been making your world smaller each month. Your plan turns this around gently, one small step at a time."
+          }
+        },
+        "grounding": {
+          "label": "Grounding",
+          "desc": "How easily you can come back to the present when worry spikes.",
+          "rec": "Practise the 5-4-3-2-1 senses exercise once a day, while calm, so it works when you’re not.",
+          "hints": {
+            "low": "You can find your way back to the present. Sessions will make it second nature.",
+            "mid": "You can steady yourself when you remember to. The practice is making it automatic.",
+            "high": "When worry spikes, the present is hard to reach. Your plan drills short, physical ways to steady yourself until they’re there when you need them."
+          }
+        }
+      },
+      "questions": [
+        "I keep going over worries long after I can do anything about them.",
+        "My mind jumps to the worst version of everyday situations.",
+        "I notice tension in my chest, jaw, or stomach during normal days.",
+        "My breathing stays slow and easy under pressure.",
+        "I put off tasks, calls, or places because of how they might make me feel.",
+        "I say yes to things even when they make me nervous.",
+        "When worry spikes, I can bring myself back to the present.",
+        "Once anxious, I stay anxious for hours.",
+        "I lose sleep going over things that might go wrong.",
+        "My body feels restless even when nothing urgent is happening."
+      ],
+      "ebook": "Loosening the Knot"
+    },
+    "focus-clarity": {
+      "title": "Focus & Clarity",
+      "tagline": "For scattered days that end busy, blurry, and strangely empty.",
+      "blurb": "Where your focus leaks, what overloads it, when your mind is sharpest, and how easily you can get real, deep work done right now. A clear map of a foggy thing.",
+      "ringLabel": "How foggy",
+      "overall": {
+        "low": "Your focus is basically solid. The parts below show where to build, not fix.",
+        "mid": "Your focus is leaking in clear places. Focus can be trained, and leaks this size usually close within one plan.",
+        "high": "The fog is thick right now. Your focus is scattered, your head is overloaded, and deep work feels out of reach. All four of these can be trained, and your plan trains them daily."
+      },
+      "plan": {
+        "welcome": "we begin with one small block of quiet time. Small enough to keep, real enough to matter…",
+        "sessions": [
+          "Your first quiet work time",
+          "Clearing your head",
+          "Finding your best hour",
+          "A routine to start"
+        ]
+      },
+      "dims": {
+        "distraction": {
+          "label": "Pull of distractions",
+          "desc": "How strongly interruptions and devices pull you off task.",
+          "rec": "One 25-minute block daily: phone in another room. Not silenced. Another room.",
+          "hints": {
+            "low": "Your focus holds well. The sessions will sharpen a skill you already have.",
+            "mid": "You’re losing focus in small, frequent leaks rather than big breaks. Fixing two or three of them changes whole days.",
+            "high": "You’re interrupted so often you can barely focus at all. Your plan rebuilds it the only way that works: short blocks of quiet time, daily."
+          }
+        },
+        "overload": {
+          "label": "Too much in your head",
+          "desc": "How much you’re keeping in your head instead of written down.",
+          "rec": "Each night, take 3 minutes to write down everything on your mind before sleep.",
+          "hints": {
+            "low": "Your head is mostly clear. Your notes and lists are holding what they should.",
+            "mid": "You’re holding more in your head than you need to. Every thing you write down clears your mind a little.",
+            "high": "Your mind is trying to store everything, remember everything, and remind you of everything at once. Your plan starts by getting it all out of your head and onto paper."
+          }
+        },
+        "energy": {
+          "label": "Your energy pattern",
+          "desc": "How well your work lines up with the times your mind is actually sharp.",
+          "rec": "Find your sharpest 90 minutes. Put your hardest thing there. Defend it.",
+          "hints": {
+            "low": "You mostly spend your best hours on your best work. That’s rarer than you’d think.",
+            "mid": "Some of your sharpest hours go to your most boring tasks. Swapping even one hour helps right away.",
+            "high": "Your best hours go to email and meetings, leaving only fog for what matters. Your plan takes back one good hour at a time."
+          }
+        },
+        "deepwork": {
+          "label": "Getting into deep focus",
+          "desc": "How easily you can get into, and stay in, deep focus.",
+          "rec": "Same desk, same playlist, same first step. Make starting a routine, not a decision.",
+          "hints": {
+            "low": "You can still get into deep focus when you choose to. That skill grows. Use it on purpose.",
+            "mid": "Deep focus comes, but it takes a long warm-up and breaks easily. A set start routine gets you there faster.",
+            "high": "Deep focus has become rare. It’s not gone, it’s just out of practice. Your plan rebuilds your start routine from scratch."
+          }
+        }
+      },
+      "questions": [
+        "I check my phone within minutes of starting focused work.",
+        "I can work for thirty minutes without switching tasks.",
+        "I keep important to-dos in my head rather than written down.",
+        "I feel behind on things I can’t even name.",
+        "My clearest hours go to meetings, email, or admin.",
+        "I save hard work for the time of day I focus best.",
+        "I can sink into a task deeply enough to lose track of time.",
+        "Even simple tasks take me far longer than they should.",
+        "Notifications decide the order of my day.",
+        "My mind feels like a browser with forty tabs open."
+      ],
+      "ebook": "One Clear Hour"
+    },
+    "emotional-intelligence": {
+      "title": "Emotional Intelligence",
+      "tagline": "For understanding your own feelings, and reading them in others.",
+      "blurb": "Four skills, measured honestly: how well you notice your own feelings, calm them, read others, and say what’s true. Here, higher scores are strengths, and the report shows where to grow.",
+      "ringLabel": "Feelings score",
+      "overall": {
+        "low": "These skills are just getting started for you, which is when they grow the fastest. Every part below can be trained, and the plan trains them in order.",
+        "mid": "You have a real base here, with clear room to grow. The report shows exactly which skill to work on next for the biggest change.",
+        "high": "These skills are strong across the board. The work now is staying steady under pressure, keeping them going when it’s hard."
+      },
+      "plan": {
+        "welcome": "we’ll build four skills in order. Noticing first, because everything else builds on it…",
+        "sessions": [
+          "One word for how you feel",
+          "Practising the pause",
+          "Listening for what’s underneath",
+          "One honest sentence"
+        ]
+      },
+      "dims": {
+        "awareness": {
+          "label": "Self-awareness",
+          "desc": "How well you notice and name what you’re feeling, as it happens.",
+          "rec": "Three times a day, one question: “What am I feeling, in one word?” That’s it.",
+          "hints": {
+            "low": "Feelings tend to reach you late, as moods, tension, or sudden reactions. Practising naming them changes this faster than any other skill here.",
+            "mid": "You catch your bigger feelings well, but the smaller ones still slip past. Your sessions help you notice the subtle ones.",
+            "high": "You notice your own feelings early and clearly. That’s the base every other skill builds on."
+          }
+        },
+        "regulation": {
+          "label": "Calming yourself",
+          "desc": "How well you can calm a strong feeling without pushing it away.",
+          "rec": "When things heat up: feel your feet on the floor, take one slow breath, then speak. The order matters.",
+          "hints": {
+            "low": "Right now strong feelings are in charge and you go along for the ride. Calming yourself is the most trainable skill here, and your plan builds it gently.",
+            "mid": "You can calm yourself, but it takes effort and a bit of time. Practice makes it faster.",
+            "high": "You can hold a strong feeling without it taking over. Others can feel how steady you are."
+          }
+        },
+        "empathy": {
+          "label": "Empathy",
+          "desc": "How well you read what others are feeling, under what they say.",
+          "rec": "Once a day, quietly guess what someone is feeling, then gently check if you can.",
+          "hints": {
+            "low": "Other people’s feelings often catch you by surprise. Staying curious, every day, is the whole fix.",
+            "mid": "You read people well when you’re present, but stress narrows your view. The work is keeping it on when it counts.",
+            "high": "You pick up on what isn’t said. Used with care, that’s a rare and valuable skill."
+          }
+        },
+        "expression": {
+          "label": "Speaking up",
+          "desc": "How clearly and safely you can say what you really feel and need.",
+          "rec": "Once a day, say one honest sentence that starts with “I feel…” to anyone, about anything.",
+          "hints": {
+            "low": "What’s true for you tends to stay inside, or come out the wrong way. Small, low-pressure moments of honesty build this faster than big talks.",
+            "mid": "You say what you feel when it’s easy, but the important talks still get put off. Your sessions practise exactly those.",
+            "high": "You can say hard, honest things in a way people can hear. That’s the top skill, and you have it."
+          }
+        }
+      },
+      "questions": [
+        "I can name what I’m feeling while I’m feeling it.",
+        "I notice my moods only after they’ve affected my whole day.",
+        "When something upsets me, I can calm myself within minutes.",
+        "I say or send things in the heat of a moment that I later regret.",
+        "I sense how someone is feeling before they tell me.",
+        "People’s reactions often catch me completely off guard.",
+        "I can tell people what I need without it turning into a fight.",
+        "I keep my real feelings in until they come out the wrong way.",
+        "I understand why I reacted the way I did, soon after.",
+        "Stress makes me react more strongly than I mean to."
+      ],
+      "ebook": "The Listening Heart"
+    }
+  },
+  "report": {
+    "eng": {
+      "stress": {
+        "label": {
+          "exhaustion": "Exhaustion",
+          "cynicism": "Cynicism & detachment",
+          "workload": "Workload",
+          "recovery": "Recovery capacity",
+          "control": "Sense of control"
+        },
+        "content": {
+          "exhaustion": {
+            "strengthLabel": "steady energy",
+            "blurb": "How depleted you feel — physically and mentally — by the demands of your days.",
+            "note": {
+              "low": "Your tank is reading fairly full. Energy is showing up when you need it.",
+              "mid": "You’re running warmer than is comfortable — noticeable tiredness that rest isn’t fully clearing.",
+              "high": "You’re depleted often. This is the body asking for real recovery, not just a weekend."
+            },
+            "bullets": [
+              "Tiredness that lingers past a normal night’s sleep is a load signal, not a character flaw.",
+              "Exhaustion compounds quietly — small recovery habits matter more than one big reset."
+            ],
+            "try": "Pick one fixed “off switch” tonight — screens down 30 minutes before bed — and protect it for a week."
+          },
+          "cynicism": {
+            "strengthLabel": "sense of engagement",
+            "blurb": "How connected — or detached and going-through-the-motions — you feel about your work and people.",
+            "note": {
+              "low": "You’re still engaged and present. The work and people around you still land as meaningful.",
+              "mid": "Some distance is creeping in — moments of “why bother” or going through the motions.",
+              "high": "You’re feeling detached a lot. Pulling back is a normal way the mind protects itself under strain."
+            },
+            "bullets": [
+              "Cynicism is often a symptom of depletion, not your true outlook — it usually softens as reserves return.",
+              "Naming one thing that still matters to you re-opens a little of the connection."
+            ],
+            "try": "Each evening, note one small moment that felt genuinely worthwhile. No pressure for it to be big."
+          },
+          "workload": {
+            "strengthLabel": "manageable workload",
+            "blurb": "How much the sheer volume and pace of demands outstrips the time and resources you have.",
+            "note": {
+              "low": "The volume feels manageable. You generally have room to do things at a sustainable pace.",
+              "mid": "The load is bumping the ceiling — frequent stretches where there’s more to do than time to do it.",
+              "high": "Demands are routinely outrunning your capacity. This is a structural pressure, not a willpower gap."
+            },
+            "bullets": [
+              "Sustained overload is the single strongest driver of burnout — it’s worth treating as a real constraint.",
+              "Protecting capacity often means subtracting commitments, not just working harder inside them."
+            ],
+            "try": "Name the one task that drains the most for the least return — and ask what it would take to drop or hand it off."
+          },
+          "recovery": {
+            "strengthLabel": "recovery capacity",
+            "blurb": "How well you’re able to switch off, rest, and genuinely recharge between demands.",
+            "note": {
+              "low": "Recovery is running thin. You’re rarely fully switching off, so the tank isn’t refilling.",
+              "mid": "You get some recovery, but it’s patchy — rest that doesn’t quite reach the bottom of the tank.",
+              "high": "You recover well. You can put things down and come back genuinely refreshed — a real asset."
+            },
+            "bullets": [
+              "Recovery is a skill and a resource, not a reward for finishing — it works best scheduled, not earned.",
+              "Even short, deliberate breaks protect you more than a single long collapse at the end."
+            ],
+            "try": "Block one genuinely off-duty pocket this week — phone elsewhere — and treat it as non-negotiable."
+          },
+          "control": {
+            "strengthLabel": "sense of control",
+            "blurb": "How much agency and say you feel you have over how your days and work unfold.",
+            "note": {
+              "low": "Agency is feeling thin — a lot of your day shaped by forces you don’t feel you can steer.",
+              "mid": "You have some say, but not as much as you’d like — pockets of feeling pushed along by events.",
+              "high": "You feel a real sense of agency. Knowing you can steer your days is protective under pressure."
+            },
+            "bullets": [
+              "Even small, reclaimed choices restore a sense of control that buffers against strain.",
+              "Control is less about changing everything and more about owning the few levers you do have."
+            ],
+            "try": "Choose one small thing this week you’ll decide on your own terms — when you start, what you say no to."
+          }
+        },
+        "archetype": {
+          "runningOnEmpty": {
+            "name": "Running on Empty",
+            "summary": "High demands, low recovery — a classic burnout pattern, and a reversible one."
+          },
+          "stretchedButResourced": {
+            "name": "Stretched but Resourced",
+            "summary": "You’re carrying a lot, but you still have real ways to recharge."
+          },
+          "coastingOnLowReserves": {
+            "name": "Coasting on Low Reserves",
+            "summary": "Not heavily strained yet, but your reserves are thin — an early-warning pattern worth tending."
+          },
+          "balancedAndSteady": {
+            "name": "Balanced & Steady",
+            "summary": "Your demands and recovery are in a healthy balance right now."
+          }
+        },
+        "patternDetail": {
+          "base": "Your demands are running at {{difficulty}}/100 and your capacity to recover sits at {{resource}}/100. {{connector}}{{heaviest}} is adding the most pressure, while {{thinnest}} is the resource most worth rebuilding.",
+          "demandsHeavier": "The demands side is clearly the heavier of the two right now — ",
+          "reserveHigher": "You’ve got more in reserve than is being asked of you at the moment — ",
+          "evenlyMatched": "The two are fairly evenly matched — "
+        }
+      },
+      "sleep": {
+        "label": {
+          "sleeplessness": "Sleeplessness",
+          "quality": "Sleep quality",
+          "rest": "Rest & downtime",
+          "energy": "Daytime energy",
+          "winddown": "Wind-down routine"
+        },
+        "content": {
+          "sleeplessness": {
+            "strengthLabel": "easy sleep onset",
+            "blurb": "How much trouble you have falling asleep, staying asleep, or settling a busy mind at night.",
+            "note": {
+              "low": "Sleep is coming fairly easily — you’re falling and staying asleep without much of a fight.",
+              "mid": "Sleep is bumpy — some nights you lie awake or wake and struggle to drop back off.",
+              "high": "You’re wrestling with sleep often — trouble falling or staying asleep. This is the piece most worth tending."
+            },
+            "bullets": [
+              "A racing mind at night is usually daytime overflow — what’s unprocessed surfaces once it’s finally quiet.",
+              "Sleeplessness responds to a steady wind-down far better than to “trying harder” to fall asleep."
+            ],
+            "try": "If you’re awake past ~20 minutes, get up, keep lights low, and do something dull until sleepy — keep the bed for sleep, not struggle."
+          },
+          "quality": {
+            "strengthLabel": "sleep quality",
+            "blurb": "How restorative your sleep actually feels — deep, unbroken, and leaving you refreshed.",
+            "note": {
+              "low": "Your sleep isn’t restoring you much — light or broken nights that don’t leave you refreshed.",
+              "mid": "Your sleep quality is okay but inconsistent — some genuinely good nights, some that don’t land.",
+              "high": "Your sleep is genuinely restorative — deep, refreshing rest. A real asset to lean on."
+            },
+            "bullets": [
+              "Quality beats quantity — seven solid hours rebuilds you more than nine broken ones.",
+              "A cool, dark, screen-free room is the single biggest lever on sleep quality."
+            ],
+            "try": "Make the room properly cool and dark tonight — eye mask or blackout — and notice how the morning feels."
+          },
+          "rest": {
+            "strengthLabel": "rest & downtime",
+            "blurb": "How much genuine rest and downtime you get while awake — not just sleep, but true off-duty time.",
+            "note": {
+              "low": "Daytime rest is thin — you’re rarely fully off-duty, so the day never lets up before night.",
+              "mid": "You get some downtime, but it’s patchy — rest that’s often half-attention or interrupted.",
+              "high": "You give yourself real downtime — genuine off-duty pockets that let the system settle."
+            },
+            "bullets": [
+              "Rest while awake sets up rest while asleep — a day with no pauses rarely ends in a calm night.",
+              "Real rest is undivided — scrolling counts less than ten quiet minutes with nothing demanded of you."
+            ],
+            "try": "Schedule one genuinely off-duty pocket tomorrow — no phone, no task — and protect it like an appointment."
+          },
+          "energy": {
+            "strengthLabel": "daytime energy",
+            "blurb": "How much steady, usable energy you have through the day — the daytime payoff of good rest.",
+            "note": {
+              "low": "Daytime energy is running low — you’re pushing through dips rather than feeling genuinely fuelled.",
+              "mid": "Your energy is okay but uneven — decent stretches broken by real slumps.",
+              "high": "Your daytime energy is strong and steady — a clear sign your rest is doing its job."
+            },
+            "bullets": [
+              "Steady energy is the clearest daytime read on whether your nights are working.",
+              "Morning light and movement stabilise energy more reliably than caffeine timing."
+            ],
+            "try": "Get a few minutes of daylight within an hour of waking — it anchors your body clock and steadies energy."
+          },
+          "winddown": {
+            "strengthLabel": "wind-down routine",
+            "blurb": "How consistent and calming your pre-sleep routine is — the runway that tells your body it’s nearly night.",
+            "note": {
+              "low": "There’s little wind-down — you go from full-on straight to lights-out, with no runway to land.",
+              "mid": "You have some wind-down, but it’s inconsistent — good some nights, skipped on busy ones.",
+              "high": "You’ve got a real wind-down routine — a consistent runway that eases you toward sleep. Lean on it."
+            },
+            "bullets": [
+              "A predictable runway matters more than a perfect one — the same order of calm steps, most nights.",
+              "Dimming lights and screens in the last hour is the strongest cue that night is coming."
+            ],
+            "try": "Pick a fixed “last hour” ritual — dim lights, no screens, one calm activity — and run it three nights this week."
+          }
+        },
+        "archetype": {
+          "wiredWorn": {
+            "name": "Wired & Worn",
+            "summary": "Trouble sleeping and low recovery — sleep needs real attention."
+          },
+          "restlessButResourced": {
+            "name": "Restless but Resourced",
+            "summary": "Sleep is disrupted, but you have recovery habits to build on."
+          },
+          "quietButUnderRested": {
+            "name": "Quiet but Under-rested",
+            "summary": "You fall asleep okay, but you’re not truly recovering."
+          },
+          "restedRecharged": {
+            "name": "Rested & Recharged",
+            "summary": "Healthy sleep and recovery across the board."
+          }
+        },
+        "patternDetail": {
+          "base": "Your sleep difficulty reads {{difficulty}}/100, and your recovery resources — quality, rest, energy and wind-down — average {{resource}}/100. {{connector}}the resource most worth building is {{strengthLabel}}.",
+          "highDifficulty": "Falling and staying asleep is the harder part right now — ",
+          "lowDifficulty": "Getting to sleep isn’t the main issue — "
+        }
+      },
+      "anxiety": {
+        "label": {
+          "worry": "Worry",
+          "rumination": "Rumination",
+          "catastrophizing": "Catastrophising",
+          "physical": "Physical anxiety",
+          "refocus": "Ability to refocus"
+        },
+        "content": {
+          "worry": {
+            "strengthLabel": "a calm baseline",
+            "blurb": "How often anxious “what if” thoughts show up and how much space they take.",
+            "note": {
+              "low": "Worry is staying in proportion — it shows up, but it isn’t running the show.",
+              "mid": "Worry is a frequent visitor — enough to be tiring, though not constant.",
+              "high": "Worry is loud and frequent right now. That’s draining — and it’s also very workable."
+            },
+            "bullets": [
+              "Worry is the mind trying to keep you safe — it over-fires, but it isn’t a flaw or a diagnosis.",
+              "Most worries never happen; naming the specific fear shrinks it more than pushing it away."
+            ],
+            "try": "Set a 10-minute “worry window” each day — write the worries down then, and gently postpone them the rest of the day."
+          },
+          "rumination": {
+            "strengthLabel": "a settled mind",
+            "blurb": "How much your mind replays past moments or loops on the same thoughts.",
+            "note": {
+              "low": "You’re not getting too stuck — thoughts come and go without looping for long.",
+              "mid": "Some looping is happening — replaying conversations or decisions more than helps.",
+              "high": "Your mind is caught in replay a lot. Looping feels productive but rarely resolves anything — that’s the trap."
+            },
+            "bullets": [
+              "Rumination masquerades as problem-solving, but it mostly recycles the problem without moving it.",
+              "Shifting the body — a short walk, cold water — breaks a loop faster than thinking your way out."
+            ],
+            "try": "When you notice the loop, name it (“that’s rumination”) and change your physical state — stand up, move, step outside."
+          },
+          "catastrophizing": {
+            "strengthLabel": "a balanced outlook",
+            "blurb": "How often your mind jumps to the worst-case version of things.",
+            "note": {
+              "low": "You’re mostly keeping perspective — the worst-case isn’t your default.",
+              "mid": "The worst-case shows up fairly often, colouring how risky things feel.",
+              "high": "Your mind leaps to the worst-case a lot. It feels like foresight, but it’s the anxiety talking, not the odds."
+            },
+            "bullets": [
+              "Catastrophising overweights the scary outcome and underweights your ability to cope with it.",
+              "Asking “what’s most likely?” and “could I handle it?” gently rebalances the picture."
+            ],
+            "try": "When you catch a worst-case thought, jot the feared outcome, the most likely outcome, and one way you’d cope."
+          },
+          "physical": {
+            "strengthLabel": "a settled body",
+            "blurb": "How much anxiety shows up in your body — tension, racing heart, restlessness, shallow breath.",
+            "note": {
+              "low": "Your body is staying fairly settled — anxiety isn’t showing up much physically.",
+              "mid": "There’s some physical tension — a tight chest, restlessness, or shallow breathing at times.",
+              "high": "Anxiety is showing up strongly in your body. Body and mind feed each other — calming one calms the other."
+            },
+            "bullets": [
+              "Physical anxiety is your nervous system on high alert — real and very treatable, not weakness.",
+              "Slow exhales are the fastest off-switch: a longer breath out tells the body it’s safe."
+            ],
+            "try": "Breathe in for 4, out for 6, for two minutes. The longer out-breath is what settles the nervous system."
+          },
+          "refocus": {
+            "strengthLabel": "ability to refocus",
+            "blurb": "How well you can step out of an anxious spiral and bring your attention back.",
+            "note": {
+              "low": "This steadying skill is still developing — right now it’s hard to step out once the spiral starts.",
+              "mid": "You can sometimes redirect your attention, though it doesn’t always hold.",
+              "high": "You’re genuinely good at catching the spiral and refocusing. This is your strongest lever — lean on it."
+            },
+            "bullets": [
+              "Noticing “I’m spiralling” and redirecting is the single most protective anxiety skill there is.",
+              "It’s a muscle, not a trait — every time you redirect on purpose, it gets a little easier."
+            ],
+            "try": "Pick one grounding anchor — five things you can see, or your feet on the floor — and use it the moment you notice the spin."
+          }
+        },
+        "archetype": {
+          "caughtInTheSpin": {
+            "name": "Caught in the Spin",
+            "summary": "High anxious thinking with little ability to step out of it — and that ability is buildable."
+          },
+          "anxiousButAware": {
+            "name": "Anxious but Aware",
+            "summary": "Strong worry and overthinking, but you can catch and redirect it."
+          },
+          "quietlyTense": {
+            "name": "Quietly Tense",
+            "summary": "Lower-grade anxiety, but few tools yet to settle it when it rises."
+          },
+          "steadyMind": {
+            "name": "Steady Mind",
+            "summary": "Low anxiety and a good ability to refocus."
+          }
+        },
+        "patternDetail": {
+          "base": "Your anxious thinking averages {{difficulty}}/100, while your ability to refocus sits at {{resource}}/100. {{connector}}Right now {{heaviest}} is the loudest of the four.",
+          "reassuring": "The reassuring part: you can already catch and redirect the spiral — that’s the lever everything else turns on. ",
+          "build": "The most useful thing to build is that catch-and-redirect skill — it’s what turns the volume down. "
+        }
+      },
+      "ei": {
+        "band": {
+          "emerging": "Emerging",
+          "developing": "Developing",
+          "moderate": "Moderate",
+          "strong": "Strong",
+          "exceptional": "Exceptional"
+        },
+        "label": {
+          "awareness": "Self-Awareness",
+          "regulation": "Self-Regulation",
+          "empathy": "Empathy",
+          "relationships": "Relationship Management",
+          "motivation": "Motivation"
+        },
+        "profile": {
+          "awareness": {
+            "name": "The Reflective"
+          },
+          "regulation": {
+            "name": "The Composed"
+          },
+          "empathy": {
+            "name": "The Attuned"
+          },
+          "relationships": {
+            "name": "The Connector"
+          },
+          "motivation": {
+            "name": "The Driven"
+          },
+          "summary": "Your profile leads with {{label}}."
+        },
+        "content": {
+          "awareness": {
+            "strengthLabel": "self-awareness",
+            "blurb": "How clearly you notice your own emotions, triggers, and patterns as they happen.",
+            "note": {
+              "low": "Self-awareness is your biggest area to grow — noticing what you feel, as you feel it, is the foundation everything else builds on.",
+              "mid": "You’re building real self-awareness — you catch your emotions some of the time, and that’s growing.",
+              "high": "You read your own emotions clearly and early. That insight is the engine of every other EI skill."
+            },
+            "bullets": [
+              "Naming an emotion as it arises (“I’m frustrated”) is the single most powerful EI habit — it creates a pause before reaction.",
+              "Self-awareness is a skill, not a fixed trait; brief daily check-ins build it surprisingly fast."
+            ],
+            "try": "Twice a day, pause and name what you’re feeling in one word. No fixing — just noticing."
+          },
+          "regulation": {
+            "strengthLabel": "self-regulation",
+            "blurb": "How well you manage strong emotions and respond on purpose rather than on impulse.",
+            "note": {
+              "low": "Self-regulation is a key area to build — strong feelings tend to drive the response before you can choose it. Very learnable.",
+              "mid": "You can steady yourself some of the time; under real pressure it’s still a work in progress.",
+              "high": "You handle strong emotions well — you can feel them fully and still choose your response."
+            },
+            "bullets": [
+              "Regulation isn’t suppression — it’s feeling the emotion and still choosing the response.",
+              "A slow exhale or a short pause buys the few seconds that turn reaction into choice."
+            ],
+            "try": "Next time you feel a surge, take one slow breath before responding — that pause is the whole skill."
+          },
+          "empathy": {
+            "strengthLabel": "empathy",
+            "blurb": "How well you sense and understand what other people are feeling.",
+            "note": {
+              "low": "Empathy is an area with real room to grow — tuning into others’ feelings is a skill that strengthens with attention.",
+              "mid": "You pick up on others’ emotions some of the time; it deepens the more you look for it.",
+              "high": "You read others well — you sense what people feel, often before they say it. A genuine strength."
+            },
+            "bullets": [
+              "Empathy starts with curiosity — asking “what might they be feeling?” before responding.",
+              "Listening to understand, rather than to reply, is the fastest way to strengthen it."
+            ],
+            "try": "In one conversation today, focus entirely on understanding the other person’s feeling before you respond."
+          },
+          "relationships": {
+            "strengthLabel": "relationship skills",
+            "blurb": "How well you build, maintain, and navigate relationships — including the tricky moments.",
+            "note": {
+              "low": "Managing relationships is your biggest growth area — handling tension and connection on purpose is a learnable craft.",
+              "mid": "You manage relationships reasonably well; the harder conversations are where it’s still growing.",
+              "high": "You navigate relationships skilfully — connecting, and handling friction without it derailing things."
+            },
+            "bullets": [
+              "Most relationship skill is repair, not perfection — naming and mending small ruptures keeps trust strong.",
+              "Clear, kind directness beats avoidance almost every time."
+            ],
+            "try": "Have one slightly braver conversation this week — name something kindly that you’d normally let slide."
+          },
+          "motivation": {
+            "strengthLabel": "inner drive",
+            "blurb": "How much internal drive and persistence you bring toward what matters to you.",
+            "note": {
+              "low": "Motivation is an area to nurture — reconnecting to what genuinely matters to you is where drive gets rebuilt.",
+              "mid": "Your drive is there but uneven — stronger when the “why” is clear, thinner when it isn’t.",
+              "high": "You’ve got real internal drive — you keep moving toward what matters without needing constant external push."
+            },
+            "bullets": [
+              "Durable motivation comes from meaning, not willpower — a clear “why” outlasts any push.",
+              "Small, visible progress feeds drive more than distant goals do."
+            ],
+            "try": "Write down the one reason your current goal matters to you, and keep it somewhere you’ll see it."
+          }
+        },
+        "patternDetail": {
+          "text": "Your profile leads with {{dominantLabel}} ({{dominantPct}}%). The highest-leverage place to grow is {{priorityLabel}} ({{priorityPct}}%) — real room to build, not a weakness."
+        }
+      },
+      "focus": {
+        "label": {
+          "distractibility": "Distractibility",
+          "procrastination": "Procrastination",
+          "attention": "Sustained attention",
+          "management": "Task & time management",
+          "motivation": "Motivation & energy"
+        },
+        "content": {
+          "distractibility": {
+            "strengthLabel": "steady focus",
+            "blurb": "How easily your attention gets pulled away from what you meant to do.",
+            "note": {
+              "low": "You hold your focus well — distractions don’t pull you off course much.",
+              "mid": "Distractions catch you fairly often — enough to fragment a focused stretch.",
+              "high": "You’re getting pulled off task a lot. That’s hard on follow-through — and very workable with the right setup."
+            },
+            "bullets": [
+              "Most distraction is environmental, not a willpower failure — the fix is usually the setup, not trying harder.",
+              "Every switch back to a task costs minutes of refocus; protecting a clear runway pays off fast."
+            ],
+            "try": "Pick one 25-minute block today with your phone in another room and notifications off. One block, fully protected."
+          },
+          "procrastination": {
+            "strengthLabel": "easy starts",
+            "blurb": "How much you delay or avoid starting the things that matter.",
+            "note": {
+              "low": "You tend to get started without much delay — avoidance isn’t a big drag on you.",
+              "mid": "Some delaying is happening — tasks slipping or starting later than you’d like.",
+              "high": "Putting things off is a real pattern right now. Starting is the hard part — and the part with the best leverage."
+            },
+            "bullets": [
+              "Procrastination is usually about the feeling a task brings up, not laziness — shrinking the first step shrinks the dread.",
+              "Starting is the whole battle; momentum almost always follows the first two minutes."
+            ],
+            "try": "Pick the task you’re avoiding and commit to just two minutes on it. Permission to stop after — you usually won’t."
+          },
+          "attention": {
+            "strengthLabel": "sustained attention",
+            "blurb": "How well you can hold sustained concentration on one thing over time.",
+            "note": {
+              "low": "Sustained attention is the skill most worth building — holding focus over time is hard right now, and it’s trainable.",
+              "mid": "You can concentrate for a while, though it’s not yet a reliable, deep stretch.",
+              "high": "You can sink into deep, sustained focus — a genuine asset for getting real work done."
+            },
+            "bullets": [
+              "Attention is a muscle — focused blocks, even short ones, build the capacity for longer ones.",
+              "Single-tasking trains attention; constant switching erodes it."
+            ],
+            "try": "Do one task at a time today, start to finish, before opening anything else. Notice how much further you get."
+          },
+          "management": {
+            "strengthLabel": "task management",
+            "blurb": "How well you organise tasks, plan your time, and keep things from piling up.",
+            "note": {
+              "low": "Task and time management is an area to build — without a system, things pile up and pull at your attention.",
+              "mid": "You’ve got some structure, but it’s inconsistent — enough slips through to add friction.",
+              "high": "You manage tasks and time well — a clear system that keeps things moving and your head clear."
+            },
+            "bullets": [
+              "A trusted external list frees your mind from holding everything — and that frees up focus.",
+              "Planning the day in a couple of minutes beats reacting to it for hours."
+            ],
+            "try": "Each morning, write the three things that would make the day a win — and do the hardest first."
+          },
+          "motivation": {
+            "strengthLabel": "drive & energy",
+            "blurb": "How much drive and energy you bring to getting things done.",
+            "note": {
+              "low": "Drive is running low right now — reconnecting to why the work matters is where energy gets rebuilt.",
+              "mid": "Your motivation is there but uneven — stronger when the goal is clear, thinner when it isn’t.",
+              "high": "You’ve got real drive and energy — a strong engine to point at what matters most."
+            },
+            "bullets": [
+              "Energy follows meaning — a clear “why” sustains effort better than any push.",
+              "Visible progress feeds drive; break big goals into wins you can actually see."
+            ],
+            "try": "Name the one reason your current goal matters, and put it where you’ll see it while you work."
+          }
+        },
+        "archetype": {
+          "scatteredStalling": {
+            "name": "Scattered & Stalling",
+            "summary": "High distraction and delay with limited focus tools — all of it buildable."
+          },
+          "willingButPulled": {
+            "name": "Willing but Pulled",
+            "summary": "You have drive and ability, but distraction and delay keep derailing you."
+          },
+          "calmButCoasting": {
+            "name": "Calm but Coasting",
+            "summary": "Few distractions, but low focus and drive — easy to drift."
+          },
+          "inTheZone": {
+            "name": "In the Zone",
+            "summary": "Strong focus and follow-through with little friction."
+          }
+        },
+        "patternDetail": {
+          "base": "Your friction — distraction and delay — averages {{difficulty}}/100, while your focus capability sits at {{resource}}/100. {{connector}}{{heaviest}} is the biggest drag, while {{thinnest}} is the skill most worth building.",
+          "frictionHeavier": "Right now the friction side is what’s pulling your score down — ",
+          "capabilityLifting": "Your capability is doing the heavy lifting — "
+        }
+      }
+    },
+    "ui": {
+      "stress": {
+        "kicker": "Stress & burnout",
+        "headTitle": "{{name}}, here’s how stress and burnout are showing up for you.",
+        "assessmentName": "Stress & Burnout Profile",
+        "gaugeLabel": "/ 100 load",
+        "headlinePillSuffix": " load",
+        "scoreSentence": "Your overall load is {{v}} / 100. This blends all the areas together — problems add to the load, and your strengths take away from it.",
+        "spectrumScale": [
+          "0 · light",
+          "50",
+          "100 · heavy"
+        ],
+        "miniHeadlineLabel": "Overall load",
+        "miniPriorityLabel": "Focus areas",
+        "miniThirdLabel": "Biggest cause",
+        "patternTitle": "Your burnout pattern",
+        "patternFoot": "Burnout sits in the bottom-right corner — lots of demands and little recovery. The further your dot is from there, the safer you are.",
+        "quadXLabel": "more demands →",
+        "quadYLabel": "more recovery →",
+        "quads": {
+          "TL": "Balanced & steady",
+          "TR": "Busy but coping",
+          "BL": "Quiet but tired",
+          "BR": "Running on empty"
+        },
+        "balanceTop": "Demands",
+        "balanceBottom": "Recovery",
+        "radarTitle": "Where the load sits",
+        "radarCaption": "A bigger shape means more stress in that area.",
+        "driversTitle": "What’s adding the most stress",
+        "legendWarm": "warm = stress (shorter is better)",
+        "legendGreen": "green = strengths (longer is better)",
+        "habitsTitle": "Five daily habits",
+        "habits": [
+          "Take one real break each day — a proper lunch away from your screen, or a short walk.",
+          "Do the tiring tasks in one block instead of spreading them across the whole day.",
+          "Set one limit you can keep: a set finish time, or notifications off after a certain hour.",
+          "Each day, name one thing you got to decide for yourself — it helps you feel more in control.",
+          "End the day by noting one moment that felt good, however small."
+        ],
+        "closingBaseline": "This is your starting point. There’s nothing to fix today — just one small thing to work on. Come back in 60–90 days and see what changes.",
+        "closingReturn": "This is one more check-in on your path — watch how these numbers change over time. Change is the proof.",
+        "doors": {
+          "audio": "Start your daily audio plan",
+          "counselling": "Talk to someone"
+        }
+      },
+      "sleep": {
+        "kicker": "Sleep, rest & recovery",
+        "headTitle": "{{name}}, here’s how your sleep and recovery are holding up.",
+        "assessmentName": "Sleep, Rest & Recovery Profile",
+        "gaugeLabel": "/ 100 score",
+        "headlinePillSuffix": "",
+        "scoreSentence": "Your sleep and recovery score is {{v}} / 100. It blends how easily you sleep with how well you recover. Higher is better.",
+        "spectrumScale": [
+          "0 · low",
+          "50",
+          "100 · strong"
+        ],
+        "miniHeadlineLabel": "Sleep & Recovery",
+        "miniPriorityLabel": "Focus areas",
+        "miniThirdLabel": "Biggest cause",
+        "patternTitle": "Your sleep pattern",
+        "patternFoot": "The best corner is the top-left — easy sleep and strong recovery. The further your dot is from the bottom-right, the better you’re sleeping.",
+        "quadXLabel": "more sleep trouble →",
+        "quadYLabel": "more recovery →",
+        "quads": {
+          "TL": "Rested & recharged",
+          "TR": "Restless but coping",
+          "BL": "Calm but not rested",
+          "BR": "Wired and worn out"
+        },
+        "balanceTop": "Sleep trouble",
+        "balanceBottom": "Recovery",
+        "radarTitle": "Where your sleep stands",
+        "radarCaption": "A bigger shape means better sleep and recovery in that area.",
+        "driversTitle": "What needs the most attention",
+        "legendWarm": "warm = sleep trouble (shorter is better)",
+        "legendGreen": "green = sleep and recovery (longer is better)",
+        "habitsTitle": "Five better-sleep habits",
+        "habits": [
+          "Wake up at the same time every day, weekends too — a steady wake-up time sets the whole rhythm.",
+          "Get daylight within an hour of waking up — it helps you feel sleepy earlier at night.",
+          "Stop caffeine after early afternoon — it stays in your body longer than you think.",
+          "Turn the lights down and put screens away for the last hour — give your brain time to slow down.",
+          "If you can’t sleep, get up and reset instead of lying there — keep your bed just for sleep."
+        ],
+        "closingBaseline": "This is your sleep starting point. Pick one habit above and try it for two weeks — sleep changes slowly at first, then all at once.",
+        "closingReturn": "This is one more check-in on your path — watch how these numbers change over time. Change is the proof.",
+        "doors": {
+          "audio": "Start a sleep audio plan",
+          "counselling": "Talk to someone"
+        }
+      },
+      "anxiety": {
+        "kicker": "Anxiety & overthinking",
+        "headTitle": "{{name}}, here’s how anxiety and overthinking are showing up for you.",
+        "assessmentName": "Anxiety & Overthinking Style",
+        "gaugeLabel": "/ 100 load",
+        "headlinePillSuffix": " load",
+        "scoreSentence": "Your overall load is {{v}} / 100. This blends all the areas — anxious habits add to the load, and your ability to refocus takes away from it.",
+        "spectrumScale": [
+          "0 · calm",
+          "50",
+          "100 · loud"
+        ],
+        "miniHeadlineLabel": "Overall load",
+        "miniPriorityLabel": "Focus areas",
+        "miniThirdLabel": "Biggest cause",
+        "patternTitle": "Your anxiety pattern",
+        "patternFoot": "Being “caught in the spin” sits in the bottom-right — lots of anxious thinking with little room to step back. The further your dot is from there, the calmer things are.",
+        "quadXLabel": "more anxious thinking →",
+        "quadYLabel": "more able to refocus →",
+        "quads": {
+          "TL": "Steady mind",
+          "TR": "Anxious but aware",
+          "BL": "Quietly tense",
+          "BR": "Caught in the spin"
+        },
+        "balanceTop": "Anxious thinking",
+        "balanceBottom": "Refocus",
+        "radarTitle": "Where the load sits",
+        "radarCaption": "A bigger shape means more anxiety in that area.",
+        "driversTitle": "What’s adding the most anxiety",
+        "legendWarm": "warm = anxiety (shorter is better)",
+        "legendGreen": "green = ability to refocus (longer is better)",
+        "habitsTitle": "Five calming habits",
+        "habits": [
+          "Name it to calm it — when anxiety rises, say to yourself “this is worry.” Naming it loosens its hold.",
+          "Breathe out slowly when your body tightens — in for 4, out for 6. The long out-breath helps you feel safe.",
+          "Give worry a set time — 10 minutes to write it down, so it doesn’t spill into the whole day.",
+          "Move when you get stuck — a short walk or changing rooms stops the loop faster than thinking harder.",
+          "Come back to your senses — name five things you can see, or feel your feet on the floor — to step out of the spin."
+        ],
+        "closingBaseline": "This is your starting point — a snapshot of your habits, not a label. Pick one calming habit above and practise it gently. These numbers change with practice.",
+        "closingReturn": "This is one more check-in on your path — watch how these numbers settle over time. Practice is the proof.",
+        "doors": {
+          "audio": "Start a calming audio plan",
+          "counselling": "Talk to someone"
+        }
+      },
+      "ei": {
+        "kicker": "Emotional intelligence",
+        "headTitle": "{{name}}, here’s your emotional-intelligence profile.",
+        "assessmentName": "Emotional Intelligence Profile",
+        "gaugeLabel": "/ 100 EI",
+        "headlinePillSuffix": " EI",
+        "scoreSentence": "Your EI score is {{v}} / 100 — the average across your five areas. Higher is stronger.",
+        "spectrumScale": [
+          "0 · early",
+          "50",
+          "100 · very strong"
+        ],
+        "miniHeadlineLabel": "EI score",
+        "miniPriorityLabel": "Growth areas",
+        "miniThirdLabel": "Strongest",
+        "patternTitle": "Your EI profile",
+        "patternFoot": "A few strong areas lift the rest — your growth areas are simply the best place to build next.",
+        "radarTitle": "Your five areas",
+        "radarCaption": "A bigger shape means stronger emotional intelligence in that area.",
+        "driversTitle": "The best areas to grow next",
+        "legendWarm": "",
+        "legendGreen": "every bar is green — longer is stronger",
+        "habitsTitle": "Five habits that build EI",
+        "habits": [
+          "Name your feeling as it comes up — “I’m anxious,” “I’m excited.” Naming it builds the self-awareness everything else rests on.",
+          "Pause before you react — one slow breath turns a snap reaction into a choice.",
+          "Get curious about others — ask “what might they be feeling?” before you reply.",
+          "Fix small upsets early — a quick, honest “that came out wrong” keeps trust strong.",
+          "Remember your why — keep the reason your goals matter somewhere you’ll see it."
+        ],
+        "closingBaseline": "This is your starting point — a map of your strengths and room to grow, not a judgement. Emotional intelligence can be learned; pick one habit above and practise it.",
+        "closingReturn": "This is one more check-in on your growth — watch these areas climb over time. Practice is the proof.",
+        "doors": {
+          "audio": "Start a guided practice",
+          "counselling": "Talk to someone"
+        }
+      },
+      "focus": {
+        "kicker": "Focus & productivity",
+        "headTitle": "{{name}}, here’s how your focus and productivity are holding up.",
+        "assessmentName": "Focus & Productivity Profile",
+        "gaugeLabel": "/ 100 score",
+        "headlinePillSuffix": "",
+        "scoreSentence": "Your focus and productivity score is {{v}} / 100. It blends how little you get distracted with how strong your focus skills are. Higher is better.",
+        "spectrumScale": [
+          "0 · low",
+          "50",
+          "100 · strong"
+        ],
+        "miniHeadlineLabel": "Focus & Productivity",
+        "miniPriorityLabel": "Focus areas",
+        "miniThirdLabel": "Biggest cause",
+        "patternTitle": "Your focus pattern",
+        "patternFoot": "The best corner is the top-left — few distractions and strong skills. The further your dot is from the bottom-right, the more you’re in the zone.",
+        "quadXLabel": "more distraction →",
+        "quadYLabel": "more skill →",
+        "quads": {
+          "TL": "In the zone",
+          "TR": "Willing but distracted",
+          "BL": "Calm but coasting",
+          "BR": "Scattered and stuck"
+        },
+        "balanceTop": "Distraction",
+        "balanceBottom": "Skill",
+        "radarTitle": "Where your focus stands",
+        "radarCaption": "A bigger shape means stronger focus and productivity in that area.",
+        "driversTitle": "What’s pulling your score down",
+        "legendWarm": "warm = distraction (shorter is better)",
+        "legendGreen": "green = focus skills (longer is better)",
+        "habitsTitle": "Five focus habits",
+        "habits": [
+          "Work in short blocks — 25 focused minutes, phone away, one task. Short and clear beats long and scattered.",
+          "Start before you feel ready — do just two minutes on the thing you’re avoiding, and the rest follows.",
+          "Do one thing at a time — finish it before you open the next. Switching is where focus leaks away.",
+          "Plan your day in two minutes — pick the three things that matter and do the hardest first.",
+          "Fix your surroundings, not just your willpower — remove the nearest distraction before you start."
+        ],
+        "closingBaseline": "This is your starting point — a snapshot of your habits, not a judgement. Pick one focus habit above and try it for two weeks. These numbers change with practice.",
+        "closingReturn": "This is one more check-in on your path — watch how these numbers climb over time. Practice is the proof.",
+        "doors": {
+          "audio": "Start a focus audio plan",
+          "counselling": "Talk to someone"
+        }
+      }
+    },
+    "chrome": {
+      "audio": "Audio",
+      "gettingAudio": "Getting audio ready…",
+      "audioPreparingTitle": "Your audio plan is still being made",
+      "downloadPdf": "Download PDF",
+      "takeAgain": "Take again",
+      "attempt": "try {{n}}",
+      "completed": "Completed {{date}} · {{name}}",
+      "headNote": "A tool to help you understand yourself, made from your answers — not a medical test or diagnosis.",
+      "radarAria": "Your score in each of the areas",
+      "quadAria": "Where your pattern falls",
+      "areaByArea": "Area by area",
+      "closerLook": "A closer look",
+      "tryThis": "Try this:",
+      "actionPlan": "Your action plan",
+      "focusTag": "Focus",
+      "useStrengthTag": "Use this strength",
+      "useYour": "Use your {{label}}",
+      "leanOnText": "This is what’s working well for you right now. Use it on the focus areas above — it’s what makes the rest of the plan stick.",
+      "disclaimer": "Daybreak is a tool to help you reflect. It is not a medical test, a diagnosis, or treatment. If you’re struggling, reaching out to a trained professional is a brave and worthwhile next step.",
+      "downloadReport": "Download this report",
+      "allReports": "All my reports"
+    },
+    "json": {
+      "headerNote": "A self-awareness tool generated from your answers — not a clinical or diagnostic assessment.",
+      "leanOnText": "This is what’s working for you right now. Spend it deliberately on the focus areas above — it’s what makes the rest of the plan stick.",
+      "disclaimer": "Daybreak is a self-reflection tool, not a clinical assessment, diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.",
+      "attempt": "attempt {{n}}",
+      "completed": "Completed {{date}} · {{name}}",
+      "categoryByCategory": "Category by category",
+      "closerRead": "A closer read",
+      "actionPlan": "Your action plan",
+      "focusTag": "Focus",
+      "leanOnTag": "Lean on this",
+      "leanOnTitle": "Lean on your {{label}}",
+      "overall": "Overall"
+    },
+    "band": {
+      "load": {
+        "low": "Low",
+        "mid": "Moderate",
+        "high": "High"
+      },
+      "strength": {
+        "low": "Running low",
+        "mid": "Building",
+        "high": "Strong"
+      },
+      "positive": {
+        "low": "Low",
+        "mid": "Developing",
+        "high": "Strong"
+      }
+    },
+    "tag": {
+      "focus": "Focus area",
+      "watch": "Watch",
+      "good": "Doing well",
+      "building": "Building",
+      "strength": "Strength",
+      "growth": "Growth area"
+    },
+    "demo": {
+      "gen": {
+        "scoring": "Scoring your answers",
+        "looking": "Looking at {{n}} areas",
+        "writing": "Writing what it means",
+        "building": "Building your {{days}}-day audio plan",
+        "reading": "Reading your answers…",
+        "note": "Same answers, same report, every time"
+      },
+      "band": {
+        "load": {
+          "low": "Low load",
+          "mid": "Moderate load",
+          "high": "High load"
+        },
+        "strength": {
+          "low": "Developing",
+          "mid": "Growing",
+          "high": "Strong"
+        }
+      },
+      "profile": {
+        "load": {
+          "low": "Feeling steady",
+          "mid": "Under pressure but coping",
+          "high": "Carrying a heavy load"
+        },
+        "strength": {
+          "low": "Just starting out",
+          "mid": "Growing steadily",
+          "high": "A strong base"
+        }
+      },
+      "reportDate": "Report · {{date}}",
+      "yourReport": "Your report",
+      "backReports": "Back to your reports",
+      "backAssessments": "Back to assessments",
+      "nameReport": "{{name}}’s Report",
+      "complete": "Complete",
+      "strongPoint": "Your strong point {{label}}",
+      "anchorText": "At {{score}}, this is the area holding you steadiest right now. Your plan builds on it.",
+      "focusPoint": "Your focus {{label}}",
+      "focusText": "At {{score}}, this is where to start. The first week of your plan is built around it.",
+      "closerAreas": "A closer look at the four areas",
+      "tryThis": "Try this:",
+      "planTitle": "Your {{days}}-day plan, built from this report",
+      "welcomeGreeting": "Hi {{name}}",
+      "day": "Day {{n}}",
+      "daysRange": "Days {{from}}–{{to}}",
+      "oneEachMorning": "one each morning",
+      "unlockPlan": "Unlock my audio plan",
+      "whatOpens": "What this report opens",
+      "ebookCard": "{{ebook}}: {{name}}’s {{days}} Days",
+      "ebookCardSmall": "Your own ebook, made from these scores",
+      "talkThrough": "Talk it through",
+      "talkThroughSmall": "An AI helper that has already read this report",
+      "takeAgain": "Take it again in 60–90 days",
+      "takeAgainSmall": "See these numbers change — that’s the proof",
+      "disclaimer": "This report is a tool to help you reflect. It is made from your answers using a fixed way of scoring. It is not a medical test, a diagnosis, or a treatment plan. If you’re struggling, talking to a trained professional is a good and brave next step.",
+      "tryAnother": "Try another topic",
+      "backHome": "Back to Daybreak"
+    }
+  },
+  "subCat": {
+    "exhaustion": {
+      "label": "Exhaustion",
+      "desc": "How tired you feel — how much energy is left at the end of the day."
+    },
+    "cynicism": {
+      "label": "Cynicism",
+      "desc": "Pulling away from work, people, or things you used to care about."
+    },
+    "workload": {
+      "label": "Workload",
+      "desc": "How heavy your work feels, and whether you can keep it up."
+    },
+    "recovery": {
+      "label": "Recovery",
+      "desc": "How well rest helps you — whether you feel better after, or still worn out."
+    },
+    "control": {
+      "label": "Control",
+      "desc": "How much say you feel you have over how your days go."
+    },
+    "sleeplessness": {
+      "label": "Sleeplessness",
+      "desc": "Trouble falling asleep or staying asleep at night."
+    },
+    "quality": {
+      "label": "Quality",
+      "desc": "How good your sleep is, not just how long you sleep."
+    },
+    "rest": {
+      "label": "Rest",
+      "desc": "Whether you let yourself take real breaks, or keep going without stopping."
+    },
+    "energy": {
+      "label": "Energy",
+      "desc": "How awake and steady you feel during the day."
+    },
+    "winddown": {
+      "label": "Wind-down",
+      "desc": "How well you slow down and relax before bed."
+    },
+    "worry": {
+      "label": "Worry",
+      "desc": "How often your mind jumps to what might go wrong."
+    },
+    "rumination": {
+      "label": "Rumination",
+      "desc": "Getting stuck going over the same thoughts again and again."
+    },
+    "catastrophizing": {
+      "label": "Catastrophizing",
+      "desc": "Jumping straight to the worst thing that could happen."
+    },
+    "physical": {
+      "label": "Physical",
+      "desc": "How worry shows up in your body — tight muscles, feeling restless, a fast heartbeat."
+    },
+    "refocus": {
+      "label": "Refocus",
+      "desc": "How well you can stop worrying and come back to the moment."
+    },
+    "awareness": {
+      "label": "Awareness",
+      "desc": "How well you notice and name what you feel, as it happens."
+    },
+    "regulation": {
+      "label": "Regulation",
+      "desc": "Staying calm with your feelings — thinking before you react under pressure."
+    },
+    "empathy": {
+      "label": "Empathy",
+      "desc": "Sensing what other people feel, and letting it guide how you act."
+    },
+    "relationships": {
+      "label": "Relationships",
+      "desc": "Getting along, working through arguments, and making up with people."
+    },
+    "motivation": {
+      "label": "Motivation",
+      "desc": "The drive that gets you to start and keep going on what matters."
+    },
+    "distractibility": {
+      "label": "Distractibility",
+      "desc": "How easily you get pulled away from what you meant to do."
+    },
+    "procrastination": {
+      "label": "Procrastination",
+      "desc": "The gap between meaning to start and actually starting."
+    },
+    "attention": {
+      "label": "Attention",
+      "desc": "Staying focused on one thing without your mind wandering."
+    },
+    "management": {
+      "label": "Management",
+      "desc": "How you plan your tasks and time so your effort counts."
+    }
+  },
+  "meta": {
+    "title": "Daybreak — Your mind has a path"
+  }
+}

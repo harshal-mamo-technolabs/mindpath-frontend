@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowLeft,
   ArrowRight,
@@ -43,41 +44,42 @@ const slotFor = (slug = '') =>
 const norm = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '')
 const DIM_DESC = {
   // Stress & Burnout
-  exhaustion: 'How drained you feel — the physical and emotional fuel left at the end of a day.',
-  cynicism: 'Quiet distancing from work, people, or things you once cared about.',
-  workload: 'The weight and relentlessness of what’s on your plate, and how sustainable it feels.',
-  recovery: 'How well rest actually restores you — whether you bounce back or stay depleted.',
-  control: 'Your sense of agency — how much say you feel you have over how your days go.',
+  exhaustion: 'How tired you feel — how much energy is left at the end of the day.',
+  cynicism: 'Pulling away from work, people, or things you used to care about.',
+  workload: 'How heavy your work feels, and whether you can keep it up.',
+  recovery: 'How well rest helps you — whether you feel better after, or still worn out.',
+  control: 'How much say you feel you have over how your days go.',
   // Sleep, Rest & Recovery
-  sleeplessness: 'Trouble falling or staying asleep — the nights that refuse to let go.',
-  quality: 'How restorative your sleep is, beyond just the hours you spend in bed.',
-  rest: 'Whether you allow yourself genuine downtime, or run without ever truly pausing.',
-  energy: 'Your daytime vitality — the alertness and steadiness sleep is meant to fund.',
-  winddown: 'The evening runway into sleep — how well you decelerate before bed.',
+  sleeplessness: 'Trouble falling asleep or staying asleep at night.',
+  quality: 'How good your sleep is, not just how long you sleep.',
+  rest: 'Whether you let yourself take real breaks, or keep going without stopping.',
+  energy: 'How awake and steady you feel during the day.',
+  winddown: 'How well you slow down and relax before bed.',
   // Anxiety & Overthinking
-  worry: 'How often the mind runs ahead to what might go wrong.',
-  rumination: 'Getting stuck replaying the same thoughts without resolution.',
-  catastrophizing: 'Jumping to the worst-case ending before the story has even unfolded.',
-  physical: 'Where anxiety shows up in the body — tension, restlessness, a racing pulse.',
-  refocus: 'Your ability to step out of the spiral and bring attention back to now.',
+  worry: 'How often your mind jumps to what might go wrong.',
+  rumination: 'Getting stuck going over the same thoughts again and again.',
+  catastrophizing: 'Jumping straight to the worst thing that could happen.',
+  physical: 'How worry shows up in your body — tight muscles, feeling restless, a fast heartbeat.',
+  refocus: 'How well you can stop worrying and come back to the moment.',
   // Emotional Intelligence
-  awareness: 'How clearly you notice and name what you’re feeling, as it happens.',
-  regulation: 'Steadying your own emotions — responding rather than reacting under pressure.',
-  empathy: 'Reading what others feel, and letting it inform how you show up.',
-  relationships: 'Navigating connection, conflict, and repair with the people around you.',
-  motivation: 'The inner drive that gets you to begin and keep going toward what matters.',
+  awareness: 'How well you notice and name what you feel, as it happens.',
+  regulation: 'Staying calm with your feelings — thinking before you react under pressure.',
+  empathy: 'Sensing what other people feel, and letting it guide how you act.',
+  relationships: 'Getting along, working through arguments, and making up with people.',
+  motivation: 'The drive that gets you to start and keep going on what matters.',
   // Focus & Productivity
-  distractibility: 'How easily your attention gets pulled away from what you meant to do.',
-  procrastination: 'The gap between intending to start and actually starting.',
-  attention: 'Sustaining deep focus on one thing without fragmenting.',
-  management: 'How you organise tasks and time so effort lands where it counts.',
+  distractibility: 'How easily you get pulled away from what you meant to do.',
+  procrastination: 'The gap between meaning to start and actually starting.',
+  attention: 'Staying focused on one thing without your mind wandering.',
+  management: 'How you plan your tasks and time so your effort counts.',
 }
-const descFor = (sub) => DIM_DESC[norm(sub)] || 'One of the areas this assessment scores you across.'
+const descFor = (sub) => DIM_DESC[norm(sub)] || 'One of the areas this assessment looks at.'
 
 const estMinutes = (q) => Math.max(5, Math.round((q || 0) * 0.5))
 const titleCaseWord = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s)
 
 export default function AssessmentDetail() {
+  const { t } = useTranslation()
   const { id } = useParams()
   const showPrice = useShowAssessmentPrice()
   const [state, setState] = useState({ status: 'loading', a: null, error: '' })
@@ -107,7 +109,7 @@ export default function AssessmentDetail() {
       <main className="detail">
         <div className="catalog-state" style={{ minHeight: '60vh', justifyContent: 'center' }}>
           <Loader2 size={28} className="ap-spin" />
-          <p>Loading assessment…</p>
+          <p>{t('assess.detail.loading')}</p>
         </div>
       </main>
     )
@@ -121,14 +123,14 @@ export default function AssessmentDetail() {
           role="alert"
           style={{ minHeight: '60vh', justifyContent: 'center' }}
         >
-          <h3>We couldn’t load this assessment</h3>
+          <h3>{t('assess.detail.errorTitle')}</h3>
           <p>{error}</p>
           <div style={{ display: 'flex', gap: 12 }}>
             <button className="btn btn-ghost" onClick={() => setReloadKey((k) => k + 1)}>
-              <RefreshCcw size={16} /> Try again
+              <RefreshCcw size={16} /> {t('assess.detail.retry')}
             </button>
             <Link to="/assessments" className="btn btn-primary">
-              All assessments
+              {t('assess.detail.allAssessments')}
             </Link>
           </div>
         </div>
@@ -159,7 +161,7 @@ export default function AssessmentDetail() {
         <div className="container">
           <Reveal>
             <Link to="/assessments" className="crumb">
-              <ArrowLeft size={15} /> All assessments
+              <ArrowLeft size={15} /> {t('assess.detail.allAssessments')}
             </Link>
           </Reveal>
 
@@ -181,45 +183,46 @@ export default function AssessmentDetail() {
 
               <Reveal className="detail-meta" delay={0.2}>
                 <span>
-                  <Clock size={15} /> ~{mins} minutes
+                  <Clock size={15} /> {t('assess.detail.minutes', { mins })}
                 </span>
                 <span>
-                  <ListChecks size={15} /> {qCount} questions
+                  <ListChecks size={15} /> {t('assess.detail.questions', { count: qCount })}
                 </span>
                 {dims.length > 0 && (
                   <span>
-                    <FileHeart size={15} /> {dims.length} dimensions
+                    <FileHeart size={15} /> {t('assess.detail.areas', { count: dims.length })}
                   </span>
                 )}
                 {a.maxAttempts && (
                   <span>
-                    <CalendarCheck size={15} /> {a.maxAttempts} attempts included
+                    <CalendarCheck size={15} />{' '}
+                    {t('assess.detail.tries', { count: a.maxAttempts })}
                   </span>
                 )}
               </Reveal>
 
               <Reveal className="detail-actions" delay={0.26}>
                 <Link to={takeTo} className="btn btn-primary">
-                  Begin assessment{showPrice ? ` · ${price}` : ''} <ArrowRight size={18} />
+                  {t('assess.detail.begin')}
+                  {showPrice ? ` · ${price}` : ''} <ArrowRight size={18} />
                 </Link>
                 <p className="detail-note">
-                  <ShieldCheck size={14} /> A self-reflection instrument not a clinical or
-                  diagnostic tool.
+                  <ShieldCheck size={14} /> {t('assess.detail.note')}
                 </p>
               </Reveal>
             </div>
 
             {dims.length > 0 && (
               <Reveal className="detail-dims-card" delay={0.18}>
-                <p className="panel-label">What we measure</p>
+                <p className="panel-label">{t('assess.detail.whatWeMeasure')}</p>
                 {dims.map((d, i) => (
                   <div className="detail-dim" key={`${d}-${i}`}>
                     <span className="detail-dim-num" style={{ background: bg, color: fg }}>
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <div>
-                      <h4>{dimLabel(i)}</h4>
-                      <p>{descFor(d)}</p>
+                      <h4>{t(`subCat.${norm(d)}.label`, dimLabel(i))}</h4>
+                      <p>{t(`subCat.${norm(d)}.desc`, descFor(d))}</p>
                     </div>
                   </div>
                 ))}
@@ -233,14 +236,14 @@ export default function AssessmentDetail() {
         <section className="section detail-scale-section" style={{ '--topic': accent }}>
           <div className="container">
             <Reveal as="span" className="eyebrow">
-              How you&rsquo;ll answer
+              {t('assess.detail.scaleEyebrow')}
             </Reveal>
             <Reveal as="h2" className="h2" delay={0.08}>
-              Each statement, on a <em>{scale.length}-point scale.</em>
+              {t('assess.detail.scaleH2a')}{' '}
+              <em>{t('assess.detail.scaleH2em', { n: scale.length })}</em>
             </Reveal>
             <Reveal as="p" className="lede" delay={0.14}>
-              Rate how often each one is true for you lately. There are no right answers only honest
-              ones.
+              {t('assess.detail.scaleLede')}
             </Reveal>
             <Reveal className="detail-scale-row" delay={0.2}>
               {scale.map((label, i) => (
@@ -257,10 +260,10 @@ export default function AssessmentDetail() {
       <section className="section detail-receive">
         <div className="container">
           <Reveal as="span" className="eyebrow">
-            What your answers become
+            {t('assess.detail.receiveEyebrow')}
           </Reveal>
           <Reveal as="h2" className="h2" delay={0.08}>
-            One honest quarter-hour, <em>three things back.</em>
+            {t('assess.detail.receiveH2a')} <em>{t('assess.detail.receiveH2em')}</em>
           </Reveal>
 
           <div className="receive-grid">
@@ -268,16 +271,12 @@ export default function AssessmentDetail() {
               <span className="receive-ico" style={{ background: '#f0edfb', color: '#4d3da8' }}>
                 <FileHeart size={24} strokeWidth={1.8} />
               </span>
-              <h3>Your personal report</h3>
-              <p>
-                Scores across every dimension with plain-language interpretation what each number
-                means for you and what tends to help. Generated deterministically from a validated
-                framework: same answers, same insight, every time.
-              </p>
+              <h3>{t('assess.detail.reportTitle')}</h3>
+              <p>{t('assess.detail.reportDesc')}</p>
               <ul className="receive-list">
-                <li>Overall profile &amp; per-dimension scores</li>
-                <li>What&rsquo;s protecting you, what&rsquo;s draining you</li>
-                <li>Concrete next steps, ranked by leverage</li>
+                <li>{t('assess.detail.reportList1')}</li>
+                <li>{t('assess.detail.reportList2')}</li>
+                <li>{t('assess.detail.reportList3')}</li>
               </ul>
             </Reveal>
 
@@ -288,22 +287,21 @@ export default function AssessmentDetail() {
               >
                 <Headphones size={24} strokeWidth={1.8} />
               </span>
-              <h3>A daily audio plan</h3>
-              <p>
-                Sessions selected and ordered from your scores one unlocks each morning, 5–10
-                minutes each. It opens with a welcome recorded for you, by name.
-              </p>
+              <h3>{t('assess.detail.planTitle')}</h3>
+              <p>{t('assess.detail.planDesc')}</p>
               <div className="receive-plan">
                 <p className="receive-welcome">
-                  <MessagesSquare size={14} /> Sequenced from this exact report
+                  <MessagesSquare size={14} /> {t('assess.detail.planBuilt')}
                 </p>
                 <span className="receive-session">
-                  <em>Day 1</em> Putting the day down <small>6 min</small>
+                  <em>{t('assess.detail.planDayLabel', { n: 1 })}</em> {t('assess.detail.planDay1')}{' '}
+                  <small>{t('assess.detail.planDay1Min')}</small>
                 </span>
                 <span className="receive-session">
-                  <em>Day 2</em> The overdraft, named <small>7 min</small>
+                  <em>{t('assess.detail.planDayLabel', { n: 2 })}</em> {t('assess.detail.planDay2')}{' '}
+                  <small>{t('assess.detail.planDay2Min')}</small>
                 </span>
-                <span className="receive-session locked">One new session each morning</span>
+                <span className="receive-session locked">{t('assess.detail.planLocked')}</span>
               </div>
             </Reveal>
 
@@ -311,31 +309,28 @@ export default function AssessmentDetail() {
               <span className="receive-ico" style={{ background: '#f9e3cd', color: '#8a5420' }}>
                 <Sparkles size={24} strokeWidth={1.8} />
               </span>
-              <h3>Unlocked after your report</h3>
-              <p>
-                Your report opens doors that stay personal each one built from your dimensions, not
-                a template.
-              </p>
+              <h3>{t('assess.detail.unlockTitle')}</h3>
+              <p>{t('assess.detail.unlockDesc')}</p>
               <ul className="receive-unlocks">
                 <li>
                   <BookOpen size={16} />
                   <div>
-                    <strong>A personalized ebook</strong>
-                    <small>Written from your profile, cover with your name</small>
+                    <strong>{t('assess.detail.unlockEbook')}</strong>
+                    <small>{t('assess.detail.unlockEbookSmall')}</small>
                   </div>
                 </li>
                 <li>
                   <MessagesSquare size={16} />
                   <div>
-                    <strong>AI counselling sessions</strong>
-                    <small>A voice advisor that has already read your report</small>
+                    <strong>{t('assess.detail.unlockCounselling')}</strong>
+                    <small>{t('assess.detail.unlockCounsellingSmall')}</small>
                   </div>
                 </li>
                 <li>
                   <CalendarCheck size={16} />
                   <div>
-                    <strong>Retake in 60–90 days</strong>
-                    <small>Before/after comparison that proves the path worked</small>
+                    <strong>{t('assess.detail.unlockRetake')}</strong>
+                    <small>{t('assess.detail.unlockRetakeSmall')}</small>
                   </div>
                 </li>
               </ul>
@@ -349,15 +344,12 @@ export default function AssessmentDetail() {
           <Reveal className="detail-cta-panel">
             <div>
               <h2>
-                Ready when you are. <em>It takes ~{mins} quiet minutes.</em>
+                {t('assess.detail.ctaH2a')} <em>{t('assess.detail.ctaH2em', { mins })}</em>
               </h2>
-              <p>
-                Answer as the person you are this week not your best week, not your worst. Honest in,
-                useful out.
-              </p>
+              <p>{t('assess.detail.ctaDesc')}</p>
             </div>
             <Link to={takeTo} className="btn btn-light">
-              Begin assessment <ArrowRight size={18} />
+              {t('assess.detail.begin')} <ArrowRight size={18} />
             </Link>
           </Reveal>
         </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
-import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowLeft,
   BookOpen,
@@ -16,6 +17,7 @@ import {
 } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
 import { useAuth } from '../hooks/useAuth.js'
+import { useTheme } from '../hooks/useTheme.js'
 import { stripeConfigured, stripePromise } from '../lib/stripe.js'
 import { formatPrice, getPlans } from '../lib/plans.js'
 import { createSubscription, getPaymentMethods, waitForActive } from '../lib/payments.js'
@@ -25,21 +27,25 @@ const ACCENT = '#6450cf'
 // Plan names arrive lowercase from the API ("calm") — capitalize for display.
 const titleCase = (s) => (s || '').replace(/\b\w/g, (c) => c.toUpperCase())
 
-// Style the Stripe Payment Element to match the app.
-const STRIPE_APPEARANCE = {
-  theme: 'stripe',
-  variables: {
-    colorPrimary: ACCENT,
+// Theme-aware styling for the Stripe Card Element (card-only — no Link/contact fields).
+const cardStyle = (isDark) => ({
+  base: {
     fontFamily: 'Manrope, sans-serif',
-    borderRadius: '12px',
+    fontSize: '15px',
+    fontWeight: '600',
+    color: isDark ? '#ece9fa' : '#23203b',
+    '::placeholder': { color: '#8a83a8', fontWeight: '500' },
   },
-}
+  invalid: { color: '#c2452f' },
+})
 
-/** The new-card form — must live inside <Elements>. Confirms the payment
- *  (Stripe.js shows the 3D Secure modal automatically when required). */
-function NewCardForm({ onConfirmed, onError, priceLabel }) {
+/** The new-card form — must live inside <Elements>. Confirms the payment with the split
+ *  Card Element (Stripe.js shows the 3D Secure modal automatically when required). */
+function NewCardForm({ clientSecret, onConfirmed, onError, priceLabel }) {
   const stripe = useStripe()
   const elements = useElements()
+  const { theme } = useTheme()
+  const { t } = useTranslation()
   const [submitting, setSubmitting] = useState(false)
 
   async function handlePay(e) {
@@ -47,13 +53,11 @@ function NewCardForm({ onConfirmed, onError, priceLabel }) {
     if (!stripe || !elements) return
     setSubmitting(true)
     onError('')
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: { return_url: `${window.location.origin}/subscription` },
-      redirect: 'if_required', // stay on the page unless the bank forces a redirect
+    const { error } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card: elements.getElement(CardElement) },
     })
     if (error) {
-      onError(error.message || 'Your card could not be charged. Please try another card.')
+      onError(error.message || t('checkout.errorChargeFailedRetry'))
       setSubmitting(false)
       return
     }
@@ -62,20 +66,23 @@ function NewCardForm({ onConfirmed, onError, priceLabel }) {
 
   return (
     <form onSubmit={handlePay} className="checkout-form">
-      <PaymentElement options={{ paymentMethodOrder: ['card'] }} />
+      <label className="checkout-card-label">{t('checkout.cardDetails')}</label>
+      <div className="checkout-card-field">
+        <CardElement options={{ style: cardStyle(theme === 'dark'), hidePostalCode: true }} />
+      </div>
       <button className="btn btn-primary checkout-pay" disabled={!stripe || submitting}>
         {submitting ? (
           <>
-            <Loader2 size={17} className="ap-spin" /> Processing…
+            <Loader2 size={17} className="ap-spin" /> {t('checkout.processing')}
           </>
         ) : (
           <>
-            <Lock size={16} /> Pay {priceLabel}
+            <Lock size={16} /> {t('checkout.pay', { price: priceLabel })}
           </>
         )}
       </button>
       <p className="checkout-secure">
-        <ShieldCheck size={14} /> Secured by Stripe. Test mode — use card 4242 4242 4242 4242.
+        <ShieldCheck size={14} /> {t('checkout.secureTest')}
       </p>
     </form>
   )
@@ -83,6 +90,7 @@ function NewCardForm({ onConfirmed, onError, priceLabel }) {
 
 export default function CheckoutPage() {
   const { isAuthenticated } = useAuth()
+  const { t } = useTranslation()
   const [params] = useSearchParams()
   const planId = params.get('plan')
 
@@ -107,7 +115,7 @@ export default function CheckoutPage() {
         if (!alive) return
         const found = plans.find((p) => p._id === planId)
         if (!found) {
-          setError('That plan is no longer available.')
+          setError(t('checkout.errorPlanUnavailable'))
           setStatus('error')
           return
         }
@@ -177,11 +185,11 @@ export default function CheckoutPage() {
         paymentMethodId: selectedCardId,
       })
       const stripe = await stripePromise
-      if (!stripe) throw new Error('Payments are not configured (missing Stripe key).')
+      if (!stripe) throw new Error(t('checkout.errorStripeMissing'))
       const { error: stripeErr } = await stripe.confirmCardPayment(secret, {
         payment_method: selectedCardId,
       })
-      if (stripeErr) throw new Error(stripeErr.message || 'Your card could not be charged.')
+      if (stripeErr) throw new Error(stripeErr.message || t('checkout.errorChargeFailed'))
       await finalize()
     } catch (err) {
       setError(err.message)
@@ -211,9 +219,9 @@ export default function CheckoutPage() {
       <header className="take-bar">
         <Logo />
         <p className="take-topic">
-          <Lock size={13} /> Secure checkout
+          <Lock size={13} /> {t('checkout.secureCheckout')}
         </p>
-        <Link to="/pricing" className="take-exit" aria-label="Back to pricing">
+        <Link to="/pricing" className="take-exit" aria-label={t('checkout.backToPricingAria')}>
           <ArrowLeft size={19} />
         </Link>
       </header>
@@ -221,20 +229,20 @@ export default function CheckoutPage() {
       {status === 'loading' && (
         <div className="checkout-status">
           <Loader2 size={30} className="ap-spin" />
-          <p>Preparing your checkout…</p>
+          <p>{t('checkout.loading')}</p>
         </div>
       )}
 
       {status === 'error' && (
         <div className="checkout-status" role="alert">
-          <h1>Something went wrong</h1>
+          <h1>{t('checkout.errorTitle')}</h1>
           <p>{error}</p>
           <div className="checkout-done-actions">
             <button className="btn btn-primary" onClick={retryLoad}>
-              <RefreshCcw size={16} /> Try again
+              <RefreshCcw size={16} /> {t('checkout.tryAgain')}
             </button>
             <Link to="/pricing" className="btn btn-ghost">
-              Back to plans
+              {t('checkout.backToPlans')}
             </Link>
           </div>
         </div>
@@ -243,8 +251,8 @@ export default function CheckoutPage() {
       {status === 'finalizing' && (
         <div className="checkout-status">
           <Loader2 size={30} className="ap-spin" />
-          <h1>Finalizing your subscription…</h1>
-          <p>Confirming your payment. This only takes a moment.</p>
+          <h1>{t('checkout.finalizingTitle')}</h1>
+          <p>{t('checkout.finalizingBody')}</p>
         </div>
       )}
 
@@ -255,33 +263,31 @@ export default function CheckoutPage() {
           </span>
           {status === 'done' ? (
             <>
-              <h1>You&rsquo;re on {name}.</h1>
+              <h1>{t('checkout.doneTitle', { plan: name })}</h1>
               {subscription?.allowances ? (
                 <p>
-                  {subscription.allowances.assessments} assessments,{' '}
-                  {subscription.allowances.ebooks} ebooks, and{' '}
-                  {subscription.allowances.counsellingMinutes} counselling minutes are unlocked this
-                  cycle.
+                  {t('checkout.doneAllowances', {
+                    assessments: subscription.allowances.assessments,
+                    ebooks: subscription.allowances.ebooks,
+                    minutes: subscription.allowances.counsellingMinutes,
+                  })}
                 </p>
               ) : (
-                <p>Your plan is active.</p>
+                <p>{t('checkout.doneActive')}</p>
               )}
             </>
           ) : (
             <>
-              <h1>Payment received.</h1>
-              <p>
-                We&rsquo;re finalizing your {name} subscription it usually activates within a
-                moment. You can refresh your subscription page shortly.
-              </p>
+              <h1>{t('checkout.pendingTitle')}</h1>
+              <p>{t('checkout.pendingBody', { plan: name })}</p>
             </>
           )}
           <div className="checkout-done-actions">
             <Link to="/dashboard" className="btn btn-primary">
-              Go to dashboard
+              {t('checkout.goToDashboard')}
             </Link>
             <Link to="/subscription" className="btn btn-ghost">
-              View subscription
+              {t('checkout.viewSubscription')}
             </Link>
           </div>
         </div>
@@ -291,10 +297,10 @@ export default function CheckoutPage() {
         <main className="checkout-grid">
           <section className="checkout-form-side">
             <Link to="/pricing" className="crumb">
-              <ArrowLeft size={15} /> Change plan
+              <ArrowLeft size={15} /> {t('checkout.changePlan')}
             </Link>
-            <h1>Start your {name} plan</h1>
-            <p className="checkout-lede">Billed monthly · cancel anytime from your billing page.</p>
+            <h1>{t('checkout.startPlanTitle', { plan: name })}</h1>
+            <p className="checkout-lede">{t('checkout.lede')}</p>
 
             {error && (
               <p className="checkout-error" role="alert">
@@ -304,8 +310,11 @@ export default function CheckoutPage() {
 
             {!stripeConfigured && (
               <p className="checkout-error" role="alert">
-                Payments aren’t configured. Add <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to{' '}
-                <code>.env</code> and restart the dev server.
+                {t('checkout.stripeMissingPre')}
+                <code>VITE_STRIPE_PUBLISHABLE_KEY</code>
+                {t('checkout.stripeMissingMid')}
+                <code>.env</code>
+                {t('checkout.stripeMissingPost')}
               </p>
             )}
 
@@ -326,7 +335,10 @@ export default function CheckoutPage() {
                           {c.brand} •••• {c.last4}
                         </strong>
                         <small>
-                          Expires {String(c.expMonth).padStart(2, '0')}/{c.expYear}
+                          {t('checkout.cardExpires', {
+                            month: String(c.expMonth).padStart(2, '0'),
+                            year: c.expYear,
+                          })}
                         </small>
                       </span>
                       {selectedCardId === c.id && <Check size={16} className="pay-card-check" />}
@@ -340,11 +352,11 @@ export default function CheckoutPage() {
                 >
                   {busy ? (
                     <>
-                      <Loader2 size={17} className="ap-spin" /> Processing…
+                      <Loader2 size={17} className="ap-spin" /> {t('checkout.processing')}
                     </>
                   ) : (
                     <>
-                      <Lock size={16} /> Pay {priceLabel}
+                      <Lock size={16} /> {t('checkout.pay', { price: priceLabel })}
                     </>
                   )}
                 </button>
@@ -356,10 +368,10 @@ export default function CheckoutPage() {
                     setError('')
                   }}
                 >
-                  Pay with a new card instead
+                  {t('checkout.payNewCard')}
                 </button>
                 <p className="checkout-secure">
-                  <ShieldCheck size={14} /> Secured by Stripe · 3D Secure handled automatically.
+                  <ShieldCheck size={14} /> {t('checkout.secureSaved')}
                 </p>
               </>
             )}
@@ -367,16 +379,18 @@ export default function CheckoutPage() {
             {stripeConfigured &&
               useNewCard &&
               (clientSecret ? (
-                <Elements
-                  stripe={stripePromise}
-                  options={{ clientSecret, appearance: STRIPE_APPEARANCE }}
-                >
-                  <NewCardForm onConfirmed={finalize} onError={setError} priceLabel={priceLabel} />
+                <Elements stripe={stripePromise}>
+                  <NewCardForm
+                    clientSecret={clientSecret}
+                    onConfirmed={finalize}
+                    onError={setError}
+                    priceLabel={priceLabel}
+                  />
                 </Elements>
               ) : (
                 <div className="checkout-status checkout-status-inline">
                   <Loader2 size={24} className="ap-spin" />
-                  <p>Preparing secure card form…</p>
+                  <p>{t('checkout.cardFormLoading')}</p>
                 </div>
               ))}
 
@@ -389,7 +403,7 @@ export default function CheckoutPage() {
                   setError('')
                 }}
               >
-                ← Use a saved card
+                {t('checkout.useSavedCard')}
               </button>
             )}
           </section>
@@ -401,33 +415,34 @@ export default function CheckoutPage() {
                   <Sparkles size={18} />
                 </span>
                 <div>
-                  <h3>{name} plan</h3>
-                  <p>Monthly billing</p>
+                  <h3>{t('checkout.summaryPlan', { plan: name })}</h3>
+                  <p>{t('checkout.summaryBilled')}</p>
                 </div>
                 <strong>{priceLabel}</strong>
               </div>
 
               <ul className="checkout-includes">
                 <li>
-                  <ClipboardList size={15} /> {plan.allowedAssessments} assessments / month
+                  <ClipboardList size={15} />{' '}
+                  {t('checkout.summaryAssessments', { count: plan.allowedAssessments })}
                 </li>
                 <li>
-                  <BookOpen size={15} /> {plan.allowedEbooks} ebooks / month
+                  <BookOpen size={15} /> {t('checkout.summaryEbooks', { count: plan.allowedEbooks })}
                 </li>
                 <li>
-                  <MessagesSquare size={15} /> {plan.allowedCounsellingMinutes} min counselling /
-                  month
+                  <MessagesSquare size={15} />{' '}
+                  {t('checkout.summaryMinutes', { count: plan.allowedCounsellingMinutes })}
                 </li>
               </ul>
 
               <div className="checkout-totals">
                 <div className="checkout-total-row">
-                  <span>Due today</span>
+                  <span>{t('checkout.dueToday')}</span>
                   <span>{priceLabel}</span>
                 </div>
               </div>
 
-              <p className="checkout-renew">Renews monthly · cancel anytime.</p>
+              <p className="checkout-renew">{t('checkout.renew')}</p>
             </div>
           </aside>
         </main>

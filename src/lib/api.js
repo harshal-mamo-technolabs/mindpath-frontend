@@ -17,6 +17,15 @@ export function setAuthTokenProvider(fn) {
   getAuthToken = fn
 }
 
+// The i18n layer injects a language getter here so every request carries the
+// user's language via Accept-Language (backend localizes content, falls back to en).
+let getLanguage = () => 'en'
+
+/** Register a function that returns the active language code (en/de/fr/it). */
+export function setLanguageProvider(fn) {
+  getLanguage = fn
+}
+
 /** Thrown for any non-successful response; carries the server's detail. */
 export class ApiError extends Error {
   constructor(message, { status, errors } = {}) {
@@ -40,6 +49,7 @@ async function request(path, { method = 'GET', body } = {}) {
   }
 
   const options = { method, headers: {} }
+  options.headers['Accept-Language'] = getLanguage()
   const token = getAuthToken()
   if (token) options.headers.Authorization = `Bearer ${token}`
   if (body !== undefined) {

@@ -1,14 +1,9 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Annoyed, Bell, Frown, Laugh, Meh, Mic, Pause, Play, Smile, Sparkles } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
-const MOODS = [
-  ['Heavy', Frown],
-  ['Low', Annoyed],
-  ['Okay', Meh],
-  ['Good', Smile],
-  ['Light', Laugh],
-]
+const MOOD_ICONS = [Frown, Annoyed, Meh, Smile, Laugh]
 
 const EQ_BARS = [38, 62, 84, 51, 95, 70, 44, 88, 60, 76, 35, 92, 55, 80, 47, 68, 90, 58, 73, 42]
 
@@ -48,13 +43,10 @@ const FULL_TRAIL = trailPath(NODES)
 const WALKED_TRAIL = trailPath(NODES.slice(0, TODAY_IDX + 1))
 
 function DayTrail() {
+  const { t } = useTranslation()
   return (
     <div className="day-trail">
-      <svg
-        viewBox={`0 0 ${VB_W} ${VB_H}`}
-        role="img"
-        aria-label="Your 14-day plan — 3 days walked, day 4 is today, the rest unlock one per morning"
-      >
+      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} role="img" aria-label={t('home.audioPlan.trailAria')}>
         <defs>
           <linearGradient id="trailGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#8fd4ae" />
@@ -133,22 +125,23 @@ function MoodSpark() {
 }
 
 export default function AudioPlan() {
+  const { t } = useTranslation()
   const [playing, setPlaying] = useState(false)
   const [mood, setMood] = useState(3)
+  const moods = t('home.audioPlan.moods', { returnObjects: true })
 
   return (
     <section className="section audio" id="audio">
       <div className="container">
         <div style={{ maxWidth: 680 }}>
           <Reveal as="span" className="eyebrow on-dark">
-            Your daily audio path
+            {t('home.audioPlan.eyebrow')}
           </Reveal>
           <Reveal as="h2" className="h2" delay={0.08}>
-            Then, every day, <em>a small ritual.</em>
+            {t('home.audioPlan.h2a')} <em>{t('home.audioPlan.h2em')}</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.16}>
-            Your report sequences a day-by-day plan of calming sessions chosen and ordered for your
-            scores. One unlocks each morning, so the path becomes a habit, not a binge.
+            {t('home.audioPlan.lede')}
           </Reveal>
         </div>
 
@@ -156,22 +149,26 @@ export default function AudioPlan() {
           <div>
             <Reveal className="panel-dark" delay={0.1}>
               <p className="panel-title">
-                Your 14-day plan <em>3 of 14 walked</em>
+                {t('home.audioPlan.planTitle')} <em>{t('home.audioPlan.planDone')}</em>
               </p>
               <DayTrail />
             </Reveal>
 
             <Reveal className="panel-dark" delay={0.2}>
               <p className="panel-title">
-                Before today&rsquo;s session <em>one tap, that&rsquo;s all</em>
+                {t('home.audioPlan.beforeTitle')} <em>{t('home.audioPlan.beforeEm')}</em>
               </p>
-              <div className="mood-row" role="radiogroup" aria-label="How are you arriving today?">
-                {MOODS.map(([label, Icon], i) => (
+              <div
+                className="mood-row"
+                role="radiogroup"
+                aria-label={t('home.audioPlan.moodQuestion')}
+              >
+                {MOOD_ICONS.map((Icon, i) => (
                   <button
-                    key={label}
+                    key={i}
                     role="radio"
                     aria-checked={mood === i}
-                    aria-label={label}
+                    aria-label={moods[i]}
                     className={`mood-btn ${mood === i ? 'active' : ''}`}
                     onClick={() => setMood(i)}
                   >
@@ -182,7 +179,7 @@ export default function AudioPlan() {
               <MoodSpark />
               <p className="mood-spark-note">
                 <Sparkles size={14} />
-                Your mood trend, mapped over the plan <strong>up 32% since day 1.</strong>
+                {t('home.audioPlan.moodNote')} <strong>{t('home.audioPlan.moodNoteStrong')}</strong>
               </p>
             </Reveal>
           </div>
@@ -191,8 +188,7 @@ export default function AudioPlan() {
             <div className={`player ${playing ? 'playing' : ''}`}>
               <p className="player-welcome">
                 <Mic size={17} />
-                &ldquo;Hi Maya this plan begins with your evenings, because that&rsquo;s where your
-                report says rest slips away…&rdquo;
+                {t('home.audioPlan.welcome')}
               </p>
 
               <div className="player-cover" aria-hidden="true">
@@ -203,13 +199,13 @@ export default function AudioPlan() {
 
               <div className="player-meta">
                 <div>
-                  <h3>Day 4 · Loosening the grip</h3>
-                  <p>Stress &amp; Burnout path · 7 min · evening session</p>
+                  <h3>{t('home.audioPlan.sessionTitle')}</h3>
+                  <p>{t('home.audioPlan.sessionMeta')}</p>
                 </div>
                 <button
                   className="play-btn"
                   onClick={() => setPlaying((p) => !p)}
-                  aria-label={playing ? 'Pause session preview' : 'Play session preview'}
+                  aria-label={playing ? t('home.audioPlan.pauseAria') : t('home.audioPlan.playAria')}
                 >
                   {playing ? (
                     <Pause size={24} fill="currentColor" strokeWidth={0} />
@@ -236,7 +232,7 @@ export default function AudioPlan() {
               <p className="player-foot">
                 <Bell size={15} />
                 <span>
-                  <strong>Day 5 is ready tomorrow at 7:00.</strong> We&rsquo;ll nudge you, gently.
+                  <strong>{t('home.audioPlan.footStrong')}</strong> {t('home.audioPlan.footRest')}
                 </span>
               </p>
             </div>

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ArrowRight, Headphones, Leaf, Play, Star, TrendingUp } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
@@ -31,6 +32,7 @@ function Spark() {
 }
 
 export default function Hero() {
+  const { t } = useTranslation()
   return (
     <section className="hero" id="top">
       <div className="aurora" aria-hidden="true">
@@ -45,13 +47,13 @@ export default function Hero() {
             <span className="dot">
               <Leaf size={12} strokeWidth={2.5} />
             </span>
-            Assessment-led mental wellness
+            {t('home.hero.badge')}
           </Reveal>
 
           <Reveal as="h1" className="h1" delay={0.08}>
-            Your mind has{' '}
+            {t('home.hero.h1a')}{' '}
             <span className="underline-swash">
-              a path
+              {t('home.hero.h1swash')}
               <svg viewBox="0 0 220 24" fill="none" preserveAspectRatio="none" aria-hidden="true">
                 <path
                   d="M4 16 C 50 22, 90 6, 130 12 C 160 16, 190 12, 216 8"
@@ -62,21 +64,19 @@ export default function Hero() {
               </svg>
             </span>
             .<br />
-            <em>Let&rsquo;s walk it together.</em>
+            <em>{t('home.hero.h1b')}</em>
           </Reveal>
 
           <Reveal as="p" className="hero-sub" delay={0.16}>
-            Take a guided self-assessment, get a personal report that actually reads like you then
-            follow a daily audio plan, ebooks, and counselling shaped around your scores. Ten quiet
-            minutes a day.
+            {t('home.hero.sub')}
           </Reveal>
 
           <Reveal className="hero-actions" delay={0.24}>
             <Link to="/assessments" className="btn btn-primary">
-              Find your path <ArrowRight size={18} />
+              {t('home.hero.findPath')} <ArrowRight size={18} />
             </Link>
-            <Link to="/music" className="btn btn-ghost">
-              <Headphones size={18} /> Listen free first
+            <Link to="/sound" className="btn btn-ghost">
+              <Headphones size={18} /> {t('home.hero.listenFree')}
             </Link>
           </Reveal>
 
@@ -89,14 +89,14 @@ export default function Hero() {
               ))}
             </div>
             <p className="hero-proof-text">
-              <span className="stars" aria-label="Rated 4.9 out of 5 stars">
+              <span className="stars" aria-label={t('home.hero.starsAria')}>
                 {Array.from({ length: 5 }, (_, i) => (
                   <Star key={i} size={13} fill="currentColor" strokeWidth={0} />
                 ))}
               </span>{' '}
-              <strong>4.9</strong> from 12,000+ journeys
+              <strong>4.9</strong> {t('home.hero.ratingFrom')}
               <br />
-              <strong>87%</strong> report calmer mornings by day 14
+              <strong>87%</strong> {t('home.hero.ratingCalmer')}
             </p>
           </Reveal>
         </div>
@@ -106,7 +106,7 @@ export default function Hero() {
             <span className="hero-art-glow" aria-hidden="true" />
             <img
               src="/hero-calm.png"
-              alt="A person sitting calmly at a tidy desk with a hand resting on their heart, beside a plant, a cup of tea, an open journal and books"
+              alt={t('home.hero.imageAlt')}
               loading="eager"
               width="1536"
               height="1024"
@@ -114,29 +114,29 @@ export default function Hero() {
           </div>
 
           <div className="float-card fc-report" aria-hidden="true">
-            <p className="fc-label">Recovery capacity</p>
+            <p className="fc-label">{t('home.hero.fcReportLabel')}</p>
             <p className="fc-score">
               <strong>68</strong>
-              <em>+21 since retake</em>
+              <em>{t('home.hero.fcReportDelta')}</em>
             </p>
           </div>
 
           <div className="float-card fc-day" aria-hidden="true">
-            <p className="fc-label">Today on your path</p>
+            <p className="fc-label">{t('home.hero.fcDayLabel')}</p>
             <div className="fc-day-row">
               <span className="play">
                 <Play size={14} fill="currentColor" strokeWidth={0} />
               </span>
               <p>
-                Day 4 · Loosening the grip
-                <small>7 min · unlocked this morning</small>
+                {t('home.hero.fcDayTitle')}
+                <small>{t('home.hero.fcDayMeta')}</small>
               </p>
             </div>
           </div>
 
           <div className="float-card fc-mood" aria-hidden="true">
             <p className="fc-label">
-              Mood trend <TrendingUp size={12} style={{ display: 'inline' }} />
+              {t('home.hero.fcMoodLabel')} <TrendingUp size={12} style={{ display: 'inline' }} />
             </p>
             <Spark />
           </div>

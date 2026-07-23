@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowDownRight,
   ArrowRight,
@@ -18,13 +19,14 @@ import Reveal from '../components/Reveal.jsx'
 import { getAssessments, getScores } from '../lib/assessmentsApi.js'
 import { groupScores, reportTotals } from '../components/report/reportsData.js'
 
-const fmtDate = (iso, long = false) =>
-  new Date(iso).toLocaleDateString('en-US', { day: 'numeric', month: long ? 'long' : 'short', year: 'numeric' })
+const fmtDate = (iso, long = false, locale = 'en-US') =>
+  new Date(iso).toLocaleDateString(locale, { day: 'numeric', month: long ? 'long' : 'short', year: 'numeric' })
 
 const estMinutes = (q) => Math.max(2, Math.round(((q || 10) * 30) / 60))
 
 /* ---- trend of the headline score across attempts ---- */
 function TrendChart({ attempts, accent }) {
+  const { i18n } = useTranslation()
   const scores = attempts.map((a) => a.headline)
   const min = Math.min(...scores)
   const max = Math.max(...scores)
@@ -76,7 +78,7 @@ function TrendChart({ attempts, accent }) {
       <div className="r-axis">
         {attempts.map((a, i) => (
           <span key={a.id} className="r-axis-tick" style={{ left: `${xOf(i)}%` }}>
-            {fmtDate(a.createdAt)}
+            {fmtDate(a.createdAt, false, i18n.language)}
           </span>
         ))}
       </div>
@@ -85,6 +87,7 @@ function TrendChart({ attempts, accent }) {
 }
 
 function ReportGroup({ g, i }) {
+  const { t, i18n } = useTranslation()
   const Icon = g.Icon
   const multi = g.count > 1
   // icon follows the actual direction the score moved; colour tells good/bad
@@ -102,9 +105,7 @@ function ReportGroup({ g, i }) {
         </span>
         <div className="r-group-titles">
           <h2>{g.name}</h2>
-          <p>
-            {g.count} {g.count === 1 ? 'report' : 'reports'} · first taken {fmtDate(g.first.createdAt)}
-          </p>
+          <p>{t('reports.groupMeta', { count: g.count, date: fmtDate(g.first.createdAt, false, i18n.language) })}</p>
         </div>
         <div className="r-group-latest">
           <span className="r-group-score">{g.latest.headline}</span>
@@ -117,19 +118,26 @@ function ReportGroup({ g, i }) {
           <div className="r-progress-banner">
             <span className={`r-delta ${g.improved ? 'good' : 'rise'}`}>
               <DeltaIcon size={15} />
-              {Math.abs(g.delta)} pts {g.delta === 0 ? 'unchanged' : g.improved ? 'better' : g.betterWord}
+              {Math.abs(g.delta)} {t('reports.pts')}{' '}
+              {g.delta === 0
+                ? t('reports.noChange')
+                : g.improved
+                  ? t('reports.better')
+                  : t(`reports.dir_${g.betterWord}`)}
             </span>
             <p>
-              Across {g.count} check-ins, your score has moved from <strong>{g.first.headline}</strong> to{' '}
+              {t('reports.progressPre', { count: g.count })}
+              <strong>{g.first.headline}</strong>
+              {t('reports.progressTo')}
               <strong>{g.latest.headline}</strong>
-              {g.improved ? ' — that change is yours, not the measurement’s.' : '.'}
+              {g.improved ? t('reports.progressTailImproved') : t('reports.progressTailFlat')}
             </p>
           </div>
 
           <TrendChart attempts={g.attempts} accent={g.accent} />
 
           <div className="r-ba">
-            <p className="r-sub-label">First check-in → latest, by dimension</p>
+            <p className="r-sub-label">{t('reports.baLabel')}</p>
             {g.first.dims.map((f) => {
               const l = latestDims.get(f.key)
               if (!l) return null
@@ -157,14 +165,15 @@ function ReportGroup({ g, i }) {
         <div className="r-baseline">
           <Sparkles size={17} />
           <p>
-            This is your <strong>baseline</strong> for {g.name.toLowerCase()}. Retake in {g.retakeIn} days to see the
-            first movement in your numbers.
+            {t('reports.baselinePre')}
+            <strong>{t('reports.baselineStrong')}</strong>
+            {t('reports.baselineMid', { topic: g.name.toLowerCase(), count: g.retakeIn })}
           </p>
         </div>
       )}
 
       <div className="r-takes">
-        <p className="r-sub-label">All reports</p>
+        <p className="r-sub-label">{t('reports.allReports')}</p>
         <ol>
           {g.attempts
             .map((a, idx) => ({ a, idx }))
@@ -178,8 +187,8 @@ function ReportGroup({ g, i }) {
                 <li key={a.id}>
                   <Link className="r-take-row" to={`/reports/${a.id}`}>
                     <span className="r-take-date">
-                      {fmtDate(a.createdAt, true)}
-                      {isLatest && <em className="r-latest-tag">Latest</em>}
+                      {fmtDate(a.createdAt, true, i18n.language)}
+                      {isLatest && <em className="r-latest-tag">{t('reports.latest')}</em>}
                     </span>
                     <span className="r-take-score">{a.headline}</span>
                     {a.band && <span className={`band-chip ${a.bandClass}`}>{a.band}</span>}
@@ -195,7 +204,7 @@ function ReportGroup({ g, i }) {
                         {Math.abs(change)}
                       </span>
                     ) : (
-                      <span className="r-take-change muted">baseline</span>
+                      <span className="r-take-change muted">{t('reports.start')}</span>
                     )}
                     <ChevronRight size={17} className="r-take-chev" />
                   </Link>
@@ -209,24 +218,24 @@ function ReportGroup({ g, i }) {
         {g.eligible ? (
           <>
             <Link to={`/assessments/${g.slug}/take`} className="btn btn-primary r-retake-btn">
-              Retake now <ArrowRight size={17} />
+              {t('reports.takeAgainNow')} <ArrowRight size={17} />
             </Link>
             <p className="r-retake-note">
-              <CalendarClock size={14} /> It’s been {g.lastDays} days — a retake now shows how far you’ve come.
+              <CalendarClock size={14} /> {t('reports.retakeNote', { count: g.lastDays })}
             </p>
           </>
         ) : (
           <div className="r-retake-wait">
             <div className="r-retake-wait-head">
               <span>
-                <CalendarClock size={14} /> Retake unlocks in {g.retakeIn} days
+                <CalendarClock size={14} /> {t('reports.retakeWait', { count: g.retakeIn })}
               </span>
-              <small>{g.lastDays} / 60 days</small>
+              <small>{t('reports.daysProgress', { n: g.lastDays })}</small>
             </div>
             <div className="r-retake-bar">
               <i style={{ width: `${Math.min(100, (g.lastDays / 60) * 100)}%`, background: g.accent }} />
             </div>
-            <small className="r-retake-sub">Retaking every 60–90 days keeps the comparison meaningful.</small>
+            <small className="r-retake-sub">{t('reports.retakeSub')}</small>
           </div>
         )}
       </div>
@@ -235,6 +244,7 @@ function ReportGroup({ g, i }) {
 }
 
 export default function ReportsLibrary() {
+  const { t } = useTranslation()
   const [state, setState] = useState({ status: 'loading' })
   const [catalog, setCatalog] = useState([])
 
@@ -256,7 +266,7 @@ export default function ReportsLibrary() {
       <main className="reports">
         <div className="reports-state">
           <Loader2 size={26} className="ap-spin" />
-          <p>Loading your reports…</p>
+          <p>{t('reports.loading')}</p>
         </div>
       </main>
     )
@@ -266,10 +276,10 @@ export default function ReportsLibrary() {
     return (
       <main className="reports">
         <div className="reports-state" role="alert">
-          <h1>We couldn’t load your reports</h1>
+          <h1>{t('reports.errorTitle')}</h1>
           <p>{state.error}</p>
           <Link to="/assessments" className="btn btn-primary">
-            Browse assessments
+            {t('reports.browseAssessments')}
           </Link>
         </div>
       </main>
@@ -281,6 +291,7 @@ export default function ReportsLibrary() {
 
 /* Presentational — given grouped reports + the catalog, renders the page. */
 export function ReportsView({ groups, catalog }) {
+  const { t } = useTranslation()
   const totals = reportTotals(groups)
   const takenSlugs = new Set(groups.map((g) => g.slug))
   const notTaken = catalog.filter((a) => !takenSlugs.has(a.slug))
@@ -294,25 +305,25 @@ export function ReportsView({ groups, catalog }) {
         </div>
         <div className="container">
           <Reveal as="span" className="eyebrow">
-            Your reports
+            {t('reports.eyebrow')}
           </Reveal>
           <Reveal as="h1" className="h1 reports-title" delay={0.07}>
-            Proof you can <em>watch move.</em>
+            {t('reports.titleA')}
+            <em>{t('reports.titleEm')}</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.14}>
-            Every report you’ve unlocked, grouped by topic so each retake stacks into a story of where you started and
-            how far you’ve come.
+            {t('reports.lede')}
           </Reveal>
 
           {groups.length > 0 && (
             <Reveal className="reports-ledger" delay={0.2}>
               <div className="reports-ledger-item">
                 <strong>{totals.reports}</strong>
-                <small>reports archived</small>
+                <small>{t('reports.reportsSaved')}</small>
               </div>
               <div className="reports-ledger-item">
                 <strong>{totals.topics}</strong>
-                <small>topics explored</small>
+                <small>{t('reports.topicsTried')}</small>
               </div>
               {totals.best && (
                 <div className="reports-ledger-item">
@@ -320,7 +331,7 @@ export function ReportsView({ groups, catalog }) {
                     <TrendingUp size={18} strokeWidth={2.4} />
                     {Math.abs(totals.best.delta)}
                   </strong>
-                  <small>pts · best shift</small>
+                  <small>{t('reports.biggestChange')}</small>
                 </div>
               )}
             </Reveal>
@@ -333,10 +344,10 @@ export function ReportsView({ groups, catalog }) {
           {groups.length === 0 ? (
             <Reveal className="reports-empty">
               <FileHeart size={28} />
-              <h2>No reports yet</h2>
-              <p>Take your first assessment and your report will appear here — then each retake stacks into a trend.</p>
+              <h2>{t('reports.emptyTitle')}</h2>
+              <p>{t('reports.emptyBody')}</p>
               <Link to="/assessments" className="btn btn-primary">
-                Take an assessment <ArrowRight size={17} />
+                {t('reports.takeAssessment')} <ArrowRight size={17} />
               </Link>
             </Reveal>
           ) : (
@@ -352,8 +363,8 @@ export function ReportsView({ groups, catalog }) {
               <div className="reports-explore-head">
                 <FileHeart size={20} />
                 <div>
-                  <h3>Topics you haven’t explored yet</h3>
-                  <p>Each new assessment adds another report and another path to follow.</p>
+                  <h3>{t('reports.exploreTitle')}</h3>
+                  <p>{t('reports.exploreBody')}</p>
                 </div>
               </div>
               <div className="reports-explore-grid">
@@ -365,7 +376,7 @@ export function ReportsView({ groups, catalog }) {
                     <div>
                       <strong>{a.name}</strong>
                       <small>
-                        {(a.subCategories?.length || 5)} dimensions · {estMinutes(a.questionsCount)} min
+                        {t('reports.cardMeta', { areas: a.subCategories?.length || 5, min: estMinutes(a.questionsCount) })}
                       </small>
                     </div>
                     <span className="reports-explore-add">

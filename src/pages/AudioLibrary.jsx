@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowRight,
   BadgeCheck,
@@ -27,7 +28,7 @@ import { formatTime } from '../lib/time.js'
    (keyed by clip order) is rekeyed to "day-<order>" to match the plan's daily unlock; it
    has no welcome clip, so track 1 opens right away. `kind: 'program'` marks it so play
    progress is saved via the program endpoint. */
-function mapProgramToPlan(p) {
+function mapProgramToPlan(p, t) {
   const playedAt = {}
   Object.entries(p.playedAt || {}).forEach(([order, date]) => {
     playedAt[`day-${order}`] = date
@@ -45,7 +46,7 @@ function mapProgramToPlan(p) {
     days: (p.clips || []).map((c) => ({
       day: c.order,
       title: c.title,
-      focus: c.category || 'session',
+      focus: c.category || t('audio.sessionFocus'),
       session: {
         _id: `prog-${p.id}-${c.order}`,
         title: c.title,
@@ -75,7 +76,7 @@ const ACCENTS = {
    `playedAt` log: "day-0" is the welcome, "day-1".."day-N" the sessions. The next
    clip opens once today is PAST the last played date — welcome + Day 1 share the
    first day, every later session needs a fresh day. */
-function shapePlan(plan, i) {
+function shapePlan(plan, i, t) {
   const played = plan.playedAt || {}
   const today = todayUTC()
   const dates = Object.values(played)
@@ -126,23 +127,24 @@ function shapePlan(plan, i) {
     isComplete: plan.status === 'completed' || (total > 0 && doneCount >= total),
     cover,
     accent: ACCENTS[cover],
-    title: plan.archetype || 'Your daily audio plan',
+    title: plan.archetype || t('audio.dailyPlanTitle'),
   }
 }
 
 /* Message for a locked session row / button. */
-function lockReason(plan, d) {
+function lockReason(plan, d, t) {
   if (plan.nextDay && d.day === plan.nextDay.day) {
     return plan.gate?.reason === 'welcome'
-      ? 'Play the welcome clip first to open Day 1.'
-      : 'You’ve already unlocked today’s session — the next one opens tomorrow.'
+      ? t('audio.lockWelcomeFirst')
+      : t('audio.lockDoneToday')
   }
-  return 'Finish the earlier sessions to unlock this one.'
+  return t('audio.lockFinishEarlier')
 }
 
 export default function AudioLibrary() {
+  const { t } = useTranslation()
   const { user, isAuthenticated } = useAuth()
-  const firstName = (user?.name || '').split(' ')[0] || 'there'
+  const firstName = (user?.name || '').split(' ')[0] || t('audio.thereFallback')
 
   const [state, setState] = useState({ status: 'loading', plans: [] })
   const [reloadKey, setReloadKey] = useState(0)
@@ -180,7 +182,7 @@ export default function AudioLibrary() {
       .then(([list, progs]) => {
         if (!alive) return
         const generated = (Array.isArray(list) ? list : []).map((p) => ({ ...p, kind: 'plan' }))
-        const programs = (Array.isArray(progs) ? progs : []).map(mapProgramToPlan)
+        const programs = (Array.isArray(progs) ? progs : []).map((p) => mapProgramToPlan(p, t))
         const plans = [...generated, ...programs]
         setState({ status: plans.length ? 'ready' : 'empty', plans })
       })
@@ -188,9 +190,9 @@ export default function AudioLibrary() {
     return () => {
       alive = false
     }
-  }, [isAuthenticated, reloadKey, pathKey])
+  }, [isAuthenticated, reloadKey, pathKey, t])
 
-  const plans = useMemo(() => state.plans.map(shapePlan), [state.plans])
+  const plans = useMemo(() => state.plans.map((p, i) => shapePlan(p, i, t)), [state.plans, t])
   // The hero follows whatever's playing (so playing a clip from "Your paths"
   // pulls that library up top); otherwise it defaults to the first active plan.
   const primary =
@@ -209,14 +211,14 @@ export default function AudioLibrary() {
   const playTrack = useCallback(
     (track) => {
       if (!track.url) {
-        say('That session’s audio isn’t ready yet.')
+        say(t('audio.sessionAudioNotReady'))
         return
       }
       setNowPlaying(track)
       setElapsed(0)
       setDuration(track.durationSeconds || 0)
     },
-    [say],
+    [say, t],
   )
 
   // load + play whenever the track changes
@@ -239,34 +241,34 @@ export default function AudioLibrary() {
       try {
         if (isProgram) {
           const prog = await markProgramPlayed(planId, day)
-          patchPlan(mapProgramToPlan(prog))
+          patchPlan(mapProgramToPlan(prog, t))
           const total = prog.total || (prog.clips || []).length
           say(
             prog.status === 'completed'
-              ? `Path complete — all ${total} sessions done. Beautiful work.`
-              : `Day ${day} done — Day ${day + 1} opens tomorrow.`,
+              ? t('audio.programAllDone', { count: total })
+              : t('audio.dayDoneTomorrow', { day, next: day + 1 }),
           )
           return
         }
         const updated = await markPlayed(planId, day)
         patchPlan({ ...updated, kind: 'plan' })
         if (day === 0) {
-          say('Welcome played — Day 1 is unlocked.')
+          say(t('audio.welcomePlayedToast'))
           return
         }
         const total = updated.durationDays || (updated.days || []).length
         const sessionsDone = Object.keys(updated.playedAt || {}).filter((k) => k !== 'day-0').length
         say(
           sessionsDone >= total
-            ? `Path complete — all ${total} days walked. Beautiful work.`
-            : `Day ${day} done — Day ${day + 1} opens tomorrow.`,
+            ? t('audio.planAllDone', { count: total })
+            : t('audio.dayDoneTomorrow', { day, next: day + 1 }),
         )
       } catch (e) {
         // server rejects a locked clip with a friendly 423 message
-        say(e?.message || 'Couldn’t save your progress — check your connection and try again.')
+        say(e?.message || t('audio.saveProgressError'))
       }
     },
-    [state.plans, patchPlan, say],
+    [state.plans, patchPlan, say, t],
   )
 
   const onEnded = () => {
@@ -294,7 +296,7 @@ export default function AudioLibrary() {
     playTrack({
       planId: p.id,
       kind: 'welcome',
-      title: 'Welcome from your guide',
+      title: t('audio.welcomeFromGuide'),
       subtitle: p.title,
       url: p.welcomeAudioUrl,
       cover: p.cover,
@@ -308,7 +310,7 @@ export default function AudioLibrary() {
       kind: 'day',
       day: d.day,
       title: d.session?.title || d.title,
-      subtitle: `${p.title} · Day ${d.day}`,
+      subtitle: t('audio.playDaySubtitle', { title: p.title, day: d.day }),
       url: d.session?.audioUrl,
       cover: p.cover,
       accent: p.accent,
@@ -334,9 +336,11 @@ export default function AudioLibrary() {
             {plan.welcomePlayed ? <Check size={13} /> : <Sparkles size={12} />}
           </span>
           <span className="ap-also-text">
-            <strong>Welcome · a short hello</strong>
+            <strong>{t('audio.welcomeRow')}</strong>
           </span>
-          <span className="ap-also-len">{plan.welcomePlayed ? 'played' : 'intro'}</span>
+          <span className="ap-also-len">
+            {plan.welcomePlayed ? t('audio.playedLabel') : t('audio.introLabel')}
+          </span>
         </button>
       )}
       {plan.days.map((d) => {
@@ -349,7 +353,7 @@ export default function AudioLibrary() {
             className={`ap-also-row ap-also-session ${cls} ${isCurrent ? 'current' : ''}`}
             onClick={() => {
               if (d.locked) {
-                say(lockReason(plan, d))
+                say(lockReason(plan, d, t))
                 return
               }
               playDay(plan, d)
@@ -369,9 +373,7 @@ export default function AudioLibrary() {
               )}
             </span>
             <span className="ap-also-text">
-              <strong>
-                Day {d.day} · {d.session?.title || d.title}
-              </strong>
+              <strong>{t('audio.dayRow', { day: d.day, title: d.session?.title || d.title })}</strong>
             </span>
             <span className="ap-also-len">
               {d.session?.durationSeconds ? formatTime(d.session.durationSeconds) : '—'}
@@ -414,7 +416,7 @@ export default function AudioLibrary() {
       <main className="ap ap-state-wrap">
         <div className="ap-state">
           <Loader2 size={26} className="ap-spin" />
-          <p>Loading your audio plan…</p>
+          <p>{t('audio.loadingPlan')}</p>
         </div>
       </main>
     )
@@ -425,10 +427,10 @@ export default function AudioLibrary() {
       <main className="ap ap-state-wrap">
         <div className="ap-state">
           <Headphones size={30} />
-          <h1>Your audio plans live here</h1>
-          <p>Log in to see the daily audio plan generated from your assessment.</p>
+          <h1>{t('audio.unauthTitle')}</h1>
+          <p>{t('audio.unauthBody')}</p>
           <Link to="/login?next=/audio" className="btn btn-primary">
-            Log in
+            {t('audio.logIn')}
           </Link>
         </div>
       </main>
@@ -439,10 +441,10 @@ export default function AudioLibrary() {
     return (
       <main className="ap ap-state-wrap">
         <div className="ap-state" role="alert">
-          <h1>We couldn’t load your plans</h1>
+          <h1>{t('audio.errorTitle')}</h1>
           <p>{state.error}</p>
           <button className="btn btn-primary" onClick={() => setReloadKey((k) => k + 1)}>
-            Try again
+            {t('audio.tryAgain')}
           </button>
         </div>
       </main>
@@ -454,13 +456,14 @@ export default function AudioLibrary() {
       <main className="ap">
         <div className="ap-state">
           <Headphones size={30} />
-          <h1>No audio plan yet</h1>
+          <h1>{t('audio.emptyTitle')}</h1>
           <p>
-            A personalised daily-audio plan is generated from your <strong>first</strong> attempt at
-            an assessment. Take one to unlock a guided path sequenced from your report.
+            {t('audio.emptyBodyPre')}
+            <strong>{t('audio.emptyBodyStrong')}</strong>
+            {t('audio.emptyBodyPost')}
           </p>
           <Link to="/assessments" className="btn btn-primary">
-            Explore assessments <ArrowRight size={16} />
+            {t('audio.exploreAssessments')} <ArrowRight size={16} />
           </Link>
         </div>
         {/* standalone purchasable audio library — always available, even with no plan */}
@@ -493,25 +496,28 @@ export default function AudioLibrary() {
       <header className="ap-hero">
         <div className="container">
           <Reveal as="span" className="eyebrow on-dark">
-            Your audio library
+            {t('audio.yourAudioLibrary')}
           </Reveal>
           <Reveal as="h1" className="ap-h1" delay={0.07}>
             {primary?.isComplete ? (
               <>
-                Nicely done, {firstName}. <em>Your path is complete.</em>
+                {t('audio.heroDoneA', { name: firstName })} <em>{t('audio.heroDoneEm')}</em>
               </>
             ) : heroMode === 'day-locked' ? (
               <>
-                Good work today, {firstName}. <em>Day {nextD?.day} opens tomorrow.</em>
+                {t('audio.heroLockedA', { name: firstName })}{' '}
+                <em>{t('audio.heroLockedEm', { day: nextD?.day })}</em>
               </>
             ) : heroMode === 'welcome' ? (
               <>
-                Welcome, {firstName}. <em>Your plan is ready.</em>
+                {t('audio.heroWelcomeA', { name: firstName })} <em>{t('audio.heroWelcomeEm')}</em>
               </>
             ) : (
               <>
-                Good to see you, {firstName}.{' '}
-                <em>{nextD ? `Day ${nextD.day} is ready.` : 'Your plan is ready.'}</em>
+                {t('audio.heroDefaultA', { name: firstName })}{' '}
+                <em>
+                  {nextD ? t('audio.heroDayReadyEm', { day: nextD.day }) : t('audio.heroWelcomeEm')}
+                </em>
               </>
             )}
           </Reveal>
@@ -529,7 +535,7 @@ export default function AudioLibrary() {
                           <i />
                           <i />
                         </span>
-                        {playing ? 'Now playing' : 'Paused'} · {primary.title}
+                        {playing ? t('audio.nowPlaying') : t('audio.paused')} · {primary.title}
                       </p>
                       <h2>{nowPlaying.title}</h2>
                       <p className="ap-primary-meta">{nowPlaying.subtitle}</p>
@@ -540,11 +546,11 @@ export default function AudioLibrary() {
                         <button className="btn btn-light" onClick={togglePlay}>
                           {playing ? (
                             <>
-                              <Pause size={17} fill="currentColor" strokeWidth={0} /> Pause
+                              <Pause size={17} fill="currentColor" strokeWidth={0} /> {t('audio.pause')}
                             </>
                           ) : (
                             <>
-                              <Play size={17} fill="currentColor" strokeWidth={0} /> Resume
+                              <Play size={17} fill="currentColor" strokeWidth={0} /> {t('audio.resume')}
                             </>
                           )}
                         </button>
@@ -557,20 +563,23 @@ export default function AudioLibrary() {
                     <>
                       {heroMode === 'welcome' && (
                         <>
-                          <p className="ap-kicker">Start here · {primary.title}</p>
-                          <h2>Welcome from your guide</h2>
+                          <p className="ap-kicker">
+                            {t('audio.startHere')} · {primary.title}
+                          </p>
+                          <h2>{t('audio.welcomeFromGuide')}</h2>
                           <p className="ap-primary-meta">
-                            A short hello, then {primary.total} days — one session each.
+                            {t('audio.welcomeDays', { count: primary.total })}
                           </p>
                           <div className="ap-primary-actions">
                             <button className="btn btn-light" onClick={() => playWelcome(primary)}>
-                              <Play size={17} fill="currentColor" strokeWidth={0} /> Play welcome
+                              <Play size={17} fill="currentColor" strokeWidth={0} />{' '}
+                              {t('audio.playWelcomeBtn')}
                             </button>
                             <button
                               className="ap-mark-btn"
                               onClick={() => recordPlayed(primary.id, 0)}
                             >
-                              <Check size={15} /> Mark as played
+                              <Check size={15} /> {t('audio.markAsPlayed')}
                             </button>
                           </div>
                         </>
@@ -579,28 +588,29 @@ export default function AudioLibrary() {
                       {heroMode === 'day-open' && nextD && (
                         <>
                           <p className="ap-kicker">
-                            Up next · {primary.title} · Day {nextD.day} of {primary.total}
+                            {t('audio.upNext')} · {primary.title} ·{' '}
+                            {t('audio.dayOfTotal', { day: nextD.day, total: primary.total })}
                           </p>
                           <h2>{nextD.session?.title || nextD.title}</h2>
                           <p className="ap-primary-meta">
                             {nextD.session?.durationSeconds
                               ? `${formatTime(nextD.session.durationSeconds)} · `
                               : ''}
-                            {nextD.focus || 'guided session'}
+                            {nextD.focus || t('audio.guidedSession')}
                           </p>
                           <div className="ap-primary-actions">
                             <button
                               className="btn btn-light"
                               onClick={() => playDay(primary, nextD)}
                             >
-                              <Play size={17} fill="currentColor" strokeWidth={0} /> Begin Day{' '}
-                              {nextD.day}
+                              <Play size={17} fill="currentColor" strokeWidth={0} />{' '}
+                              {t('audio.beginDay', { day: nextD.day })}
                             </button>
                             <button
                               className="ap-mark-btn"
                               onClick={() => recordPlayed(primary.id, nextD.day)}
                             >
-                              <Check size={15} /> Mark as completed
+                              <Check size={15} /> {t('audio.markAsDone')}
                             </button>
                           </div>
                         </>
@@ -609,40 +619,43 @@ export default function AudioLibrary() {
                       {heroMode === 'day-locked' && nextD && (
                         <>
                           <p className="ap-kicker">
-                            Up next · {primary.title} · Day {nextD.day} of {primary.total}
+                            {t('audio.upNext')} · {primary.title} ·{' '}
+                            {t('audio.dayOfTotal', { day: nextD.day, total: primary.total })}
                           </p>
                           <h2>{nextD.session?.title || nextD.title}</h2>
                           <p className="ap-primary-meta">
                             {nextD.session?.durationSeconds
                               ? `${formatTime(nextD.session.durationSeconds)} · `
                               : ''}
-                            {nextD.focus || 'guided session'}
+                            {nextD.focus || t('audio.guidedSession')}
                           </p>
                           <div className="ap-primary-actions">
                             <span className="ap-locked-btn">
-                              <Lock size={16} /> Opens tomorrow
+                              <Lock size={16} /> {t('audio.opensTomorrow')}
                             </span>
                           </div>
                           <p className="ap-locked-note">
-                            <Sparkles size={13} /> One session a day — you’ve done today’s. Come
-                            back tomorrow for Day {nextD.day}.
+                            <Sparkles size={13} /> {t('audio.lockedNote', { day: nextD.day })}
                           </p>
                         </>
                       )}
 
                       {heroMode === 'complete' && (
                         <>
-                          <p className="ap-kicker">Complete · {primary.title}</p>
-                          <h2>Every day walked.</h2>
+                          <p className="ap-kicker">
+                            {t('audio.complete')} · {primary.title}
+                          </p>
+                          <h2>{t('audio.everyDayDone')}</h2>
                           <p className="ap-primary-meta">
-                            All {primary.total} sessions done. Replay any of them any time.
+                            {t('audio.completeMeta', { count: primary.total })}
                           </p>
                           <div className="ap-primary-actions">
                             <button
                               className="btn btn-light"
                               onClick={() => playDay(primary, primary.days[0])}
                             >
-                              <Play size={17} fill="currentColor" strokeWidth={0} /> Replay Day 1
+                              <Play size={17} fill="currentColor" strokeWidth={0} />{' '}
+                              {t('audio.replayDay1')}
                             </button>
                           </div>
                         </>
@@ -657,14 +670,14 @@ export default function AudioLibrary() {
               <Reveal className="ap-alsotoday" delay={0.22}>
                 <div className="ap-also-inner">
                   <p className="panel-title">
-                    Session by session{' '}
+                    {t('audio.sessionBySession')}{' '}
                     <em>
                       {primary.doneCount}/{primary.total}
                     </em>
                   </p>
                   {renderSessions(primary)}
                   <p className="ap-also-note">
-                    <Sparkles size={13} /> One new session unlocks each day.
+                    <Sparkles size={13} /> {t('audio.oneNewSessionDaily')}
                   </p>
                 </div>
               </Reveal>
@@ -678,11 +691,11 @@ export default function AudioLibrary() {
         <div className="container">
           <div className="ap-section-head">
             <h2 className="rp-h2 on-night">
-              <Headphones size={19} /> Your paths
+              <Headphones size={19} /> {t('audio.yourPaths')}
             </h2>
             <span className="ap-section-count">
-              {plans.filter((p) => !p.isComplete).length} active ·{' '}
-              {plans.filter((p) => p.isComplete).length} complete
+              {t('audio.activeCount', { count: plans.filter((p) => !p.isComplete).length })} ·{' '}
+              {t('audio.completeCount', { count: plans.filter((p) => p.isComplete).length })}
             </span>
           </div>
           <div className="ap-plans-grid">
@@ -693,11 +706,11 @@ export default function AudioLibrary() {
                 <div className={`ap-plan-cover ${p.cover}`}>
                   {p.isComplete ? (
                     <span className="ap-done-badge">
-                      <BadgeCheck size={14} /> Completed
+                      <BadgeCheck size={14} /> {t('audio.completed')}
                     </span>
                   ) : (
                     <span className="ap-day-badge">
-                      Day {p.doneCount + 1} of {p.total}
+                      {t('audio.dayOfTotal', { day: p.doneCount + 1, total: p.total })}
                     </span>
                   )}
                 </div>
@@ -723,7 +736,7 @@ export default function AudioLibrary() {
                           scrollToTop()
                         }}
                       >
-                        <Play size={14} fill="currentColor" strokeWidth={0} /> Replay Day 1
+                        <Play size={14} fill="currentColor" strokeWidth={0} /> {t('audio.replayDay1')}
                       </button>
                     ) : !p.welcomePlayed && p.welcomeAudioUrl ? (
                       <button
@@ -734,7 +747,7 @@ export default function AudioLibrary() {
                           scrollToTop()
                         }}
                       >
-                        <Play size={14} fill="currentColor" strokeWidth={0} /> Play welcome
+                        <Play size={14} fill="currentColor" strokeWidth={0} /> {t('audio.playWelcomeBtn')}
                       </button>
                     ) : p.gate?.nextAvailable ? (
                       <button
@@ -745,12 +758,12 @@ export default function AudioLibrary() {
                           scrollToTop()
                         }}
                       >
-                        <Play size={14} fill="currentColor" strokeWidth={0} /> Begin Day{' '}
-                        {p.doneCount + 1}
+                        <Play size={14} fill="currentColor" strokeWidth={0} />{' '}
+                        {t('audio.beginDay', { day: p.doneCount + 1 })}
                       </button>
                     ) : (
                       <span className="ap-btn-play locked">
-                        <Lock size={14} /> Opens tomorrow
+                        <Lock size={14} /> {t('audio.opensTomorrow')}
                       </span>
                     )}
                     <button
@@ -760,7 +773,7 @@ export default function AudioLibrary() {
                         setDetailPlanId(p.id)
                       }}
                     >
-                      View sessions <ArrowRight size={14} />
+                      {t('audio.viewSessions')} <ArrowRight size={14} />
                     </button>
                   </div>
                 </div>
@@ -786,20 +799,22 @@ export default function AudioLibrary() {
             <button
               className="ap-modal-close"
               onClick={() => setDetailPlanId(null)}
-              aria-label="Close"
+              aria-label={t('audio.close')}
             >
               <X size={18} />
             </button>
             <div className={`ap-modal-cover ${detailPlan.cover}`} aria-hidden="true" />
             <p className="ap-kicker">
               {detailPlan.isComplete
-                ? `Complete · ${detailPlan.total} sessions`
-                : `${detailPlan.doneCount}/${detailPlan.total} done · Day ${detailPlan.doneCount + 1} up next`}
+                ? t('audio.detailCompleteKicker', { count: detailPlan.total })
+                : t('audio.detailProgressKicker', {
+                    done: detailPlan.doneCount,
+                    total: detailPlan.total,
+                    next: detailPlan.doneCount + 1,
+                  })}
             </p>
             <h3>{detailPlan.title}</h3>
-            <p className="ap-modal-pitch">
-              Everything in this path. Play any session you’ve unlocked — new ones open one a day.
-            </p>
+            <p className="ap-modal-pitch">{t('audio.planDetailPitch')}</p>
             {renderSessions(detailPlan, () => {
               setDetailPlanId(null)
               scrollToTop()
@@ -844,7 +859,7 @@ export default function AudioLibrary() {
             </div>
             <div className="ap-player-progress">
               <span>{formatTime(elapsed)}</span>
-              <button className="ap-seek" onClick={seek} aria-label="Seek within session">
+              <button className="ap-seek" onClick={seek} aria-label={t('audio.seekAria')}>
                 <i
                   style={{
                     width: `${duration ? (elapsed / duration) * 100 : 0}%`,
@@ -857,7 +872,7 @@ export default function AudioLibrary() {
             <button
               className="ap-player-toggle"
               onClick={togglePlay}
-              aria-label={playing ? 'Pause' : 'Play'}
+              aria-label={playing ? t('audio.pause') : t('audio.play')}
             >
               {playing ? (
                 <Pause size={20} fill="currentColor" strokeWidth={0} />
@@ -873,7 +888,7 @@ export default function AudioLibrary() {
                 audioRef.current?.pause()
                 setNowPlaying(null)
               }}
-              aria-label="Close player"
+              aria-label={t('audio.closePlayer')}
             >
               <X size={17} />
             </button>

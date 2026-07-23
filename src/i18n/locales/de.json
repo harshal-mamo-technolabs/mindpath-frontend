@@ -1,0 +1,2854 @@
+{
+  "lang": {
+    "label": "Sprache",
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "it": "Italiano"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "assessments": "Tests",
+    "counselling": "Beratung",
+    "reports": "Deine Berichte",
+    "audio": "Tägliches Audio",
+    "ebooks": "E-Books",
+    "shortDashboard": "Start",
+    "shortAssessments": "Tests",
+    "shortCounselling": "Reden",
+    "shortReports": "Berichte",
+    "shortAudio": "Audio",
+    "shortEbooks": "E-Books",
+    "explore": "Entdecken",
+    "freeMusic": "Gratis-Musik",
+    "account": "Konto",
+    "profile": "Profil",
+    "subscription": "Abonnement",
+    "pricing": "Tarife & Preise",
+    "logout": "Abmelden",
+    "accountMenu": "Konto & Menü",
+    "dayMode": "Tagmodus",
+    "nightMode": "Nachtmodus",
+    "switchToDay": "Zum Tagmodus wechseln",
+    "switchToNight": "Zum Nachtmodus wechseln",
+    "ariaPrimary": "Hauptnavigation"
+  },
+  "common": {
+    "loading": "Wird geladen…",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "next": "Weiter",
+    "back": "Zurück",
+    "continue": "Fortfahren",
+    "retry": "Erneut versuchen",
+    "signIn": "Anmelden",
+    "getStarted": "Loslegen"
+  },
+  "home": {
+    "hero": {
+      "badge": "Wohlbefinden, das mit einem Test beginnt",
+      "h1a": "Du hast",
+      "h1swash": "einen Weg",
+      "h1b": "Gehen wir ihn gemeinsam.",
+      "sub": "Mach einen kurzen Test. Erhalte einen Bericht, der nur für dich gemacht ist. Folge dann einem täglichen Audio-Plan, E-Books und Beratung, die auf deine Ergebnisse zugeschnitten sind. Nur zehn ruhige Minuten am Tag.",
+      "findPath": "Finde deinen Weg",
+      "listenFree": "Erst kostenlos hören",
+      "starsAria": "Bewertet mit 4,9 von 5 Sternen",
+      "ratingFrom": "von über 12.000 Menschen",
+      "ratingCalmer": "fühlen sich bis Tag 14 morgens ruhiger",
+      "imageAlt": "Eine ruhige Person sitzt an einem aufgeräumten Schreibtisch, eine Hand auf dem Herzen, daneben eine Pflanze, eine Tasse Tee, ein offenes Tagebuch und Bücher",
+      "fcReportLabel": "Energie zur Erholung",
+      "fcReportDelta": "+21 seit dem letzten Mal",
+      "fcDayLabel": "Heute auf deinem Weg",
+      "fcDayTitle": "Tag 4 · Loslassen",
+      "fcDayMeta": "7 Min. · heute Morgen geöffnet",
+      "fcMoodLabel": "Stimmungsverlauf"
+    },
+    "marquee": {
+      "topics": [
+        "Stress & Burnout",
+        "Schlaf & Erholung",
+        "Angst & Sorgen",
+        "Fokus & Klarheit",
+        "Selbstwert",
+        "Emotionale Intelligenz",
+        "Beziehungen",
+        "Lebensübergänge",
+        "Resilienz",
+        "Achtsame Gewohnheiten"
+      ]
+    },
+    "journey": {
+      "eyebrow": "So funktioniert’s",
+      "h2a": "Ein Kreislauf.",
+      "h2em": "Bleibende Veränderung.",
+      "lede": "Bei Daybreak beginnt alles damit, dich selbst zu verstehen und alles Weitere baut darauf auf.",
+      "step": "Schritt",
+      "steps": [
+        {
+          "title": "Mach deinen Test",
+          "text": "Wähle ein Thema, das sich gerade schwer anfühlt. Antworte ehrlich. Es dauert etwa 12 ruhige Minuten."
+        },
+        {
+          "title": "Sieh deinen Bericht",
+          "text": "Deine Werte in jedem Bereich, in klaren Worten erklärt: was sie für dich bedeuten und was als Nächstes zu tun ist."
+        },
+        {
+          "title": "Mach es täglich",
+          "text": "Ein 7–30-tägiger Audio-Plan aus deinem Bericht. Jeden Tag öffnet sich eine Sitzung. Fünf bis zehn Minuten."
+        },
+        {
+          "title": "Wiederhole ihn & sieh die Veränderung",
+          "text": "Mach den Test nach 60–90 Tagen erneut und sieh dein Vorher und Nachher nebeneinander."
+        }
+      ],
+      "loopNote": "Dann wiederholt sich der Weg ein tieferes Thema, ein neuer Plan und sichtbarer Fortschritt."
+    },
+    "ecosystem": {
+      "eyebrow": "Rund um deinen Weg",
+      "h2a": "Gemacht für",
+      "h2em": "genau einen Menschen.",
+      "lede": "Sobald du deinen Bericht hast, kann alles andere darauf abgestimmt werden und die Musik ist für alle kostenlos, immer.",
+      "ebookTag": "E-Books für dich gemacht",
+      "ebookTitle": "Ein kurzes Buch mit deinem Namen auf dem Cover",
+      "ebookText": "Aus deinem Bericht erstellt über deine Werte, deine Gewohnheiten und deine nächsten 30 Tage. Allgemeine Bücher sind für alle offen.",
+      "ebookLink": "Zum Shop",
+      "ebookMockTitle": "Ruhe im Lärm: Mayas 30 Tage zur Erholung",
+      "ebookMockFor": "geschrieben für Maya K.",
+      "voiceTag": "KI-Beratung",
+      "voiceTitle": "Sprich es dir von der Seele",
+      "voiceText": "Ein sprechender Begleiter, der deinen Bericht bereits gelesen hat, sodass du nie mit „Erzähl mir von dir“ anfangen musst.",
+      "voiceLink": "So laufen die Sitzungen",
+      "musicTag": "Kostenlos · ohne Konto",
+      "musicTitle": "Yoga- & Meditationsmusik",
+      "musicText": "Drück jetzt auf Play. Keine Bezahlschranke, keine Anmeldung einfach ein ruhiger Ort zum Anfangen.",
+      "musicLink": "Bibliothek öffnen",
+      "tracks": [
+        "Morgendlicher Yoga-Flow",
+        "Tiefe Ruhe · Regen auf Blättern",
+        "Ruhige Atemklänge"
+      ],
+      "min": "Min."
+    },
+    "proof": {
+      "eyebrow": "Belege, keine Versprechen",
+      "h2a": "Der Weg ist real,",
+      "h2em": "wenn du siehst, wie er sich verändert.",
+      "progressTag": "Nach 60–90 Tagen erneut machen",
+      "progressTitle": "Mayas Vorher & Nachher",
+      "rowExhaustion": "Erschöpfung",
+      "rowEnergy": "Energie zur Erholung",
+      "progressFoot": "Gleiche Fragen, gleiche Bewertung so ist die Veränderung, die du siehst, echt und keine Änderung am Test.",
+      "testimonials": [
+        {
+          "quote": "Der Bericht fand Worte für etwas, das ich nicht ausdrücken konnte. „Deine Energie ist nicht kaputt, dir fehlt die Ruhe.“  An diesen Satz denke ich jeden Abend.",
+          "role": "Weg Stress & Burnout · Tag 41"
+        },
+        {
+          "quote": "Zehn Minuten am Tag fühlten sich zu klein an, um etwas zu bewirken. Dann machte ich den Test erneut und meine Werte stiegen.",
+          "role": "Weg Schlaf & Erholung · +27 beim zweiten Mal"
+        }
+      ]
+    },
+    "cta": {
+      "h2a": "Beginne, wo du stehst.",
+      "h2em": "Und fühl dich leichter.",
+      "text": "Zwölf Minuten ehrliche Antworten heute. Ein klareres Bild von dir morgen und ein Weg, der danach bei dir bleibt.",
+      "primary": "Mach deinen ersten Test",
+      "secondary": "Vorerst nur die kostenlose Musik",
+      "referral": "Es hilft, jemanden dabeizuhaben. Lade eine Freundin oder einen Freund ein und ihr bekommt beide eine kostenlose Sitzung."
+    },
+    "report": {
+      "eyebrow": "Dein persönlicher Bericht",
+      "h2a": "Ein Bericht, der",
+      "h2em": "dich wirklich versteht.",
+      "lede": "Nicht nur eine Zahl und ein Schulterklopfen ein vollständiges Bild davon, wo du stehst, geschrieben wie von einer freundlichen, ehrlichen Freundin.",
+      "points": [
+        {
+          "title": "Klare Worte, kein Fachjargon",
+          "text": "Jeder Wert wird für dich erklärt was er bedeutet, warum er auftaucht und was meist hilft."
+        },
+        {
+          "title": "Konsistent und verlässlich",
+          "text": "Deine Ergebnisse nutzen eine feste Bewertungsmethode dieselben Antworten ergeben immer dasselbe Ergebnis. Kein KI-Raten."
+        },
+        {
+          "title": "Es prägt alles Weitere",
+          "text": "Dein Audio-Plan, dein E-Book und deine Beratungssitzungen bauen alle auf diesem einen Bericht auf."
+        }
+      ],
+      "reportTitle": "{{name}}s Bericht",
+      "complete": "Fertig",
+      "planDays": "{{days}}-Tage-Audio-Plan",
+      "builds": "Dieser Bericht formt",
+      "ebook": "Persönliches E-Book",
+      "counsellingNotes": "Beratungsnotizen",
+      "dotAria": "{{name}}s Bericht",
+      "samples": [
+        {
+          "topic": "Stress & Burnout",
+          "date": "Juni 2026",
+          "ringLabel": "Gesamtniveau",
+          "bars": [
+            "Erschöpfung",
+            "Negativität",
+            "Kontrollgefühl",
+            "Energie zur Erholung"
+          ],
+          "quote": [
+            "Maya, deine Erschöpfung ist hoch und deine Energie zur Erholung wird knapp ",
+            "deine Energie ist nicht kaputt, dir fehlt die Ruhe.",
+            " Dein 14-Tage-Plan beginnt genau dort: zuerst die Abende."
+          ]
+        },
+        {
+          "topic": "Schlaf & Erholung",
+          "date": "Mai 2026",
+          "ringLabel": "Schlafprobleme",
+          "bars": [
+            "Schläfrigkeit",
+            "Zur-Ruhe-Kommen",
+            "Routine",
+            "Sorgen in der Nacht"
+          ],
+          "quote": [
+            "Jonas, dein Zur-Ruhe-Kommen klappt wirklich es regelmäßig zu halten, rutscht dir weg. ",
+            "Wähle eine feste Aufstehzeit",
+            " und lass die Schlafenszeit dazu passen. Du kannst besser schlafen."
+          ]
+        },
+        {
+          "topic": "Emotionale Intelligenz",
+          "date": "Juni 2026",
+          "ringLabel": "EQ-Wert",
+          "bars": [
+            "Selbstwahrnehmung",
+            "Gefühle steuern",
+            "Empathie",
+            "Gefühle teilen"
+          ],
+          "quote": [
+            "Aisha, du liest andere Menschen richtig gut Empathie ist eine echte Stärke. ",
+            "Richte das jetzt nach innen",
+            ", ein ehrlicher Satz pro Tag."
+          ]
+        }
+      ],
+      "ariaExamples": "Beispielhafte persönliche Berichte",
+      "ariaTablist": "Beispielbericht"
+    },
+    "audioPlan": {
+      "eyebrow": "Dein täglicher Audio-Weg",
+      "h2a": "Dann, jeden Tag,",
+      "h2em": "eine kleine Routine.",
+      "lede": "Dein Bericht erstellt einen Tag-für-Tag-Plan aus beruhigenden Sitzungen, ausgewählt und geordnet nach deinen Werten. Jeden Morgen öffnet sich eine so wird es eine Gewohnheit, kein Marathon.",
+      "moods": [
+        "Schwer",
+        "Gedrückt",
+        "Okay",
+        "Gut",
+        "Leicht"
+      ],
+      "planTitle": "Dein 14-Tage-Plan",
+      "planDone": "3 von 14 erledigt",
+      "trailAria": "Dein 14-Tage-Plan 3 Tage erledigt, Tag 4 ist heute, der Rest öffnet sich jeden Morgen einer",
+      "beforeTitle": "Vor der heutigen Sitzung",
+      "beforeEm": "ein Tipp, mehr nicht",
+      "moodQuestion": "Wie fühlst du dich heute?",
+      "moodNote": "Wie sich deine Stimmung über den Plan entwickelt",
+      "moodNoteStrong": "seit Tag 1 um 32 % gestiegen.",
+      "welcome": "„Hi Maya, dieser Plan beginnt bei deinen Abenden, denn genau dort entgleitet dir laut deinem Bericht die Ruhe …“",
+      "sessionTitle": "Tag 4 · Loslassen",
+      "sessionMeta": "Weg Stress & Burnout · 7 Min. · Abendsitzung",
+      "playAria": "Sitzungsvorschau abspielen",
+      "pauseAria": "Sitzungsvorschau pausieren",
+      "footStrong": "Tag 5 ist morgen um 7:00 Uhr bereit.",
+      "footRest": "Wir erinnern dich sanft."
+    },
+    "assess": {
+      "eyebrow": "Die Assessments",
+      "h2A": "Beginne dort, wo es",
+      "h2Em": "am meisten wehtut.",
+      "lede": "Sorgfältige, gut gemachte Assessments, durchdachte Fragen, bewertet über echte Bereiche, kein schnelles Quiz mit fünf Fragen. Zwanzig Themen, ein ehrlicher Ort für den Anfang.",
+      "browseAll": "Alle 20 Themen ansehen",
+      "mostTaken": "Am häufigsten gemacht",
+      "min": "Min.",
+      "questions": "Fragen",
+      "begin": "Assessment beginnen",
+      "more": "+15 weitere",
+      "moreTitle": "Beziehungen, Selbstwert, Lebensübergänge …",
+      "moreMeta": "Monatlich neue Themen",
+      "seeAll": "Die ganze Liste ansehen",
+      "bundleStrong": "Bündeln & sparen",
+      "bundleText": "Mach verknüpfte Assessments wie Stress & Burnout → Emotionale Intelligenz zusammen und spare 30 %."
+    }
+  },
+  "auth": {
+    "kickerLogin": "Anmelden",
+    "kickerSignup": "Konto erstellen",
+    "titleBackA": "Willkommen",
+    "titleBackEm": "zurück.",
+    "titleStartA": "Starte",
+    "titleStartEm": "hier.",
+    "successBack": "Willkommen zurück, {{name}}.",
+    "successName": "Willkommen, {{name}}.",
+    "successBackPlain": "Willkommen zurück.",
+    "opening": "Dein Dashboard wird geöffnet …",
+    "subtitleLogin": "Deine Sitzungen, deine Stimmung und das Audio für morgen sind genau da, wo du sie verlassen hast.",
+    "subtitleSignup": "Mach einen Test, erhalte einen Bericht über dich und zehn ruhige Minuten am Tag.",
+    "subtitleLoginMsisdn": "Gib die Handynummer ein, mit der du dich registriert hast.",
+    "subtitleSignupMsisdn": "Nur ein paar Angaben und deine Nummer. Dein Tarif wird über dein Handy abgerechnet und für dich eingerichtet.",
+    "nameLabel": "Dein Name",
+    "namePlaceholder": "Wie sollen wir dich nennen?",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "du@irgendwo.de",
+    "passwordLabel": "Passwort",
+    "forgot": "Vergessen?",
+    "passwordPlaceholderLogin": "Dein Passwort",
+    "passwordPlaceholderSignup": "Passwort wählen",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen",
+    "genderLabel": "Geschlecht",
+    "select": "Auswählen",
+    "female": "Weiblich",
+    "male": "Männlich",
+    "other": "Divers",
+    "ageLabel": "Alter",
+    "agePlaceholder": "28",
+    "mobileLabel": "Handynummer",
+    "mobilePlaceholder": "9876543210",
+    "submitLoading": "Einen Moment …",
+    "submitLogin": "Anmelden",
+    "submitCreate": "Konto erstellen",
+    "legalEmail": "Mit dem Fortfahren stimmst du unseren AGB zu. Daybreak ist ein Selbsthilfe-Tool, keine medizinische Versorgung.",
+    "legalMsisdn": "Mit dem Fortfahren stimmst du unseren AGB zu. Daybreak ist ein Selbsthilfe-Tool, keine medizinische Versorgung. Dein Tarif wird über deine Handyrechnung abgerechnet.",
+    "swapNew": "Neu hier?",
+    "createLink": "Konto erstellen",
+    "haveAccount": "Hast du schon ein Konto?",
+    "loginLink": "Anmelden",
+    "guest": "← Nur am Umschauen? Zurück zu Daybreak",
+    "defaultName": "du",
+    "errName": "Verwende 2 bis 50 Zeichen.",
+    "errEmail": "Diese E-Mail sieht nicht richtig aus.",
+    "errGender": "Bitte wähle etwas aus.",
+    "errAge": "Gib ein Alter von 1 bis 120 an.",
+    "errMsisdn": "Gib eine echte Handynummer ein (8 bis 15 Ziffern).",
+    "errMsisdnExists": "Für diese Nummer gibt es bereits ein Konto. Bitte melde dich an.",
+    "errMsisdnNoAccount": "Für diese Nummer gibt es kein Konto. Bitte registriere dich zuerst."
+  },
+  "assess": {
+    "catalog": {
+      "eyebrow": "Der Katalog",
+      "h1a": "Beginne mit dem,",
+      "h1em": "was am meisten wehtut.",
+      "lede": "Jeder Daybreak-Weg beginnt mit einem ehrlichen Satz Fragen zu echten Bereichen deines Lebens. Wähle das Thema, das zu dem passt, was du gerade durchmachst.",
+      "trust1": "Fragen, die du selbst beantwortest keine Diagnose",
+      "trust2": "Konsistente Ergebnisse nie von einer KI geraten",
+      "trust3": "Jeder gibt dir einen Bericht, einen Audio-Plan und ein E-Book",
+      "availableNow": "Jetzt verfügbar",
+      "count": "{{count}} Tests · bewertet, nie geraten",
+      "loading": "Tests werden geladen …",
+      "errorTitle": "Wir konnten die Tests nicht laden",
+      "retry": "Erneut versuchen",
+      "emptyTitle": "Noch keine Tests verfügbar",
+      "emptyText": "Bitte schau bald wieder vorbei.",
+      "mostTaken": "Am häufigsten gemacht",
+      "minAbbr": "~{{min}} Min.",
+      "questions": "{{count}} Fragen",
+      "explore": "Diesen Weg erkunden",
+      "soonTitle": "Demnächst",
+      "soonLede": "Die nächsten Themen, an denen wir arbeiten jeden Monat kommt ein neuer Test.",
+      "notifyMe": "Benachrichtige mich",
+      "comingSoon": [
+        {
+          "title": "Selbstwert",
+          "dims": [
+            "Innerer Kritiker",
+            "Selbstwert",
+            "Grenzen"
+          ]
+        },
+        {
+          "title": "Beziehungen",
+          "dims": [
+            "Nähe",
+            "Konflikt",
+            "Versöhnen"
+          ]
+        },
+        {
+          "title": "Resilienz",
+          "dims": [
+            "Rückschläge",
+            "Sich erholen",
+            "Zuversicht"
+          ]
+        },
+        {
+          "title": "Lebensübergänge",
+          "dims": [
+            "Wer du bist",
+            "Ungewissheit",
+            "Richtung"
+          ]
+        },
+        {
+          "title": "Achtsame Gewohnheiten",
+          "dims": [
+            "Dranbleiben",
+            "Präsent sein",
+            "Auslöser"
+          ]
+        },
+        {
+          "title": "Trauer & Verlust",
+          "dims": [
+            "Wellen",
+            "Sinn",
+            "Unterstützung"
+          ]
+        }
+      ]
+    },
+    "detail": {
+      "loading": "Test wird geladen …",
+      "errorTitle": "Wir konnten diesen Test nicht laden",
+      "retry": "Erneut versuchen",
+      "allAssessments": "Alle Tests",
+      "minutes": "~{{mins}} Minuten",
+      "questions": "{{count}} Fragen",
+      "areas": "{{count}} Bereiche",
+      "tries": "{{count}} Versuche inklusive",
+      "begin": "Test beginnen",
+      "note": "Ein Werkzeug zum Nachdenken. Kein medizinischer Test und keine Diagnose.",
+      "whatWeMeasure": "Was wir messen",
+      "scaleEyebrow": "Wie du antwortest",
+      "scaleH2a": "Bewerte jede Aussage auf einer",
+      "scaleH2em": "{{n}}-Punkte-Skala.",
+      "scaleLede": "Sag, wie oft jede Aussage in letzter Zeit auf dich zutrifft. Es gibt keine richtigen oder falschen Antworten nur ehrliche.",
+      "receiveEyebrow": "Was du zurückbekommst",
+      "receiveH2a": "Fünfzehn ehrliche Minuten,",
+      "receiveH2em": "drei Dinge zurück.",
+      "reportTitle": "Dein persönlicher Bericht",
+      "reportDesc": "Ein Wert für jeden Bereich, in klaren Worten was jede Zahl für dich bedeutet und was meist hilft. Dieselben Antworten ergeben jedes Mal dasselbe Ergebnis.",
+      "reportList1": "Dein Gesamtergebnis & ein Wert für jeden Bereich",
+      "reportList2": "Was dir hilft und was dich auslaugt",
+      "reportList3": "Klare nächste Schritte, geordnet nach dem größten Nutzen",
+      "planTitle": "Ein täglicher Audio-Plan",
+      "planDesc": "Kurze Audio-Sitzungen, ausgewählt nach deinen Werten jeden Morgen öffnet sich eine neue, je 5–10 Minuten. Sie beginnt mit einem Gruß nur für dich, mit deinem Namen.",
+      "planBuilt": "Aus genau diesem Bericht erstellt",
+      "planDayLabel": "Tag {{n}}",
+      "planDay1": "Den Tag loslassen",
+      "planDay1Min": "6 Min.",
+      "planDay2": "Benennen, was dich auslaugt",
+      "planDay2Min": "7 Min.",
+      "planLocked": "Jeden Morgen eine neue Sitzung",
+      "unlockTitle": "Nach deinem Bericht freigeschaltet",
+      "unlockDesc": "Dein Bericht öffnet dir mehr jedes daraus, aus deinen eigenen Werten, keine Kopie.",
+      "unlockEbook": "Ein E-Book für dich",
+      "unlockEbookSmall": "Aus deinen Ergebnissen geschrieben, mit deinem Namen auf dem Cover",
+      "unlockCounselling": "KI-Beratungsgespräche",
+      "unlockCounsellingSmall": "Ein Sprach-Begleiter, der deinen Bericht bereits gelesen hat",
+      "unlockRetake": "Wiederhole ihn in 60–90 Tagen",
+      "unlockRetakeSmall": "Vergleiche Vorher und Nachher und sieh, wie weit du gekommen bist",
+      "ctaH2a": "Bereit, wann du es bist.",
+      "ctaH2em": "Es dauert etwa {{mins}} ruhige Minuten.",
+      "ctaDesc": "Antworte so, wie du diese Woche bist nicht deine beste, nicht deine schlechteste. Ehrliche Antworten liefern nützliche Ergebnisse."
+    },
+    "take": {
+      "loading": "Test wird geladen …",
+      "errorTitle": "Wir konnten diesen Test nicht laden",
+      "allAssessments": "Alle Tests",
+      "exitAria": "Test verlassen",
+      "genTitle": "Deine Antworten werden gelesen …",
+      "genNote": "Gleiche Antworten, gleicher Bericht, jedes Mal",
+      "genSteps": [
+        "Deine Antworten werden bewertet",
+        "Jeder Bereich wird betrachtet",
+        "Es wird aufgeschrieben, was es bedeutet",
+        "Dein Audio-Plan wird erstellt"
+      ],
+      "introTag": "{{count}} Fragen",
+      "introH1": "Antworte so, wie du diese Woche bist.",
+      "introP": "Nicht deine beste Woche, nicht deine schlechteste einfach die, in der du gerade bist. Jede Aussage fragt, wie oft sie in letzter Zeit auf dich zutrifft. Es gibt keine richtigen oder falschen Antworten, nur ehrliche.",
+      "start": "Los geht’s",
+      "legal": "Ein Werkzeug zum Nachdenken. Kein medizinischer Test und keine Diagnose.",
+      "checking": "Dein Zugang wird geprüft …",
+      "unlockH1": "Diesen Test freischalten",
+      "unlockSub": "{{name}} · {{price}} · ein Test, mit bis zu {{tries}} Versuchen.",
+      "reflect": "Nachdenken",
+      "likertAria": "Wie oft trifft das auf dich zu?",
+      "previous": "Zurück",
+      "hint": "In letzter Zeit = die letzten zwei Wochen",
+      "resultH1": "Deine Antworten sind bewertet.",
+      "resultTry": "Versuch {{n}}",
+      "resultOverall": "gesamt",
+      "viewReports": "Meine Berichte ansehen",
+      "another": "Noch ein Test",
+      "deniedH1": "Du hast deine Tests vorerst aufgebraucht.",
+      "deniedMsisdn": "Du hast alle Tests aufgebraucht, die dir dein Plan gibt. Zu Beginn deines nächsten Abrechnungszeitraums bekommst du mehr bei der Abrechnung über den Mobilfunkanbieter gibt es kein Pay-as-you-go.",
+      "deniedStripe": "Du hast alle Tests aufgebraucht, die dir dein Plan gibt. Zu Beginn deines nächsten Abrechnungszeitraums bekommst du mehr.",
+      "viewSubscription": "Abonnement ansehen",
+      "backToAssessments": "Zurück zu den Tests",
+      "errorH1": "Etwas ist schiefgelaufen",
+      "retry": "Erneut versuchen",
+      "back": "Zurück",
+      "you": "Du",
+      "pendingError": "Wir haben deine Zahlung erhalten es wird noch abgeschlossen. Warte einen Moment und versuch es erneut.",
+      "pay": {
+        "cardDetails": "Kartendaten",
+        "chargeFail": "Wir konnten deine Karte nicht belasten. Versuch eine andere Karte.",
+        "chargeFailSaved": "Wir konnten deine Karte nicht belasten.",
+        "notConfigured": "Zahlungen sind nicht eingerichtet (Stripe-Schlüssel fehlt).",
+        "notConfiguredLong": "Zahlungen sind noch nicht eingerichtet. Füge VITE_STRIPE_PUBLISHABLE_KEY in .env hinzu und starte den Dev-Server neu.",
+        "gettingReady": "Kasse wird vorbereitet …",
+        "processing": "Wird verarbeitet …",
+        "payBtn": "{{price}} bezahlen",
+        "expires": "Gültig bis {{exp}}",
+        "newCard": "Stattdessen mit neuer Karte zahlen",
+        "savedCard": "← Gespeicherte Karte verwenden",
+        "secure": "Sicher durch Stripe · zusätzliche Kartenprüfungen für dich erledigt."
+      }
+    }
+  },
+  "dash": {
+    "loading": "Dein Dashboard wird geladen …",
+    "moods": [
+      "Schlecht",
+      "Mäßig",
+      "Okay",
+      "Gut",
+      "Super"
+    ],
+    "greetingMorning": "Guten Morgen",
+    "greetingAfternoon": "Guten Tag",
+    "greetingEvening": "Guten Abend",
+    "greeting": "{{greeting}}, {{name}}.",
+    "min": "Min.",
+    "linkCopied": "Link kopiert. Ihr bekommt beide eine kostenlose Sitzung.",
+    "night": "Nacht",
+    "day": "Tag",
+    "switchToDay": "Zum Tagmodus wechseln",
+    "switchToNight": "Zum Nachtmodus wechseln",
+    "dayMode": "Tagmodus",
+    "nightMode": "Nachtmodus",
+    "planFallback": "Täglicher Audio-Plan",
+    "sublineReady": "Tag {{day}} von {{title}} ist bereit.",
+    "sublineReports_one": "{{count}} Bericht bisher. Mach weiter.",
+    "sublineReports_other": "{{count}} Berichte bisher. Mach weiter.",
+    "sublineFirst": "Mach deinen ersten Test, um zu starten.",
+    "todaysSession": "Heutige Sitzung · {{title}} · Tag {{day}} von {{total}}",
+    "complete": "Fertig · {{title}}",
+    "allSessionsDone": "Alle Sitzungen erledigt",
+    "guidedSession": "geführte Sitzung",
+    "startSession": "Sitzung starten",
+    "playAgain": "Erneut abspielen",
+    "yourDailyAudio": "Dein tägliches Audio",
+    "getPlan": "Hol dir einen Plan nur für dich",
+    "madeFromFirst": "Aus deinem ersten Test erstellt",
+    "takeAnAssessment": "Einen Test machen",
+    "moodTitle": "Wie fühlst du dich?",
+    "moodDaily": "Täglich",
+    "moodAria": "Stimmungs-Check",
+    "moodTapOne": "Tippe eins an, bevor du startest.",
+    "moodThanks": "Danke fürs Vorbeischauen, {{name}}.",
+    "moodToast": "Danke. Sei heute gut zu dir.",
+    "notTakenTitle": "Themen, die du noch nicht ausprobiert hast",
+    "notTakenSub": "Jeder neue Test gibt dir einen neuen Bericht und einen neuen Audio-Plan.",
+    "questions": "{{count}} Fragen",
+    "ledgerReports_one": "Bericht gespeichert",
+    "ledgerReports_other": "Berichte gespeichert",
+    "ledgerTopics": "Themen ausprobiert",
+    "ledgerSessions": "Sitzungen erledigt",
+    "ledgerBooks_one": "Buch im Regal",
+    "ledgerBooks_other": "Bücher im Regal",
+    "yourProgress": "Dein Fortschritt",
+    "audioProgress": "Audio-Fortschritt",
+    "open": "Öffnen",
+    "done": "Fertig",
+    "noAudioPre": "Noch kein Audio-Plan.",
+    "noAudioPost": "für einen täglichen Plan.",
+    "progressRetake": "Fortschritt & Wiederholung",
+    "reportsLink": "Berichte",
+    "better": "besser",
+    "reportNoteMulti": "Aus {{count}} Check-ins. Es ist {{days}} Tage her. Mach ihn erneut, um zu sehen, was sich geändert hat.",
+    "reportNoteFirst": "Dein erster Bericht. Mach ihn in ein paar Wochen erneut, um die Veränderung zu sehen.",
+    "reportNoteEmpty": "Noch keine Berichte. Mach deinen ersten Test und er erscheint hier. Jedes Mal, wenn du ihn erneut machst, siehst du deinen Fortschritt.",
+    "takeAgain": "Erneut machen",
+    "continueReading": "Weiterlesen",
+    "shelfLink": "Regal",
+    "continuePct": "Weiter · {{pct}} %",
+    "startReading": "Lesen beginnen",
+    "shelfEmptyPre": "Dein Regal ist leer.",
+    "shelfEmptyLink": "Zum E-Book-Shop",
+    "shelfEmptyPost": "um ein Buch hinzuzufügen.",
+    "moreForYou": "Mehr für dich",
+    "counselTitle": "Sprich darüber",
+    "counselDesc": "Ein KI-Begleiter, der deinen Bericht gelesen hat. Sprich darüber, wie du dich fühlst.",
+    "seeCounselling": "Beratung ansehen",
+    "referTitle": "Bring jemanden mit",
+    "referDesc": "Lade eine Freundin oder einen Freund ein. Ihr bekommt beide eine kostenlose Beratungssitzung.",
+    "copyInvite": "Einladungslink kopieren",
+    "musicTitle": "Gratis-Musik",
+    "musicDesc": "Yoga- & Meditations-Tracks. Spiel sie ab, wann immer du zur Ruhe kommen willst.",
+    "openLibrary": "Bibliothek öffnen",
+    "jumpLabel": "Alles, nur einen Tipp entfernt",
+    "chipAssessments": "Tests",
+    "chipReports": "Deine Berichte",
+    "chipAudio": "Tägliches Audio",
+    "chipEbookShop": "E-Book-Shop",
+    "chipCounselling": "Beratung",
+    "chipMusic": "Gratis-Musik",
+    "noChange": "keine Änderung",
+    "dir_higher": "höher",
+    "dir_lower": "niedriger"
+  },
+  "sound": {
+    "kicker": "Kostenlos · für alle · ohne Konto",
+    "titleA": "Ein ruhiger Ort",
+    "titleB": "zum",
+    "titleEm": "Ausruhen.",
+    "lede": "Yoga- & Meditationsklänge. Wähle eine ruhige Szene zum Verweilen oder misch dir deine eigene. Kostenlos, immer.",
+    "index": "{{sounds}} Klänge · {{layers}} Klangebenen · 0 Anmeldungen",
+    "playAria": "{{title}} abspielen",
+    "startHere": "Fang hier an",
+    "makeMix": "Misch dir deine eigene",
+    "makeMixSub": "Tippe an, um Klänge hinzuzufügen. Sie spielen zusammen, jede Mischung ist anders.",
+    "nothingPlaying": "Noch nichts läuft",
+    "layersPlaying_one": "{{count}} Ebene läuft",
+    "layersPlaying_other": "{{count}} Ebenen laufen",
+    "theSounds": "Die Klänge",
+    "moodsAria": "Stimmungen",
+    "moods": {
+      "all": "Alle",
+      "sleep": "Schlaf",
+      "yoga": "Yoga",
+      "focus": "Fokus",
+      "nature": "Natur",
+      "breathwork": "Atemübung"
+    },
+    "plays": "{{plays}} Wiedergaben",
+    "like": "Gefällt mir",
+    "ctaA": "Die Musik ist nur der Anfang.",
+    "ctaEm": "Dein Weg ist genau hier.",
+    "ctaP": "Wenn du bereit für Sitzungen bist, die für dich gemacht sind, beginne mit einem kurzen Test.",
+    "findPath": "Finde deinen Weg",
+    "yourMix": "Deine Mischung",
+    "silence": "Stille",
+    "free": "kostenlos",
+    "pause": "Pause",
+    "play": "Abspielen",
+    "next": "Weiter",
+    "looping": "∞ Endlosschleife",
+    "closePlayer": "Player schließen",
+    "addLayer": "{{label}} hinzufügen",
+    "removeLayer": "{{label}} entfernen",
+    "scenes": {
+      "dawn-flow": {
+        "title": "Sonnenaufgangs-Flow",
+        "mood": "Yoga · Morgen"
+      },
+      "rain-roof": {
+        "title": "Regen auf Blechdach",
+        "mood": "Schlaf · Regen"
+      },
+      "ocean-far": {
+        "title": "Meer, in der Ferne",
+        "mood": "Natur · Gezeiten"
+      },
+      "forest-dawn": {
+        "title": "Wald bei Morgengrauen",
+        "mood": "Natur · Vogelgesang"
+      },
+      "mountain-stream": {
+        "title": "Gebirgsbach",
+        "mood": "Natur · Wasser"
+      },
+      "night-drift": {
+        "title": "Wegdämmern",
+        "mood": "Schlaf · tief"
+      },
+      "embers": {
+        "title": "Glut",
+        "mood": "Fokus · Wärme"
+      },
+      "box-breath": {
+        "title": "Box-Atem-Töne",
+        "mood": "Atemübung"
+      },
+      "deep-work": {
+        "title": "Deep-Work-Drones",
+        "mood": "Fokus · stetig"
+      }
+    },
+    "layers": {
+      "rain": "Regen",
+      "waves": "Wellen",
+      "forest": "Vogelgesang",
+      "wind": "Wind",
+      "fire": "Knistern",
+      "drone": "Drone"
+    }
+  },
+  "audio": {
+    "sessionFocus": "Sitzung",
+    "dailyPlanTitle": "Dein täglicher Audioplan",
+    "thereFallback": "du",
+    "lockWelcomeFirst": "Spiel zuerst den Willkommens-Clip ab, um Tag 1 freizuschalten.",
+    "lockDoneToday": "Du hast die heutige Sitzung schon gemacht — die nächste öffnet morgen.",
+    "lockFinishEarlier": "Schließ die früheren Sitzungen ab, um diese zu öffnen.",
+    "sessionAudioNotReady": "Das Audio dieser Sitzung ist noch nicht bereit.",
+    "programAllDone_one": "Alles geschafft — {{count}} Sitzung abgeschlossen. Gut gemacht.",
+    "programAllDone_other": "Alles geschafft — {{count}} Sitzungen abgeschlossen. Gut gemacht.",
+    "dayDoneTomorrow": "Tag {{day}} erledigt — Tag {{next}} öffnet morgen.",
+    "welcomePlayedToast": "Willkommen abgespielt — Tag 1 ist jetzt offen.",
+    "planAllDone_one": "Alles geschafft — {{count}} Tag abgeschlossen. Gut gemacht.",
+    "planAllDone_other": "Alles geschafft — {{count}} Tage abgeschlossen. Gut gemacht.",
+    "saveProgressError": "Dein Fortschritt konnte nicht gespeichert werden — prüf deine Verbindung und versuch es erneut.",
+    "welcomeFromGuide": "Willkommen von deinem Guide",
+    "playDaySubtitle": "{{title}} · Tag {{day}}",
+    "welcomeRow": "Willkommen · ein kurzes Hallo",
+    "playedLabel": "abgespielt",
+    "introLabel": "Intro",
+    "dayRow": "Tag {{day}} · {{title}}",
+    "loadingPlan": "Dein Audioplan wird geladen…",
+    "unauthTitle": "Deine Audiopläne findest du hier",
+    "unauthBody": "Melde dich an, um den täglichen Audioplan zu sehen, den wir aus deinem Test erstellt haben.",
+    "logIn": "Anmelden",
+    "errorTitle": "Wir konnten deine Pläne nicht laden",
+    "tryAgain": "Erneut versuchen",
+    "emptyTitle": "Noch kein Audioplan",
+    "emptyBodyPre": "Wir erstellen einen täglichen Audioplan aus deinem ",
+    "emptyBodyStrong": "ersten",
+    "emptyBodyPost": " Versuch bei einem Test. Mach einen, um einen geführten Weg aus deinem Bericht zu öffnen.",
+    "exploreAssessments": "Tests entdecken",
+    "yourAudioLibrary": "Deine Audiobibliothek",
+    "heroDoneA": "Gut gemacht, {{name}}.",
+    "heroDoneEm": "Dein Weg ist geschafft.",
+    "heroLockedA": "Gute Arbeit heute, {{name}}.",
+    "heroLockedEm": "Tag {{day}} öffnet morgen.",
+    "heroWelcomeA": "Willkommen, {{name}}.",
+    "heroWelcomeEm": "Dein Plan ist bereit.",
+    "heroDefaultA": "Schön, dich zu sehen, {{name}}.",
+    "heroDayReadyEm": "Tag {{day}} ist bereit.",
+    "nowPlaying": "Läuft jetzt",
+    "paused": "Pausiert",
+    "pause": "Pause",
+    "resume": "Fortsetzen",
+    "startHere": "Hier starten",
+    "welcomeDays_one": "Ein kurzes Hallo, dann {{count}} Tag — je eine Sitzung.",
+    "welcomeDays_other": "Ein kurzes Hallo, dann {{count}} Tage — je eine Sitzung.",
+    "playWelcomeBtn": "Willkommen abspielen",
+    "markAsPlayed": "Als abgespielt markieren",
+    "upNext": "Als Nächstes",
+    "dayOfTotal": "Tag {{day}} von {{total}}",
+    "guidedSession": "geführte Sitzung",
+    "beginDay": "Tag {{day}} beginnen",
+    "markAsDone": "Als erledigt markieren",
+    "opensTomorrow": "Öffnet morgen",
+    "lockedNote": "Eine Sitzung pro Tag — die heutige hast du gemacht. Komm morgen für Tag {{day}} wieder.",
+    "complete": "Abgeschlossen",
+    "everyDayDone": "Jeder Tag geschafft.",
+    "completeMeta_one": "Alle {{count}} Sitzung geschafft. Spiel sie jederzeit erneut ab.",
+    "completeMeta_other": "Alle {{count}} Sitzungen geschafft. Spiel sie jederzeit erneut ab.",
+    "replayDay1": "Tag 1 erneut abspielen",
+    "sessionBySession": "Sitzung für Sitzung",
+    "oneNewSessionDaily": "Jeden Tag öffnet eine neue Sitzung.",
+    "yourPaths": "Deine Wege",
+    "activeCount_one": "{{count}} aktiv",
+    "activeCount_other": "{{count}} aktiv",
+    "completeCount_one": "{{count}} abgeschlossen",
+    "completeCount_other": "{{count}} abgeschlossen",
+    "completed": "Abgeschlossen",
+    "viewSessions": "Sitzungen ansehen",
+    "close": "Schließen",
+    "detailCompleteKicker_one": "Abgeschlossen · {{count}} Sitzung",
+    "detailCompleteKicker_other": "Abgeschlossen · {{count}} Sitzungen",
+    "detailProgressKicker": "{{done}}/{{total}} erledigt · Tag {{next}} als Nächstes",
+    "planDetailPitch": "Alles in diesem Weg. Spiel jede Sitzung, die du geöffnet hast. Jeden Tag öffnet eine neue.",
+    "seekAria": "Durch die Sitzung bewegen",
+    "play": "Abspielen",
+    "closePlayer": "Player schließen",
+    "free": "Kostenlos",
+    "owned": "Gekauft",
+    "included": "Enthalten",
+    "cardChargeError": "Deine Karte konnte nicht belastet werden. Versuch eine andere Karte.",
+    "cardDetails": "Kartendaten",
+    "processing": "Wird verarbeitet…",
+    "payAmount": "{{amount}} zahlen",
+    "errNoStripeKey": "Zahlungen sind nicht konfiguriert (Stripe-Schlüssel fehlt).",
+    "cardChargeErrorShort": "Deine Karte konnte nicht belastet werden.",
+    "paymentsNotSetUp": "Zahlungen sind nicht eingerichtet — füge VITE_STRIPE_PUBLISHABLE_KEY hinzu und starte neu.",
+    "preparingCheckout": "Sicherer Checkout wird vorbereitet…",
+    "cardExpires": "Gültig bis",
+    "cardDefault": "Standard",
+    "useNewCard": "Stattdessen eine neue Karte verwenden",
+    "useSavedCard": "← Eine gespeicherte Karte verwenden",
+    "secureNote": "Gesichert durch Stripe · jede zusätzliche Kartenprüfung wird für dich erledigt.",
+    "libraryLoadError": "Die Audiobibliothek konnte nicht geladen werden — {{error}}",
+    "audioLibrary": "Audiobibliothek",
+    "librarySub": "Geführtes Audio, das du jederzeit starten kannst — kein Test nötig. Manches ist kostenlos. Anderes erfordert eine einmalige Zahlung.",
+    "loadingLibrary": "Bibliothek wird geladen…",
+    "inYourPath": "In deinem Weg",
+    "tracksCount_one": "{{count}} Titel",
+    "tracksCount_other": "{{count}} Titel",
+    "minShort": "Min.",
+    "open": "Öffnen",
+    "get": "Holen",
+    "details": "Details",
+    "loading": "Wird geladen…",
+    "preparing": "Wird vorbereitet…",
+    "getFullProgram": "Das ganze Programm holen",
+    "previewNote_one": "Der erste Titel ist gratis zur Vorschau.",
+    "previewNote_other": "Die ersten {{count}} Titel sind gratis zur Vorschau.",
+    "adding": "Wird hinzugefügt…",
+    "addToPath": "Zu deinem Weg hinzufügen",
+    "freeLower": "gratis",
+    "libraryPreview": "Audiobibliothek · Vorschau"
+  },
+  "billing": {
+    "cardDetailsLabel": "Kartendaten",
+    "saving": "Wird gespeichert…",
+    "saveCard": "Karte speichern",
+    "cardSaveFailed": "Diese Karte konnte nicht gespeichert werden.",
+    "toastPlanEnds": "Dein Tarif endet am {{date}}.",
+    "cancelFailed": "Wir konnten gerade nicht kündigen. Bitte versuch es noch einmal.",
+    "chooseReason": "Bitte wähle einen Grund.",
+    "toastDefaultUpdated": "Standardkarte aktualisiert.",
+    "toastCardRemoved": "Karte entfernt.",
+    "paymentsNotSetup": "Zahlungen sind nicht eingerichtet (Stripe-Schlüssel fehlt).",
+    "toastCardSaved": "Karte gespeichert.",
+    "loading": "Dein Abo wird geladen…",
+    "errorTitle": "Wir konnten dein Abo nicht laden",
+    "tryAgain": "Erneut versuchen",
+    "noneTitle": "Kein aktives Abo",
+    "noneMsisdnBody": "Melde dich mit deiner Handynummer an, um deinen Tarif zu starten. Die Abrechnung läuft über dein Handy.",
+    "createAccount": "Konto erstellen",
+    "noneBody": "Wähle einen Tarif und erhalte jeden Monat Assessments, E-Books und Beratung.",
+    "viewPlans": "Tarife ansehen",
+    "eyebrow": "Abo",
+    "title": "Dein Abo",
+    "planLabel": "{{name}}-Tarif",
+    "perYr": "Jahr",
+    "perMo": "Mon.",
+    "endsShort": "endet {{date}}",
+    "renewsShort": "verlängert sich {{date}}",
+    "billedToMobile": "Über dein Handy abgerechnet",
+    "cancelsOn": "Endet {{date}}",
+    "cancelPlan": "Tarif kündigen",
+    "includedTitle": "Was diesen Monat enthalten ist",
+    "resetsOn": "Setzt sich am {{date}} zurück.",
+    "resetsMsisdn": "Sobald du alles aufgebraucht hast, kommt es nächsten Monat zurück — bei der Handy-Abrechnung fallen keine Extrakosten an.",
+    "resetsStripe": "Sobald du das Enthaltene aufgebraucht hast, zahlst du danach einfach pro Artikel.",
+    "usedUp": "Aufgebraucht",
+    "payPerItem": "Pro Artikel zahlen",
+    "left_one": "{{count}} übrig",
+    "left_other": "{{count}} übrig",
+    "leftInfinite": "∞ übrig",
+    "unlimitedOn": "Unbegrenzt bei {{name}}",
+    "usageMeta": "{{used}} von {{total}} in diesem Zeitraum genutzt",
+    "usageMetaMin": "{{used}} von {{total}} Min. in diesem Zeitraum genutzt",
+    "comesBack": "Kommt am {{date}} zurück",
+    "includedInPlan": "In deinem Tarif enthalten",
+    "paymentMethods": "Zahlungsmethoden",
+    "addCard": "Karte hinzufügen",
+    "noCards": "Noch keine gespeicherten Karten.",
+    "default": "Standard",
+    "expires": "Gültig bis {{exp}}",
+    "makeDefault": "Als Standard festlegen",
+    "removeCardAria": "Karte entfernen",
+    "securelyStored": "Sicher gespeichert von Stripe.",
+    "historyTitle": "Rechnungsverlauf",
+    "exportAll": "Alle exportieren",
+    "historySub": "Deine Tarifzahlungen und jeder Einzelkauf — Assessments, E-Books, Audioprogramme und Beratungsminuten.",
+    "noCharges": "Noch keine Abbuchungen.",
+    "viewReceiptAria": "Beleg ansehen",
+    "cancelHeading": "Bevor du gehst…",
+    "cancelLede": "Du behältst {{name}} bis {{date}}. Danach zahlst du pro Artikel, und alles, was du freigeschaltet hast, bleibt dir erhalten.",
+    "surveyReasonQ": "Sag uns, warum du kündigst",
+    "surveyStayQ": "Wärst du geblieben, wenn wir Folgendes angeboten hätten:",
+    "cancelling": "Wird gekündigt…",
+    "yesCancel": "Ja, kündigen",
+    "back": "Zurück",
+    "close": "Schließen",
+    "addCardTitle": "Karte hinzufügen",
+    "preparingForm": "Sicheres Formular wird vorbereitet…",
+    "status": {
+      "active": "Aktiv",
+      "trialing": "Testphase",
+      "past_due": "Überfällig",
+      "incomplete": "Unvollständig",
+      "canceled": "Gekündigt"
+    },
+    "txKind": {
+      "subscription": "Abo",
+      "assessment": "Assessment",
+      "ebook": "E-Book",
+      "audio": "Audioprogramm",
+      "counselling": "Beratung",
+      "payg": "Pro Artikel"
+    },
+    "allowance": {
+      "assessments": {
+        "label": "Assessments",
+        "cta": "Assessment kaufen"
+      },
+      "ebooks": {
+        "label": "E-Books",
+        "cta": "Zum Shop"
+      },
+      "counsellingMinutes": {
+        "label": "Beratungsminuten",
+        "cta": "Minuten kaufen"
+      }
+    },
+    "cancelReasons": {
+      "not_using_enough": "Ich habe es nicht oft genug genutzt",
+      "too_expensive": "Zu teuer.",
+      "not_worth_value": "Der Nutzen war den Preis nicht wert.",
+      "unmet_needs": "Es hat meine Bedürfnisse oder Erwartungen nicht erfüllt.",
+      "missing_features": "Funktionen, die ich brauchte, waren nicht verfügbar.",
+      "insights_too_basic": "Berichte oder Einblicke waren zu oberflächlich.",
+      "technical_problems": "Ich hatte technische Probleme.",
+      "performance_issues": "Schlechte App-Leistung oder Bedienprobleme.",
+      "repetitive_content": "Die Informationen waren wiederholend oder wenig hilfreich.",
+      "other": "Sonstiges"
+    },
+    "wouldStayFor": {
+      "lower_cost": "Günstigeres Abo",
+      "annual_discount": "Rabattierte Jahrestarife",
+      "premium_content": "Zusätzliche Premium-Inhalte"
+    }
+  },
+  "checkout": {
+    "secureCheckout": "Sicherer Checkout",
+    "backToPricingAria": "Zurück zu den Preisen",
+    "loading": "Wir machen deinen Checkout bereit…",
+    "errorTitle": "Etwas ist schiefgelaufen",
+    "tryAgain": "Erneut versuchen",
+    "backToPlans": "Zurück zu den Plänen",
+    "finalizingTitle": "Wir richten deinen Plan ein…",
+    "finalizingBody": "Wir bestätigen deine Zahlung. Das dauert nur einen Moment.",
+    "doneTitle": "Du hast jetzt {{plan}}.",
+    "doneAllowances": "{{assessments}} Assessments, {{ebooks}} E-Books und {{minutes}} Beratungsminuten sind diesen Monat freigeschaltet.",
+    "doneActive": "Dein Plan ist aktiv.",
+    "pendingTitle": "Wir haben deine Zahlung erhalten.",
+    "pendingBody": "Wir richten deinen {{plan}}-Plan ein. Meist ist er innerhalb eines Moments aktiv. Du kannst deine Abo-Seite gleich aktualisieren.",
+    "goToDashboard": "Zum Dashboard",
+    "viewSubscription": "Abo ansehen",
+    "changePlan": "Plan ändern",
+    "startPlanTitle": "Starte deinen {{plan}}-Plan",
+    "lede": "Monatliche Abrechnung · jederzeit auf deiner Abrechnungsseite kündbar.",
+    "stripeMissingPre": "Zahlungen sind nicht eingerichtet. Füge ",
+    "stripeMissingMid": " zu ",
+    "stripeMissingPost": " hinzu und starte den Dev-Server neu.",
+    "cardDetails": "Kartendaten",
+    "cardExpires": "Gültig bis {{month}}/{{year}}",
+    "processing": "Wird verarbeitet…",
+    "pay": "{{price}} bezahlen",
+    "payNewCard": "Stattdessen mit einer neuen Karte bezahlen",
+    "secureTest": "Sicher durch Stripe. Testmodus — verwende Karte 4242 4242 4242 4242.",
+    "secureSaved": "Sicher durch Stripe · zusätzliche Kartenprüfungen übernehmen wir für dich.",
+    "cardFormLoading": "Wir machen das sichere Kartenformular bereit…",
+    "useSavedCard": "← Gespeicherte Karte verwenden",
+    "summaryPlan": "{{plan}}-Plan",
+    "summaryBilled": "Monatliche Abrechnung",
+    "summaryAssessments_one": "{{count}} Assessment / Monat",
+    "summaryAssessments_other": "{{count}} Assessments / Monat",
+    "summaryEbooks_one": "{{count}} E-Book / Monat",
+    "summaryEbooks_other": "{{count}} E-Books / Monat",
+    "summaryMinutes_one": "{{count}} Min. Beratung / Monat",
+    "summaryMinutes_other": "{{count}} Min. Beratung / Monat",
+    "dueToday": "Heute fällig",
+    "renew": "Verlängert sich monatlich · jederzeit kündbar.",
+    "errorPlanUnavailable": "Dieser Plan ist nicht mehr verfügbar.",
+    "errorStripeMissing": "Zahlungen sind nicht eingerichtet (Stripe-Schlüssel fehlt).",
+    "errorChargeFailed": "Wir konnten deine Karte nicht belasten.",
+    "errorChargeFailedRetry": "Wir konnten deine Karte nicht belasten. Bitte versuche eine andere."
+  },
+  "counsel": {
+    "advisor": {
+      "role": "Dein Daybreak-Berater",
+      "blurb": "Wähl einfach, was dir gerade auf dem Herzen liegt, und sprich es laut mit einem KI-Berater durch, mit dem du wirklich redest. Jeder kann das, ganz ohne Bericht. Du hast einen? Dann hilft er Sol nur, dich besser kennenzulernen."
+    },
+    "suggest": {
+      "ebook": "Empfohlenes E-Book",
+      "plan": "Empfohlene Sitzung",
+      "assessment": "Empfohlener Test"
+    },
+    "topics": {
+      "stress": {
+        "title": "Stress & Druck",
+        "line": "Wenn alles auf einmal zu viel wird."
+      },
+      "anxiety": {
+        "title": "Angst & Sorgen",
+        "line": "Wenn deine Gedanken schon zu allem vorauseilen, was schiefgehen könnte."
+      },
+      "sleep": {
+        "title": "Schlaf & Ruhe",
+        "line": "Müde, aber wie aufgedreht nachts, schwere Morgen."
+      },
+      "feelings": {
+        "title": "Meine Gefühle verstehen",
+        "line": "Benennen, was in dir vorgeht, und warum."
+      },
+      "focus": {
+        "title": "Fokus & Überforderung",
+        "line": "Zerstreute Tage, die geschäftig, aber verschwommen enden."
+      },
+      "relationships": {
+        "title": "Beziehungen",
+        "line": "Die Menschen, die dir nahstehen, und die Spannungen."
+      },
+      "self-worth": {
+        "title": "Selbstwert",
+        "line": "Die Stimme, die sagt, du bist nicht genug."
+      },
+      "direction": {
+        "title": "Arbeit & Richtung",
+        "line": "Das Gefühl festzustecken, oder nicht zu wissen, was kommt."
+      },
+      "grief": {
+        "title": "Trauer & Verlust",
+        "line": "Etwas oder jemanden tragen, den du verloren hast."
+      },
+      "open": {
+        "title": "Etwas, das mich beschäftigt",
+        "line": "Noch unsicher, wie du es nennen sollst? Fang einfach an zu reden."
+      }
+    },
+    "session": {
+      "stress": {
+        "suggestTitle": "„Quiet the Static“ – das Kapitel über die Abende",
+        "takeaways": [
+          "Deine Erholung, nicht deine Anstrengung, ist gerade das schwächste Glied.",
+          "Eine klare Grenze für heute Abend: Lad dein Handy ab 21 Uhr außerhalb des Schlafzimmers.",
+          "Kombinier es mit Tag 4 deines Audio-Plans, der an derselben Abendzeit ansetzt."
+        ],
+        "lines": [
+          "Hi Maya. Ich habe deinen Stress-&-Burnout-Bericht als Grundlage, aber das ist deine Zeit, also nimm sie, wohin du willst. Wie fühlst du dich heute?",
+          "Ehrlich? Müde. So müde, dass Schlaf es nicht zu beheben scheint.",
+          "Das passt zu dem, was ich sehe. Deine Erschöpfung hat seit deinem ersten Check-in nachgelassen, aber Erholung ist weiterhin das schwächste Glied. Wie sehen deine Abende meist aus?",
+          "Die Arbeit schwappt hinein. Ich beantworte Nachrichten, bis ich einschlafe.",
+          "Der Tag hört also nie wirklich auf. Genau das wollen wir ändern, nicht durch mehr tun, sondern indem wir die letzte Stunde schützen. Was ist eine kleine Sache, die du heute Abend loslassen könntest?",
+          "Vielleicht … nach dem Abendessen keine E-Mails mehr checken.",
+          "Das ist eine echte Grenze. Lad dein Handy ab 21 Uhr in einem anderen Raum. Nur für heute Abend, achte darauf, wie es sich anfühlt. Und es gibt ein kurzes Kapitel aus deinen Ergebnissen genau dazu. Ich kann es danach in dein Regal legen."
+        ]
+      },
+      "sleep": {
+        "suggestTitle": "Die heutige Sitzung „Schlaf & Ruhe“",
+        "takeaways": [
+          "Dein Runterkommen funktioniert. Es jeden Abend zu tun, ist das, was schleift.",
+          "Setz eine feste Aufstehzeit und lass deine Schlafenszeit ihr folgen.",
+          "Verleg das Grübeln auf einen 20-Uhr-Slot, damit das Bett nicht mehr der Ort ist, an dem du Dinge sortierst."
+        ],
+        "lines": [
+          "Guten Abend, Maya. Ich habe deinen Bericht „Schlaf & Ruhe“ gelesen, also kenne ich den Hintergrund, aber erzähl mir, was dich wirklich beschäftigt. Wie waren die Nächte?",
+          "Einschlafen geht. Durchschlafen ist das Problem.",
+          "Deine Ergebnisse deuten das an. Dein Runterkommen ist gut, aber deine Routine schleift. Wenn du um 3 Uhr aufwachst, wohin geht dein Kopf dann meistens?",
+          "Direkt zu morgen. Zu allem, was ich nicht erledigt habe.",
+          "Dann geben wir diesem Denken einen früheren Ort. Fünf Minuten Grübelzeit um 20 Uhr, aufgeschrieben und beiseitegelegt, damit das Bett nicht der Ort ist, an dem du planst.",
+          "Das könnte ich versuchen.",
+          "Gut. Die heutige Audio-Sitzung ist genau um dieses Runterkommen herum gebaut. Soll ich sie für nach unserem Auflegen bereitlegen?"
+        ]
+      },
+      "feelings": {
+        "suggestTitle": "Mach ihn erneut, um zu sehen, wie du gewachsen bist",
+        "takeaways": [
+          "Du liest andere richtig gut. Das nach innen zu richten, ist der Ort, an dem du wachsen kannst.",
+          "Übung: ein ehrlicher „Ich fühle …“-Satz am Tag, erst die einfachen.",
+          "Dich selbst zu beruhigen wächst am schnellsten. Füße auf den Boden, ein Atemzug, dann sprich."
+        ],
+        "lines": [
+          "Hi Maya. Ich kenne dein EQ-Profil schon, also können wir das Grundlegende überspringen und dorthin gehen, wo du magst. Was beschäftigt dich heute wirklich?",
+          "Ich bemerke die Stimmung aller anderen, aber meine eigene verliere ich aus dem Blick.",
+          "Genau das zeigen deine Ergebnisse: hohe Empathie, geringere Selbstwahrnehmung. Die gute Nachricht: Das ist die Lücke, die sich am leichtesten trainieren lässt. Kannst du in einem Wort benennen, was du gerade fühlst?",
+          "Ähm … angespannt.",
+          "Ein perfekter Anfang. Du hast es in Sekunden gefunden. Frag dich dreimal am Tag genau diese eine Frage. Nichts reparieren, nur benennen. Es verändert Dinge schneller, als du denkst.",
+          "Und wenn du die Veränderung in Zahlen sehen willst, zeigt sie ein erneuter Test in ein paar Wochen."
+        ]
+      },
+      "generic": {
+        "suggestAssessment": "Mach den Test zu {{topic}}, um mehr zu erfahren",
+        "suggestFallback": "Finde den richtigen Ausgangspunkt",
+        "takeaway1Open": "Dem, was dich beschäftigt, Worte zu geben, ist bereits ein echter Schritt.",
+        "takeaway1Named": "Du hast {{topic}} als das benannt, worauf du schauen willst, und das ist schon ein Schritt.",
+        "takeaway2": "Kleine, regelmäßige Schritte helfen mehr als große, gelegentliche Anläufe.",
+        "takeaway3Assessment": "Ein kurzer Test zu {{topic}} würde das in etwas Klares zum Verfolgen verwandeln.",
+        "takeaway3None": "Wir können es weiter durchsprechen. Kein Plan nötig. Der Weg kann sich von selbst zeigen.",
+        "line1Open": "Hi Maya. Kein Thema, kein Bericht, lass uns einfach reden. Was beschäftigt dich in letzter Zeit?",
+        "line1Named": "Hi Maya. Zu {{topic}} haben wir noch keinen Bericht, also lerne ich es kennen, während wir reden. Kein Druck. Was führt dich heute her?",
+        "line2": "Ich trage es schon eine Weile mit mir. Ich weiß nicht mal, wo ich anfangen soll.",
+        "line3": "Das ist okay. Nicht zu wissen, wo man anfängt, ist ein guter Anfang. Wenn es am lautesten ist, steckt es dann eher in deinem Körper, deinen Gedanken oder deiner Energie?",
+        "line4": "Meist im Kopf. Es dreht sich einfach im Kreis.",
+        "line5": "Dann geben wir dem Kreisen einen Ort zum Landen. In einem Satz: Was macht dir daran am meisten Sorgen?",
+        "line6": "Dass ich so weitermache und sich wirklich nichts ändert.",
+        "line7Assessment": "An dieser Angst kann man arbeiten, und mit Details wird sie klarer. Ein kurzer Test zu {{topic}} würde dieses vage Gewicht in etwas Klares verwandeln, das wir tatsächlich bewegen können. Soll ich einen bereitlegen?",
+        "line7None": "An dieser Angst kann man arbeiten. Veränderung kommt selten auf einmal. Es ist eine ehrliche Entscheidung, immer wieder getroffen. Was ist die kleinste, die du treffen könntest, bevor wir wieder reden?"
+      }
+    },
+    "lobby": {
+      "eyebrow": "KI-Beratung",
+      "titleA": "Sprich es durch,",
+      "titleEm": "laut ausgesprochen.",
+      "lede": "Sprich mit {{name}}, einem KI-Berater, über alles, was dich beschäftigt – ganz ohne Bericht.",
+      "minutesWord": "Minuten",
+      "availableThisCycle": "in diesem Zyklus verfügbar",
+      "signIn": "Anmelden",
+      "signInPost": "um deine Minuten zu sehen",
+      "topUp": "Aufladen",
+      "whatTalk": "Worüber möchtest du sprechen?",
+      "yourReport": "Dein Bericht",
+      "viewReport": "Deinen Bericht zu {{title}} ansehen",
+      "takeAssessment": "Mach zuerst den Test zu {{title}}"
+    },
+    "setup": {
+      "yourSession": "Deine Sitzung",
+      "howOpens": "Wie {{name}} beginnt",
+      "talkIn": "Sprechen auf",
+      "resume": "Da weitermachen, wo wir letztes Mal aufgehört haben",
+      "start": "Sitzung mit {{name}} starten",
+      "metaMin": "{{minutes}} Min.",
+      "metaAvail": "verfügbar · ~15 Min. sind normal · jederzeit aufhören",
+      "metaNoAuth": "Nutzt deine Minuten · ~15 Min. sind normal · jederzeit aufhören",
+      "outOfMinutes": "Keine Minuten mehr – zum Starten aufladen"
+    },
+    "call": {
+      "barLive": "Live · {{title}}",
+      "closeAria": "Sitzung schließen",
+      "connecting": "Verbinden …",
+      "speaking": "Spricht …",
+      "listening": "Hört zu – lass dir Zeit",
+      "groundedReport": "{{name}} hat deinen Bericht zu {{title}} zur Hilfe – aber sprich über das, was du brauchst.",
+      "groundedOpen": "Kein Bericht, kein Plan – fang einfach an zu reden, und {{name}} folgt dir.",
+      "groundedNone": "Kein Bericht nötig – {{name}} lernt das kennen, während du redest.",
+      "you": "Du",
+      "sayHello": "Sag Hallo, wann immer du bereit bist.",
+      "minLeft": "{{remaining}} Min. übrig",
+      "mute": "Stumm",
+      "unmute": "Ton an",
+      "end": "Beenden",
+      "endAria": "Sitzung beenden",
+      "minutes": "Minuten",
+      "addMinutesAria": "Minuten hinzufügen",
+      "lowAlmost": "Fast keine Minuten mehr – ",
+      "lowRunning": "Wird knapp – ",
+      "lowTopup": "Minuten hinzufügen, um weiterzureden",
+      "lowWrap": "{{name}} wird langsam zum Ende kommen."
+    },
+    "summary": {
+      "barTitle": "Sitzungszusammenfassung",
+      "complete": "Sitzung abgeschlossen",
+      "meta": "{{title}} · {{clock}} · {{remaining}} Min. übrig in diesem Zyklus",
+      "talkedAbout": "Worüber du und {{name}} gesprochen habt",
+      "newSession": "Neue Sitzung",
+      "buyMore": "Mehr Minuten kaufen"
+    },
+    "toast": {
+      "minutesUp": "Deine Minuten sind aufgebraucht – die Sitzung ist beendet.",
+      "minutesAdded_one": "{{count}} Minute hinzugefügt – rede, so lange du brauchst.",
+      "minutesAdded_other": "{{count}} Minuten hinzugefügt – rede, so lange du brauchst."
+    },
+    "err": {
+      "voiceDropped": "Die Sprachverbindung wurde getrennt.",
+      "micNeeded": "Für ein Gespräch mit {{name}} wird Mikrofonzugriff benötigt.",
+      "couldNotStart": "Die Sitzung konnte nicht gestartet werden."
+    },
+    "buy": {
+      "cardDetails": "Kartendaten",
+      "processing": "Wird verarbeitet …",
+      "payAdd": "Bezahlen & Minuten hinzufügen",
+      "cardError": "Deine Karte konnte nicht belastet werden.",
+      "topupError": "Die Aufladung konnte nicht abgeschlossen werden.",
+      "noStripe": "Zahlungen sind nicht eingerichtet (Stripe-Schlüssel fehlt).",
+      "payLabelMsisdn": "{{minutes}} Min. kaufen · {{price}}",
+      "payLabelCard": "{{price}} zahlen · {{brand}} •••• {{last4}}",
+      "payLabelContinue": "Weiter zur Zahlung · {{price}}",
+      "dialogAria": "Beratungsminuten kaufen",
+      "addMinutes": "Beratungsminuten hinzufügen",
+      "pitch": "Jederzeit mehr hinzufügen – sogar während eines Gesprächs. Minuten verfallen nie.",
+      "popular": "Beliebt",
+      "packMin": "{{minutes}} Min.",
+      "payingWith": "Zahlung mit {{brand}} •••• {{last4}}",
+      "differentCard": "Andere Karte verwenden",
+      "savedCard": "← Gespeicherte Karte verwenden",
+      "checkingCard": "Deine gespeicherte Karte wird geprüft …",
+      "chargedMobile": "Wird über deine Handyrechnung abgerechnet.",
+      "securedStripe": "Gesichert durch Stripe.",
+      "close": "Schließen",
+      "addingMinutes": "Minuten werden hinzugefügt …",
+      "checkingPhone": "Wird mit deinem Mobilfunkanbieter geprüft.",
+      "confirmingPayment": "Deine Zahlung wird bestätigt.",
+      "payFor_one": "Für {{count}} Minute bezahlen",
+      "payFor_other": "Für {{count}} Minuten bezahlen",
+      "savedCardInstead": "← Stattdessen gespeicherte Karte verwenden",
+      "doneAdded_one": "{{count}} Minute hinzugefügt",
+      "doneAdded_other": "{{count}} Minuten hinzugefügt",
+      "ready": "Sie sind bereit, wann immer du reden möchtest.",
+      "done": "Fertig"
+    }
+  },
+  "ebooks": {
+    "badgeFree": "Gratis",
+    "badgeOwned": "Gekauft",
+    "badgeIncluded": "Enthalten",
+    "addToShelf": "Ins Regal legen",
+    "buyPrice": "Kaufen · {{price}}",
+    "lang": {
+      "en": "Englisch",
+      "de": "Deutsch",
+      "hi": "Hindi",
+      "fr": "Französisch",
+      "es": "Spanisch"
+    },
+    "coverAlt": "Cover von {{title}}",
+    "cardNumber": "Kartennummer",
+    "expiry": "Gültig bis",
+    "cvc": "CVC",
+    "processing": "Wird verarbeitet…",
+    "pay": "Zahle {{price}}",
+    "cardChargeErrorRetry": "Deine Karte konnte nicht belastet werden. Bitte versuche eine andere Karte.",
+    "payNotConfigured": "Zahlungen sind nicht eingerichtet (Stripe-Schlüssel fehlt).",
+    "cardChargeError": "Deine Karte konnte nicht belastet werden.",
+    "payNotSetUp": "Zahlungen sind nicht eingerichtet — füge VITE_STRIPE_PUBLISHABLE_KEY hinzu und starte neu.",
+    "preparingCheckout": "Sicherer Checkout wird vorbereitet…",
+    "cardExpires": "Gültig bis {{exp}}",
+    "cardDefaultSuffix": " · Standard",
+    "useNewCard": "Stattdessen eine neue Karte verwenden",
+    "useSavedCard": "← Gespeicherte Karte verwenden",
+    "paySecure": "Gesichert durch Stripe. Testmodus — nutze Karte 4242 4242 4242 4242.",
+    "openError": "Dieses Buch konnte nicht geöffnet werden — versuche es erneut.",
+    "saveProgressError": "Dein Fortschritt konnte nicht gespeichert werden.",
+    "addedToShelf": "“{{title}}” wurde zu deinem Regal hinzugefügt.",
+    "addShelfError": "Dieses Buch konnte nicht zu deinem Regal hinzugefügt werden.",
+    "onYourShelfToast": "“{{title}}” ist jetzt in deinem Regal.",
+    "checkoutError": "Checkout konnte nicht gestartet werden — versuche es erneut.",
+    "chapterKicker": "Kapitel {{n}}",
+    "pdfFooter": "Für dich zum Lesen gemacht.",
+    "preparingPdf": "Bereite “{{title}}” vor — wähle im Druckfenster “Als PDF speichern”.",
+    "previewAria": "Vorschau von {{title}}",
+    "premium": "Premium",
+    "chaptersShort_one": "{{count}} Kap.",
+    "chaptersShort_other": "{{count}} Kap.",
+    "minutesShort_one": "{{count}} Min.",
+    "minutesShort_other": "{{count}} Min.",
+    "read": "Lesen",
+    "preview": "Vorschau",
+    "loadError": "Der E-Book-Shop konnte nicht geladen werden — {{error}}",
+    "eyebrow": "Der E-Book-Shop",
+    "heroTitleA": "Kurze Lektüren für einen ",
+    "heroTitleEm": "ruhigeren Geist.",
+    "lede": "Kurze, freundliche Bücher über das, was uns belastet — Sorgen, Schlaf, Selbstzweifel, Trauer. Manche sind gratis zu lesen. Andere erfordern eine einmalige Zahlung.",
+    "shelfPill_one": "{{count}} in deinem Regal",
+    "shelfPill_other": "{{count}} in deinem Regal",
+    "yourShelf": "Dein Regal",
+    "booksCount_one": "{{count}} Buch",
+    "booksCount_other": "{{count}} Bücher",
+    "shelfSub": "Bücher, die du hinzugefügt oder gekauft hast — jederzeit öffnen.",
+    "explore": "Entdecken",
+    "searchPlaceholder": "Titel oder Autoren suchen",
+    "searchAria": "Bibliothek durchsuchen",
+    "exploreSub": "Lege ein gratis Buch in dein Regal oder lies das erste Kapitel und schalte den Rest frei.",
+    "categoriesAria": "Kategorien",
+    "categoryAll": "Alle",
+    "loadingLibrary": "Bibliothek wird geladen…",
+    "emptyAllAdded": "Du hast hier alles hinzugefügt — genieße dein Regal.",
+    "emptyNoMatch": "Noch keine passenden Bücher — probiere eine andere Kategorie oder Suche.",
+    "readerAria": "Leseansicht von {{title}}",
+    "closeReader": "Leseansicht schließen",
+    "pagesCount_one": "{{count}} Seite",
+    "pagesCount_other": "{{count}} Seiten",
+    "percentRead": "{{percent}}% gelesen",
+    "onYourShelf": "In deinem Regal",
+    "freeToRead": "Gratis zu lesen · füge es hinzu, um es in deinem Regal zu behalten",
+    "readChapterOneFree": "Erstes Kapitel gratis lesen · kaufe den Rest, um weiterzulesen",
+    "contents": "Inhalt",
+    "loading": "Wird geladen…",
+    "tocFree": "Gratis",
+    "startReading": "Zu lesen beginnen",
+    "downloadPdf": "PDF herunterladen",
+    "readChapterOne": "Erstes Kapitel lesen",
+    "chapterOf": "Kapitel {{current}} von {{total}}",
+    "markedAsRead": "Als gelesen markiert",
+    "markAsRead": "Als gelesen markieren",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "buyToKeepReading": "Kaufen, um weiterzulesen",
+    "theEnd": "Ende · {{author}}",
+    "buyAria": "{{title}} kaufen",
+    "oneTimePurchase": "Einmaliger Kauf",
+    "lifetimeAccess": "Lebenslanger Zugang — jederzeit lesen",
+    "availableIn": "Verfügbar auf {{languages}}",
+    "chaptersCount_one": "{{count}} Kapitel",
+    "chaptersCount_other": "{{count}} Kapitel",
+    "paymentDetails": "Zahlungsdetails",
+    "isYours": "{{title}} gehört jetzt dir",
+    "onShelfNow": "Es ist jetzt in deinem Regal — beginne, wann immer du magst.",
+    "readNow": "Jetzt lesen",
+    "toMyShelf": "Zu meinem Regal",
+    "close": "Schließen",
+    "cat": {
+      "anxiety-mental-health": "Angst & psychische Gesundheit",
+      "habits-routines": "Gewohnheiten & Routinen",
+      "leadership-management": "Führung & Management",
+      "focus-productivity": "Fokus & Produktivität",
+      "purpose-personal-growth": "Sinn & persönliches Wachstum",
+      "relationships-emotions": "Beziehungen & Emotionen"
+    }
+  },
+  "pricing": {
+    "eyebrow": "Tarife & Preise",
+    "h1a": "Wähle den Tarif, der",
+    "h1em": "zu dir passt.",
+    "ledeBase": "Ein Monatstarif gibt dir eine feste Anzahl an Assessments, E-Books und Beratungsminuten.",
+    "ledeStripe": "Aufgebraucht? Du zahlst nur für die zusätzlichen Dinge, die du wählst.",
+    "ledeMsisdn": "Wird über deine Handyrechnung abgerechnet – keine Karte nötig.",
+    "coveredTitle": "Du nutzt den {{plan}}-Tarif.",
+    "coveredRemaining": "{{remaining}} von {{allowance}} Assessments",
+    "coveredLeft": "diesen Monat übrig.",
+    "coveredActive": "Dein Tarif ist aktiv.",
+    "coveredTake": "Mach eins, wann immer du bereit bist. Du musst nichts weiter kaufen, bis alles aufgebraucht ist.",
+    "takeAssessment": "Assessment starten",
+    "manageSubscription": "Abo verwalten",
+    "blockedTitle": "Du hast alle deine Assessments genutzt.",
+    "blockedBody": "Du hast diesen Monat alle {{allowance}} Assessments in deinem {{plan}}-Tarif gemacht.",
+    "blockedResetPre": "Wird zurückgesetzt am",
+    "blockedNote": "Mit Abrechnung über die Handyrechnung kannst du keine Extras kaufen – hier gibt es also nichts zu kaufen. Nächsten Monat beginnt dein Zähler von vorn.",
+    "viewSubscription": "Abo ansehen",
+    "nextMonth": "nächsten Monat",
+    "exhaustedPre": "Du hast alle {{allowance}} Assessments in deinem",
+    "exhaustedPost": "Tarif aufgebraucht. Jedes weitere Assessment kostet jetzt ${{price}}, berechnet, sobald du eines machst.",
+    "emptyTitle": "Gerade keine Tarife",
+    "emptyBody": "Bitte schau bald wieder vorbei.",
+    "mostPopular": "Am beliebtesten",
+    "perMonth": "/Mon.",
+    "rowAssessments": "Assessments / Monat",
+    "rowEbooks": "E-Books / Monat",
+    "rowCounselling": "Beratung / Monat",
+    "unitMin": "Min.",
+    "yourCurrentPlan": "Dein aktueller Tarif",
+    "choosePlan": "{{plan}} wählen",
+    "errorTitle": "Wir konnten die Tarife nicht laden",
+    "tryAgain": "Erneut versuchen",
+    "paygTitle": "Lieber nach Bedarf zahlen?",
+    "paygBody": "Kein Tarif nötig. Das nutzt du auch, wenn ein Tarif aufgebraucht ist. Kauf nur, was du brauchst.",
+    "paygAssessment": "Assessment",
+    "paygEbook": "E-Book",
+    "paygFrom": "ab",
+    "paygCounselling": "Beratung",
+    "faqTitle": "Häufige Fragen",
+    "faq": {
+      "assessment": {
+        "q": "Was zählt als ein Assessment?",
+        "a": "Jedes Thema, das du wählst, etwa Stress & Burnout, Schlaf oder Emotionale Intelligenz. Dein Tarif gibt dir jeden Monat so viele vollständige Assessments (mit Berichten und Audioplänen)."
+      },
+      "runOut": {
+        "q": "Was passiert, wenn alles aufgebraucht ist?",
+        "aStripe": "Nichts hört auf zu funktionieren. Danach zahlst du einfach für jedes Element, das du möchtest – ein zusätzliches Assessment, ein E-Book oder Beratungsminuten, eins nach dem anderen.",
+        "aMsisdn": "Bei Abrechnung über die Handyrechnung kannst du keine Extras einzeln kaufen. Du wartest einfach, bis dein Zähler zu Beginn des nächsten Monats zurückgesetzt wird. Alles, was du schon freigeschaltet hast, bleibt dir erhalten."
+      },
+      "change": {
+        "q": "Kann ich meinen Tarif ändern oder kündigen?",
+        "a": "Jederzeit auf deiner Abrechnungsseite. Ein größerer Tarif startet sofort. Ein kleinerer Tarif oder eine Kündigung greift zum Monatsende."
+      },
+      "carry": {
+        "q": "Werden ungenutzte Elemente in den nächsten Monat übertragen?",
+        "a": "Nein. Dein Zähler wird jeden Monat zurückgesetzt. Aber alles, was du bereits freigeschaltet hast, bleibt dir erhalten."
+      }
+    }
+  },
+  "profile": {
+    "eyebrow": "Dein Konto",
+    "title": "Profil & Einstellungen",
+    "memberSince": "Mitglied seit {{date}}",
+    "signOut": "Abmelden",
+    "aria": {
+      "settingsSections": "Einstellungsbereiche",
+      "pickTime": "Erinnerungszeit wählen",
+      "timePicker": "Zeitauswahl",
+      "deleteAccount": "Konto löschen",
+      "close": "Schließen"
+    },
+    "account": {
+      "title": "Konto",
+      "desc": "Deine Angaben und der Name, den wir in deinen Berichten und Audios verwenden.",
+      "changePhoto": "Foto ändern",
+      "photoNote": "PNG oder JPG. Quadratisch sieht am besten aus.",
+      "fullName": "Vollständiger Name",
+      "reportName": "Name in deinen Berichten",
+      "email": "E-Mail",
+      "save": "Änderungen speichern"
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "desc": "Wähle die Erinnerungen, die du möchtest. Wir senden sie nur, wenn du zustimmst.",
+      "dailyTitle": "Tägliche Sitzungserinnerung",
+      "dailyDesc": "Eine Benachrichtigung zur von dir gewählten Zeit, wenn deine Sitzung bereit ist.",
+      "productTitle": "Produktneuigkeiten",
+      "productDesc": "Neue Themen und Funktionen. Nicht sehr oft."
+    },
+    "referrals": {
+      "title": "Empfehlungen",
+      "desc": "Es hilft, jemanden mitzunehmen. Ihr bekommt beide eine kostenlose Beratungssitzung.",
+      "inviteLabel": "Dein Einladungslink",
+      "copy": "Kopieren",
+      "invited": "eingeladen",
+      "joined": "beigetreten",
+      "earned": "kostenlose Sitzung erhalten"
+    },
+    "privacy": {
+      "title": "Privatsphäre & Daten",
+      "desc": "Deine Berichte gehören dir. Lade sie herunter oder schließe dein Konto.",
+      "exportTitle": "Meine Daten exportieren",
+      "exportDesc": "Lade alle deine Berichte, Ergebnisse und Stimmungsprotokolle als Datei herunter.",
+      "disclaimer": "Daybreak-Assessments helfen dir, über dich selbst nachzudenken. Sie sind keine medizinische Versorgung. Wir verkaufen deine Daten niemals. Wenn du in einer Krise bist, ruf bitte deinen örtlichen Notruf oder eine Krisenhotline an.",
+      "deleteTitle": "Konto löschen",
+      "deleteDesc": "Damit werden deine Berichte, Pläne und Bücher endgültig gelöscht. Du kannst das nicht rückgängig machen.",
+      "delete": "Löschen"
+    },
+    "modal": {
+      "title": "Dein Konto löschen?",
+      "body": "Damit würden deine Berichte, dein Audio-Fortschritt und deine Bücher endgültig gelöscht. In dieser Demo wird nichts wirklich gelöscht.",
+      "confirm": "Ja, alles löschen",
+      "keep": "Konto behalten"
+    },
+    "toast": {
+      "browserNoNotif": "Dein Browser kann keine Benachrichtigungen anzeigen.",
+      "serverNotSetup": "Benachrichtigungen sind auf dem Server noch nicht eingerichtet.",
+      "allowNotif": "Erlaube Benachrichtigungen in deinem Browser, um das zu aktivieren.",
+      "turnOnFailed": "Benachrichtigungen konnten nicht aktiviert werden.",
+      "photoDemo": "Der Foto-Upload ist nur eine Demo.",
+      "profileUpdated": "Profil aktualisiert.",
+      "exportStarted": "Export gestartet. Das ist nur eine Demo.",
+      "inviteCopied": "Einladungslink kopiert.",
+      "accountSafe": "Das ist eine Demo. Dein Konto ist sicher.",
+      "reminderOn": "Tägliche Erinnerung aktiviert. Wir erinnern dich um {{time}}.",
+      "reminderOff": "Tägliche Erinnerung deaktiviert.",
+      "productNewsOn": "Produktneuigkeiten aktiviert. Wir informieren dich über neue Funktionen.",
+      "productNewsOff": "Produktneuigkeiten deaktiviert.",
+      "reminderSetFor": "Erinnerung für {{time}} eingestellt.",
+      "reminderTimeSaved": "Erinnerungszeit gespeichert."
+    }
+  },
+  "reports": {
+    "loading": "Deine Berichte werden geladen …",
+    "errorTitle": "Wir konnten deine Berichte nicht laden",
+    "browseAssessments": "Tests durchstöbern",
+    "eyebrow": "Deine Berichte",
+    "titleA": "Sieh deinen Fortschritt ",
+    "titleEm": "im Laufe der Zeit.",
+    "lede": "Jeder Bericht, den du freigeschaltet hast, nach Thema gruppiert. Jedes Mal, wenn du einen erneut machst, siehst du, wo du angefangen hast und wie weit du gekommen bist.",
+    "reportsSaved": "Berichte gespeichert",
+    "topicsTried": "Themen ausprobiert",
+    "biggestChange": "Pkt. · größte Veränderung",
+    "emptyTitle": "Noch keine Berichte",
+    "emptyBody": "Mach deinen ersten Test und dein Bericht erscheint hier. Jedes Mal, wenn du ihn erneut machst, entsteht ein Verlauf.",
+    "takeAssessment": "Einen Test machen",
+    "exploreTitle": "Themen, die du noch nicht ausprobiert hast",
+    "exploreBody": "Jeder neue Test fügt einen weiteren Bericht und einen weiteren Weg hinzu, dem du folgen kannst.",
+    "cardMeta": "{{areas}} Bereiche · {{min}} Min.",
+    "groupMeta_one": "{{count}} Bericht · erstmals gemacht am {{date}}",
+    "groupMeta_other": "{{count}} Berichte · erstmals gemacht am {{date}}",
+    "pts": "Pkt.",
+    "noChange": "keine Änderung",
+    "better": "besser",
+    "progressPre_one": "Über {{count}} Check-in hinweg ging dein Wert von ",
+    "progressPre_other": "Über {{count}} Check-ins hinweg ging dein Wert von ",
+    "progressTo": " auf ",
+    "progressTailImproved": " — diese Veränderung ist deine, nicht die des Tests.",
+    "progressTailFlat": ".",
+    "baLabel": "Erster Check-in → aktuell, Bereich für Bereich",
+    "baselinePre": "Das ist dein ",
+    "baselineStrong": "Ausgangspunkt",
+    "baselineMid_one": " für {{topic}}. Mach ihn in {{count}} Tag erneut, um zu sehen, wie deine Zahlen sich zu bewegen beginnen.",
+    "baselineMid_other": " für {{topic}}. Mach ihn in {{count}} Tagen erneut, um zu sehen, wie deine Zahlen sich zu bewegen beginnen.",
+    "allReports": "Alle Berichte",
+    "latest": "Aktuell",
+    "start": "Start",
+    "takeAgainNow": "Jetzt erneut machen",
+    "retakeNote_one": "Es ist {{count}} Tag her — jetzt erneut zu machen zeigt, wie weit du gekommen bist.",
+    "retakeNote_other": "Es sind {{count}} Tage her — jetzt erneut zu machen zeigt, wie weit du gekommen bist.",
+    "retakeWait_one": "Du kannst ihn in {{count}} Tag erneut machen",
+    "retakeWait_other": "Du kannst ihn in {{count}} Tagen erneut machen",
+    "daysProgress": "{{n}} / 60 Tage",
+    "retakeSub": "Ihn alle 60–90 Tage erneut zu machen hält den Vergleich sinnvoll.",
+    "viewLoading": "Dein Bericht wird geladen …",
+    "notFoundTitle": "Bericht nicht gefunden",
+    "viewErrorTitle": "Wir konnten diesen Bericht nicht laden",
+    "backToReports": "Zurück zu den Berichten",
+    "you": "Du",
+    "reportDate": "Bericht · {{date}}",
+    "yourReport": "Dein Bericht",
+    "backAria": "Zurück zu deinen Berichten",
+    "dir_higher": "höher",
+    "dir_lower": "niedriger"
+  },
+  "assessData": {
+    "likert": [
+      "Nie",
+      "Selten",
+      "Manchmal",
+      "Oft",
+      "Fast immer"
+    ],
+    "stress-burnout": {
+      "title": "Stress & Burnout",
+      "tagline": "Für die Zeiten, in denen von außen alles gut aussieht, sich innen aber schwer anfühlt.",
+      "blurb": "Ein klarer Blick darauf, wohin deine Energie geht und warum Ruhe irgendwann nicht mehr hilft. Wir schauen uns vier Bereiche deines Lebens an, werten deine ehrlichen Antworten aus und erstellen einen Plan, der dort ansetzt, wo du es am stärksten spürst.",
+      "ringLabel": "Gesamtbelastung",
+      "overall": {
+        "low": "Deine Gesamtbelastung liegt in einem gesunden Bereich. Die Bereiche unten zeigen, wo sich bei dir zuerst Druck aufbaut. Dein Plan sorgt dafür, dass sie frei bleiben.",
+        "mid": "Du stehst unter echtem Druck und hältst trotzdem stand. Aber manches, das dich eigentlich auftanken sollte, wird knapp. Jetzt erkannt, lässt sich das schnell umkehren.",
+        "high": "Deine Belastung ist in mehreren Bereichen gleichzeitig hoch. Nichts davon ist ein Urteil. Hohe Werte zeigen einfach, wo dein Plan beginnt, und diese Zahlen verändern sich mit etwas Übung."
+      },
+      "plan": {
+        "welcome": "dieser Plan beginnt bei deinen Abenden, denn genau dort verlierst du laut deinen Antworten deine Erholung…",
+        "sessions": [
+          "Den Tag ausklingen lassen",
+          "Sehen, was dich auslaugt",
+          "Eine Stunde, die dir gehört",
+          "Ein bisschen loslassen"
+        ]
+      },
+      "dims": {
+        "exhaustion": {
+          "label": "Erschöpfung",
+          "desc": "Wie niedrig deine Energie ist, in Körper und Kopf.",
+          "rec": "Leg jeden Tag zwei Wochen lang eine ruhige Ausklingzeit vor 21 Uhr fest. Lass sie nicht ausfallen.",
+          "hints": {
+            "low": "Deine Energie bleibt stabil. Das ist eine echte Stärke, und dein Plan hilft dir, sie zu bewahren.",
+            "mid": "Deine Energie sackt ab, aber noch nicht zu stark. Das Ziel ist jetzt, die Stunden zu schützen, die dich auftanken, bevor die Tiefs schlimmer werden.",
+            "high": "Deine Energie läuft auf Reserve. Der erste Schritt ist, weniger zu tun, nicht mehr. Dein Plan beginnt damit, dir Dinge abzunehmen."
+          }
+        },
+        "cynicism": {
+          "label": "Distanz spüren",
+          "desc": "Wie weit du dich von den Dingen entfernt fühlst, die dir früher wichtig waren.",
+          "rec": "Benenne einmal am Tag eine Aufgabe, die sich noch lohnt, bevor du irgendetwas anderes öffnest.",
+          "hints": {
+            "low": "Du fühlst dich noch mit dem verbunden, was du tust. Das hilft dir, schneller wieder auf die Beine zu kommen.",
+            "mid": "Du fängst an, dich etwas distanziert zu fühlen. Meist ist das ein Weg, dich zu schützen, keine Veränderung deiner selbst. Es lässt nach, wenn der Druck sinkt.",
+            "high": "Distanz zu spüren ist zu deiner Art geworden, damit klarzukommen. Diese Taubheit ist ein Signal. Sie zeigt, wo es zu lange zu schwer war."
+          }
+        },
+        "control": {
+          "label": "Gefühl von Kontrolle",
+          "desc": "Wie viel Mitbestimmung du über deine Zeit, dein Tempo und deine Entscheidungen zu haben glaubst.",
+          "rec": "Wähle jeden Morgen deine erste Aufgabe selbst, bevor deine E-Mails sie für dich wählen.",
+          "hints": {
+            "low": "Du hast das Gefühl, deine Tage im Griff zu haben. Achte weiter auf die kleinen Entscheidungen, die du triffst. So wächst dieses Gefühl von Kontrolle.",
+            "mid": "Deine Tage gehören teils dir und teils deinem Posteingang. Schon eine einzige Stunde, die du selbst bestimmst, bewegt diesen Wert schnell.",
+            "high": "Im Moment fühlen sich deine Tage so an, als würden sie dir einfach passieren. Dein Plan baut dein Gefühl von Kontrolle in winzigen Schritten wieder auf. Minuten, keine großen Lebensumstellungen."
+          }
+        },
+        "recovery": {
+          "label": "Erholungsfähigkeit",
+          "desc": "Wie gut deine Ruhe dich wirklich erfrischt.",
+          "rec": "Tausche deine letzten 20 Minuten Bildschirmzeit gegen eine Audiositzung aus deinem Plan.",
+          "hints": {
+            "low": "Deine Ruhe erfrischt dich wirklich. Das ist selten und wert, es zu schützen.",
+            "mid": "Deine Ruhe wirkt, aber nicht jedes Mal. Die Lösung ist meist eine feste Routine, nicht mehr Stunden.",
+            "high": "Deine Ruhe erreicht dich nicht. Abende vergehen, Wochenenden vergehen, und du fühlst dich immer noch leer. Genau hier setzt dein Plan an: zuerst die Abende."
+          }
+        }
+      },
+      "questions": [
+        "Ich wache müde auf, sogar nach einer ganzen Nacht Schlaf.",
+        "Am frühen Nachmittag habe ich kaum noch Energie für die Dinge, die mir wichtig sind.",
+        "Kleine Aufgaben fühlen sich schwerer an, als sie sein sollten.",
+        "Ich fühle mich distanziert oder als wären mir Dinge egal, die mir früher wichtig waren.",
+        "Ich ertappe mich bei dem Gedanken „Wozu das Ganze?“ bei alltäglichen Aufgaben.",
+        "Meine Tage fühlen sich an, als würden sie mir einfach passieren, statt dass ich sie gestalte.",
+        "Ich kann das Tempo und die Reihenfolge meines Tages selbst bestimmen.",
+        "Abende und Wochenenden laden mich wirklich auf.",
+        "Selbst wenn ich ruhe, arbeitet mein Kopf weiter.",
+        "Ich halte mir in meiner Woche Zeit frei, die nur der Ruhe dient."
+      ],
+      "ebook": "Das Rauschen zur Ruhe bringen"
+    },
+    "sleep-rest": {
+      "title": "Schlaf & Erholung",
+      "tagline": "Für Nächte, in denen du müde, aber aufgedreht bist, und Morgen, die holprig beginnen.",
+      "blurb": "Ein Blick auf vier Bereiche deiner Nächte: Schlafdruck, Herunterfahren, deine Routine und die Sorgen, die auftauchen, wenn das Licht ausgeht. Ehrlich ausgewertet, in einen Plan für jede Nacht verwandelt.",
+      "ringLabel": "Schlafprobleme",
+      "overall": {
+        "low": "Dein Schlaf funktioniert im Grunde. Die Bereiche unten sind frühe Warnzeichen. Dein Plan hält sie im grünen Bereich.",
+        "mid": "Deine Nächte sind an ein paar Stellen angespannt, die du beheben kannst. Schlaf bessert sich mit einer festen Routine schnell. Die meisten spüren die Veränderung innerhalb von zwei Wochen.",
+        "high": "Dein Schlaf ist in mehreren Bereichen angespannt. Die gute Nachricht: Schlaf reagiert auf kleine, wiederholte Veränderungen besser als fast alles andere."
+      },
+      "plan": {
+        "welcome": "wir fangen heute Nacht an. Nicht mit Regeln, sondern mit einem sanften Herunterfahren, das dein Körper lernen kann…",
+        "sessions": [
+          "Lernen, herunterzufahren",
+          "Den Tag abschalten",
+          "Ein Bett nur zum Schlafen",
+          "Das Sorgenfenster"
+        ]
+      },
+      "dims": {
+        "debt": {
+          "label": "Schlafdruck",
+          "desc": "Wie viel aufgestaute Müdigkeit du in jeden Tag mitnimmst.",
+          "rec": "Geh 20 Minuten früher ins Bett, nur 20, in den nächsten zehn Nächten.",
+          "hints": {
+            "low": "Du fährst mit einem fast vollen Tank. Du bekommst ungefähr den Schlaf, den du brauchst.",
+            "mid": "Du baust ein kleines Schlafdefizit auf. Es ist nicht riesig, aber es summiert sich. Kleines, regelmäßiges Nachholen wirkt am besten.",
+            "high": "Dein Körper muss dringend nachholen. Der Plan setzt auf gleichmäßige, etwas frühere Nächte statt auf großes Nachholen am Wochenende."
+          }
+        },
+        "winddown": {
+          "label": "Herunterfahren",
+          "desc": "Wie gut deine Abende dir helfen, vom Tun zum Ruhen umzuschalten.",
+          "rec": "Wähle jeden Abend eine feste Zeit, um das Licht zu dimmen. Die Audiositzung markiert sie.",
+          "hints": {
+            "low": "Deine Abende werden schon gut ruhiger. Deine Sitzungen bauen auf dem auf, was funktioniert.",
+            "mid": "Dein Herunterfahren funktioniert, wenn du es zulässt. Die Lücke liegt darin, es jeden Abend zu tun, nicht an der Methode selbst.",
+            "high": "Du gehst von Vollgas auf Stillstand, ohne etwas dazwischen. Dein Plan baut ein 30-minütiges Herunterfahren auf, das dein Körper lernen kann."
+          }
+        },
+        "rhythm": {
+          "label": "Eine feste Routine",
+          "desc": "Wie gleichmäßig deine Schlaf- und Aufstehzeiten unter der Woche sind.",
+          "rec": "Leg zuerst deine Aufstehzeit fest. Lass deine Schlafenszeit folgen.",
+          "hints": {
+            "low": "Deine innere Uhr hält einen gleichmäßigen Takt. Schütze sie. Sie leistet still viel für dich.",
+            "mid": "Deine Routine rutscht an Wochenenden und in vollen Wochen. Schon eine feste Aufstehzeit bringt den Rest ins Gleichgewicht.",
+            "high": "Deine innere Uhr bekommt jeden Tag widersprüchliche Signale. Eine feste Aufstehzeit, auch am Wochenende, ist die größte einzelne Veränderung, die du machen kannst."
+          }
+        },
+        "nightworry": {
+          "label": "Sorgen in der Nacht",
+          "desc": "Wie sehr dein Kopf loslegt, wenn das Licht ausgeht.",
+          "rec": "Nimm dir um 20 Uhr 5 Minuten, um deine Sorgen aufzuschreiben, und leg sie dann beiseite.",
+          "hints": {
+            "low": "Dein Kopf ist nachts meist ruhig. Der Plan hält das mit ein wenig Pflege so.",
+            "mid": "Manche Nächte tauchen Sorgen auf. Sie aufzuschreiben, statt sie im Bett festzuhalten, hilft meist innerhalb einer Woche.",
+            "high": "Die Nacht ist zu der Zeit geworden, in der dein Kopf am härtesten arbeitet. Dein Plan verlegt die Sorgen auf den früheren Abend, damit das Bett nicht mehr der Ort ist, an dem du Dinge klärst."
+          }
+        }
+      },
+      "questions": [
+        "Ich brauche einen Wecker, und die Schlummertaste, um aufzustehen, wenn ich es mir vornehme.",
+        "Ich fühle mich beim Aufwachen richtig ausgeruht.",
+        "Ich nutze Bildschirme bis kurz bevor ich versuche zu schlafen.",
+        "Meine Abende haben einen klaren Punkt, an dem ich anfange, langsamer zu werden.",
+        "Meine Schlaf- und Aufstehzeiten schwanken unter der Woche um mehr als eine Stunde.",
+        "Am Wochenende stehe ich ungefähr zur gleichen Zeit auf.",
+        "Wenn das Licht ausgeht, wird mein Kopf lauter.",
+        "Ich gehe Gespräche durch oder plane den nächsten Tag, während ich versuche einzuschlafen.",
+        "Ich brauche Koffein, um durch einen normalen Tag zu kommen.",
+        "Ich schlafe an den meisten Abenden innerhalb von zwanzig Minuten ein."
+      ],
+      "ebook": "Die sanfte Landung"
+    },
+    "anxiety-worry": {
+      "title": "Angst & Sorgen",
+      "tagline": "Für die Zeiten, in denen dein Kopf zu Dingen vorausspringt, die noch nicht passiert sind.",
+      "blurb": "Wo deine Sorgen sitzen, wie sie sich in deinem Körper zeigen, was sie dich meiden lassen und wie leicht du in die Gegenwart zurückfindest. Behutsam kartiert, klar ausgewertet.",
+      "ringLabel": "Sorgenpegel",
+      "overall": {
+        "low": "Deine Sorgen bleiben meist im Verhältnis. Sie sind da, aber sie geben nicht den Ton an. Die Karte unten zeigt, wo sie sich stauen, wenn sie doch ansteigen.",
+        "mid": "Sorgen haben an manchen Stellen wirklich Fuß gefasst, während andere Stärken intakt bleiben. Dein Plan arbeitet an den Schwachstellen und baut auf den Stärken auf.",
+        "high": "Sorgen sind gerade in mehreren Bereichen laut. Das ist anstrengend, und man kann daran arbeiten. Diese vier Bereiche reagieren gut auf kurze, tägliche, körperliche Übung."
+      },
+      "plan": {
+        "welcome": "wir kämpfen nicht gegen deine Sorgen an. Wir üben, aus ihnen zurückzufinden, jeden Tag ein bisschen…",
+        "sessions": [
+          "Lernen, dich zu erden",
+          "Länger ausatmen",
+          "Die Sorgenschleife benennen",
+          "Der erste kleine Schritt"
+        ]
+      },
+      "dims": {
+        "rumination": {
+          "label": "Sich im Kreis drehen",
+          "desc": "Wie sehr dein Kopf sich in denselben Sorgen dreht, ohne sie zu lösen.",
+          "rec": "Wenn eine Schleife anfängt, sag sie einmal laut, etwa „schon wieder am Planen“, dann steh auf und beweg dich.",
+          "hints": {
+            "low": "Deine Gedanken ziehen meist vorbei und weiter. Das ist bemerkenswert. Es ist eine Fähigkeit, die du schon hast.",
+            "mid": "Manche Gedanken bleiben in der Wiederholung hängen. Schleifen werden schwächer, wenn du sie früh erwischst. Genau das üben deine Sitzungen.",
+            "high": "Dein Kopf hat tiefe Rillen aus denselben Gedanken gegraben. Dein Plan streitet nicht mit den Schleifen. Er bringt dir bei, vom Gleis zu steigen."
+          }
+        },
+        "body": {
+          "label": "Körpersignale",
+          "desc": "Wie stark sich Sorgen in deinem Körper zeigen: Brust, Atem, Bauch, Kiefer.",
+          "rec": "Atme zweimal am Tag länger aus als ein, für zehn Atemzüge. Das ist die ganze Übung.",
+          "hints": {
+            "low": "Dein Körper bleibt unter Stress meist ruhig. Das ist eine starke Basis für alles andere.",
+            "mid": "Dein Körper warnt dich, bevor dein Kopf es merkt. Seine frühen Signale zu lernen macht sie zu hilfreichen Warnungen.",
+            "high": "Dein Körper hält die Sorge fest, die dein Kopf nicht ablegen will. Dein Plan beginnt beim Körper: erst Atem und Muskeln, dann die Gedanken."
+          }
+        },
+        "avoidance": {
+          "label": "Vermeidung",
+          "desc": "Wie sehr Sorgen angefangen haben, das zu verkleinern, wozu du bereit bist.",
+          "rec": "Schreib drei Dinge auf, die du nicht mehr tust. Wähl das Einfachste. Mach diese Woche ein bisschen davon.",
+          "hints": {
+            "low": "Sorgen treffen nicht deine Entscheidungen. Deine Welt bleibt in voller Größe. Halt das so.",
+            "mid": "Ein paar Türen haben sich still geschlossen. Sie in kleinen Schritten wieder zu öffnen ist der verlässlichste Weg, an Angst zu arbeiten.",
+            "high": "Sorgen machen deine Welt Monat für Monat kleiner. Dein Plan dreht das behutsam um, ein kleiner Schritt nach dem anderen."
+          }
+        },
+        "grounding": {
+          "label": "Erdung",
+          "desc": "Wie leicht du in die Gegenwart zurückfindest, wenn die Sorgen hochschießen.",
+          "rec": "Übe die 5-4-3-2-1-Sinnesübung einmal am Tag in Ruhe, damit sie wirkt, wenn du es nicht bist.",
+          "hints": {
+            "low": "Du findest deinen Weg zurück in die Gegenwart. Die Sitzungen machen es dir zur zweiten Natur.",
+            "mid": "Du kannst dich erden, wenn du daran denkst. Die Übung macht es automatisch.",
+            "high": "Wenn die Sorgen hochschießen, ist die Gegenwart schwer zu erreichen. Dein Plan übt kurze, körperliche Wege, dich zu erden, bis sie da sind, wenn du sie brauchst."
+          }
+        }
+      },
+      "questions": [
+        "Ich grüble über Sorgen noch lange nach, wenn ich schon nichts mehr tun kann.",
+        "Mein Kopf springt bei Alltagssituationen zur schlimmsten Version.",
+        "Ich bemerke an ganz normalen Tagen Anspannung in Brust, Kiefer oder Bauch.",
+        "Meine Atmung bleibt unter Druck langsam und ruhig.",
+        "Ich schiebe Aufgaben, Anrufe oder Orte auf, wegen der Gefühle, die sie auslösen könnten.",
+        "Ich sage zu Dingen ja, auch wenn sie mich nervös machen.",
+        "Wenn die Sorgen hochschießen, kann ich mich in die Gegenwart zurückholen.",
+        "Bin ich einmal ängstlich, bleibe ich es stundenlang.",
+        "Ich verliere Schlaf, weil ich durchgehe, was alles schiefgehen könnte.",
+        "Mein Körper fühlt sich unruhig an, selbst wenn nichts Dringendes ansteht."
+      ],
+      "ebook": "Den Knoten lösen"
+    },
+    "focus-clarity": {
+      "title": "Fokus & Klarheit",
+      "tagline": "Für zerstreute Tage, die geschäftig, verschwommen und seltsam leer enden.",
+      "blurb": "Wo dein Fokus verloren geht, was ihn überlastet, wann dein Kopf am schärfsten ist und wie leicht du gerade echte, konzentrierte Arbeit schaffst. Eine klare Karte von etwas Nebligem.",
+      "ringLabel": "Wie neblig",
+      "overall": {
+        "low": "Dein Fokus ist im Grunde stabil. Die Bereiche unten zeigen, wo du aufbauen kannst, nicht was du reparieren musst.",
+        "mid": "Dein Fokus geht an klaren Stellen verloren. Fokus lässt sich trainieren, und Lücken dieser Größe schließen sich meist innerhalb eines Plans.",
+        "high": "Der Nebel ist gerade dicht. Dein Fokus ist zerstreut, dein Kopf überlastet, und konzentriertes Arbeiten fühlt sich unerreichbar an. Alle vier lassen sich trainieren, und dein Plan trainiert sie täglich."
+      },
+      "plan": {
+        "welcome": "wir beginnen mit einem kleinen Block ruhiger Zeit. Klein genug, um ihn zu halten, echt genug, um etwas zu bewirken…",
+        "sessions": [
+          "Deine erste ruhige Arbeitszeit",
+          "Den Kopf frei machen",
+          "Deine beste Stunde finden",
+          "Eine Routine zum Starten"
+        ]
+      },
+      "dims": {
+        "distraction": {
+          "label": "Sog der Ablenkungen",
+          "desc": "Wie stark Unterbrechungen und Geräte dich von der Aufgabe wegziehen.",
+          "rec": "Ein 25-Minuten-Block täglich: Handy in einem anderen Raum. Nicht stumm. Ein anderer Raum.",
+          "hints": {
+            "low": "Dein Fokus hält gut. Die Sitzungen schärfen eine Fähigkeit, die du schon hast.",
+            "mid": "Du verlierst Fokus in kleinen, häufigen Lecks statt in großen Brüchen. Zwei oder drei davon zu beheben verändert ganze Tage.",
+            "high": "Du wirst so oft unterbrochen, dass du dich kaum konzentrieren kannst. Dein Plan baut den Fokus auf die einzige Weise wieder auf, die funktioniert: kurze Blöcke ruhiger Zeit, täglich."
+          }
+        },
+        "overload": {
+          "label": "Zu viel im Kopf",
+          "desc": "Wie viel du im Kopf behältst, statt es aufzuschreiben.",
+          "rec": "Nimm dir jeden Abend vor dem Schlafen 3 Minuten, um alles aufzuschreiben, was dir im Kopf herumgeht.",
+          "hints": {
+            "low": "Dein Kopf ist meist klar. Deine Notizen und Listen halten fest, was sie sollen.",
+            "mid": "Du behältst mehr im Kopf, als nötig ist. Jede Sache, die du aufschreibst, macht deinen Kopf ein bisschen freier.",
+            "high": "Dein Kopf versucht, alles zu speichern, sich an alles zu erinnern und dich an alles gleichzeitig zu erinnern. Dein Plan beginnt damit, alles aus deinem Kopf auf Papier zu bringen."
+          }
+        },
+        "energy": {
+          "label": "Dein Energiemuster",
+          "desc": "Wie gut deine Arbeit mit den Zeiten übereinstimmt, in denen dein Kopf wirklich wach ist.",
+          "rec": "Finde deine schärfsten 90 Minuten. Leg deine schwerste Sache dorthin. Verteidige sie.",
+          "hints": {
+            "low": "Du verbringst deine besten Stunden meist mit deiner besten Arbeit. Das ist seltener, als du denkst.",
+            "mid": "Ein Teil deiner schärfsten Stunden geht für deine langweiligsten Aufgaben drauf. Schon eine Stunde zu tauschen hilft sofort.",
+            "high": "Deine besten Stunden gehen an E-Mails und Meetings, sodass für das Wichtige nur Nebel bleibt. Dein Plan holt sich eine gute Stunde nach der anderen zurück."
+          }
+        },
+        "deepwork": {
+          "label": "In tiefen Fokus kommen",
+          "desc": "Wie leicht du in tiefen Fokus kommst und darin bleibst.",
+          "rec": "Gleicher Schreibtisch, gleiche Playlist, gleicher erster Schritt. Mach das Anfangen zur Routine, nicht zur Entscheidung.",
+          "hints": {
+            "low": "Du kommst noch in tiefen Fokus, wenn du dich dafür entscheidest. Diese Fähigkeit wächst. Nutze sie bewusst.",
+            "mid": "Tiefer Fokus stellt sich ein, braucht aber ein langes Aufwärmen und bricht leicht ab. Eine feste Startroutine bringt dich schneller dorthin.",
+            "high": "Tiefer Fokus ist selten geworden. Er ist nicht weg, nur aus der Übung. Dein Plan baut deine Startroutine von Grund auf neu auf."
+          }
+        }
+      },
+      "questions": [
+        "Ich schaue schon wenige Minuten nach Beginn konzentrierter Arbeit aufs Handy.",
+        "Ich kann dreißig Minuten arbeiten, ohne die Aufgabe zu wechseln.",
+        "Ich behalte wichtige To-dos im Kopf, statt sie aufzuschreiben.",
+        "Ich fühle mich im Rückstand bei Dingen, die ich nicht einmal benennen kann.",
+        "Meine klarsten Stunden gehen an Meetings, E-Mails oder Verwaltung.",
+        "Ich hebe mir anspruchsvolle Arbeit für die Tageszeit auf, in der ich mich am besten konzentriere.",
+        "Ich kann so tief in eine Aufgabe eintauchen, dass ich die Zeit vergesse.",
+        "Selbst einfache Aufgaben brauchen bei mir viel länger, als sie sollten.",
+        "Benachrichtigungen bestimmen die Reihenfolge meines Tages.",
+        "Mein Kopf fühlt sich an wie ein Browser mit vierzig offenen Tabs."
+      ],
+      "ebook": "Eine klare Stunde"
+    },
+    "emotional-intelligence": {
+      "title": "Emotionale Intelligenz",
+      "tagline": "Um deine eigenen Gefühle zu verstehen und sie bei anderen zu lesen.",
+      "blurb": "Vier Fähigkeiten, ehrlich gemessen: wie gut du deine eigenen Gefühle wahrnimmst, sie beruhigst, andere liest und aussprichst, was wahr ist. Hier sind höhere Werte Stärken, und der Bericht zeigt, wo du wachsen kannst.",
+      "ringLabel": "Gefühlswert",
+      "overall": {
+        "low": "Diese Fähigkeiten stehen bei dir noch am Anfang, und genau dann wachsen sie am schnellsten. Jeder Bereich unten lässt sich trainieren, und der Plan trainiert sie der Reihe nach.",
+        "mid": "Du hast hier eine echte Basis, mit klarem Raum zum Wachsen. Der Bericht zeigt genau, welche Fähigkeit du als Nächstes angehen solltest, für die größte Veränderung.",
+        "high": "Diese Fähigkeiten sind durchweg stark. Die Arbeit besteht jetzt darin, unter Druck ruhig zu bleiben und sie auch dann zu halten, wenn es schwer wird."
+      },
+      "plan": {
+        "welcome": "wir bauen vier Fähigkeiten der Reihe nach auf. Zuerst das Wahrnehmen, weil alles andere darauf aufbaut…",
+        "sessions": [
+          "Ein Wort für dein Gefühl",
+          "Die Pause üben",
+          "Auf das hören, was darunter liegt",
+          "Ein ehrlicher Satz"
+        ]
+      },
+      "dims": {
+        "awareness": {
+          "label": "Selbstwahrnehmung",
+          "desc": "Wie gut du wahrnimmst und benennst, was du fühlst, während es geschieht.",
+          "rec": "Dreimal am Tag eine Frage: „Was fühle ich, in einem Wort?“ Das ist alles.",
+          "hints": {
+            "low": "Gefühle erreichen dich oft spät, als Stimmungen, Anspannung oder plötzliche Reaktionen. Sie benennen zu üben verändert das schneller als jede andere Fähigkeit hier.",
+            "mid": "Deine größeren Gefühle erwischst du gut, aber die kleineren rutschen dir noch durch. Deine Sitzungen helfen dir, die feinen wahrzunehmen.",
+            "high": "Du nimmst deine eigenen Gefühle früh und klar wahr. Das ist die Basis, auf der jede andere Fähigkeit aufbaut."
+          }
+        },
+        "regulation": {
+          "label": "Sich selbst beruhigen",
+          "desc": "Wie gut du ein starkes Gefühl beruhigen kannst, ohne es wegzuschieben.",
+          "rec": "Wenn es hochkocht: spür deine Füße auf dem Boden, atme einmal langsam, dann sprich. Die Reihenfolge zählt.",
+          "hints": {
+            "low": "Im Moment haben starke Gefühle das Sagen, und du wirst mitgerissen. Sich selbst zu beruhigen ist die am besten trainierbare Fähigkeit hier, und dein Plan baut sie behutsam auf.",
+            "mid": "Du kannst dich beruhigen, aber es kostet Mühe und etwas Zeit. Übung macht es schneller.",
+            "high": "Du kannst ein starkes Gefühl aushalten, ohne dass es die Oberhand gewinnt. Andere spüren, wie ausgeglichen du bist."
+          }
+        },
+        "empathy": {
+          "label": "Empathie",
+          "desc": "Wie gut du liest, was andere fühlen, unter dem, was sie sagen.",
+          "rec": "Rate einmal am Tag still, was jemand fühlt, und prüf es dann behutsam nach, wenn du kannst.",
+          "hints": {
+            "low": "Die Gefühle anderer überraschen dich oft. Neugierig zu bleiben, jeden Tag, ist die ganze Lösung.",
+            "mid": "Du liest Menschen gut, wenn du präsent bist, aber Stress verengt deinen Blick. Die Arbeit besteht darin, ihn offen zu halten, wenn es zählt.",
+            "high": "Du nimmst wahr, was nicht gesagt wird. Mit Bedacht eingesetzt, ist das eine seltene und wertvolle Fähigkeit."
+          }
+        },
+        "expression": {
+          "label": "Sich äußern",
+          "desc": "Wie klar und sicher du sagen kannst, was du wirklich fühlst und brauchst.",
+          "rec": "Sag einmal am Tag einen ehrlichen Satz, der mit „Ich fühle…“ beginnt, zu irgendjemandem, über irgendetwas.",
+          "hints": {
+            "low": "Was für dich wahr ist, bleibt meist innen oder kommt auf die falsche Weise heraus. Kleine, druckarme Momente der Ehrlichkeit bauen das schneller auf als große Gespräche.",
+            "mid": "Du sagst, was du fühlst, wenn es leicht ist, aber die wichtigen Gespräche schiebst du weiter auf. Genau die üben deine Sitzungen.",
+            "high": "Du kannst schwierige, ehrliche Dinge so sagen, dass Menschen sie hören können. Das ist die höchste Fähigkeit, und du hast sie."
+          }
+        }
+      },
+      "questions": [
+        "Ich kann benennen, was ich fühle, während ich es fühle.",
+        "Ich bemerke meine Stimmungen erst, nachdem sie meinen ganzen Tag beeinflusst haben.",
+        "Wenn mich etwas aufregt, kann ich mich innerhalb von Minuten beruhigen.",
+        "Ich sage oder verschicke im Eifer des Moments Dinge, die ich später bereue.",
+        "Ich spüre, wie sich jemand fühlt, bevor er es mir sagt.",
+        "Die Reaktionen anderer erwischen mich oft völlig unvorbereitet.",
+        "Ich kann anderen sagen, was ich brauche, ohne dass es zum Streit wird.",
+        "Ich halte meine wahren Gefühle zurück, bis sie auf die falsche Weise herauskommen.",
+        "Ich verstehe kurz danach, warum ich so reagiert habe.",
+        "Stress lässt mich stärker reagieren, als ich eigentlich will."
+      ],
+      "ebook": "Das hörende Herz"
+    }
+  },
+  "report": {
+    "eng": {
+      "stress": {
+        "label": {
+          "exhaustion": "Erschöpfung",
+          "cynicism": "Zynismus & Distanz",
+          "workload": "Arbeitspensum",
+          "recovery": "Erholungsfähigkeit",
+          "control": "Gefühl von Kontrolle"
+        },
+        "content": {
+          "exhaustion": {
+            "strengthLabel": "stabile Energie",
+            "blurb": "Wie ausgelaugt du dich fühlst – körperlich und mental – durch die Anforderungen deiner Tage.",
+            "note": {
+              "low": "Dein Tank ist ziemlich voll. Energie ist da, wenn du sie brauchst.",
+              "mid": "Du läufst heißer, als es angenehm ist – eine spürbare Müdigkeit, die auch Ruhe nicht ganz auflöst.",
+              "high": "Du bist oft ausgelaugt. Das ist dein Körper, der um echte Erholung bittet, nicht nur um ein Wochenende."
+            },
+            "bullets": [
+              "Müdigkeit, die auch nach einer normalen Nacht Schlaf bleibt, ist ein Belastungssignal, kein Charakterfehler.",
+              "Erschöpfung summiert sich leise – kleine Erholungsgewohnheiten zählen mehr als ein großer Neustart."
+            ],
+            "try": "Wähle heute Abend einen festen „Ausschalter“ – Bildschirme 30 Minuten vor dem Schlafengehen weg – und schütze ihn eine Woche lang."
+          },
+          "cynicism": {
+            "strengthLabel": "Gefühl von Verbundenheit",
+            "blurb": "Wie verbunden – oder distanziert und nur noch funktionierend – du dich mit deiner Arbeit und den Menschen fühlst.",
+            "note": {
+              "low": "Du bist noch beteiligt und präsent. Deine Arbeit und die Menschen um dich herum fühlen sich weiterhin bedeutsam an.",
+              "mid": "Etwas Distanz schleicht sich ein – Momente von „Wozu das Ganze“ oder von bloßem Funktionieren.",
+              "high": "Du fühlst dich oft distanziert. Sich zurückzuziehen ist eine normale Art, wie sich der Geist unter Belastung schützt."
+            },
+            "bullets": [
+              "Zynismus ist oft ein Zeichen von Erschöpfung, nicht deine wahre Haltung – meist wird er milder, sobald deine Reserven zurückkehren.",
+              "Eine Sache zu benennen, die dir noch wichtig ist, öffnet ein Stück der Verbundenheit wieder."
+            ],
+            "try": "Halte jeden Abend einen kleinen Moment fest, der sich wirklich lohnend angefühlt hat. Er muss nicht groß sein."
+          },
+          "workload": {
+            "strengthLabel": "machbares Arbeitspensum",
+            "blurb": "Wie sehr die schiere Menge und das Tempo der Anforderungen die Zeit und Mittel übersteigen, die dir zur Verfügung stehen.",
+            "note": {
+              "low": "Die Menge fühlt sich machbar an. Du hast in der Regel Raum, die Dinge in einem tragfähigen Tempo zu erledigen.",
+              "mid": "Die Last stößt an die Decke – immer wieder Phasen, in denen mehr zu tun ist, als Zeit dafür da ist.",
+              "high": "Die Anforderungen übersteigen regelmäßig deine Kapazität. Das ist ein struktureller Druck, kein Mangel an Willenskraft."
+            },
+            "bullets": [
+              "Anhaltende Überlastung ist der stärkste Einzeltreiber von Burnout – es lohnt sich, sie als echte Grenze ernst zu nehmen.",
+              "Kapazität zu schützen bedeutet oft, Verpflichtungen wegzunehmen, nicht nur härter darin zu arbeiten."
+            ],
+            "try": "Benenne die eine Aufgabe, die am meisten Kraft kostet und am wenigsten bringt – und frage dich, was es bräuchte, um sie abzugeben oder wegzulassen."
+          },
+          "recovery": {
+            "strengthLabel": "Erholungsfähigkeit",
+            "blurb": "Wie gut es dir gelingt, abzuschalten, zu ruhen und zwischen den Anforderungen wirklich aufzutanken.",
+            "note": {
+              "low": "Deine Erholung wird knapp. Du schaltest selten ganz ab, deshalb füllt sich der Tank nicht wieder.",
+              "mid": "Du erholst dich etwas, aber unregelmäßig – Ruhe, die nicht ganz bis auf den Grund des Tanks reicht.",
+              "high": "Du erholst dich gut. Du kannst Dinge loslassen und wirklich frisch zurückkehren – eine echte Stärke."
+            },
+            "bullets": [
+              "Erholung ist eine Fähigkeit und eine Ressource, keine Belohnung fürs Fertigwerden – am besten wirkt sie geplant, nicht verdient.",
+              "Schon kurze, bewusste Pausen schützen dich mehr als ein einziger langer Zusammenbruch am Ende."
+            ],
+            "try": "Blockiere diese Woche eine wirklich dienstfreie Zeitinsel – das Handy woanders – und behandle sie als unverhandelbar."
+          },
+          "control": {
+            "strengthLabel": "Gefühl von Kontrolle",
+            "blurb": "Wie viel Handlungsspielraum und Mitsprache du darüber spürst, wie deine Tage und deine Arbeit verlaufen.",
+            "note": {
+              "low": "Dein Handlungsspielraum fühlt sich klein an – vieles an deinem Tag wird von Kräften geformt, die du nicht steuern zu können glaubst.",
+              "mid": "Du hast etwas Mitsprache, aber nicht so viel, wie du möchtest – immer wieder Momente, in denen dich die Ereignisse vor sich hertreiben.",
+              "high": "Du spürst echten Handlungsspielraum. Zu wissen, dass du deine Tage steuern kannst, schützt dich unter Druck."
+            },
+            "bullets": [
+              "Schon kleine, zurückgewonnene Entscheidungen stellen ein Gefühl von Kontrolle her, das gegen Belastung abfedert.",
+              "Kontrolle heißt weniger, alles zu verändern, als vielmehr die wenigen Hebel, die du hast, bewusst zu nutzen."
+            ],
+            "try": "Wähle diese Woche eine kleine Sache, die du ganz nach deinen eigenen Regeln entscheidest – wann du beginnst, wozu du Nein sagst."
+          }
+        },
+        "archetype": {
+          "runningOnEmpty": {
+            "name": "Auf Reserve",
+            "summary": "Hohe Anforderungen, wenig Erholung – ein klassisches Burnout-Muster, und ein umkehrbares."
+          },
+          "stretchedButResourced": {
+            "name": "Gefordert, aber gut versorgt",
+            "summary": "Du trägst viel, aber du hast weiterhin echte Wege, um aufzutanken."
+          },
+          "coastingOnLowReserves": {
+            "name": "Unterwegs mit knappen Reserven",
+            "summary": "Noch nicht stark belastet, aber deine Reserven sind dünn – ein Frühwarnmuster, um das es sich zu kümmern lohnt."
+          },
+          "balancedAndSteady": {
+            "name": "Ausgeglichen & stabil",
+            "summary": "Deine Anforderungen und deine Erholung sind gerade in einem gesunden Gleichgewicht."
+          }
+        },
+        "patternDetail": {
+          "base": "Deine Anforderungen liegen bei {{difficulty}}/100 und deine Fähigkeit, dich zu erholen, bei {{resource}}/100. {{connector}}{{heaviest}} erzeugt den meisten Druck, während {{thinnest}} die Ressource ist, die sich am meisten aufzubauen lohnt.",
+          "demandsHeavier": "Die Anforderungsseite ist gerade eindeutig die schwerere von beiden – ",
+          "reserveHigher": "Du hast im Moment mehr in Reserve, als von dir verlangt wird – ",
+          "evenlyMatched": "Die beiden halten sich ziemlich die Waage – "
+        }
+      },
+      "sleep": {
+        "label": {
+          "sleeplessness": "Schlafprobleme",
+          "quality": "Schlafqualität",
+          "rest": "Ruhe & Auszeiten",
+          "energy": "Energie am Tag",
+          "winddown": "Abendroutine"
+        },
+        "content": {
+          "sleeplessness": {
+            "strengthLabel": "leichtes Einschlafen",
+            "blurb": "Wie schwer es dir fällt, einzuschlafen, durchzuschlafen oder nachts einen unruhigen Kopf zur Ruhe zu bringen.",
+            "note": {
+              "low": "Der Schlaf kommt recht leicht — du schläfst ein und durch, ohne großen Kampf.",
+              "mid": "Der Schlaf ist holprig — manche Nächte liegst du wach oder wachst auf und findest schwer zurück.",
+              "high": "Du ringst oft mit dem Schlaf — Schwierigkeiten beim Ein- oder Durchschlafen. Das ist der Punkt, um den du dich am meisten kümmern solltest."
+            },
+            "bullets": [
+              "Ein rasender Kopf in der Nacht ist meist der Überlauf des Tages — was unverarbeitet ist, kommt hoch, sobald es endlich still wird.",
+              "Schlaflosigkeit reagiert viel besser auf ein ruhiges Runterkommen als darauf, sich „mehr anzustrengen“, um einzuschlafen."
+            ],
+            "try": "Wenn du länger als ~20 Minuten wach liegst, steh auf, halte das Licht gedämpft und mach etwas Langweiliges, bis du müde wirst — das Bett ist zum Schlafen da, nicht zum Kämpfen."
+          },
+          "quality": {
+            "strengthLabel": "Schlafqualität",
+            "blurb": "Wie erholsam sich dein Schlaf tatsächlich anfühlt — tief, ununterbrochen und erfrischend.",
+            "note": {
+              "low": "Dein Schlaf erholt dich kaum — leichte oder unterbrochene Nächte, die dich nicht erfrischt zurücklassen.",
+              "mid": "Deine Schlafqualität ist okay, aber unbeständig — manche wirklich gute Nächte, manche, die nicht sitzen.",
+              "high": "Dein Schlaf ist wirklich erholsam — tiefe, erfrischende Ruhe. Eine echte Stärke, auf die du bauen kannst."
+            },
+            "bullets": [
+              "Qualität schlägt Quantität — sieben durchgehende Stunden bauen dich mehr auf als neun unterbrochene.",
+              "Ein kühles, dunkles, bildschirmfreies Zimmer ist der größte einzelne Hebel für die Schlafqualität."
+            ],
+            "try": "Mach dein Zimmer heute Nacht richtig kühl und dunkel — Schlafmaske oder Verdunkelung — und achte darauf, wie sich der Morgen anfühlt."
+          },
+          "rest": {
+            "strengthLabel": "Ruhe & Auszeiten",
+            "blurb": "Wie viel echte Ruhe und Auszeit du im Wachzustand bekommst — nicht nur Schlaf, sondern wirklich dienstfreie Zeit.",
+            "note": {
+              "low": "Ruhe am Tag ist knapp — du bist selten ganz dienstfrei, sodass der Tag bis zur Nacht nie nachlässt.",
+              "mid": "Du hast etwas Auszeit, aber sie ist lückenhaft — Ruhe, die oft nur halb bei der Sache oder unterbrochen ist.",
+              "high": "Du gönnst dir echte Auszeiten — wirklich dienstfreie Momente, in denen dein System zur Ruhe kommt."
+            },
+            "bullets": [
+              "Ruhe im Wachen bereitet Ruhe im Schlaf vor — ein Tag ohne Pausen endet selten in einer ruhigen Nacht.",
+              "Echte Ruhe ist ungeteilt — Scrollen zählt weniger als zehn stille Minuten, in denen nichts von dir verlangt wird."
+            ],
+            "try": "Plane dir morgen einen wirklich dienstfreien Moment ein — kein Handy, keine Aufgabe — und schütze ihn wie einen Termin."
+          },
+          "energy": {
+            "strengthLabel": "Energie am Tag",
+            "blurb": "Wie viel gleichmäßige, nutzbare Energie du über den Tag hast — der Ertrag guter Erholung am Tag.",
+            "note": {
+              "low": "Deine Energie am Tag ist niedrig — du kämpfst dich durch Tiefs, statt dich wirklich aufgetankt zu fühlen.",
+              "mid": "Deine Energie ist okay, aber ungleichmäßig — passable Phasen, unterbrochen von echten Durchhängern.",
+              "high": "Deine Energie am Tag ist stark und gleichmäßig — ein klares Zeichen, dass deine Erholung ihren Job macht."
+            },
+            "bullets": [
+              "Gleichmäßige Energie ist das klarste Tageszeichen dafür, ob deine Nächte funktionieren.",
+              "Morgenlicht und Bewegung stabilisieren die Energie zuverlässiger als das richtige Timing von Koffein."
+            ],
+            "try": "Hol dir innerhalb einer Stunde nach dem Aufwachen ein paar Minuten Tageslicht — das verankert deine innere Uhr und beruhigt die Energie."
+          },
+          "winddown": {
+            "strengthLabel": "Abendroutine",
+            "blurb": "Wie beständig und beruhigend deine Routine vor dem Schlafen ist — die Landebahn, die deinem Körper sagt, dass es fast Nacht ist.",
+            "note": {
+              "low": "Es gibt kaum ein Runterkommen — du gehst von Vollgas direkt zu Licht aus, ohne Landebahn.",
+              "mid": "Du hast etwas Runterkommen, aber unbeständig — an manchen Abenden gut, an vollen ausgelassen.",
+              "high": "Du hast eine echte Abendroutine — eine beständige Landebahn, die dich sanft in den Schlaf gleiten lässt. Bau darauf."
+            },
+            "bullets": [
+              "Eine vorhersehbare Landebahn zählt mehr als eine perfekte — dieselbe Reihenfolge ruhiger Schritte, an den meisten Abenden.",
+              "Licht und Bildschirme in der letzten Stunde zu dimmen ist das stärkste Signal dafür, dass die Nacht kommt."
+            ],
+            "try": "Wähle ein festes Ritual für die „letzte Stunde“ — gedämpftes Licht, keine Bildschirme, eine ruhige Tätigkeit — und zieh es diese Woche an drei Abenden durch."
+          }
+        },
+        "archetype": {
+          "wiredWorn": {
+            "name": "Aufgedreht & erschöpft",
+            "summary": "Schlafprobleme und wenig Erholung — dein Schlaf braucht echte Aufmerksamkeit."
+          },
+          "restlessButResourced": {
+            "name": "Unruhig, aber gut aufgestellt",
+            "summary": "Dein Schlaf ist gestört, aber du hast Erholungsgewohnheiten, auf denen du aufbauen kannst."
+          },
+          "quietButUnderRested": {
+            "name": "Ruhig, aber zu wenig erholt",
+            "summary": "Du schläfst gut ein, aber du erholst dich nicht wirklich."
+          },
+          "restedRecharged": {
+            "name": "Erholt & aufgeladen",
+            "summary": "Gesunder Schlaf und gute Erholung auf ganzer Linie."
+          }
+        },
+        "patternDetail": {
+          "base": "Deine Schlafschwierigkeit liegt bei {{difficulty}}/100, und deine Erholungsressourcen — Qualität, Ruhe, Energie und Abendroutine — liegen im Schnitt bei {{resource}}/100. {{connector}}die Ressource, die am meisten Aufbau lohnt, ist {{strengthLabel}}.",
+          "highDifficulty": "Ein- und Durchschlafen ist gerade der schwierigere Teil — ",
+          "lowDifficulty": "Das Einschlafen ist nicht das Hauptproblem — "
+        }
+      },
+      "anxiety": {
+        "label": {
+          "worry": "Sorgen",
+          "rumination": "Grübeln",
+          "catastrophizing": "Schwarzmalen",
+          "physical": "Körperliche Angst",
+          "refocus": "Fähigkeit, neu zu fokussieren"
+        },
+        "content": {
+          "worry": {
+            "strengthLabel": "eine ruhige Grundstimmung",
+            "blurb": "Wie oft ängstliche „Was-wäre-wenn“-Gedanken auftauchen und wie viel Raum sie einnehmen.",
+            "note": {
+              "low": "Die Sorgen bleiben im Rahmen — sie tauchen auf, aber sie haben nicht das Sagen.",
+              "mid": "Die Sorgen sind häufig zu Gast — genug, um zu ermüden, aber nicht ununterbrochen.",
+              "high": "Die Sorgen sind gerade laut und häufig. Das zehrt — und es lässt sich zugleich gut angehen."
+            },
+            "bullets": [
+              "Sorgen sind der Versuch deines Kopfes, dich zu schützen — er schießt übers Ziel hinaus, aber das ist kein Makel und keine Diagnose.",
+              "Die meisten Sorgen treten nie ein; die konkrete Angst zu benennen, verkleinert sie mehr, als sie wegzuschieben."
+            ],
+            "try": "Richte dir jeden Tag ein 10-minütiges „Sorgenfenster“ ein — schreib die Sorgen dann auf und verschieb sie den Rest des Tages sanft."
+          },
+          "rumination": {
+            "strengthLabel": "ein ruhiger Geist",
+            "blurb": "Wie sehr dein Kopf vergangene Momente noch einmal abspielt oder sich in denselben Gedanken dreht.",
+            "note": {
+              "low": "Du bleibst nicht zu sehr hängen — Gedanken kommen und gehen, ohne sich lange zu drehen.",
+              "mid": "Es dreht sich einiges im Kreis — du spielst Gespräche oder Entscheidungen öfter durch, als es hilft.",
+              "high": "Dein Kopf hängt oft in der Wiederholung fest. Das Kreisen fühlt sich produktiv an, löst aber selten etwas — das ist die Falle."
+            },
+            "bullets": [
+              "Grübeln gibt sich als Problemlösen aus, wälzt das Problem aber meist nur um, ohne es zu bewegen.",
+              "Den Körper in Bewegung zu bringen — ein kurzer Spaziergang, kaltes Wasser — durchbricht eine Schleife schneller, als sich herauszudenken."
+            ],
+            "try": "Wenn du die Schleife bemerkst, benenne sie („das ist Grübeln“) und ändere deinen Körperzustand — aufstehen, bewegen, nach draußen gehen."
+          },
+          "catastrophizing": {
+            "strengthLabel": "ein ausgewogener Blick",
+            "blurb": "Wie oft dein Kopf zur Schlimmstfall-Variante der Dinge springt.",
+            "note": {
+              "low": "Du behältst meist den Überblick — der schlimmste Fall ist nicht dein Standard.",
+              "mid": "Der schlimmste Fall taucht ziemlich oft auf und färbt darauf ab, wie riskant sich Dinge anfühlen.",
+              "high": "Dein Kopf springt oft zum schlimmsten Fall. Es fühlt sich nach Weitsicht an, aber da spricht die Angst, nicht die Wahrscheinlichkeit."
+            },
+            "bullets": [
+              "Schwarzmalen überschätzt den angsteinflößenden Ausgang und unterschätzt deine Fähigkeit, damit umzugehen.",
+              "Die Fragen „Was ist am wahrscheinlichsten?“ und „Könnte ich das bewältigen?“ bringen das Bild sanft wieder ins Gleichgewicht."
+            ],
+            "try": "Wenn du einen Schlimmstfall-Gedanken bemerkst, notiere den gefürchteten Ausgang, den wahrscheinlichsten Ausgang und einen Weg, wie du damit umgehen würdest."
+          },
+          "physical": {
+            "strengthLabel": "ein ruhiger Körper",
+            "blurb": "Wie stark sich Angst in deinem Körper zeigt — Anspannung, rasendes Herz, Unruhe, flache Atmung.",
+            "note": {
+              "low": "Dein Körper bleibt recht ruhig — die Angst zeigt sich körperlich kaum.",
+              "mid": "Es gibt etwas körperliche Anspannung — mal ein enges Brustgefühl, Unruhe oder flache Atmung.",
+              "high": "Die Angst zeigt sich stark in deinem Körper. Körper und Geist nähren einander — beruhigst du das eine, beruhigt sich das andere."
+            },
+            "bullets": [
+              "Körperliche Angst ist dein Nervensystem in Alarmbereitschaft — echt und sehr gut behandelbar, keine Schwäche.",
+              "Langsames Ausatmen ist der schnellste Ausschalter: ein längerer Ausatem sagt dem Körper, dass er sicher ist."
+            ],
+            "try": "Atme zwei Minuten lang 4 Sekunden ein und 6 Sekunden aus. Das längere Ausatmen ist es, was das Nervensystem beruhigt."
+          },
+          "refocus": {
+            "strengthLabel": "Fähigkeit, neu zu fokussieren",
+            "blurb": "Wie gut du aus einer Angstspirale aussteigen und deine Aufmerksamkeit zurückholen kannst.",
+            "note": {
+              "low": "Diese beruhigende Fähigkeit entwickelt sich noch — im Moment ist es schwer, auszusteigen, sobald die Spirale beginnt.",
+              "mid": "Du kannst deine Aufmerksamkeit manchmal umlenken, auch wenn es nicht immer hält.",
+              "high": "Du bist richtig gut darin, die Spirale zu erkennen und neu zu fokussieren. Das ist dein stärkster Hebel — stütz dich darauf."
+            },
+            "bullets": [
+              "Zu bemerken „ich drehe mich gerade hoch“ und umzulenken ist die schützendste Angst-Fähigkeit überhaupt.",
+              "Es ist ein Muskel, kein Wesenszug — jedes Mal, wenn du bewusst umlenkst, wird es ein bisschen leichter."
+            ],
+            "try": "Wähle einen Erdungsanker — fünf Dinge, die du sehen kannst, oder deine Füße auf dem Boden — und nutze ihn in dem Moment, in dem du das Kreisen bemerkst."
+          }
+        },
+        "archetype": {
+          "caughtInTheSpin": {
+            "name": "Im Sog gefangen",
+            "summary": "Viel ängstliches Denken bei noch wenig Fähigkeit, auszusteigen — und diese Fähigkeit lässt sich aufbauen."
+          },
+          "anxiousButAware": {
+            "name": "Ängstlich, aber achtsam",
+            "summary": "Viel Sorge und Grübeln, aber du kannst es erkennen und umlenken."
+          },
+          "quietlyTense": {
+            "name": "Still angespannt",
+            "summary": "Angst auf niedrigerem Niveau, aber noch wenige Mittel, um sie zu beruhigen, wenn sie steigt."
+          },
+          "steadyMind": {
+            "name": "Ruhiger Geist",
+            "summary": "Wenig Angst und eine gute Fähigkeit, neu zu fokussieren."
+          }
+        },
+        "patternDetail": {
+          "base": "Dein ängstliches Denken liegt im Schnitt bei {{difficulty}}/100, während deine Fähigkeit, neu zu fokussieren, bei {{resource}}/100 liegt. {{connector}}Am lautesten von den vieren ist im Moment: {{heaviest}}.",
+          "reassuring": "Das Beruhigende daran: Du kannst die Spirale bereits erkennen und umlenken — das ist der Hebel, an dem alles andere hängt. ",
+          "build": "Am nützlichsten ist es, genau dieses Erkennen und Umlenken aufzubauen — das dreht die Lautstärke herunter. "
+        }
+      },
+      "ei": {
+        "band": {
+          "emerging": "Aufkeimend",
+          "developing": "In Entwicklung",
+          "moderate": "Mittel",
+          "strong": "Stark",
+          "exceptional": "Außergewöhnlich"
+        },
+        "label": {
+          "awareness": "Selbstwahrnehmung",
+          "regulation": "Selbstregulation",
+          "empathy": "Empathie",
+          "relationships": "Beziehungsgestaltung",
+          "motivation": "Motivation"
+        },
+        "profile": {
+          "awareness": {
+            "name": "Der Reflektierte"
+          },
+          "regulation": {
+            "name": "Der Ausgeglichene"
+          },
+          "empathy": {
+            "name": "Der Einfühlsame"
+          },
+          "relationships": {
+            "name": "Der Verbindende"
+          },
+          "motivation": {
+            "name": "Der Zielstrebige"
+          },
+          "summary": "Dein Profil wird von {{label}} angeführt."
+        },
+        "content": {
+          "awareness": {
+            "strengthLabel": "Selbstwahrnehmung",
+            "blurb": "Wie klar du deine eigenen Gefühle, Auslöser und Muster wahrnimmst, während sie geschehen.",
+            "note": {
+              "low": "Selbstwahrnehmung ist dein größtes Wachstumsfeld — zu bemerken, was du fühlst, während du es fühlst, ist das Fundament, auf dem alles andere aufbaut.",
+              "mid": "Du baust echte Selbstwahrnehmung auf — du erwischst deine Gefühle manchmal, und das wächst.",
+              "high": "Du liest deine eigenen Gefühle klar und früh. Diese Einsicht ist der Motor jeder anderen EI-Fähigkeit."
+            },
+            "bullets": [
+              "Ein Gefühl zu benennen, sobald es aufkommt („Ich bin frustriert“), ist die wirkungsvollste EI-Gewohnheit überhaupt — sie schafft eine Pause vor der Reaktion.",
+              "Selbstwahrnehmung ist eine Fähigkeit, kein festes Merkmal; kurze tägliche Momente des Innehaltens bauen sie erstaunlich schnell auf."
+            ],
+            "try": "Halte zweimal am Tag inne und benenne mit einem Wort, was du fühlst. Nichts reparieren — nur bemerken."
+          },
+          "regulation": {
+            "strengthLabel": "Selbstregulation",
+            "blurb": "Wie gut du mit starken Gefühlen umgehst und bewusst reagierst statt impulsiv.",
+            "note": {
+              "low": "Selbstregulation ist ein zentrales Feld zum Aufbauen — starke Gefühle bestimmen oft die Reaktion, bevor du sie wählen kannst. Sehr gut erlernbar.",
+              "mid": "Manchmal kannst du dich selbst beruhigen; unter echtem Druck ist es noch in Arbeit.",
+              "high": "Du gehst gut mit starken Gefühlen um — du kannst sie ganz fühlen und trotzdem deine Reaktion wählen."
+            },
+            "bullets": [
+              "Regulation ist keine Unterdrückung — es heißt, das Gefühl zu spüren und trotzdem die Reaktion zu wählen.",
+              "Ein langsames Ausatmen oder eine kurze Pause verschafft dir die paar Sekunden, die aus Reaktion eine Wahl machen."
+            ],
+            "try": "Wenn du das nächste Mal eine Welle spürst, atme einmal langsam durch, bevor du reagierst — diese Pause ist die ganze Fähigkeit."
+          },
+          "empathy": {
+            "strengthLabel": "Empathie",
+            "blurb": "Wie gut du wahrnimmst und verstehst, was andere Menschen fühlen.",
+            "note": {
+              "low": "Empathie ist ein Feld mit echtem Wachstumsspielraum — sich in die Gefühle anderer einzufühlen ist eine Fähigkeit, die mit Aufmerksamkeit stärker wird.",
+              "mid": "Manchmal nimmst du die Gefühle anderer wahr; es vertieft sich, je mehr du darauf achtest.",
+              "high": "Du liest andere gut — du spürst, was Menschen fühlen, oft bevor sie es aussprechen. Eine echte Stärke."
+            },
+            "bullets": [
+              "Empathie beginnt mit Neugier — sich zu fragen „Was fühlen sie wohl gerade?“, bevor du reagierst.",
+              "Zuzuhören, um zu verstehen, statt um zu antworten, ist der schnellste Weg, sie zu stärken."
+            ],
+            "try": "Konzentriere dich heute in einem Gespräch ganz darauf, das Gefühl des anderen zu verstehen, bevor du antwortest."
+          },
+          "relationships": {
+            "strengthLabel": "Beziehungsfähigkeiten",
+            "blurb": "Wie gut du Beziehungen aufbaust, pflegst und durch sie navigierst — auch durch die kniffligen Momente.",
+            "note": {
+              "low": "Beziehungen zu gestalten ist dein größtes Wachstumsfeld — Spannung und Verbundenheit bewusst zu handhaben ist ein erlernbares Handwerk.",
+              "mid": "Du gestaltest Beziehungen recht gut; bei den schwierigeren Gesprächen wächst es noch.",
+              "high": "Du navigierst Beziehungen geschickt — du verbindest dich und gehst mit Reibung um, ohne dass sie die Dinge entgleisen lässt."
+            },
+            "bullets": [
+              "Beziehungskompetenz besteht meist aus Reparatur, nicht aus Perfektion — kleine Risse zu benennen und zu kitten hält das Vertrauen stark.",
+              "Klare, freundliche Direktheit schlägt Vermeidung fast immer."
+            ],
+            "try": "Führe diese Woche ein etwas mutigeres Gespräch — sprich freundlich etwas an, das du sonst durchgehen lassen würdest."
+          },
+          "motivation": {
+            "strengthLabel": "innerer Antrieb",
+            "blurb": "Wie viel innerer Antrieb und Ausdauer du für das aufbringst, was dir wichtig ist.",
+            "note": {
+              "low": "Motivation ist ein Feld zum Pflegen — dich wieder mit dem zu verbinden, was dir wirklich wichtig ist, ist der Ort, an dem Antrieb neu entsteht.",
+              "mid": "Dein Antrieb ist da, aber ungleichmäßig — stärker, wenn das „Warum“ klar ist, schwächer, wenn nicht.",
+              "high": "Du hast echten inneren Antrieb — du bewegst dich weiter auf das zu, was zählt, ohne ständigen Schub von außen zu brauchen."
+            },
+            "bullets": [
+              "Dauerhafte Motivation kommt aus Sinn, nicht aus Willenskraft — ein klares „Warum“ hält länger als jeder Schub.",
+              "Kleine, sichtbare Fortschritte nähren den Antrieb mehr als ferne Ziele."
+            ],
+            "try": "Schreib den einen Grund auf, warum dir dein aktuelles Ziel wichtig ist, und bewahr ihn dort auf, wo du ihn siehst."
+          }
+        },
+        "patternDetail": {
+          "text": "Dein Profil wird von {{dominantLabel}} ({{dominantPct}} %) angeführt. Der wirkungsvollste Ansatzpunkt zum Wachsen ist {{priorityLabel}} ({{priorityPct}} %) — echter Spielraum zum Ausbauen, keine Schwäche."
+        }
+      },
+      "focus": {
+        "label": {
+          "distractibility": "Ablenkbarkeit",
+          "procrastination": "Aufschieben",
+          "attention": "Anhaltende Aufmerksamkeit",
+          "management": "Aufgaben- & Zeitmanagement",
+          "motivation": "Motivation & Energie"
+        },
+        "content": {
+          "distractibility": {
+            "strengthLabel": "stabiler Fokus",
+            "blurb": "Wie leicht deine Aufmerksamkeit von dem abgezogen wird, was du dir eigentlich vorgenommen hast.",
+            "note": {
+              "low": "Du hältst deinen Fokus gut — Ablenkungen bringen dich kaum vom Kurs ab.",
+              "mid": "Ablenkungen erwischen dich ziemlich oft — genug, um eine fokussierte Phase zu zerstückeln.",
+              "high": "Du wirst oft von deiner Aufgabe weggerissen. Das erschwert das Dranbleiben — und lässt sich mit dem richtigen Setup gut in den Griff bekommen."
+            },
+            "bullets": [
+              "Die meiste Ablenkung liegt an der Umgebung, nicht an mangelnder Willenskraft — die Lösung ist meist das Setup, nicht mehr Anstrengung.",
+              "Jede Rückkehr zu einer Aufgabe kostet Minuten, um wieder hineinzufinden; einen freien Zeitraum zu schützen, zahlt sich schnell aus."
+            ],
+            "try": "Nimm dir heute einen 25-Minuten-Block vor — Handy in einem anderen Raum, Benachrichtigungen aus. Ein Block, voll geschützt."
+          },
+          "procrastination": {
+            "strengthLabel": "leichte Starts",
+            "blurb": "Wie sehr du das Anfangen der wichtigen Dinge hinauszögerst oder vermeidest.",
+            "note": {
+              "low": "Du legst meist ohne große Verzögerung los — Vermeidung bremst dich kaum.",
+              "mid": "Etwas Aufschieben ist da — Aufgaben verrutschen oder starten später, als dir lieb ist.",
+              "high": "Dinge aufzuschieben ist gerade ein echtes Muster. Das Anfangen ist der schwere Teil — und der mit dem größten Hebel."
+            },
+            "bullets": [
+              "Aufschieben hat meist mit dem Gefühl zu tun, das eine Aufgabe auslöst, nicht mit Faulheit — wird der erste Schritt kleiner, wird auch das Unbehagen kleiner.",
+              "Der Anfang ist alles; der Schwung folgt fast immer auf die ersten zwei Minuten."
+            ],
+            "try": "Nimm dir die Aufgabe vor, die du vermeidest, und verpflichte dich zu nur zwei Minuten daran. Danach darfst du aufhören — meistens tust du es nicht."
+          },
+          "attention": {
+            "strengthLabel": "anhaltende Aufmerksamkeit",
+            "blurb": "Wie gut du deine Konzentration über längere Zeit auf einer Sache halten kannst.",
+            "note": {
+              "low": "Anhaltende Aufmerksamkeit ist die Fähigkeit, die sich am meisten zu entwickeln lohnt — den Fokus über längere Zeit zu halten, fällt dir gerade schwer, und das lässt sich trainieren.",
+              "mid": "Du kannst dich eine Weile konzentrieren, auch wenn es noch keine verlässliche, tiefe Phase ist.",
+              "high": "Du kannst in tiefen, anhaltenden Fokus eintauchen — ein echter Vorteil, um wirklich etwas zu schaffen."
+            },
+            "bullets": [
+              "Aufmerksamkeit ist ein Muskel — fokussierte Blöcke, auch kurze, bauen die Fähigkeit für längere auf.",
+              "Eins nach dem anderen zu tun, trainiert die Aufmerksamkeit; ständiges Wechseln höhlt sie aus."
+            ],
+            "try": "Erledige heute eine Aufgabe nach der anderen, von Anfang bis Ende, bevor du etwas anderes öffnest. Achte darauf, wie viel weiter du kommst."
+          },
+          "management": {
+            "strengthLabel": "Aufgabenmanagement",
+            "blurb": "Wie gut du Aufgaben organisierst, deine Zeit planst und verhinderst, dass sich Dinge auftürmen.",
+            "note": {
+              "low": "Aufgaben- und Zeitmanagement ist ein Bereich zum Ausbauen — ohne System türmen sich Dinge auf und zerren an deiner Aufmerksamkeit.",
+              "mid": "Du hast etwas Struktur, aber sie ist unbeständig — genug rutscht durch, um für Reibung zu sorgen.",
+              "high": "Du managst Aufgaben und Zeit gut — ein klares System, das die Dinge in Bewegung und deinen Kopf frei hält."
+            },
+            "bullets": [
+              "Eine verlässliche externe Liste befreit deinen Kopf davon, alles zu behalten — und das setzt Fokus frei.",
+              "Den Tag in ein paar Minuten zu planen, schlägt es, stundenlang nur darauf zu reagieren."
+            ],
+            "try": "Schreib jeden Morgen die drei Dinge auf, die den Tag zum Erfolg machen würden — und erledige das Schwerste zuerst."
+          },
+          "motivation": {
+            "strengthLabel": "Antrieb & Energie",
+            "blurb": "Wie viel Antrieb und Energie du mitbringst, um Dinge zu erledigen.",
+            "note": {
+              "low": "Dein Antrieb ist gerade niedrig — dich neu damit zu verbinden, warum die Arbeit wichtig ist, ist der Ort, an dem Energie wieder aufgebaut wird.",
+              "mid": "Deine Motivation ist da, aber ungleichmäßig — stärker, wenn das Ziel klar ist, schwächer, wenn nicht.",
+              "high": "Du hast echten Antrieb und Energie — ein starker Motor, den du auf das Wichtigste richten kannst."
+            },
+            "bullets": [
+              "Energie folgt dem Sinn — ein klares „Warum“ trägt die Anstrengung besser als jeder Antrieb von außen.",
+              "Sichtbarer Fortschritt nährt den Antrieb; zerlege große Ziele in Erfolge, die du wirklich sehen kannst."
+            ],
+            "try": "Benenne den einen Grund, warum dein aktuelles Ziel wichtig ist, und platziere ihn dort, wo du ihn beim Arbeiten siehst."
+          }
+        },
+        "archetype": {
+          "scatteredStalling": {
+            "name": "Zerstreut & ins Stocken geraten",
+            "summary": "Viel Ablenkung und Aufschieben bei wenigen Fokus-Werkzeugen — alles davon aufbaubar."
+          },
+          "willingButPulled": {
+            "name": "Willig, aber abgelenkt",
+            "summary": "Du hast Antrieb und Können, aber Ablenkung und Aufschieben werfen dich immer wieder aus der Bahn."
+          },
+          "calmButCoasting": {
+            "name": "Ruhig, aber im Leerlauf",
+            "summary": "Wenige Ablenkungen, aber wenig Fokus und Antrieb — leicht abzudriften."
+          },
+          "inTheZone": {
+            "name": "Im Flow",
+            "summary": "Starker Fokus und gutes Dranbleiben bei wenig Reibung."
+          }
+        },
+        "patternDetail": {
+          "base": "Deine Reibung — Ablenkung und Aufschieben — liegt im Schnitt bei {{difficulty}}/100, während deine Fokus-Fähigkeit bei {{resource}}/100 liegt. {{connector}}{{heaviest}} ist die größte Bremse, während {{thinnest}} die Fähigkeit ist, die sich am meisten zu entwickeln lohnt.",
+          "frictionHeavier": "Gerade ist es die Reibungsseite, die deinen Wert nach unten zieht — ",
+          "capabilityLifting": "Deine Fähigkeit leistet die Hauptarbeit — "
+        }
+      }
+    },
+    "ui": {
+      "stress": {
+        "kicker": "Stress & Burnout",
+        "headTitle": "{{name}}, so zeigen sich Stress und Burnout bei dir.",
+        "assessmentName": "Stress- & Burnout-Profil",
+        "gaugeLabel": "/ 100 Belastung",
+        "headlinePillSuffix": " Belastung",
+        "scoreSentence": "Deine Gesamtbelastung liegt bei {{v}} / 100. Sie fasst alle Bereiche zusammen — Probleme erhöhen die Belastung, deine Stärken senken sie.",
+        "spectrumScale": [
+          "0 · leicht",
+          "50",
+          "100 · schwer"
+        ],
+        "miniHeadlineLabel": "Gesamtbelastung",
+        "miniPriorityLabel": "Fokusbereiche",
+        "miniThirdLabel": "Größte Ursache",
+        "patternTitle": "Dein Burnout-Muster",
+        "patternFoot": "Burnout sitzt in der unteren rechten Ecke — viele Anforderungen und wenig Erholung. Je weiter dein Punkt davon entfernt ist, desto sicherer bist du.",
+        "quadXLabel": "mehr Anforderungen →",
+        "quadYLabel": "mehr Erholung →",
+        "quads": {
+          "TL": "Ausgeglichen & stabil",
+          "TR": "Viel zu tun, aber im Griff",
+          "BL": "Ruhig, aber müde",
+          "BR": "Am Limit"
+        },
+        "balanceTop": "Anforderungen",
+        "balanceBottom": "Erholung",
+        "radarTitle": "Wo die Belastung sitzt",
+        "radarCaption": "Eine größere Fläche bedeutet mehr Stress in diesem Bereich.",
+        "driversTitle": "Was den meisten Stress verursacht",
+        "legendWarm": "warm = Stress (kürzer ist besser)",
+        "legendGreen": "grün = Stärken (länger ist besser)",
+        "habitsTitle": "Fünf tägliche Gewohnheiten",
+        "habits": [
+          "Mach jeden Tag eine echte Pause — ein richtiges Mittagessen weg vom Bildschirm oder ein kurzer Spaziergang.",
+          "Erledige die anstrengenden Aufgaben in einem Block, statt sie über den ganzen Tag zu verteilen.",
+          "Setz dir eine Grenze, die du einhalten kannst: eine feste Feierabendzeit oder Benachrichtigungen aus ab einer bestimmten Uhrzeit.",
+          "Benenne jeden Tag eine Sache, die du selbst entscheiden konntest — das gibt dir mehr das Gefühl von Kontrolle.",
+          "Beende den Tag, indem du einen Moment festhältst, der sich gut angefühlt hat, so klein er auch war."
+        ],
+        "closingBaseline": "Das ist dein Ausgangspunkt. Heute gibt es nichts zu reparieren — nur eine kleine Sache, an der du arbeiten kannst. Komm in 60–90 Tagen wieder und schau, was sich verändert hat.",
+        "closingReturn": "Das ist ein weiterer Check-in auf deinem Weg — beobachte, wie sich diese Zahlen mit der Zeit verändern. Die Veränderung ist der Beweis.",
+        "doors": {
+          "audio": "Starte deinen täglichen Audio-Plan",
+          "counselling": "Sprich mit jemandem"
+        }
+      },
+      "sleep": {
+        "kicker": "Schlaf, Ruhe & Erholung",
+        "headTitle": "{{name}}, so steht es um deinen Schlaf und deine Erholung.",
+        "assessmentName": "Schlaf-, Ruhe- & Erholungsprofil",
+        "gaugeLabel": "/ 100 Punkte",
+        "headlinePillSuffix": "",
+        "scoreSentence": "Dein Schlaf- und Erholungswert liegt bei {{v}} / 100. Er verbindet, wie leicht du schläfst, mit dem, wie gut du dich erholst. Höher ist besser.",
+        "spectrumScale": [
+          "0 · niedrig",
+          "50",
+          "100 · stark"
+        ],
+        "miniHeadlineLabel": "Schlaf & Erholung",
+        "miniPriorityLabel": "Fokusbereiche",
+        "miniThirdLabel": "Größte Ursache",
+        "patternTitle": "Dein Schlafmuster",
+        "patternFoot": "Die beste Ecke ist oben links — leichter Schlaf und starke Erholung. Je weiter dein Punkt von unten rechts entfernt ist, desto besser schläfst du.",
+        "quadXLabel": "mehr Schlafprobleme →",
+        "quadYLabel": "mehr Erholung →",
+        "quads": {
+          "TL": "Ausgeruht & aufgeladen",
+          "TR": "Unruhig, aber im Griff",
+          "BL": "Ruhig, aber nicht ausgeruht",
+          "BR": "Aufgedreht und erschöpft"
+        },
+        "balanceTop": "Schlafprobleme",
+        "balanceBottom": "Erholung",
+        "radarTitle": "Wo dein Schlaf steht",
+        "radarCaption": "Eine größere Fläche bedeutet besseren Schlaf und bessere Erholung in diesem Bereich.",
+        "driversTitle": "Was am meisten Aufmerksamkeit braucht",
+        "legendWarm": "warm = Schlafprobleme (kürzer ist besser)",
+        "legendGreen": "grün = Schlaf und Erholung (länger ist besser)",
+        "habitsTitle": "Fünf Gewohnheiten für besseren Schlaf",
+        "habits": [
+          "Steh jeden Tag zur gleichen Zeit auf, auch am Wochenende — eine feste Aufstehzeit gibt den ganzen Rhythmus vor.",
+          "Hol dir innerhalb einer Stunde nach dem Aufwachen Tageslicht — so wirst du abends früher müde.",
+          "Verzichte ab dem frühen Nachmittag auf Koffein — es bleibt länger im Körper, als du denkst.",
+          "Dimme das Licht und leg in der letzten Stunde die Bildschirme weg — gib deinem Gehirn Zeit, herunterzufahren.",
+          "Wenn du nicht schlafen kannst, steh auf und komm zur Ruhe, statt wach liegen zu bleiben — halte dein Bett nur zum Schlafen frei."
+        ],
+        "closingBaseline": "Das ist dein Schlaf-Ausgangspunkt. Wähl eine Gewohnheit von oben und probier sie zwei Wochen lang aus — Schlaf verändert sich erst langsam und dann auf einmal.",
+        "closingReturn": "Das ist ein weiterer Check-in auf deinem Weg — beobachte, wie sich diese Zahlen mit der Zeit verändern. Die Veränderung ist der Beweis.",
+        "doors": {
+          "audio": "Starte einen Schlaf-Audio-Plan",
+          "counselling": "Sprich mit jemandem"
+        }
+      },
+      "anxiety": {
+        "kicker": "Angst & Grübeln",
+        "headTitle": "{{name}}, so zeigen sich Angst und Grübeln bei dir.",
+        "assessmentName": "Angst- & Grübel-Stil",
+        "gaugeLabel": "/ 100 Belastung",
+        "headlinePillSuffix": " Belastung",
+        "scoreSentence": "Deine Gesamtbelastung liegt bei {{v}} / 100. Sie fasst alle Bereiche zusammen — ängstliche Gewohnheiten erhöhen die Belastung, und deine Fähigkeit, dich neu zu fokussieren, senkt sie.",
+        "spectrumScale": [
+          "0 · ruhig",
+          "50",
+          "100 · laut"
+        ],
+        "miniHeadlineLabel": "Gesamtbelastung",
+        "miniPriorityLabel": "Fokusbereiche",
+        "miniThirdLabel": "Größte Ursache",
+        "patternTitle": "Dein Angstmuster",
+        "patternFoot": "„Im Gedankenkarussell gefangen“ sitzt unten rechts — viel ängstliches Denken und wenig Raum, um Abstand zu gewinnen. Je weiter dein Punkt davon entfernt ist, desto ruhiger ist es.",
+        "quadXLabel": "mehr ängstliches Denken →",
+        "quadYLabel": "mehr Fähigkeit, sich neu zu fokussieren →",
+        "quads": {
+          "TL": "Ruhiger Kopf",
+          "TR": "Ängstlich, aber achtsam",
+          "BL": "Still angespannt",
+          "BR": "Im Gedankenkarussell gefangen"
+        },
+        "balanceTop": "Ängstliches Denken",
+        "balanceBottom": "Neu fokussieren",
+        "radarTitle": "Wo die Belastung sitzt",
+        "radarCaption": "Eine größere Fläche bedeutet mehr Angst in diesem Bereich.",
+        "driversTitle": "Was die meiste Angst verursacht",
+        "legendWarm": "warm = Angst (kürzer ist besser)",
+        "legendGreen": "grün = Fähigkeit, sich neu zu fokussieren (länger ist besser)",
+        "habitsTitle": "Fünf beruhigende Gewohnheiten",
+        "habits": [
+          "Benenne es, um es zu beruhigen — wenn Angst aufsteigt, sag dir „das ist Sorge“. Es zu benennen lockert seinen Griff.",
+          "Atme langsam aus, wenn sich dein Körper anspannt — 4 Sekunden ein, 6 Sekunden aus. Das lange Ausatmen hilft dir, dich sicher zu fühlen.",
+          "Gib den Sorgen eine feste Zeit — 10 Minuten, um sie aufzuschreiben, damit sie sich nicht über den ganzen Tag ausbreiten.",
+          "Beweg dich, wenn du feststeckst — ein kurzer Spaziergang oder ein Raumwechsel stoppt die Gedankenschleife schneller als angestrengtes Nachdenken.",
+          "Komm zurück zu deinen Sinnen — benenne fünf Dinge, die du sehen kannst, oder spür deine Füße auf dem Boden — um aus dem Gedankenkarussell auszusteigen."
+        ],
+        "closingBaseline": "Das ist dein Ausgangspunkt — eine Momentaufnahme deiner Gewohnheiten, kein Etikett. Wähl eine beruhigende Gewohnheit von oben und übe sie sanft. Diese Zahlen verändern sich mit der Übung.",
+        "closingReturn": "Das ist ein weiterer Check-in auf deinem Weg — beobachte, wie sich diese Zahlen mit der Zeit einpendeln. Die Übung ist der Beweis.",
+        "doors": {
+          "audio": "Starte einen beruhigenden Audio-Plan",
+          "counselling": "Sprich mit jemandem"
+        }
+      },
+      "ei": {
+        "kicker": "Emotionale Intelligenz",
+        "headTitle": "{{name}}, hier ist dein Profil der emotionalen Intelligenz.",
+        "assessmentName": "Profil der emotionalen Intelligenz",
+        "gaugeLabel": "/ 100 EI",
+        "headlinePillSuffix": " EI",
+        "scoreSentence": "Dein EI-Wert liegt bei {{v}} / 100 — der Durchschnitt über deine fünf Bereiche. Höher ist stärker.",
+        "spectrumScale": [
+          "0 · früh",
+          "50",
+          "100 · sehr stark"
+        ],
+        "miniHeadlineLabel": "EI-Wert",
+        "miniPriorityLabel": "Wachstumsbereiche",
+        "miniThirdLabel": "Am stärksten",
+        "patternTitle": "Dein EI-Profil",
+        "patternFoot": "Ein paar starke Bereiche heben den Rest — deine Wachstumsbereiche sind einfach der beste Ort, um als Nächstes aufzubauen.",
+        "radarTitle": "Deine fünf Bereiche",
+        "radarCaption": "Eine größere Fläche bedeutet stärkere emotionale Intelligenz in diesem Bereich.",
+        "driversTitle": "Die besten Bereiche zum Weiterwachsen",
+        "legendWarm": "",
+        "legendGreen": "jeder Balken ist grün — länger ist stärker",
+        "habitsTitle": "Fünf Gewohnheiten, die EI aufbauen",
+        "habits": [
+          "Benenne dein Gefühl, sobald es auftaucht — „ich bin ängstlich“, „ich bin aufgeregt“. Es zu benennen baut die Selbstwahrnehmung auf, auf der alles andere ruht.",
+          "Halt inne, bevor du reagierst — ein langsamer Atemzug macht aus einer spontanen Reaktion eine Entscheidung.",
+          "Werde neugierig auf andere — frag dich „was könnten sie gerade fühlen?“, bevor du antwortest.",
+          "Kläre kleine Verstimmungen früh — ein schnelles, ehrliches „das kam falsch rüber“ hält das Vertrauen stark.",
+          "Erinnere dich an dein Warum — halt den Grund, warum deine Ziele wichtig sind, irgendwo sichtbar fest."
+        ],
+        "closingBaseline": "Das ist dein Ausgangspunkt — eine Karte deiner Stärken und deines Wachstumsspielraums, kein Urteil. Emotionale Intelligenz lässt sich lernen; wähl eine Gewohnheit von oben und übe sie.",
+        "closingReturn": "Das ist ein weiterer Check-in zu deinem Wachstum — beobachte, wie diese Bereiche mit der Zeit steigen. Die Übung ist der Beweis.",
+        "doors": {
+          "audio": "Starte eine geführte Übung",
+          "counselling": "Sprich mit jemandem"
+        }
+      },
+      "focus": {
+        "kicker": "Fokus & Produktivität",
+        "headTitle": "{{name}}, so steht es um deine Konzentration und deine Produktivität.",
+        "assessmentName": "Fokus- & Produktivitätsprofil",
+        "gaugeLabel": "/ 100 Punkte",
+        "headlinePillSuffix": "",
+        "scoreSentence": "Dein Fokus- und Produktivitätswert liegt bei {{v}} / 100. Er verbindet, wie wenig du dich ablenken lässt, mit dem, wie stark deine Konzentrationsfähigkeiten sind. Höher ist besser.",
+        "spectrumScale": [
+          "0 · niedrig",
+          "50",
+          "100 · stark"
+        ],
+        "miniHeadlineLabel": "Fokus & Produktivität",
+        "miniPriorityLabel": "Fokusbereiche",
+        "miniThirdLabel": "Größte Ursache",
+        "patternTitle": "Dein Fokusmuster",
+        "patternFoot": "Die beste Ecke ist oben links — wenige Ablenkungen und starke Fähigkeiten. Je weiter dein Punkt von unten rechts entfernt ist, desto mehr bist du im Flow.",
+        "quadXLabel": "mehr Ablenkung →",
+        "quadYLabel": "mehr Können →",
+        "quads": {
+          "TL": "Im Flow",
+          "TR": "Willig, aber abgelenkt",
+          "BL": "Ruhig, aber auf Sparflamme",
+          "BR": "Zerstreut und festgefahren"
+        },
+        "balanceTop": "Ablenkung",
+        "balanceBottom": "Können",
+        "radarTitle": "Wo deine Konzentration steht",
+        "radarCaption": "Eine größere Fläche bedeutet stärkere Konzentration und Produktivität in diesem Bereich.",
+        "driversTitle": "Was deinen Wert nach unten zieht",
+        "legendWarm": "warm = Ablenkung (kürzer ist besser)",
+        "legendGreen": "grün = Konzentrationsfähigkeiten (länger ist besser)",
+        "habitsTitle": "Fünf Fokus-Gewohnheiten",
+        "habits": [
+          "Arbeite in kurzen Blöcken — 25 konzentrierte Minuten, Handy weg, eine Aufgabe. Kurz und klar schlägt lang und zerstreut.",
+          "Fang an, bevor du dich bereit fühlst — mach nur zwei Minuten an der Sache, die du vermeidest, und der Rest folgt von selbst.",
+          "Mach eine Sache nach der anderen — bring sie zu Ende, bevor du die nächste anfängst. Beim Wechseln geht die Konzentration verloren.",
+          "Plane deinen Tag in zwei Minuten — wähl die drei wichtigsten Dinge und mach das Schwerste zuerst.",
+          "Richte deine Umgebung ein, nicht nur deine Willenskraft — beseitige die nächstliegende Ablenkung, bevor du anfängst."
+        ],
+        "closingBaseline": "Das ist dein Ausgangspunkt — eine Momentaufnahme deiner Gewohnheiten, kein Urteil. Wähl eine Fokus-Gewohnheit von oben und probier sie zwei Wochen lang aus. Diese Zahlen verändern sich mit der Übung.",
+        "closingReturn": "Das ist ein weiterer Check-in auf deinem Weg — beobachte, wie diese Zahlen mit der Zeit steigen. Die Übung ist der Beweis.",
+        "doors": {
+          "audio": "Starte einen Fokus-Audio-Plan",
+          "counselling": "Sprich mit jemandem"
+        }
+      }
+    },
+    "chrome": {
+      "audio": "Audio",
+      "gettingAudio": "Audio wird vorbereitet …",
+      "audioPreparingTitle": "Dein Audio-Plan wird noch erstellt",
+      "downloadPdf": "PDF herunterladen",
+      "takeAgain": "Erneut machen",
+      "attempt": "Versuch {{n}}",
+      "completed": "Abgeschlossen {{date}} · {{name}}",
+      "headNote": "Ein Werkzeug, das dir hilft, dich selbst zu verstehen, erstellt aus deinen Antworten — kein medizinischer Test und keine Diagnose.",
+      "radarAria": "Dein Wert in jedem der Bereiche",
+      "quadAria": "Wo dein Muster liegt",
+      "areaByArea": "Bereich für Bereich",
+      "closerLook": "Genauer betrachtet",
+      "tryThis": "Probier das:",
+      "actionPlan": "Dein Aktionsplan",
+      "focusTag": "Fokus",
+      "useStrengthTag": "Nutze diese Stärke",
+      "useYour": "Nutze deine {{label}}",
+      "leanOnText": "Das funktioniert gerade gut für dich. Setz es bei den Fokusbereichen oben ein — so bleibt der Rest des Plans hängen.",
+      "disclaimer": "Daybreak ist ein Werkzeug, das dir beim Nachdenken hilft. Es ist kein medizinischer Test, keine Diagnose und keine Behandlung. Wenn es dir schwerfällt, ist der Schritt zu einer ausgebildeten Fachperson mutig und lohnend.",
+      "downloadReport": "Diesen Bericht herunterladen",
+      "allReports": "Alle meine Berichte"
+    },
+    "json": {
+      "headerNote": "Ein Werkzeug zur Selbstwahrnehmung, erstellt aus deinen Antworten — keine klinische oder diagnostische Beurteilung.",
+      "leanOnText": "Das funktioniert gerade für dich. Setz es gezielt bei den Fokusbereichen oben ein — so bleibt der Rest des Plans hängen.",
+      "disclaimer": "Daybreak ist ein Werkzeug zur Selbstreflexion, keine klinische Beurteilung, Diagnose oder Behandlung. Wenn es dir schwerfällt, ist der Schritt zu einer zugelassenen Fachperson mutig und lohnend.",
+      "attempt": "Versuch {{n}}",
+      "completed": "Abgeschlossen {{date}} · {{name}}",
+      "categoryByCategory": "Kategorie für Kategorie",
+      "closerRead": "Genauer gelesen",
+      "actionPlan": "Dein Aktionsplan",
+      "focusTag": "Fokus",
+      "leanOnTag": "Darauf bauen",
+      "leanOnTitle": "Bau auf deine {{label}}",
+      "overall": "Gesamt"
+    },
+    "band": {
+      "load": {
+        "low": "Niedrig",
+        "mid": "Mäßig",
+        "high": "Hoch"
+      },
+      "strength": {
+        "low": "Geht zur Neige",
+        "mid": "Im Aufbau",
+        "high": "Stark"
+      },
+      "positive": {
+        "low": "Niedrig",
+        "mid": "In Entwicklung",
+        "high": "Stark"
+      }
+    },
+    "tag": {
+      "focus": "Fokusbereich",
+      "watch": "Im Blick behalten",
+      "good": "Läuft gut",
+      "building": "Im Aufbau",
+      "strength": "Stärke",
+      "growth": "Wachstumsbereich"
+    },
+    "demo": {
+      "gen": {
+        "scoring": "Deine Antworten werden ausgewertet",
+        "looking": "Betrachte {{n}} Bereiche",
+        "writing": "Formuliere, was das bedeutet",
+        "building": "Erstelle deinen {{days}}-Tage-Audio-Plan",
+        "reading": "Deine Antworten werden gelesen …",
+        "note": "Gleiche Antworten, gleicher Bericht, jedes Mal"
+      },
+      "band": {
+        "load": {
+          "low": "Niedrige Belastung",
+          "mid": "Mäßige Belastung",
+          "high": "Hohe Belastung"
+        },
+        "strength": {
+          "low": "In Entwicklung",
+          "mid": "Wachsend",
+          "high": "Stark"
+        }
+      },
+      "profile": {
+        "load": {
+          "low": "Fühlt sich stabil an",
+          "mid": "Unter Druck, aber im Griff",
+          "high": "Trägt eine schwere Last"
+        },
+        "strength": {
+          "low": "Ganz am Anfang",
+          "mid": "Stetig wachsend",
+          "high": "Eine starke Basis"
+        }
+      },
+      "reportDate": "Bericht · {{date}}",
+      "yourReport": "Dein Bericht",
+      "backReports": "Zurück zu deinen Berichten",
+      "backAssessments": "Zurück zu den Assessments",
+      "nameReport": "Bericht von {{name}}",
+      "complete": "Fertig",
+      "strongPoint": "Dein starker Punkt {{label}}",
+      "anchorText": "Mit {{score}} ist das der Bereich, der dir gerade den meisten Halt gibt. Dein Plan baut darauf auf.",
+      "focusPoint": "Dein Fokus {{label}}",
+      "focusText": "Mit {{score}} ist das der Ausgangspunkt. Die erste Woche deines Plans dreht sich darum.",
+      "closerAreas": "Ein genauerer Blick auf die vier Bereiche",
+      "tryThis": "Probier das:",
+      "planTitle": "Dein {{days}}-Tage-Plan, erstellt aus diesem Bericht",
+      "welcomeGreeting": "Hallo {{name}}",
+      "day": "Tag {{n}}",
+      "daysRange": "Tage {{from}}–{{to}}",
+      "oneEachMorning": "jeden Morgen eine",
+      "unlockPlan": "Meinen Audio-Plan freischalten",
+      "whatOpens": "Was dieser Bericht öffnet",
+      "ebookCard": "{{ebook}}: {{days}} Tage von {{name}}",
+      "ebookCardSmall": "Dein eigenes E-Book, erstellt aus diesen Werten",
+      "talkThrough": "Sprich darüber",
+      "talkThroughSmall": "Ein KI-Helfer, der diesen Bericht schon gelesen hat",
+      "takeAgain": "Mach es in 60–90 Tagen erneut",
+      "takeAgainSmall": "Sieh, wie sich diese Zahlen verändern — das ist der Beweis",
+      "disclaimer": "Dieser Bericht ist ein Werkzeug, das dir beim Nachdenken hilft. Er entsteht aus deinen Antworten nach einem festen Bewertungsverfahren. Er ist kein medizinischer Test, keine Diagnose und kein Behandlungsplan. Wenn es dir schwerfällt, ist ein Gespräch mit einer ausgebildeten Fachperson ein guter und mutiger nächster Schritt.",
+      "tryAnother": "Probier ein anderes Thema",
+      "backHome": "Zurück zu Daybreak"
+    }
+  },
+  "subCat": {
+    "exhaustion": {
+      "label": "Erschöpfung",
+      "desc": "Wie müde du dich fühlst – wie viel Energie am Ende des Tages noch übrig ist."
+    },
+    "cynicism": {
+      "label": "Distanzierung",
+      "desc": "Wie sehr du dich von der Arbeit, von Menschen oder von Dingen zurückziehst, die dir früher wichtig waren."
+    },
+    "workload": {
+      "label": "Arbeitslast",
+      "desc": "Wie schwer sich deine Arbeit anfühlt und ob du sie auf Dauer durchhältst."
+    },
+    "recovery": {
+      "label": "Erholung",
+      "desc": "Wie gut dir Ruhe hilft – ob du dich danach besser fühlst oder immer noch ausgelaugt."
+    },
+    "control": {
+      "label": "Kontrolle",
+      "desc": "Wie viel Mitsprache du bei dem Gefühl hast, wie deine Tage ablaufen."
+    },
+    "sleeplessness": {
+      "label": "Schlaflosigkeit",
+      "desc": "Schwierigkeiten, nachts einzuschlafen oder durchzuschlafen."
+    },
+    "quality": {
+      "label": "Qualität",
+      "desc": "Wie gut dein Schlaf ist, nicht nur wie lange du schläfst."
+    },
+    "rest": {
+      "label": "Ruhe",
+      "desc": "Ob du dir echte Pausen gönnst oder ohne Unterbrechung weitermachst."
+    },
+    "energy": {
+      "label": "Energie",
+      "desc": "Wie wach und ausgeglichen du dich tagsüber fühlst."
+    },
+    "winddown": {
+      "label": "Abschalten",
+      "desc": "Wie gut du vor dem Schlafengehen zur Ruhe kommst und entspannst."
+    },
+    "worry": {
+      "label": "Sorgen",
+      "desc": "Wie oft deine Gedanken zu dem springen, was schiefgehen könnte."
+    },
+    "rumination": {
+      "label": "Grübeln",
+      "desc": "Wenn du an denselben Gedanken immer wieder hängen bleibst."
+    },
+    "catastrophizing": {
+      "label": "Schwarzmalen",
+      "desc": "Sofort das Schlimmste anzunehmen, was passieren könnte."
+    },
+    "physical": {
+      "label": "Körperlich",
+      "desc": "Wie sich Anspannung in deinem Körper zeigt – verspannte Muskeln, Unruhe, ein schneller Herzschlag."
+    },
+    "refocus": {
+      "label": "Zurückfinden",
+      "desc": "Wie gut du aufhören kannst, dir Sorgen zu machen, und in den Moment zurückkehrst."
+    },
+    "awareness": {
+      "label": "Wahrnehmung",
+      "desc": "Wie gut du bemerkst und benennst, was du fühlst, während es passiert."
+    },
+    "regulation": {
+      "label": "Steuerung",
+      "desc": "Ruhig mit deinen Gefühlen umzugehen – nachzudenken, bevor du unter Druck reagierst."
+    },
+    "empathy": {
+      "label": "Empathie",
+      "desc": "Zu spüren, was andere fühlen, und dich davon leiten zu lassen, wie du handelst."
+    },
+    "relationships": {
+      "label": "Beziehungen",
+      "desc": "Gut miteinander auszukommen, Streit zu klären und dich wieder zu vertragen."
+    },
+    "motivation": {
+      "label": "Motivation",
+      "desc": "Der Antrieb, der dich anfangen und bei dem dranbleiben lässt, was dir wichtig ist."
+    },
+    "distractibility": {
+      "label": "Ablenkbarkeit",
+      "desc": "Wie leicht du dich von dem wegziehen lässt, was du dir vorgenommen hast."
+    },
+    "procrastination": {
+      "label": "Aufschieben",
+      "desc": "Die Lücke zwischen dem Vorhaben anzufangen und dem tatsächlichen Anfangen."
+    },
+    "attention": {
+      "label": "Aufmerksamkeit",
+      "desc": "Bei einer Sache zu bleiben, ohne dass deine Gedanken abschweifen."
+    },
+    "management": {
+      "label": "Organisation",
+      "desc": "Wie du deine Aufgaben und deine Zeit planst, damit dein Einsatz sich lohnt."
+    }
+  },
+  "meta": {
+    "title": "Daybreak — Dein Geist hat einen Weg"
+  }
+}

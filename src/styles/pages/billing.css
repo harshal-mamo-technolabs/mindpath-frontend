@@ -595,7 +595,26 @@
 .checkout-form {
   margin-top: 26px;
   display: grid;
-  gap: 16px;
+  gap: 14px;
+}
+
+/* split Card Element field (theme-aware) */
+.checkout-card-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+  margin-bottom: -4px;
+}
+.checkout-card-field {
+  padding: 13px 14px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 12px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.checkout-card-field:focus-within {
+  border-color: var(--accent, #6450cf);
+  box-shadow: 0 0 0 3px rgba(100, 80, 207, 0.18);
 }
 
 .checkout-row {

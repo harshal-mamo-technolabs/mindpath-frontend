@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   Activity,
-  ArrowRight,
   CalendarCheck,
   CheckCircle2,
   Compass,
@@ -17,6 +16,7 @@ import {
   Target,
 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { getAudioPlanForAssessment } from '../../lib/audioApi.js'
 
 /* gauge / pill colour keyed by health (good = green, whatever the direction).
@@ -72,6 +72,7 @@ function GaugeArc({ value, healthKey, label }) {
 
 /* ---- radar / pentagon over each category's radarValue ---- */
 function Radar({ dims }) {
+  const { t } = useTranslation()
   const size = 260
   const c = size / 2
   const R = 96
@@ -88,7 +89,7 @@ function Radar({ dims }) {
       className="srep-radar"
       viewBox={`0 0 ${size} ${size}`}
       role="img"
-      aria-label="Profile across the five categories"
+      aria-label={t('report.chrome.radarAria', 'Your score in each of the areas')}
     >
       {[0.25, 0.5, 0.75, 1].map((f) => (
         <polygon key={f} className="srep-radar-grid" points={ring(f)} />
@@ -134,6 +135,7 @@ const QUAD_POS = [
 ]
 
 function Quadrant({ difficulty, resource, active, quads, xLabel, yLabel }) {
+  const { t } = useTranslation()
   const S = 240
   const pad = 34
   const inner = S - pad * 2
@@ -146,7 +148,7 @@ function Quadrant({ difficulty, resource, active, quads, xLabel, yLabel }) {
       className="srep-quad"
       viewBox={`0 0 ${S} ${S}`}
       role="img"
-      aria-label="Your pattern across the two axes"
+      aria-label={t('report.chrome.quadAria', 'Where your pattern falls')}
     >
       {QUAD_POS.map((q) => (
         <rect
@@ -277,8 +279,9 @@ export default function AssessmentReport({
   onRetake,
   assessmentId,
 }) {
+  const { t, i18n } = useTranslation()
   const r = report
-  const today = new Date().toLocaleDateString('en-US', {
+  const today = new Date().toLocaleDateString(i18n.language, {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -373,7 +376,7 @@ export default function AssessmentReport({
       <div className="srep-toolbar">
         {audioState === 'ready' && (
           <button className="btn btn-ghost srep-tool-btn" onClick={openWelcomeAudio}>
-            <Headphones size={16} /> Audio
+            <Headphones size={16} /> {t('report.chrome.audio', 'Audio')}
           </button>
         )}
         {audioState === 'preparing' && (
@@ -381,16 +384,16 @@ export default function AssessmentReport({
             className="btn btn-ghost srep-tool-btn"
             disabled
             aria-disabled="true"
-            title="Your audio plan is still being prepared"
+            title={t('report.chrome.audioPreparingTitle', 'Your audio plan is still being made')}
           >
-            <Loader2 size={15} className="ap-spin" /> Preparing audio…
+            <Loader2 size={15} className="ap-spin" /> {t('report.chrome.gettingAudio', 'Getting audio ready…')}
           </button>
         )}
         <button className="btn btn-ghost srep-tool-btn" onClick={() => window.print()}>
-          <Download size={16} /> Download PDF
+          <Download size={16} /> {t('report.chrome.downloadPdf', 'Download PDF')}
         </button>
         <button className="btn btn-ghost srep-tool-btn" onClick={onRetake}>
-          <RefreshCcw size={16} /> Retake
+          <RefreshCcw size={16} /> {t('report.chrome.takeAgain', 'Take again')}
         </button>
       </div>
 
@@ -399,15 +402,21 @@ export default function AssessmentReport({
         <span className="srep-avatar">{name[0].toUpperCase()}</span>
         <div className="srep-head-text">
           <p className="srep-kicker">
-            {ui.kicker} · attempt {attempt || r.attempt}
+            {ui.kicker} · {t('report.chrome.attempt', 'try {{n}}', { n: attempt || r.attempt })}
           </p>
           <h1>{ui.headTitle(name)}</h1>
           <p className="srep-head-meta">
-            Completed {today} · {ui.assessmentName}
+            {t('report.chrome.completed', 'Completed {{date}} · {{name}}', {
+              date: today,
+              name: ui.assessmentName,
+            })}
           </p>
           <p className="srep-head-note">
-            <ShieldCheck size={13} /> A self-awareness tool generated from your answers — not a
-            clinical or diagnostic assessment.
+            <ShieldCheck size={13} />{' '}
+            {t(
+              'report.chrome.headNote',
+              'A tool to help you understand yourself, made from your answers — not a medical test or diagnosis.',
+            )}
           </p>
         </div>
       </header>
@@ -537,7 +546,7 @@ export default function AssessmentReport({
       {/* 5 — category detail */}
       <section className="srep-card srep-flow">
         <h2 className="srep-h2">
-          <Gauge size={18} /> Category by category
+          <Gauge size={18} /> {t('report.chrome.areaByArea', 'Area by area')}
         </h2>
         <p className="srep-legend">
           {ui.legendWarm && (
@@ -588,7 +597,7 @@ export default function AssessmentReport({
       {/* 6 — a closer read (always populated) */}
       <section className="srep-card">
         <h2 className="srep-h2">
-          <Lightbulb size={18} /> A closer read
+          <Lightbulb size={18} /> {t('report.chrome.closerLook', 'A closer look')}
         </h2>
         <div className="srep-insights">
           {r.insights.map((d) => (
@@ -608,7 +617,7 @@ export default function AssessmentReport({
                 <p className="srep-try">
                   <Lightbulb size={14} />
                   <span>
-                    <strong>Try this:</strong> {d.tryThis}
+                    <strong>{t('report.chrome.tryThis', 'Try this:')}</strong> {d.tryThis}
                   </span>
                 </p>
               )}
@@ -620,23 +629,27 @@ export default function AssessmentReport({
       {/* 7 — action plan */}
       <section className="srep-card srep-plan">
         <h2 className="srep-h2">
-          <Target size={18} /> Your action plan
+          <Target size={18} /> {t('report.chrome.actionPlan', 'Your action plan')}
         </h2>
         <div className="srep-actions-grid">
           {planFocus.map((d) => (
             <article className="srep-action" key={d.key}>
-              <span className="srep-action-tag">Focus</span>
+              <span className="srep-action-tag">{t('report.chrome.focusTag', 'Focus')}</span>
               <h3>{d.label}</h3>
               <p>{d.tryThis}</p>
             </article>
           ))}
           {leanOn && (
             <article className="srep-action use-strength">
-              <span className="srep-action-tag strength">Lean on this</span>
-              <h3>Lean on your {leanOn.strengthLabel}</h3>
+              <span className="srep-action-tag strength">
+                {t('report.chrome.useStrengthTag', 'Use this strength')}
+              </span>
+              <h3>{t('report.chrome.useYour', 'Use your {{label}}', { label: leanOn.strengthLabel })}</h3>
               <p>
-                This is what’s working for you right now. Spend it deliberately on the focus areas
-                above — it’s what makes the rest of the plan stick.
+                {t(
+                  'report.chrome.leanOnText',
+                  'This is what’s working well for you right now. Use it on the focus areas above — it’s what makes the rest of the plan stick.',
+                )}
               </p>
             </article>
           )}
@@ -662,26 +675,19 @@ export default function AssessmentReport({
       <section className="srep-card srep-closing">
         <Quote size={22} className="srep-quote-ico" />
         <p className="srep-closing-text">{r.attempt > 1 ? ui.closingReturn : ui.closingBaseline}</p>
-        <div className="srep-doors">
-          {ui.doors.map(({ to, Icon, label }) => (
-            <Link to={to} className="srep-door" key={label}>
-              <Icon size={18} />
-              <span>{label}</span>
-              <ArrowRight size={15} />
-            </Link>
-          ))}
-        </div>
         <p className="srep-disclaimer">
-          <ShieldCheck size={14} /> Daybreak is a self-reflection tool, not a clinical assessment,
-          diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is
-          a brave and worthwhile next step.
+          <ShieldCheck size={14} />{' '}
+          {t(
+            'report.chrome.disclaimer',
+            'Daybreak is a tool to help you reflect. It is not a medical test, a diagnosis, or treatment. If you’re struggling, reaching out to a trained professional is a brave and worthwhile next step.',
+          )}
         </p>
         <div className="srep-closing-actions">
           <button className="btn btn-primary" onClick={() => window.print()}>
-            <Download size={16} /> Download this report
+            <Download size={16} /> {t('report.chrome.downloadReport', 'Download this report')}
           </button>
           <Link to="/reports" className="btn btn-ghost">
-            All my reports
+            {t('report.chrome.allReports', 'All my reports')}
           </Link>
         </div>
       </section>

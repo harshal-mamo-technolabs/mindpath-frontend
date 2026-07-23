@@ -18,14 +18,14 @@ export const PLANS = [
     allowances: { assessments: 1, ebooks: 2, counselling: 15 },
     perks: [
       'Free yoga & meditation music',
-      'Full general ebook library',
+      'The full ebook library',
       'Daily audio plans for your topic',
     ],
   },
   {
     id: 'balance',
     name: 'Balance',
-    tagline: 'For a real, ongoing practice.',
+    tagline: 'For sticking with it over time.',
     monthly: 24,
     yearly: 230,
     popular: true,
@@ -35,14 +35,14 @@ export const PLANS = [
     allowances: { assessments: 3, ebooks: 6, counselling: 45 },
     perks: [
       'Everything in Calm',
-      'Personalized ebooks from your reports',
-      'Retake reminders & progress tracking',
+      'Ebooks made from your reports',
+      'Retake reminders and progress tracking',
     ],
   },
   {
     id: 'flourish',
     name: 'Flourish',
-    tagline: 'The whole path, fully open.',
+    tagline: 'Everything, fully open.',
     monthly: 39,
     yearly: 374,
     accent: '#d98b50',
@@ -52,7 +52,7 @@ export const PLANS = [
     perks: [
       'Everything in Balance',
       'Priority AI counselling',
-      'Early access to new assessment topics',
+      'Early access to new topics',
     ],
   },
 ]
@@ -86,12 +86,12 @@ export const SUBSCRIPTION = {
 }
 
 export const INVOICES = [
-  { id: 'in_1042', date: '2026-06-09', desc: 'Balance plan  monthly', amount: 24, kind: 'plan' },
-  { id: 'in_1031', date: '2026-05-28', desc: 'Assessment  Anxiety & Worry', amount: 19, kind: 'payg' },
-  { id: 'in_1020', date: '2026-05-09', desc: 'Balance plan  monthly', amount: 24, kind: 'plan' },
-  { id: 'in_1009', date: '2026-04-12', desc: 'Ebook  The Worry Habit', amount: 8, kind: 'payg' },
-  { id: 'in_0998', date: '2026-04-09', desc: 'Balance plan  monthly', amount: 24, kind: 'plan' },
-  { id: 'in_0987', date: '2026-03-09', desc: 'Balance plan  monthly', amount: 24, kind: 'plan' },
+  { id: 'in_1042', date: '2026-06-09', desc: 'Balance plan, monthly', amount: 24, kind: 'plan' },
+  { id: 'in_1031', date: '2026-05-28', desc: 'Assessment: Anxiety & Worry', amount: 19, kind: 'payg' },
+  { id: 'in_1020', date: '2026-05-09', desc: 'Balance plan, monthly', amount: 24, kind: 'plan' },
+  { id: 'in_1009', date: '2026-04-12', desc: 'Ebook: The Worry Habit', amount: 8, kind: 'payg' },
+  { id: 'in_0998', date: '2026-04-09', desc: 'Balance plan, monthly', amount: 24, kind: 'plan' },
+  { id: 'in_0987', date: '2026-03-09', desc: 'Balance plan, monthly', amount: 24, kind: 'plan' },
 ]
 
 export const fmtMoney = (n) => `$${n}`

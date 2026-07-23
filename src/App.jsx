@@ -63,7 +63,7 @@ export default function App() {
           <Route path="/audio" element={<AudioLibrary />} />
           <Route path="/reports" element={<ReportsLibrary />} />
           <Route path="/ebooks" element={<EbooksLibrary />} />
-          <Route path="/music" element={<MusicLibrary />} />
+          <Route path="/sound" element={<MusicLibrary />} />
         </Route>
         {/* Focused, chrome-free flows */}
         <Route path="/assessments/:id/take" element={<AssessmentTake />} />

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Bell,
   Check,
@@ -28,13 +29,14 @@ import {
 } from '../lib/notificationsApi.js'
 
 const SECTIONS = [
-  ['account', 'Account', User],
-  ['notifications', 'Notifications', Bell],
-  ['referrals', 'Referrals', Gift],
-  ['privacy', 'Privacy & data', Shield],
+  ['account', User],
+  ['notifications', Bell],
+  ['referrals', Gift],
+  ['privacy', Shield],
 ]
 
 function TimePicker({ value, onChange }) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [tab, setTab] = useState(() => (value.includes('PM') ? 'PM' : 'AM'))
   const ref = useRef(null)
@@ -66,7 +68,7 @@ function TimePicker({ value, onChange }) {
       <button
         className="pf-time"
         onClick={() => setOpen((o) => !o)}
-        aria-label="Pick reminder time"
+        aria-label={t('profile.aria.pickTime')}
         aria-expanded={open}
       >
         <Clock size={13} />
@@ -74,7 +76,7 @@ function TimePicker({ value, onChange }) {
         <ChevronDown size={11} className={`pf-time-chev ${open ? 'open' : ''}`} />
       </button>
       {open && (
-        <div className="pf-time-popover" role="dialog" aria-label="Time picker">
+        <div className="pf-time-popover" role="dialog" aria-label={t('profile.aria.timePicker')}>
           <div className="pf-time-tabs">
             {['AM', 'PM'].map((p) => (
               <button
@@ -87,16 +89,16 @@ function TimePicker({ value, onChange }) {
             ))}
           </div>
           <div className="pf-time-grid">
-            {slots.map((t) => (
+            {slots.map((slot) => (
               <button
-                key={t}
-                className={`pf-time-slot ${value === t ? 'active' : ''}`}
+                key={slot}
+                className={`pf-time-slot ${value === slot ? 'active' : ''}`}
                 onClick={() => {
-                  onChange(t)
+                  onChange(slot)
                   setOpen(false)
                 }}
               >
-                {t.replace(` ${tab}`, '')}
+                {slot.replace(` ${tab}`, '')}
               </button>
             ))}
           </div>
@@ -122,6 +124,7 @@ function Toggle({ on, onChange, label }) {
 }
 
 export default function Profile() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [form, setForm] = useState({
     name: 'Maya Kapoor',
@@ -189,11 +192,11 @@ export default function Profile() {
   // then have the BACKEND fire an immediate confirmation push.
   const enableChannel = async (key, confirmBody) => {
     if (!pushSupported()) {
-      say('Push notifications aren’t supported in this browser.')
+      say(t('profile.toast.browserNoNotif'))
       return
     }
     if (!vapid.current.configured || !vapid.current.key) {
-      say('Push isn’t configured on the server.')
+      say(t('profile.toast.serverNotSetup'))
       return
     }
     try {
@@ -207,9 +210,9 @@ export default function Profile() {
       say(confirmBody)
     } catch (e) {
       if (e.message === 'permission-denied') {
-        say('Allow notifications in your browser to turn this on.')
+        say(t('profile.toast.allowNotif'))
       } else {
-        say(e.message || 'Couldn’t enable notifications.')
+        say(e.message || t('profile.toast.turnOnFailed'))
       }
     }
   }
@@ -226,18 +229,22 @@ export default function Profile() {
 
   const toggleReminder = (on) =>
     on
-      ? enableChannel('dailyReminder', `Daily reminder on — you'll be nudged at ${prefs.reminderTime}.`)
-      : disableChannel('dailyReminder', 'Daily reminder turned off.')
+      ? enableChannel('dailyReminder', t('profile.toast.reminderOn', { time: prefs.reminderTime }))
+      : disableChannel('dailyReminder', t('profile.toast.reminderOff'))
 
   const toggleProductNews = (on) =>
     on
-      ? enableChannel('productNews', 'Product news on — you’ll hear about new features.')
-      : disableChannel('productNews', 'Product news turned off.')
+      ? enableChannel('productNews', t('profile.toast.productNewsOn'))
+      : disableChannel('productNews', t('profile.toast.productNewsOff'))
 
-  const changeTime = (t) => {
-    setPrefs((p) => ({ ...p, reminderTime: t }))
-    say(prefs.dailyReminder ? `Reminder set for ${t}.` : 'Reminder time saved.')
-    updateNotificationPrefs({ reminderTime: t, tzOffsetMinutes: tzOffset() }).catch(() => {})
+  const changeTime = (time) => {
+    setPrefs((p) => ({ ...p, reminderTime: time }))
+    say(
+      prefs.dailyReminder
+        ? t('profile.toast.reminderSetFor', { time })
+        : t('profile.toast.reminderTimeSaved'),
+    )
+    updateNotificationPrefs({ reminderTime: time, tzOffsetMinutes: tzOffset() }).catch(() => {})
   }
 
   const initials = form.name
@@ -252,7 +259,7 @@ export default function Profile() {
 
   function copyInvite() {
     navigator.clipboard?.writeText('daybreak.app/invite/MAYA-CALM').catch(() => {})
-    say('Invite link copied to clipboard.')
+    say(t('profile.toast.inviteCopied'))
   }
 
   function signOut() {
@@ -263,8 +270,8 @@ export default function Profile() {
     <main className="profile">
       <div className="container">
         <Reveal as="header" className="pf-head">
-          <span className="eyebrow">Your account</span>
-          <h1 className="pf-title">Profile &amp; settings</h1>
+          <span className="eyebrow">{t('profile.eyebrow')}</span>
+          <h1 className="pf-title">{t('profile.title')}</h1>
         </Reveal>
 
         <div className="pf-grid">
@@ -277,26 +284,26 @@ export default function Profile() {
               <h2>{form.name}</h2>
               <p>{form.email}</p>
               <span className="pf-plan">
-                <Sparkles size={13} /> Member since March 2025
+                <Sparkles size={13} /> {t('profile.memberSince', { date: 'March 2025' })}
               </span>
             </div>
 
-            <nav className="pf-nav" aria-label="Settings sections">
-              {SECTIONS.map(([id, label, Icon]) => (
+            <nav className="pf-nav" aria-label={t('profile.aria.settingsSections')}>
+              {SECTIONS.map(([id, Icon]) => (
                 <button
                   key={id}
                   className={`pf-nav-item ${active === id ? 'active' : ''}`}
                   onClick={() => go(id)}
                 >
                   <Icon size={17} />
-                  {label}
+                  {t(`profile.${id}.title`)}
                   <ChevronRight size={15} className="pf-nav-chev" />
                 </button>
               ))}
             </nav>
 
             <button className="pf-signout" onClick={signOut}>
-              <LogOut size={16} /> Sign out
+              <LogOut size={16} /> {t('profile.signOut')}
             </button>
           </aside>
 
@@ -310,9 +317,9 @@ export default function Profile() {
             >
               <div className="pf-section-head">
                 <h2>
-                  <User size={18} /> Account
+                  <User size={18} /> {t('profile.account.title')}
                 </h2>
-                <p>The basics and the name your reports and audio greet you by.</p>
+                <p>{t('profile.account.desc')}</p>
               </div>
 
               <div className="pf-avatar-row">
@@ -320,16 +327,16 @@ export default function Profile() {
                   {initials}
                 </span>
                 <div>
-                  <button className="pf-mini-btn" onClick={() => say('Avatar upload is a demo.')}>
-                    <Pencil size={14} /> Change avatar
+                  <button className="pf-mini-btn" onClick={() => say(t('profile.toast.photoDemo'))}>
+                    <Pencil size={14} /> {t('profile.account.changePhoto')}
                   </button>
-                  <p className="pf-avatar-note">PNG or JPG, square works best.</p>
+                  <p className="pf-avatar-note">{t('profile.account.photoNote')}</p>
                 </div>
               </div>
 
               <div className="pf-fields">
                 <label className="pf-field">
-                  <span>Full name</span>
+                  <span>{t('profile.account.fullName')}</span>
                   <input
                     value={form.name}
                     onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
@@ -337,7 +344,7 @@ export default function Profile() {
                   />
                 </label>
                 <label className="pf-field">
-                  <span>What reports call you</span>
+                  <span>{t('profile.account.reportName')}</span>
                   <input
                     value={form.displayName}
                     onChange={(e) => setForm((f) => ({ ...f, displayName: e.target.value }))}
@@ -345,7 +352,7 @@ export default function Profile() {
                   />
                 </label>
                 <label className="pf-field pf-field-wide">
-                  <span>Email</span>
+                  <span>{t('profile.account.email')}</span>
                   <span className="pf-input-icon">
                     <Mail size={16} />
                     <input
@@ -359,8 +366,8 @@ export default function Profile() {
               </div>
 
               <div className="pf-section-foot">
-                <button className="btn btn-primary" onClick={() => say('Profile updated.')}>
-                  Save changes
+                <button className="btn btn-primary" onClick={() => say(t('profile.toast.profileUpdated'))}>
+                  {t('profile.account.save')}
                 </button>
               </div>
             </section>
@@ -373,16 +380,16 @@ export default function Profile() {
             >
               <div className="pf-section-head">
                 <h2>
-                  <Bell size={18} /> Notifications
+                  <Bell size={18} /> {t('profile.notifications.title')}
                 </h2>
-                <p>Choose the nudges you want — we only ping you with your permission.</p>
+                <p>{t('profile.notifications.desc')}</p>
               </div>
 
               <div className="pf-rows">
                 <div className="pf-row">
                   <div>
-                    <strong>Daily session reminder</strong>
-                    <small>A push notification at your chosen time when your session is ready.</small>
+                    <strong>{t('profile.notifications.dailyTitle')}</strong>
+                    <small>{t('profile.notifications.dailyDesc')}</small>
                   </div>
                   <div className="pf-row-control">
                     {prefs.dailyReminder && (
@@ -391,20 +398,20 @@ export default function Profile() {
                     <Toggle
                       on={prefs.dailyReminder}
                       onChange={toggleReminder}
-                      label="Daily session reminder"
+                      label={t('profile.notifications.dailyTitle')}
                     />
                   </div>
                 </div>
 
                 <div className="pf-row">
                   <div>
-                    <strong>Product news</strong>
-                    <small>New assessment topics and features. Rare, never noisy.</small>
+                    <strong>{t('profile.notifications.productTitle')}</strong>
+                    <small>{t('profile.notifications.productDesc')}</small>
                   </div>
                   <Toggle
                     on={prefs.productNews}
                     onChange={toggleProductNews}
-                    label="Product news"
+                    label={t('profile.notifications.productTitle')}
                   />
                 </div>
               </div>
@@ -418,33 +425,33 @@ export default function Profile() {
             >
               <div className="pf-section-head">
                 <h2>
-                  <Gift size={18} /> Referrals
+                  <Gift size={18} /> {t('profile.referrals.title')}
                 </h2>
-                <p>Walking with a friend helps and you both get a free counselling session.</p>
+                <p>{t('profile.referrals.desc')}</p>
               </div>
 
               <div className="pf-referral">
                 <div className="pf-referral-code">
-                  <span className="pf-code-label">Your invite link</span>
+                  <span className="pf-code-label">{t('profile.referrals.inviteLabel')}</span>
                   <div className="pf-code-row">
                     <code>daybreak.app/invite/MAYA-CALM</code>
                     <button className="pf-copy-btn" onClick={copyInvite}>
-                      <Copy size={15} /> Copy
+                      <Copy size={15} /> {t('profile.referrals.copy')}
                     </button>
                   </div>
                 </div>
                 <div className="pf-referral-stats">
                   <div>
                     <strong>2</strong>
-                    <small>invited</small>
+                    <small>{t('profile.referrals.invited')}</small>
                   </div>
                   <div>
                     <strong>1</strong>
-                    <small>joined</small>
+                    <small>{t('profile.referrals.joined')}</small>
                   </div>
                   <div className="reward">
                     <strong>1</strong>
-                    <small>free session earned</small>
+                    <small>{t('profile.referrals.earned')}</small>
                   </div>
                 </div>
               </div>
@@ -458,39 +465,35 @@ export default function Profile() {
             >
               <div className="pf-section-head">
                 <h2>
-                  <Shield size={18} /> Privacy &amp; data
+                  <Shield size={18} /> {t('profile.privacy.title')}
                 </h2>
-                <p>Your reports are yours. Take them with you, or close the account entirely.</p>
+                <p>{t('profile.privacy.desc')}</p>
               </div>
 
               <div className="pf-rows">
                 <button
                   className="pf-row pf-row-btn"
-                  onClick={() => say('Export started  a demo.')}
+                  onClick={() => say(t('profile.toast.exportStarted'))}
                 >
                   <div>
-                    <strong>Export my data</strong>
-                    <small>Download every report, score, and mood log as a file.</small>
+                    <strong>{t('profile.privacy.exportTitle')}</strong>
+                    <small>{t('profile.privacy.exportDesc')}</small>
                   </div>
                   <Download size={18} />
                 </button>
               </div>
 
               <p className="pf-disclaimer">
-                <Shield size={14} /> Daybreak assessments are self-reflection tools, not clinical or
-                diagnostic services. Your data is never sold. If you&rsquo;re in crisis, please
-                reach out to local emergency services or a crisis line.
+                <Shield size={14} /> {t('profile.privacy.disclaimer')}
               </p>
 
               <div className="pf-danger">
                 <div>
-                  <strong>Delete account</strong>
-                  <small>
-                    Permanently removes your reports, plans, and shelf. This cannot be undone.
-                  </small>
+                  <strong>{t('profile.privacy.deleteTitle')}</strong>
+                  <small>{t('profile.privacy.deleteDesc')}</small>
                 </div>
                 <button className="pf-danger-btn" onClick={() => setConfirmDelete(true)}>
-                  <Trash2 size={15} /> Delete
+                  <Trash2 size={15} /> {t('profile.privacy.delete')}
                 </button>
               </div>
             </section>
@@ -513,36 +516,33 @@ export default function Profile() {
           className="ap-modal-overlay"
           role="dialog"
           aria-modal="true"
-          aria-label="Delete account"
+          aria-label={t('profile.aria.deleteAccount')}
           onClick={(e) => e.target === e.currentTarget && setConfirmDelete(false)}
         >
           <div className="ap-modal pf-delete-modal">
             <span className="pf-delete-ico">
               <Trash2 size={24} />
             </span>
-            <h3>Delete your account?</h3>
-            <p>
-              This would permanently erase your reports, audio progress, and shelf. In this demo,
-              nothing is actually deleted.
-            </p>
+            <h3>{t('profile.modal.title')}</h3>
+            <p>{t('profile.modal.body')}</p>
             <div className="ap-modal-actions">
               <button
                 className="pf-danger-btn lg"
                 onClick={() => {
                   setConfirmDelete(false)
-                  say('Demo  your account is safe.')
+                  say(t('profile.toast.accountSafe'))
                 }}
               >
-                Yes, delete everything
+                {t('profile.modal.confirm')}
               </button>
               <button className="ap-ghostlink" onClick={() => setConfirmDelete(false)}>
-                Keep my account
+                {t('profile.modal.keep')}
               </button>
             </div>
             <button
               className="ap-modal-close"
               onClick={() => setConfirmDelete(false)}
-              aria-label="Close"
+              aria-label={t('profile.aria.close')}
             >
               <X size={18} />
             </button>

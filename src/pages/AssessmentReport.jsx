@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Anchor,
   ArrowRight,
@@ -17,52 +18,40 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
-import { bandOf, DEMO_SCORES, getAssessment } from '../data/assessments.js'
+import { bandOf, DEMO_SCORES, getAssessment, localizeAssessment } from '../data/assessments.js'
 
-const GEN_STEPS = (a) => [
-  'Scoring your answers',
-  `Mapping ${a.dims.length} dimensions`,
-  'Writing your interpretation',
-  `Sequencing your ${a.plan.days}-day audio plan`,
-]
-
-const BAND_META = {
-  load: {
-    low: { chip: 'Low load', cls: 'band-good' },
-    mid: { chip: 'Moderate load', cls: 'band-mid' },
-    high: { chip: 'High load', cls: 'band-hot' },
-  },
-  strength: {
-    low: { chip: 'Developing', cls: 'band-hot' },
-    mid: { chip: 'Growing', cls: 'band-mid' },
-    high: { chip: 'Strong', cls: 'band-good' },
-  },
+/* CSS band colour by direction — not translatable */
+const BAND_CLS = {
+  load: { low: 'band-good', mid: 'band-mid', high: 'band-hot' },
+  strength: { low: 'band-hot', mid: 'band-mid', high: 'band-good' },
 }
-
-const PROFILE_TITLES = {
-  load: {
-    low: 'On steady ground',
-    mid: 'Under pressure, still standing',
-    high: 'Carrying a heavy load',
-  },
-  strength: {
-    low: 'At the trailhead',
-    mid: 'Growing steadily',
-    high: 'A strong foundation',
-  },
+/* English fallbacks (the real copy lives in report.demo.* locale keys) */
+const BAND_CHIP_EN = {
+  load: { low: 'Low load', mid: 'Moderate load', high: 'High load' },
+  strength: { low: 'Developing', mid: 'Growing', high: 'Strong' },
+}
+const PROFILE_EN = {
+  load: { low: 'Feeling steady', mid: 'Under pressure but coping', high: 'Carrying a heavy load' },
+  strength: { low: 'Just starting out', mid: 'Growing steadily', high: 'A strong base' },
 }
 
 function GeneratingScreen({ a, done }) {
-  const steps = GEN_STEPS(a)
+  const { t } = useTranslation()
+  const steps = [
+    t('report.demo.gen.scoring', 'Scoring your answers'),
+    t('report.demo.gen.looking', 'Looking at {{n}} areas', { n: a.dims.length }),
+    t('report.demo.gen.writing', 'Writing what it means'),
+    t('report.demo.gen.building', 'Building your {{days}}-day audio plan', { days: a.plan.days }),
+  ]
   const [reached, setReached] = useState(0)
 
   useEffect(() => {
     if (reached >= steps.length) {
-      const t = setTimeout(done, 700)
-      return () => clearTimeout(t)
+      const timer = setTimeout(done, 700)
+      return () => clearTimeout(timer)
     }
-    const t = setTimeout(() => setReached((r) => r + 1), 1050)
-    return () => clearTimeout(t)
+    const timer = setTimeout(() => setReached((r) => r + 1), 1050)
+    return () => clearTimeout(timer)
   }, [reached, steps.length, done])
 
   return (
@@ -72,7 +61,7 @@ function GeneratingScreen({ a, done }) {
         <span className="orb-ring r2" />
         <div className="orb-core gen-core" />
       </div>
-      <h1>Reading your answers…</h1>
+      <h1>{t('report.demo.gen.reading', 'Reading your answers…')}</h1>
       <ul className="gen-steps" aria-live="polite">
         {steps.map((s, i) => (
           <li key={s} className={i < reached ? 'done' : i === reached ? 'active' : ''}>
@@ -81,15 +70,16 @@ function GeneratingScreen({ a, done }) {
           </li>
         ))}
       </ul>
-      <p className="gen-note">Deterministic framework · same answers, same report, every time</p>
+      <p className="gen-note">{t('report.demo.gen.note', 'Same answers, same report, every time')}</p>
     </div>
   )
 }
 
 export default function AssessmentReport() {
+  const { t, i18n } = useTranslation()
   const { id } = useParams()
   const { state } = useLocation()
-  const a = getAssessment(id)
+  const a = localizeAssessment(getAssessment(id))
 
   // Viewing an existing report from the library skips the generation ceremony.
   const isViewing = !!state?.view
@@ -98,8 +88,8 @@ export default function AssessmentReport() {
 
   useEffect(() => {
     if (phase === 'ready') {
-      const t = requestAnimationFrame(() => setMounted(true))
-      return () => cancelAnimationFrame(t)
+      const raf = requestAnimationFrame(() => setMounted(true))
+      return () => cancelAnimationFrame(raf)
     }
   }, [phase])
 
@@ -108,7 +98,11 @@ export default function AssessmentReport() {
   const scores = state?.scores || DEMO_SCORES[id]
   const name = state?.name || 'Maya'
   const overallBand = bandOf(scores.overall)
-  const bandMeta = BAND_META[a.direction]
+  const bandCls = (band) => BAND_CLS[a.direction][band]
+  const bandChip = (band) =>
+    t(`report.demo.band.${a.direction}.${band}`, { defaultValue: BAND_CHIP_EN[a.direction][band] })
+  const profileTitle = (band) =>
+    t(`report.demo.profile.${a.direction}.${band}`, { defaultValue: PROFILE_EN[a.direction][band] })
 
   // anchor = healthiest dimension, focus = the one needing most care
   const ranked = [...a.dims].sort((x, y) => scores.dims[x.key] - scores.dims[y.key])
@@ -118,7 +112,7 @@ export default function AssessmentReport() {
   const RING_C = 326.7
   const today =
     state?.dateLabel ||
-    new Date().toLocaleDateString('en-US', {
+    new Date().toLocaleDateString(i18n.language, {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -132,11 +126,19 @@ export default function AssessmentReport() {
     <div className={`reportpage ${mounted ? 'in' : ''}`} style={{ '--topic': a.accent }}>
       <header className="take-bar">
         <Logo />
-        <p className="take-topic">{isViewing ? `Report · ${today}` : 'Personal report'}</p>
+        <p className="take-topic">
+          {isViewing
+            ? t('report.demo.reportDate', 'Report · {{date}}', { date: today })
+            : t('report.demo.yourReport', 'Your report')}
+        </p>
         <Link
           to={isViewing ? '/reports' : '/assessments'}
           className="take-exit"
-          aria-label={isViewing ? 'Back to your reports' : 'Back to assessments'}
+          aria-label={
+            isViewing
+              ? t('report.demo.backReports', 'Back to your reports')
+              : t('report.demo.backAssessments', 'Back to assessments')
+          }
         >
           <RefreshCcw size={18} />
         </Link>
@@ -150,12 +152,12 @@ export default function AssessmentReport() {
               {name[0].toUpperCase()}
             </span>
             <div>
-              <h1>{name}&rsquo;s Report</h1>
+              <h1>{t('report.demo.nameReport', '{{name}}’s Report', { name })}</h1>
               <p>
                 {a.title} · {today}
               </p>
             </div>
-            <span className="rc-badge">Complete</span>
+            <span className="rc-badge">{t('report.demo.complete', 'Complete')}</span>
           </div>
 
           <div className="rp-overview">
@@ -182,9 +184,7 @@ export default function AssessmentReport() {
               </div>
             </div>
             <div>
-              <span className={`band-chip ${bandMeta[overallBand].cls}`}>
-                {PROFILE_TITLES[a.direction][overallBand]}
-              </span>
+              <span className={`band-chip ${bandCls(overallBand)}`}>{profileTitle(overallBand)}</span>
               <p className="rp-overall-text">{a.overall[overallBand]}</p>
             </div>
           </div>
@@ -197,10 +197,13 @@ export default function AssessmentReport() {
               <Anchor size={18} />
             </span>
             <div>
-              <h3>Your anchor {anchor.label}</h3>
+              <h3>{t('report.demo.strongPoint', 'Your strong point {{label}}', { label: anchor.label })}</h3>
               <p>
-                At {scores.dims[anchor.key]}, this is the dimension holding you steadiest right now.
-                Your plan leans on it deliberately.
+                {t(
+                  'report.demo.anchorText',
+                  'At {{score}}, this is the area holding you steadiest right now. Your plan builds on it.',
+                  { score: scores.dims[anchor.key] },
+                )}
               </p>
             </div>
           </article>
@@ -209,10 +212,13 @@ export default function AssessmentReport() {
               <Crosshair size={18} />
             </span>
             <div>
-              <h3>Your focus {focus.label}</h3>
+              <h3>{t('report.demo.focusPoint', 'Your focus {{label}}', { label: focus.label })}</h3>
               <p>
-                At {scores.dims[focus.key]}, this is where the work starts. The first week of your
-                plan is built around it.
+                {t(
+                  'report.demo.focusText',
+                  'At {{score}}, this is where to start. The first week of your plan is built around it.',
+                  { score: scores.dims[focus.key] },
+                )}
               </p>
             </div>
           </article>
@@ -221,7 +227,7 @@ export default function AssessmentReport() {
         {/* ---- dimensions ---- */}
         <section className="rp-dims">
           <h2 className="rp-h2">
-            <FileHeart size={19} /> The four dimensions, read closely
+            <FileHeart size={19} /> {t('report.demo.closerAreas', 'A closer look at the four areas')}
           </h2>
           {a.dims.map((d) => {
             const score = scores.dims[d.key]
@@ -235,7 +241,7 @@ export default function AssessmentReport() {
                   </div>
                   <div className="rp-dim-score">
                     <strong>{score}</strong>
-                    <span className={`band-chip ${bandMeta[band].cls}`}>{bandMeta[band].chip}</span>
+                    <span className={`band-chip ${bandCls(band)}`}>{bandChip(band)}</span>
                   </div>
                 </header>
                 <div className="rc-bar rp-bar">
@@ -250,7 +256,7 @@ export default function AssessmentReport() {
                 <p className="rp-dim-rec">
                   <Lightbulb size={15} />
                   <span>
-                    <strong>Try this:</strong> {d.rec}
+                    <strong>{t('report.demo.tryThis', 'Try this:')}</strong> {d.rec}
                   </span>
                 </p>
               </article>
@@ -261,15 +267,19 @@ export default function AssessmentReport() {
         {/* ---- plan preview ---- */}
         <section className="rp-plan">
           <h2 className="rp-h2 on-night">
-            <Headphones size={19} /> Your {a.plan.days}-day plan, sequenced from this report
+            <Headphones size={19} />{' '}
+            {t('report.demo.planTitle', 'Your {{days}}-day plan, built from this report', {
+              days: a.plan.days,
+            })}
           </h2>
           <p className="rp-plan-welcome">
-            <Mic size={15} /> &ldquo;Hi {name} {a.plan.welcome}&rdquo;
+            <Mic size={15} /> &ldquo;{t('report.demo.welcomeGreeting', 'Hi {{name}}', { name })}{' '}
+            {a.plan.welcome}&rdquo;
           </p>
           <div className="rp-sessions">
             {a.plan.sessions.map((s) => (
               <div className="rp-session" key={s.day}>
-                <span className="rp-session-day">Day {s.day}</span>
+                <span className="rp-session-day">{t('report.demo.day', 'Day {{n}}', { n: s.day })}</span>
                 <p>{s.title}</p>
                 <small>{s.len}</small>
               </div>
@@ -279,43 +289,52 @@ export default function AssessmentReport() {
                 <Lock size={12} />
               </span>
               <p>
-                Days {a.plan.sessions.length + 1}–{a.plan.days}
+                {t('report.demo.daysRange', 'Days {{from}}–{{to}}', {
+                  from: a.plan.sessions.length + 1,
+                  to: a.plan.days,
+                })}
               </p>
-              <small>one each morning</small>
+              <small>{t('report.demo.oneEachMorning', 'one each morning')}</small>
             </div>
           </div>
           <Link to="/audio" className="btn btn-light rp-plan-btn">
-            Unlock my audio plan <ArrowRight size={17} />
+            {t('report.demo.unlockPlan', 'Unlock my audio plan')} <ArrowRight size={17} />
           </Link>
         </section>
 
         {/* ---- next doors ---- */}
         <section className="rp-next">
           <h2 className="rp-h2">
-            <ArrowRight size={19} /> Doors this report opens
+            <ArrowRight size={19} /> {t('report.demo.whatOpens', 'What this report opens')}
           </h2>
           <div className="rp-next-grid">
             <Link to="/#explore" className="rp-next-card">
               <BookOpen size={20} />
               <div>
                 <strong>
-                  &ldquo;{a.ebook}: {name}&rsquo;s {a.plan.days} Days&rdquo;
+                  &ldquo;{t('report.demo.ebookCard', '{{ebook}}: {{name}}’s {{days}} Days', {
+                    ebook: a.ebook,
+                    name,
+                    days: a.plan.days,
+                  })}&rdquo;
                 </strong>
-                <small>Your personalized ebook, generated from these scores</small>
+                <small>{t('report.demo.ebookCardSmall', 'Your own ebook, made from these scores')}</small>
               </div>
             </Link>
             <Link to="/#explore" className="rp-next-card">
               <MessagesSquare size={20} />
               <div>
-                <strong>Talk it through</strong>
-                <small>An AI advisor that has already read this report</small>
+                <strong>{t('report.demo.talkThrough', 'Talk it through')}</strong>
+                <small>
+                  {t('report.demo.talkThroughSmall', 'An AI helper that has already read this report')}
+                </small>
               </div>
             </Link>
             <Link to={`/assessments/${a.id}/take`} className="rp-next-card">
               <CalendarCheck size={20} />
               <div>
-                <strong>Retake in 60–90 days</strong>
-                <small>Watch these numbers move that&rsquo;s the proof</small>
+                <strong>{t('report.demo.takeAgain', 'Take it again in 60–90 days')}</strong>
+                <small>{t('report.demo.takeAgainSmall', 'See these numbers change — that’s the proof')}</small>
               </div>
             </Link>
           </div>
@@ -323,17 +342,18 @@ export default function AssessmentReport() {
 
         <footer className="rp-foot">
           <p>
-            <ShieldCheck size={14} /> This report is a self-reflection tool generated from your
-            answers by a fixed scoring framework. It is not a clinical assessment, diagnosis, or
-            treatment plan. If you&rsquo;re struggling, a licensed professional is the right next
-            step and a brave one.
+            <ShieldCheck size={14} />{' '}
+            {t(
+              'report.demo.disclaimer',
+              'This report is a tool to help you reflect. It is made from your answers using a fixed way of scoring. It is not a medical test, a diagnosis, or a treatment plan. If you’re struggling, talking to a trained professional is a good and brave next step.',
+            )}
           </p>
           <div className="rp-foot-actions">
             <Link to="/assessments" className="btn btn-ghost">
-              Explore another path
+              {t('report.demo.tryAnother', 'Try another topic')}
             </Link>
             <Link to="/" className="btn btn-primary">
-              Back to Daybreak
+              {t('report.demo.backHome', 'Back to Daybreak')}
             </Link>
           </div>
         </footer>

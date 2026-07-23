@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useConversation } from '@elevenlabs/react'
-import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { useTranslation } from 'react-i18next'
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
 import {
   ArrowRight,
   BookOpen,
@@ -34,10 +35,11 @@ import {
   topUpCounselling,
 } from '../lib/counsellingApi.js'
 
-const SUGGEST_META = {
-  ebook: { icon: BookOpen, label: 'Suggested ebook' },
-  plan: { icon: Headphones, label: 'Suggested session' },
-  assessment: { icon: ClipboardList, label: 'Suggested assessment' },
+// Icon per suggestion type — the label is translated at render (counsel.suggest.*).
+const SUGGEST_ICONS = {
+  ebook: BookOpen,
+  plan: Headphones,
+  assessment: ClipboardList,
 }
 
 const LANG_LABELS = { en: 'English', hi: 'हिन्दी', de: 'Deutsch', fr: 'Français', es: 'Español' }
@@ -53,11 +55,16 @@ function VoiceBlob({ speaking = false, connecting = false }) {
       <span className="vblob-glow" />
       <span className="vblob-ring r1" />
       <span className="vblob-ring r2" />
+      <span className="vblob-ring r3" />
       <span className="vblob-core">
+        <span className="vblob-aurora" />
         <span className="vblob-lobe l1" />
         <span className="vblob-lobe l2" />
         <span className="vblob-lobe l3" />
         <span className="vblob-sheen" />
+      </span>
+      <span className="vblob-orbit" aria-hidden="true">
+        <i />
       </span>
     </div>
   )
@@ -67,6 +74,7 @@ const fmtClock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')
 
 export default function CounsellingPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { isAuthenticated, token } = useAuth()
 
   const [phase, setPhase] = useState('lobby') // lobby | call | summary
@@ -139,7 +147,7 @@ export default function CounsellingPage() {
     },
     // Sol can hang up itself (end-call tool), or the connection can drop — end the UI too.
     onDisconnect: () => finalizeCall(),
-    onError: (e) => say(typeof e === 'string' ? e : e?.message || 'The voice connection dropped.'),
+    onError: (e) => say(typeof e === 'string' ? e : e?.message || t('counsel.err.voiceDropped')),
   })
   const status = conversation.status
   const connected = status === 'connected'
@@ -150,7 +158,7 @@ export default function CounsellingPage() {
 
   const backendByKey = useMemo(() => {
     const map = {}
-    for (const t of data?.topics ?? []) map[t.key] = t
+    for (const bt of data?.topics ?? []) map[bt.key] = bt
     return map
   }, [data])
 
@@ -158,20 +166,22 @@ export default function CounsellingPage() {
   // signal (hasReport, the real opening line, resume availability).
   const topics = useMemo(
     () =>
-      TOPICS.map((t) => {
-        const b = backendByKey[t.key]
-        return {
-          ...t,
-          hasReport: b ? b.hasReport : t.hasReport,
+      TOPICS.map((tp) => {
+        const b = backendByKey[tp.key]
+        const merged = {
+          ...tp,
+          title: t(`counsel.topics.${tp.id}.title`, tp.title),
+          line: t(`counsel.topics.${tp.id}.line`, tp.line),
+          hasReport: b ? b.hasReport : tp.hasReport,
           canResume: b?.canResume ?? false,
-          opening: b?.opening ?? getSession(t).lines[0].text,
         }
+        return { ...merged, opening: b?.opening ?? getSession(merged, t).lines[0].text }
       }),
-    [backendByKey],
+    [backendByKey, t],
   )
 
-  const topic = topics.find((t) => t.id === topicId) || topics[0]
-  const script = useMemo(() => getSession(topic), [topic])
+  const topic = topics.find((tp) => tp.id === topicId) || topics[0]
+  const script = useMemo(() => getSession(topic, t), [topic, t])
   const languages = data?.languages ?? ['en']
   const lang = language ?? languages[0]
   const pricing = data?.pricing ?? null
@@ -206,11 +216,11 @@ export default function CounsellingPage() {
   // Deferred so a same-tick top-up (which lifts `remaining`) cancels it via the cleanup.
   useEffect(() => {
     if (phase !== 'call' || !connected || remaining > 0) return
-    const t = setTimeout(() => {
-      say('Your minutes are up — the session has ended.')
+    const timer = setTimeout(() => {
+      say(t('counsel.toast.minutesUp'))
       endCall()
     }, 0)
-    return () => clearTimeout(t)
+    return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, connected, remaining])
 
@@ -252,8 +262,8 @@ export default function CounsellingPage() {
       setPhase('lobby')
       say(
         err?.name === 'NotAllowedError'
-          ? 'Microphone access is needed to talk with Sol.'
-          : err?.message || 'Could not start the session.',
+          ? t('counsel.err.micNeeded', { name: ADVISOR.name })
+          : err?.message || t('counsel.err.couldNotStart'),
       )
     }
   }
@@ -284,7 +294,7 @@ export default function CounsellingPage() {
       warnedRef.current = false
     }
     refreshTopics()
-    say(`${pack.minutes} minutes added — talk as long as you need.`)
+    say(t('counsel.toast.minutesAdded', { count: pack.minutes }))
   }
 
   const buyProps = {
@@ -302,12 +312,14 @@ export default function CounsellingPage() {
         <header className="take-bar cn-bar">
           <Logo />
           <p className="take-topic">
-            {phase === 'summary' ? 'Session summary' : `Live · ${topic.title}`}
+            {phase === 'summary'
+              ? t('counsel.summary.barTitle')
+              : t('counsel.call.barLive', { title: topic.title })}
           </p>
           <button
             className="take-exit"
             onClick={phase === 'summary' ? backToLobby : endCall}
-            aria-label="Close session"
+            aria-label={t('counsel.call.closeAria')}
           >
             <X size={20} />
           </button>
@@ -318,17 +330,21 @@ export default function CounsellingPage() {
             <span className="ap-done-check cn-summary-check">
               <Check size={26} />
             </span>
-            <h1>Session complete</h1>
+            <h1>{t('counsel.summary.complete')}</h1>
             <p className="cn-summary-meta">
-              {topic.title} · {fmtClock(elapsed)} · {remaining} min left this cycle
+              {t('counsel.summary.meta', {
+                title: topic.title,
+                clock: fmtClock(elapsed),
+                remaining,
+              })}
             </p>
 
             <div className="cn-summary-card">
-              <h3>What you and {ADVISOR.name} talked about</h3>
+              <h3>{t('counsel.summary.talkedAbout', { name: ADVISOR.name })}</h3>
               <ul className="cn-takeaways">
-                {script.takeaways.map((t) => (
-                  <li key={t}>
-                    <Check size={15} /> {t}
+                {script.takeaways.map((item) => (
+                  <li key={item}>
+                    <Check size={15} /> {item}
                   </li>
                 ))}
               </ul>
@@ -336,12 +352,12 @@ export default function CounsellingPage() {
               <Link to={script.suggest.to} className="cn-suggest cn-suggest-summary">
                 <span className="cn-suggest-ico">
                   {(() => {
-                    const Ico = SUGGEST_META[script.suggest.type].icon
+                    const Ico = SUGGEST_ICONS[script.suggest.type]
                     return <Ico size={18} />
                   })()}
                 </span>
                 <div>
-                  <small>{SUGGEST_META[script.suggest.type].label}</small>
+                  <small>{t(`counsel.suggest.${script.suggest.type}`)}</small>
                   <strong>{script.suggest.title}</strong>
                 </div>
                 <ArrowRight size={16} />
@@ -350,11 +366,11 @@ export default function CounsellingPage() {
 
             <div className="cn-summary-actions">
               <button className="btn btn-light" onClick={backToLobby}>
-                <PhoneCall size={16} /> New session
+                <PhoneCall size={16} /> {t('counsel.summary.newSession')}
               </button>
               {canTopUp && (
                 <button className="cn-textlink" onClick={() => setBuyOpen(true)}>
-                  Buy more minutes
+                  {t('counsel.summary.buyMore')}
                 </button>
               )}
             </div>
@@ -368,12 +384,12 @@ export default function CounsellingPage() {
               <p className="cn-advisor-state">
                 {!connected ? (
                   <>
-                    <Loader2 size={14} className="ap-spin" /> Connecting…
+                    <Loader2 size={14} className="ap-spin" /> {t('counsel.call.connecting')}
                   </>
                 ) : speaking ? (
-                  'Speaking…'
+                  t('counsel.call.speaking')
                 ) : (
-                  'Listening — take your time'
+                  t('counsel.call.listening')
                 )}
               </p>
             </div>
@@ -383,19 +399,21 @@ export default function CounsellingPage() {
               <p className="cn-grounded-note">
                 <Sparkles size={13} />{' '}
                 {topic.hasReport
-                  ? `${ADVISOR.name} has your ${topic.title} report for extra context — but lead wherever you need.`
+                  ? t('counsel.call.groundedReport', { name: ADVISOR.name, title: topic.title })
                   : topic.open
-                    ? `No report, no agenda — just start talking, ${ADVISOR.name} will follow.`
-                    : `No report needed — ${ADVISOR.name} will get to know this as you talk.`}
+                    ? t('counsel.call.groundedOpen', { name: ADVISOR.name })
+                    : t('counsel.call.groundedNone', { name: ADVISOR.name })}
               </p>
               {messages.map((line, i) => (
                 <div key={i} className={`cn-msg ${line.who}`}>
-                  <span className="cn-msg-who">{line.who === 'advisor' ? ADVISOR.name : 'You'}</span>
+                  <span className="cn-msg-who">
+                    {line.who === 'advisor' ? ADVISOR.name : t('counsel.call.you')}
+                  </span>
                   <p>{line.text}</p>
                 </div>
               ))}
               {connected && messages.length === 0 && (
-                <p className="cn-grounded-note">Say hello whenever you’re ready.</p>
+                <p className="cn-grounded-note">{t('counsel.call.sayHello')}</p>
               )}
             </div>
 
@@ -404,44 +422,50 @@ export default function CounsellingPage() {
               <div className="cn-timer">
                 <Clock size={14} />
                 <strong>{fmtClock(elapsed)}</strong>
-                <span>· {remaining} min left</span>
+                <span>· {t('counsel.call.minLeft', { remaining })}</span>
               </div>
               <div className="cn-control-btns">
                 <div className="cn-ctrl-wrap">
                   <button
                     className={`cn-ctrl ${conversation.isMuted ? 'active' : ''}`}
                     onClick={() => conversation.setMuted(!conversation.isMuted)}
-                    aria-label={conversation.isMuted ? 'Unmute' : 'Mute'}
+                    aria-label={conversation.isMuted ? t('counsel.call.unmute') : t('counsel.call.mute')}
                   >
                     {conversation.isMuted ? <MicOff size={20} /> : <Mic size={20} />}
                   </button>
-                  <span className="cn-ctrl-label">{conversation.isMuted ? 'Unmute' : 'Mute'}</span>
+                  <span className="cn-ctrl-label">
+                    {conversation.isMuted ? t('counsel.call.unmute') : t('counsel.call.mute')}
+                  </span>
                 </div>
                 <div className="cn-ctrl-wrap">
-                  <button className="cn-ctrl cn-end" onClick={endCall} aria-label="End session">
+                  <button className="cn-ctrl cn-end" onClick={endCall} aria-label={t('counsel.call.endAria')}>
                     <PhoneOff size={22} />
                   </button>
-                  <span className="cn-ctrl-label">End</span>
+                  <span className="cn-ctrl-label">{t('counsel.call.end')}</span>
                 </div>
                 {canTopUp && (
                   <div className="cn-ctrl-wrap">
-                    <button className="cn-ctrl" onClick={() => setBuyOpen(true)} aria-label="Add minutes">
+                    <button
+                      className="cn-ctrl"
+                      onClick={() => setBuyOpen(true)}
+                      aria-label={t('counsel.call.addMinutesAria')}
+                    >
                       <Plus size={20} />
                     </button>
-                    <span className="cn-ctrl-label">Minutes</span>
+                    <span className="cn-ctrl-label">{t('counsel.call.minutes')}</span>
                   </div>
                 )}
               </div>
               {remaining <= 5 && (
                 <p className="cn-low">
                   <Zap size={13} />{' '}
-                  {remaining <= 1 ? 'Almost out of minutes — ' : 'Running low — '}
+                  {remaining <= 1 ? t('counsel.call.lowAlmost') : t('counsel.call.lowRunning')}
                   {canTopUp ? (
                     <button className="cn-low-topup" onClick={() => setBuyOpen(true)}>
-                      add minutes to keep talking
+                      {t('counsel.call.lowTopup')}
                     </button>
                   ) : (
-                    'Sol will bring things to a gentle close.'
+                    t('counsel.call.lowWrap', { name: ADVISOR.name })
                   )}
                 </p>
               )}
@@ -457,17 +481,13 @@ export default function CounsellingPage() {
 
   // ---------- LOBBY ----------
   const Icon = topic.icon
-  const reportNote = topic.hasReport
-    ? `${ADVISOR.name} comes in with your ${topic.title} report, so you can skip the backstory and go straight to what’s shifted — the report is context, never a script.`
-    : topic.assessmentId
-      ? `No report on this yet — ${ADVISOR.name} gets to know it live as you talk. Want sharper context first? A short ${topic.title} assessment maps it.`
-      : topic.open
-        ? `Nothing to name and no agenda — start talking and ${ADVISOR.name} follows the thread with you.`
-        : `Bring it just as it is. ${ADVISOR.name} listens, reflects it back, and helps you find the next small step — no report needed.`
   const contextLink = topic.hasReport
-    ? { to: '/reports', label: `View your ${topic.title} report` }
+    ? { to: '/reports', label: t('counsel.lobby.viewReport', { title: topic.title }) }
     : topic.assessmentId
-      ? { to: `/assessments/${topic.assessmentId}`, label: `Take the ${topic.title} assessment first` }
+      ? {
+          to: `/assessments/${topic.assessmentId}`,
+          label: t('counsel.lobby.takeAssessment', { title: topic.title }),
+        }
       : null
 
   const minutesLabel = !isAuthenticated ? null : minutesAvail == null ? '—' : minutesAvail
@@ -476,72 +496,63 @@ export default function CounsellingPage() {
     <main className="cn">
       <div className="container">
         <Reveal as="header" className="cn-hero">
-          <div className="cn-hero-text">
-            <span className="eyebrow on-dark">AI counselling</span>
-            <h1 className="cn-title">
-              Talk it through, <em>out loud.</em>
-            </h1>
-            <p className="cn-lede">{ADVISOR.blurb}</p>
-            <div className="cn-minutes-pill">
-              <Clock size={15} />
-              {isAuthenticated ? (
-                <>
-                  <strong>{minutesLabel} minutes</strong> available this cycle
-                </>
-              ) : (
-                <>
-                  <Link to="/login?next=/counselling" style={{ color: 'inherit', fontWeight: 700 }}>
-                    Sign in
-                  </Link>{' '}
-                  to see your minutes
-                </>
-              )}
-              {canTopUp && (
-                <button onClick={() => setBuyOpen(true)}>
-                  <Plus size={13} /> Top up
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="cn-hero-orb" aria-hidden="true">
-            <VoiceBlob />
-            <span className="cn-hero-orb-label">{ADVISOR.name} · {ADVISOR.role}</span>
+          <span className="eyebrow on-dark">{t('counsel.lobby.eyebrow')}</span>
+          <h1 className="cn-title">
+            {t('counsel.lobby.titleA')} <em>{t('counsel.lobby.titleEm')}</em>
+          </h1>
+          <p className="cn-lede">{t('counsel.lobby.lede', { name: ADVISOR.name })}</p>
+          <div className="cn-minutes-pill">
+            <Clock size={15} />
+            {isAuthenticated ? (
+              <>
+                <strong>
+                  {minutesLabel} {t('counsel.lobby.minutesWord')}
+                </strong>{' '}
+                {t('counsel.lobby.availableThisCycle')}
+              </>
+            ) : (
+              <>
+                <Link to="/login?next=/counselling" style={{ color: 'inherit', fontWeight: 700 }}>
+                  {t('counsel.lobby.signIn')}
+                </Link>{' '}
+                {t('counsel.lobby.signInPost')}
+              </>
+            )}
+            {canTopUp && (
+              <button onClick={() => setBuyOpen(true)}>
+                <Plus size={13} /> {t('counsel.lobby.topUp')}
+              </button>
+            )}
           </div>
         </Reveal>
 
         <section className="cn-studio">
           <div className="cn-studio-topics">
             <h2 className="rp-h2 on-night">
-              <Sparkles size={18} /> What would you like to talk about?
+              <Sparkles size={18} /> {t('counsel.lobby.whatTalk')}
             </h2>
-            <p className="cn-section-sub">
-              Pick whatever you&rsquo;re carrying — no report required. We&rsquo;ll show you exactly
-              how the session opens before you start.
-            </p>
             <div className="cn-topics">
-              {topics.map((t, i) => {
-                const TIcon = t.icon
+              {topics.map((tp, i) => {
+                const TIcon = tp.icon
                 return (
                   <button
-                    key={t.id}
-                    className={`cn-topic ${topicId === t.id ? 'active' : ''}`}
+                    key={tp.id}
+                    className={`cn-topic ${topicId === tp.id ? 'active' : ''}`}
                     onClick={() => {
-                      setTopicId(t.id)
+                      setTopicId(tp.id)
                       setResume(false)
                     }}
-                    style={{ '--accent': t.accent, animationDelay: `${Math.min(i, 8) * 40}ms` }}
+                    style={{ '--accent': tp.accent, animationDelay: `${Math.min(i, 8) * 40}ms` }}
                   >
-                    <span className="cn-topic-ico" style={{ background: t.bg, color: t.fg }}>
+                    <span className="cn-topic-ico" style={{ background: tp.bg, color: tp.fg }}>
                       <TIcon size={22} strokeWidth={1.8} />
                     </span>
                     <span className="cn-topic-text">
-                      <strong>{t.title}</strong>
-                      <small>{t.line}</small>
+                      <strong>{tp.title}</strong>
+                      <small>{tp.line}</small>
                     </span>
-                    {t.hasReport ? (
-                      <span className="cn-topic-tag has-report">Your report</span>
-                    ) : (
-                      <span className="cn-topic-tag open">Open</span>
+                    {tp.hasReport && (
+                      <span className="cn-topic-tag has-report">{t('counsel.lobby.yourReport')}</span>
                     )}
                   </button>
                 )
@@ -556,28 +567,24 @@ export default function CounsellingPage() {
                   <Icon size={24} strokeWidth={1.8} />
                 </span>
                 <div className="cn-setup-headtext">
-                  <small>Your session</small>
+                  <small>{t('counsel.setup.yourSession')}</small>
                   <h3>{topic.title}</h3>
                 </div>
-                {topic.hasReport ? (
-                  <span className="cn-topic-tag has-report">Your report</span>
-                ) : (
-                  <span className="cn-topic-tag open">Open</span>
+                {topic.hasReport && (
+                  <span className="cn-topic-tag has-report">{t('counsel.lobby.yourReport')}</span>
                 )}
               </div>
 
-              <p className="cn-setup-note">{reportNote}</p>
-
               <div className="cn-pick-preview">
                 <span className="cn-pick-label">
-                  <Sparkles size={13} /> How {ADVISOR.name} opens
+                  <Sparkles size={13} /> {t('counsel.setup.howOpens', { name: ADVISOR.name })}
                 </span>
                 <p>&ldquo;{topic.opening}&rdquo;</p>
               </div>
 
               {languages.length > 1 && (
                 <div className="cn-lang">
-                  <span className="cn-lang-label">Talk in</span>
+                  <span className="cn-lang-label">{t('counsel.setup.talkIn')}</span>
                   <div className="cn-lang-opts">
                     {languages.map((code) => (
                       <button
@@ -595,7 +602,7 @@ export default function CounsellingPage() {
               {topic.canResume && (
                 <label className="cn-resume">
                   <input type="checkbox" checked={resume} onChange={(e) => setResume(e.target.checked)} />
-                  Pick up where we left off last time
+                  {t('counsel.setup.resume')}
                 </label>
               )}
 
@@ -605,33 +612,22 @@ export default function CounsellingPage() {
                   onClick={startCall}
                   disabled={isAuthenticated && minutesAvail != null && minutesAvail < 1}
                 >
-                  <PhoneCall size={18} /> Start session with {ADVISOR.name}
+                  <PhoneCall size={18} /> {t('counsel.setup.start', { name: ADVISOR.name })}
                 </button>
                 <p className="cn-setup-meta">
                   {isAuthenticated && minutesLabel != null && minutesLabel !== '—' ? (
                     <>
-                      <strong>{minutesLabel} min</strong> available · ~15 min is typical · stop anytime
+                      <strong>{t('counsel.setup.metaMin', { minutes: minutesLabel })}</strong>{' '}
+                      {t('counsel.setup.metaAvail')}
                     </>
                   ) : (
-                    'Sessions draw from your minutes · ~15 min is typical · stop anytime'
+                    t('counsel.setup.metaNoAuth')
                   )}
                 </p>
-                {canTopUp ? (
+                {canTopUp && minutesAvail != null && minutesAvail < 1 && (
                   <button className="cn-pick-topup" onClick={() => setBuyOpen(true)}>
-                    {minutesAvail != null && minutesAvail < 1 ? (
-                      'Out of minutes — top up to start'
-                    ) : (
-                      <>
-                        <Plus size={13} /> Top up minutes
-                      </>
-                    )}
+                    {t('counsel.setup.outOfMinutes')}
                   </button>
-                ) : (
-                  isAuthenticated &&
-                  minutesAvail != null &&
-                  minutesAvail < 1 && (
-                    <p className="cn-setup-out">You&rsquo;re out of minutes this cycle.</p>
-                  )
                 )}
                 {contextLink && (
                   <Link className="cn-pick-link" to={contextLink.to}>
@@ -663,8 +659,24 @@ function Toasts({ toast }) {
   )
 }
 
+// Dark Card Element style for the top-up modal (card-only — no Link/contact fields).
+const CARD_STYLE = {
+  hidePostalCode: true,
+  style: {
+    base: {
+      fontFamily: 'Manrope, sans-serif',
+      fontSize: '15px',
+      fontWeight: '600',
+      color: '#ece9fa',
+      '::placeholder': { color: '#8a83a8', fontWeight: '500' },
+    },
+    invalid: { color: '#e2725b' },
+  },
+}
+
 /* Stripe card confirmation for a top-up (Stripe billing mode only). */
-function TopUpCard({ onDone, onError }) {
+function TopUpCard({ clientSecret, onDone, onError }) {
+  const { t } = useTranslation()
   const stripe = useStripe()
   const elements = useElements()
   const [submitting, setSubmitting] = useState(false)
@@ -674,13 +686,11 @@ function TopUpCard({ onDone, onError }) {
     if (!stripe || !elements) return
     setSubmitting(true)
     onError('')
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: { return_url: `${window.location.origin}/counselling` },
-      redirect: 'if_required',
+    const { error } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card: elements.getElement(CardElement) },
     })
     if (error) {
-      onError(error.message || 'Your card could not be charged.')
+      onError(error.message || t('counsel.buy.cardError'))
       setSubmitting(false)
       return
     }
@@ -689,15 +699,18 @@ function TopUpCard({ onDone, onError }) {
 
   return (
     <form onSubmit={pay} className="checkout-form">
-      <PaymentElement options={{ paymentMethodOrder: ['card'] }} />
+      <label className="apl-payform-label">{t('counsel.buy.cardDetails')}</label>
+      <div className="apl-cardfield">
+        <CardElement options={CARD_STYLE} />
+      </div>
       <button className="btn btn-primary cn-buy-btn" disabled={!stripe || submitting}>
         {submitting ? (
           <>
-            <Loader2 size={17} className="ap-spin" /> Processing…
+            <Loader2 size={17} className="ap-spin" /> {t('counsel.buy.processing')}
           </>
         ) : (
           <>
-            <Lock size={16} /> Pay & add minutes
+            <Lock size={16} /> {t('counsel.buy.payAdd')}
           </>
         )}
       </button>
@@ -706,6 +719,7 @@ function TopUpCard({ onDone, onError }) {
 }
 
 function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
+  const { t } = useTranslation()
   const [step, setStep] = useState('offer') // offer | processing | card | done
   const [err, setErr] = useState('')
   const [clientSecret, setClientSecret] = useState('')
@@ -766,11 +780,11 @@ function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
         // Reuse the card on file → one-click, no re-entry.
         if (!useNewCard && selectedCardId) {
           const stripe = await stripePromise
-          if (!stripe) throw new Error('Payments are not configured (missing Stripe key).')
+          if (!stripe) throw new Error(t('counsel.buy.noStripe'))
           const { error } = await stripe.confirmCardPayment(res.clientSecret, {
             payment_method: selectedCardId,
           })
-          if (error) throw new Error(error.message || 'Your card could not be charged.')
+          if (error) throw new Error(error.message || t('counsel.buy.cardError'))
           setStep('done')
           return
         }
@@ -782,32 +796,34 @@ function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
 
       setStep('done')
     } catch (e) {
-      setErr(e?.message || 'Could not complete the top-up.')
+      setErr(e?.message || t('counsel.buy.topupError'))
       setStep('offer')
     }
   }
 
   const payLabel = isMsisdnMode
-    ? `Buy ${pack.minutes} min · ${priceOf(pack.minutes)}`
+    ? t('counsel.buy.payLabelMsisdn', { minutes: pack.minutes, price: priceOf(pack.minutes) })
     : !useNewCard && selectedCard
-      ? `Pay ${priceOf(pack.minutes)} · ${selectedCard.brand} •••• ${selectedCard.last4}`
-      : `Continue to payment · ${priceOf(pack.minutes)}`
+      ? t('counsel.buy.payLabelCard', {
+          price: priceOf(pack.minutes),
+          brand: selectedCard.brand,
+          last4: selectedCard.last4,
+        })
+      : t('counsel.buy.payLabelContinue', { price: priceOf(pack.minutes) })
 
   return (
     <div
       className="ap-modal-overlay"
       role="dialog"
       aria-modal="true"
-      aria-label="Buy counselling minutes"
+      aria-label={t('counsel.buy.dialogAria')}
       onClick={(e) => e.target === e.currentTarget && step !== 'processing' && onClose()}
     >
       <div className="ap-modal cn-buy">
         {step === 'offer' && (
           <>
-            <h3>Add counselling minutes</h3>
-            <p className="ap-modal-pitch">
-              Top up whenever you need — even mid-conversation. Minutes never expire.
-            </p>
+            <h3>{t('counsel.buy.addMinutes')}</h3>
+            <p className="ap-modal-pitch">{t('counsel.buy.pitch')}</p>
             {err && (
               <p className="checkout-error" role="alert">
                 {err}
@@ -820,8 +836,8 @@ function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
                   className={`cn-pack ${pack.id === p.id ? 'active' : ''}`}
                   onClick={() => setPack(p)}
                 >
-                  {p.popular && <span className="cn-pack-tag">Popular</span>}
-                  <strong>{p.minutes} min</strong>
+                  {p.popular && <span className="cn-pack-tag">{t('counsel.buy.popular')}</span>}
+                  <strong>{t('counsel.buy.packMin', { minutes: p.minutes })}</strong>
                   <span>{priceOf(p.minutes)}</span>
                 </button>
               ))}
@@ -830,17 +846,20 @@ function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
             {!isMsisdnMode && !useNewCard && selectedCard && (
               <div className="cn-paywith">
                 <span>
-                  Paying with {selectedCard.brand} •••• {selectedCard.last4}
+                  {t('counsel.buy.payingWith', {
+                    brand: selectedCard.brand,
+                    last4: selectedCard.last4,
+                  })}
                 </span>
                 <button type="button" onClick={() => setUseNewCard(true)}>
-                  Use a different card
+                  {t('counsel.buy.differentCard')}
                 </button>
               </div>
             )}
             {!isMsisdnMode && useNewCard && cards.length > 0 && (
               <div className="cn-paywith">
                 <button type="button" onClick={() => setUseNewCard(false)}>
-                  ← Use saved card
+                  {t('counsel.buy.savedCard')}
                 </button>
               </div>
             )}
@@ -851,15 +870,15 @@ function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
                   payLabel
                 ) : (
                   <>
-                    <Loader2 size={16} className="ap-spin" /> Checking your saved card…
+                    <Loader2 size={16} className="ap-spin" /> {t('counsel.buy.checkingCard')}
                   </>
                 )}
               </button>
             </div>
             <p className="cn-buy-demo">
-              {isMsisdnMode ? 'Charged to your mobile bill.' : 'Secured by Stripe.'}
+              {isMsisdnMode ? t('counsel.buy.chargedMobile') : t('counsel.buy.securedStripe')}
             </p>
-            <button className="ap-modal-close" onClick={onClose} aria-label="Close">
+            <button className="ap-modal-close" onClick={onClose} aria-label={t('counsel.buy.close')}>
               <X size={18} />
             </button>
           </>
@@ -867,21 +886,25 @@ function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
         {step === 'processing' && (
           <div className="ap-modal-processing">
             <Loader2 size={34} className="ap-spin" />
-            <h3>Adding minutes…</h3>
-            <p>{isMsisdnMode ? 'Confirming with your carrier.' : 'Confirming your payment.'}</p>
+            <h3>{t('counsel.buy.addingMinutes')}</h3>
+            <p>{isMsisdnMode ? t('counsel.buy.checkingPhone') : t('counsel.buy.confirmingPayment')}</p>
           </div>
         )}
         {step === 'card' && clientSecret && (
           <>
-            <h3>Pay for {pack.minutes} minutes</h3>
+            <h3>{t('counsel.buy.payFor', { count: pack.minutes })}</h3>
             {err && (
               <p className="checkout-error" role="alert">
                 {err}
               </p>
             )}
             <div style={{ marginTop: 16 }}>
-              <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <TopUpCard onDone={() => setStep('done')} onError={setErr} />
+              <Elements stripe={stripePromise}>
+                <TopUpCard
+                  clientSecret={clientSecret}
+                  onDone={() => setStep('done')}
+                  onError={setErr}
+                />
               </Elements>
             </div>
             {cards.length > 0 && (
@@ -894,10 +917,10 @@ function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
                   setStep('offer')
                 }}
               >
-                ← Use saved card instead
+                {t('counsel.buy.savedCardInstead')}
               </button>
             )}
-            <button className="ap-modal-close" onClick={onClose} aria-label="Close">
+            <button className="ap-modal-close" onClick={onClose} aria-label={t('counsel.buy.close')}>
               <X size={18} />
             </button>
           </>
@@ -907,11 +930,11 @@ function BuyMinutes({ pack, setPack, pricing, onFinish, onClose }) {
             <span className="ap-done-check">
               <Check size={26} />
             </span>
-            <h3>{pack.minutes} minutes added</h3>
-            <p>They&rsquo;re ready whenever you want to talk.</p>
+            <h3>{t('counsel.buy.doneAdded', { count: pack.minutes })}</h3>
+            <p>{t('counsel.buy.ready')}</p>
             <div className="ap-modal-actions">
               <button className="btn btn-light" onClick={onFinish}>
-                Done
+                {t('counsel.buy.done')}
               </button>
             </div>
           </div>

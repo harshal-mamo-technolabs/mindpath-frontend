@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { useTranslation } from 'react-i18next'
+import {
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
+  Elements,
+  useElements,
+  useStripe,
+} from '@stripe/react-stripe-js'
 import {
   BadgeCheck,
   BookOpen,
@@ -13,6 +21,7 @@ import {
   Crown,
   Download,
   FileText,
+  Languages,
   Loader2,
   Lock,
   Plus,
@@ -38,13 +47,25 @@ const idOf = (b) => b._id || b.id
 const titleCase = (s) => (s || '').replace(/\b\w/g, (c) => c.toUpperCase())
 const priceTag = (b) => `€${Number(b.cost || 0).toFixed(2)}`
 
-// Style Stripe's Payment Element to match the dark ebook modal.
-const STRIPE_APPEARANCE = {
-  theme: 'night',
-  variables: {
-    colorPrimary: '#6450cf',
-    fontFamily: 'Manrope, sans-serif',
-    borderRadius: '12px',
+// Human labels for the language codes an ebook edition ships in.
+const languageLabel = (codes, t) =>
+  (codes || [])
+    .map((c) => t(`ebooks.lang.${c}`, { defaultValue: String(c).toUpperCase() }))
+    .join(' & ')
+
+// Style the split Card Elements (card number / expiry / CVC) for the dark ebook modal.
+// Split elements are card-only — no Stripe Link, no email/phone/name prompts.
+const CARD_ELEMENT_OPTIONS = {
+  style: {
+    base: {
+      color: '#ece9fa',
+      fontFamily: '"Manrope", sans-serif',
+      fontSize: '15px',
+      fontSmoothing: 'antialiased',
+      iconColor: '#b9aef5',
+      '::placeholder': { color: '#7a749c' },
+    },
+    invalid: { color: '#ff8f8f', iconColor: '#ff8f8f' },
   },
 }
 
@@ -67,17 +88,45 @@ const toParas = (body) =>
     .filter(Boolean)
 
 /* Shelf badge shown on a card the caller has added/bought (null otherwise). */
-const shelfBadge = (b) => {
+const shelfBadge = (b, t) => {
   if (!b.onShelf) return null
-  if (b.isFree) return 'Free'
-  return isStripeMode ? 'Owned' : 'Included'
+  if (b.isFree) return t('ebooks.badgeFree')
+  return isStripeMode ? t('ebooks.badgeOwned') : t('ebooks.badgeIncluded')
 }
 
 /* The action label for acquiring a book not yet on the shelf. */
-const acquireLabel = (b) => (b.isFree || !isStripeMode ? 'Add to shelf' : `Buy · ${priceTag(b)}`)
+const acquireLabel = (b, t) =>
+  b.isFree || !isStripeMode ? t('ebooks.addToShelf') : t('ebooks.buyPrice', { price: priceTag(b) })
 
-/* A reusable CSS book cover. */
+/* Real cover art lives in /public/ebook-cover/<slug>.png (filename === book slug). */
+const coverImageFor = (book) => (book?.slug ? `/ebook-cover/${book.slug}.png` : null)
+
+// Maps a category name to a stable i18n key (ebooks.cat.<key>), e.g.
+// "Anxiety & Mental Health" → "anxiety-mental-health". The category name itself
+// is the English fallback, so an unmapped category still renders.
+const catKey = (c) => (c || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
+/* A reusable book cover — shows the real cover art when we have it, otherwise falls back
+   to a styled CSS cover (books with no art, or if the image fails to load). */
 function Cover({ book, theme, size = 'md' }) {
+  const { t } = useTranslation()
+  const [imgFailed, setImgFailed] = useState(false)
+  const src = coverImageFor(book)
+
+  if (src && !imgFailed) {
+    return (
+      <div className={`bk-cover bk-photo bk-${size}`} style={{ '--accent': theme.accent }}>
+        <span className="bk-spine" />
+        <img
+          src={src}
+          alt={t('ebooks.coverAlt', { title: book.title })}
+          loading="lazy"
+          onError={() => setImgFailed(true)}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className={`bk-cover bk-${size}`} style={{ '--accent': theme.accent, '--bg': theme.bg }}>
       <span className="bk-spine" />
@@ -88,8 +137,9 @@ function Cover({ book, theme, size = 'md' }) {
   )
 }
 
-/* ---- new-card form: Stripe's modern Payment Element (must live inside <Elements>) ---- */
-function NewCardForm({ priceLabel, onPaid, onError }) {
+/* ---- new-card form: Stripe's split Card Elements (card-only, no Link) — inside <Elements> ---- */
+function NewCardForm({ clientSecret, priceLabel, billingDetails, onPaid, onError }) {
+  const { t } = useTranslation()
   const stripe = useStripe()
   const elements = useElements()
   const [busy, setBusy] = useState(false)
@@ -99,15 +149,16 @@ function NewCardForm({ priceLabel, onPaid, onError }) {
     if (!stripe || !elements) return
     setBusy(true)
     onError('')
-    // Confirm the PaymentIntent; Stripe.js shows the 3D Secure step automatically when
-    // the bank requires it. redirect: 'if_required' keeps us on the page otherwise.
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: { return_url: `${window.location.origin}/ebooks` },
-      redirect: 'if_required',
+    // Confirm the card. Stripe.js shows the 3D Secure step automatically when the bank
+    // requires it. Billing details (name/email) come from the signed-in user, not a form.
+    const { error } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardNumberElement),
+        ...(billingDetails ? { billing_details: billingDetails } : {}),
+      },
     })
     if (error) {
-      onError(error.message || 'Your card could not be charged. Please try another card.')
+      onError(error.message || t('ebooks.cardChargeErrorRetry'))
       setBusy(false)
       return
     }
@@ -116,16 +167,35 @@ function NewCardForm({ priceLabel, onPaid, onError }) {
   }
 
   return (
-    <form onSubmit={submit} className="apl-payform">
-      <PaymentElement options={{ paymentMethodOrder: ['card'] }} />
-      <button className="btn btn-primary apl-paybtn" disabled={!stripe || busy}>
+    <form onSubmit={submit} className="apl-payform eb-payform">
+      <label className="eb-field">
+        <span className="eb-field-label">{t('ebooks.cardNumber')}</span>
+        <span className="eb-field-box">
+          <CardNumberElement options={{ ...CARD_ELEMENT_OPTIONS, showIcon: true }} />
+        </span>
+      </label>
+      <div className="eb-field-row">
+        <label className="eb-field">
+          <span className="eb-field-label">{t('ebooks.expiry')}</span>
+          <span className="eb-field-box">
+            <CardExpiryElement options={CARD_ELEMENT_OPTIONS} />
+          </span>
+        </label>
+        <label className="eb-field">
+          <span className="eb-field-label">{t('ebooks.cvc')}</span>
+          <span className="eb-field-box">
+            <CardCvcElement options={CARD_ELEMENT_OPTIONS} />
+          </span>
+        </label>
+      </div>
+      <button className="btn btn-primary apl-paybtn eb-paybtn" disabled={!stripe || busy}>
         {busy ? (
           <>
-            <Loader2 size={15} className="ap-spin" /> Processing…
+            <Loader2 size={15} className="ap-spin" /> {t('ebooks.processing')}
           </>
         ) : (
           <>
-            <Lock size={15} /> Pay {priceLabel}
+            <Lock size={15} /> {t('ebooks.pay', { price: priceLabel })}
           </>
         )}
       </button>
@@ -134,7 +204,8 @@ function NewCardForm({ priceLabel, onPaid, onError }) {
 }
 
 /* ---- payment step: one-click with a saved card, or a new card (Payment Element) ---- */
-function EbookPay({ clientSecret, amount, onPaid }) {
+function EbookPay({ clientSecret, amount, billingDetails, onPaid }) {
+  const { t } = useTranslation()
   const [cards, setCards] = useState(null) // null = loading
   const [selected, setSelected] = useState(null)
   const [useNew, setUseNew] = useState(false)
@@ -169,11 +240,11 @@ function EbookPay({ clientSecret, amount, onPaid }) {
     setError('')
     try {
       const stripe = await stripePromise
-      if (!stripe) throw new Error('Payments are not configured (missing Stripe key).')
+      if (!stripe) throw new Error(t('ebooks.payNotConfigured'))
       const { error: err } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: selected,
       })
-      if (err) throw new Error(err.message || 'Your card could not be charged.')
+      if (err) throw new Error(err.message || t('ebooks.cardChargeError'))
       await onPaid()
     } catch (e) {
       setError(e.message)
@@ -183,16 +254,12 @@ function EbookPay({ clientSecret, amount, onPaid }) {
   }
 
   if (!stripeConfigured) {
-    return (
-      <p className="apl-error">
-        Payments aren’t configured — add VITE_STRIPE_PUBLISHABLE_KEY and restart.
-      </p>
-    )
+    return <p className="apl-error">{t('ebooks.payNotSetUp')}</p>
   }
   if (cards === null) {
     return (
       <div className="apl-pay-loading">
-        <Loader2 size={18} className="ap-spin" /> Preparing secure checkout…
+        <Loader2 size={18} className="ap-spin" /> {t('ebooks.preparingCheckout')}
       </div>
     )
   }
@@ -218,8 +285,10 @@ function EbookPay({ clientSecret, amount, onPaid }) {
                     {titleCase(c.brand)} •••• {c.last4}
                   </strong>
                   <small>
-                    Expires {String(c.expMonth).padStart(2, '0')}/{c.expYear}
-                    {c.isDefault ? ' · default' : ''}
+                    {t('ebooks.cardExpires', {
+                      exp: `${String(c.expMonth).padStart(2, '0')}/${c.expYear}`,
+                    })}
+                    {c.isDefault ? t('ebooks.cardDefaultSuffix') : ''}
                   </small>
                 </span>
                 {selected === c.id && <Check size={15} className="apl-pay-check" />}
@@ -227,47 +296,63 @@ function EbookPay({ clientSecret, amount, onPaid }) {
             ))}
           </div>
           <button
-            className="btn btn-primary apl-paybtn"
+            className="btn btn-primary apl-paybtn eb-paybtn"
             onClick={paySaved}
             disabled={busy || !selected}
           >
             {busy ? (
               <>
-                <Loader2 size={15} className="ap-spin" /> Processing…
+                <Loader2 size={15} className="ap-spin" /> {t('ebooks.processing')}
               </>
             ) : (
               <>
-                <Lock size={15} /> Pay {label}
+                <Lock size={15} /> {t('ebooks.pay', { price: label })}
               </>
             )}
           </button>
           <button type="button" className="apl-pay-switch" onClick={() => setUseNew(true)}>
-            Use a new card instead
+            {t('ebooks.useNewCard')}
           </button>
         </>
       ) : (
         <>
-          <Elements stripe={stripePromise} options={{ clientSecret, appearance: STRIPE_APPEARANCE }}>
-            <NewCardForm priceLabel={label} onPaid={onPaid} onError={setError} />
+          <Elements stripe={stripePromise}>
+            <NewCardForm
+              clientSecret={clientSecret}
+              priceLabel={label}
+              billingDetails={billingDetails}
+              onPaid={onPaid}
+              onError={setError}
+            />
           </Elements>
           {cards.length > 0 && (
             <button type="button" className="apl-pay-switch" onClick={() => setUseNew(false)}>
-              ← Use a saved card
+              {t('ebooks.useSavedCard')}
             </button>
           )}
         </>
       )}
 
       <p className="apl-pay-secure">
-        <ShieldCheck size={13} /> Secured by Stripe. Test mode — use card 4242 4242 4242 4242.
+        <ShieldCheck size={13} /> {t('ebooks.paySecure')}
       </p>
     </div>
   )
 }
 
 export default function EbooksLibrary() {
-  const { isAuthenticated } = useAuth()
+  const { t } = useTranslation()
+  const { isAuthenticated, user } = useAuth()
   const navigate = useNavigate()
+
+  // Billing details for the hidden Payment Element fields — filled from the signed-in user.
+  const billingDetails = useMemo(() => {
+    if (!user) return undefined
+    const bd = {}
+    if (user.name) bd.name = user.name
+    if (user.email) bd.email = user.email
+    return Object.keys(bd).length ? bd : undefined
+  }, [user])
 
   const [books, setBooks] = useState(null) // null = loading
   const [listError, setListError] = useState('')
@@ -346,7 +431,7 @@ export default function EbooksLibrary() {
       setReader(full)
       setOpenChapter(chapter) // only enter the reading view once chapters are loaded
     } catch (e) {
-      say(e.message || 'Couldn’t open this book — try again.')
+      say(e.message || t('ebooks.openError'))
       setReader(null)
     } finally {
       setReaderBusy(false)
@@ -382,7 +467,7 @@ export default function EbooksLibrary() {
         ),
       )
     } catch (e) {
-      say(e.message || 'Couldn’t save your progress.')
+      say(e.message || t('ebooks.saveProgressError'))
       // revert the optimistic toggle
       setReader((r) =>
         r && idOf(r) === id
@@ -421,9 +506,9 @@ export default function EbooksLibrary() {
     try {
       await startEbook(idOf(book))
       patchOwned(idOf(book))
-      say(`“${book.title}” added to your shelf.`)
+      say(t('ebooks.addedToShelf', { title: book.title }))
     } catch (e) {
-      say(e.message || 'Couldn’t add this book to your shelf.')
+      say(e.message || t('ebooks.addShelfError'))
     } finally {
       setBusy(false)
     }
@@ -437,10 +522,10 @@ export default function EbooksLibrary() {
         setBuy({ book, step: 'pay', clientSecret: res.clientSecret, amount: res.amount })
       } else {
         patchOwned(idOf(book))
-        say(`“${book.title}” is on your shelf.`)
+        say(t('ebooks.onYourShelfToast', { title: book.title }))
       }
     } catch (e) {
-      say(e.message || 'Couldn’t add this book to your shelf.')
+      say(e.message || t('ebooks.addShelfError'))
     } finally {
       setBusy(false)
     }
@@ -460,7 +545,7 @@ export default function EbooksLibrary() {
         setBuy({ book, step: 'done' })
       }
     } catch (e) {
-      say(e.message || 'Couldn’t start checkout — try again.')
+      say(e.message || t('ebooks.checkoutError'))
       setBuy(null)
     }
   }
@@ -482,7 +567,7 @@ export default function EbooksLibrary() {
     if (read) openReader(book, 0)
     else {
       await refreshDetail(idOf(book)).catch(() => {})
-      say(`“${book.title}” added to your shelf.`)
+      say(t('ebooks.addedToShelf', { title: book.title }))
     }
   }
 
@@ -498,7 +583,7 @@ export default function EbooksLibrary() {
         const paras = toParas(ch.body)
           .map((p) => `      <p>${esc(p)}</p>`)
           .join('\n')
-        return `    <section class="ch">\n      <span class="kic">Chapter ${i + 1}</span>\n      <h2>${esc(ch.title)}</h2>\n${paras}\n    </section>`
+        return `    <section class="ch">\n      <span class="kic">${t('ebooks.chapterKicker', { n: i + 1 })}</span>\n      <h2>${esc(ch.title)}</h2>\n${paras}\n    </section>`
       })
       .join('\n')
     const html = `<!doctype html>
@@ -529,7 +614,7 @@ export default function EbooksLibrary() {
     <p class="by">${esc(book.author || 'Daybreak Press')}</p>
   </div>
 ${chaptersHtml}
-  <footer>© Daybreak Press · Prepared for your personal reading.</footer>
+  <footer>© Daybreak Press · ${t('ebooks.pdfFooter')}</footer>
 </body>
 </html>`
 
@@ -546,24 +631,24 @@ ${chaptersHtml}
     }
     iframe.srcdoc = html
     document.body.appendChild(iframe)
-    say(`Preparing “${book.title}” — choose “Save as PDF” in the print dialog.`)
+    say(t('ebooks.preparingPdf', { title: book.title }))
   }
 
   /* A single catalog card — used by both the shelf and explore grids. */
   const renderCard = (book, i) => {
     const theme = themeFor(gIndex(book))
-    const badge = shelfBadge(book)
+    const badge = shelfBadge(book, t)
     return (
       <Reveal as="article" key={idOf(book)} className="eb-card" delay={(i % 4) * 0.06}>
         <button
           className="eb-card-cover"
           onClick={() => openReader(book)}
-          aria-label={`Preview ${book.title}`}
+          aria-label={t('ebooks.previewAria', { title: book.title })}
         >
           <Cover book={book} theme={theme} size="md" />
           {!book.isFree && (
             <span className="eb-premium">
-              <Crown size={11} /> Premium
+              <Crown size={11} /> {t('ebooks.premium')}
             </span>
           )}
           {badge && (
@@ -575,18 +660,18 @@ ${chaptersHtml}
         <div className="eb-card-body">
           {book.category && (
             <span className="eb-cat" style={{ color: theme.fg, background: theme.bg }}>
-              {book.category}
+              {t(`ebooks.cat.${catKey(book.category)}`, book.category)}
             </span>
           )}
           <h3>{book.title}</h3>
           <p className="eb-author">{book.author}</p>
           <div className="eb-meta">
             <span className="eb-pages">
-              <FileText size={12} /> {book.chaptersCount} ch
+              <FileText size={12} /> {t('ebooks.chaptersShort', { count: book.chaptersCount })}
             </span>
             {book.readMinutes ? (
               <span className="eb-pages">
-                <Clock size={12} /> {book.readMinutes} min
+                <Clock size={12} /> {t('ebooks.minutesShort', { count: book.readMinutes })}
               </span>
             ) : null}
           </div>
@@ -601,15 +686,15 @@ ${chaptersHtml}
           <div className="eb-card-foot">
             {book.onShelf ? (
               <button className="eb-btn-read" onClick={() => openReader(book, 0)}>
-                <BookOpen size={15} /> Read
+                <BookOpen size={15} /> {t('ebooks.read')}
               </button>
             ) : (
               <>
                 <button className="eb-btn-buy" onClick={() => startGet(book)}>
-                  {acquireLabel(book)}
+                  {acquireLabel(book, t)}
                 </button>
                 <button className="eb-textlink sm" onClick={() => openReader(book)}>
-                  {book.isFree ? 'Read' : 'Preview'}
+                  {book.isFree ? t('ebooks.read') : t('ebooks.preview')}
                 </button>
               </>
             )}
@@ -625,7 +710,7 @@ ${chaptersHtml}
       <main className="eb">
         <div className="eb-section">
           <div className="container">
-            <p className="eb-empty">Couldn’t load the ebook shop — {listError}</p>
+            <p className="eb-empty">{t('ebooks.loadError', { error: listError })}</p>
           </div>
         </div>
       </main>
@@ -646,17 +731,17 @@ ${chaptersHtml}
         </div>
         <div className="container">
           <Reveal as="span" className="eyebrow">
-            The ebook shop
+            {t('ebooks.eyebrow')}
           </Reveal>
           <Reveal as="h1" className="h1 eb-title" delay={0.07}>
-            Short reads for a <em>calmer mind.</em>
+            {t('ebooks.heroTitleA')}
+            <em>{t('ebooks.heroTitleEm')}</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.14}>
-            Gentle books on the things that weigh on us — anxiety, sleep, self-doubt, grief. Some
-            are free to read; others unlock with a one-time purchase.
+            {t('ebooks.lede')}
           </Reveal>
           <Reveal className="eb-shelf-pill" delay={0.2}>
-            <BookOpen size={15} /> {shelfCount} on your shelf
+            <BookOpen size={15} /> {t('ebooks.shelfPill', { count: shelfCount })}
           </Reveal>
         </div>
       </header>
@@ -667,13 +752,13 @@ ${chaptersHtml}
           <div className="container">
             <div className="eb-section-head">
               <h2 className="rp-h2">
-                <Sparkles size={19} /> Your shelf
+                <Sparkles size={19} /> {t('ebooks.yourShelf')}
               </h2>
               <span className="eb-section-count">
-                {shelf.length} {shelf.length === 1 ? 'book' : 'books'}
+                {t('ebooks.booksCount', { count: shelf.length })}
               </span>
             </div>
-            <p className="eb-section-sub">Books you’ve added or bought — open any time.</p>
+            <p className="eb-section-sub">{t('ebooks.shelfSub')}</p>
             <div className="eb-grid">{shelf.map((b, i) => renderCard(b, i))}</div>
           </div>
         </section>
@@ -684,7 +769,7 @@ ${chaptersHtml}
         <div className="container">
           <div className="eb-section-head">
             <h2 className="rp-h2">
-              <Search size={19} /> Explore
+              <Search size={19} /> {t('ebooks.explore')}
             </h2>
             <label className="eb-search">
               <Search size={16} />
@@ -692,17 +777,15 @@ ${chaptersHtml}
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search titles or authors"
-                aria-label="Search the library"
+                placeholder={t('ebooks.searchPlaceholder')}
+                aria-label={t('ebooks.searchAria')}
               />
             </label>
           </div>
-          <p className="eb-section-sub">
-            Add a free book to your shelf, or read chapter one and unlock the rest.
-          </p>
+          <p className="eb-section-sub">{t('ebooks.exploreSub')}</p>
 
           {categories.length > 1 && (
-            <div className="eb-filters" role="tablist" aria-label="Categories">
+            <div className="eb-filters" role="tablist" aria-label={t('ebooks.categoriesAria')}>
               {categories.map((c) => (
                 <button
                   key={c}
@@ -711,7 +794,7 @@ ${chaptersHtml}
                   className={`eb-chip ${category === c ? 'active' : ''}`}
                   onClick={() => setCategory(c)}
                 >
-                  {c}
+                  {c === 'All' ? t('ebooks.categoryAll') : t(`ebooks.cat.${catKey(c)}`, c)}
                 </button>
               ))}
             </div>
@@ -719,13 +802,11 @@ ${chaptersHtml}
 
           {books === null ? (
             <div className="eb-empty">
-              <Loader2 size={20} className="ap-spin" /> Loading the library…
+              <Loader2 size={20} className="ap-spin" /> {t('ebooks.loadingLibrary')}
             </div>
           ) : explore.length === 0 ? (
             <p className="eb-empty">
-              {shelf.length > 0
-                ? 'You’ve added everything here — enjoy your shelf.'
-                : 'No books match that yet — try another category or search.'}
+              {shelf.length > 0 ? t('ebooks.emptyAllAdded') : t('ebooks.emptyNoMatch')}
             </p>
           ) : (
             <div className="eb-grid">{explore.map((b, i) => renderCard(b, i))}</div>
@@ -753,9 +834,13 @@ ${chaptersHtml}
             className={`eb-reader ${openChapter !== null ? 'reading' : ''}`}
             role="dialog"
             aria-modal="true"
-            aria-label={`${reader.title} reader`}
+            aria-label={t('ebooks.readerAria', { title: reader.title })}
           >
-            <button className="eb-reader-close" onClick={closeReader} aria-label="Close reader">
+            <button
+              className="eb-reader-close"
+              onClick={closeReader}
+              aria-label={t('ebooks.closeReader')}
+            >
               <X size={20} />
             </button>
 
@@ -778,12 +863,12 @@ ${chaptersHtml}
                     <div className="eb-meta">
                       {reader.pages ? (
                         <span className="eb-pages">
-                          <FileText size={13} /> {reader.pages} pages
+                          <FileText size={13} /> {t('ebooks.pagesCount', { count: reader.pages })}
                         </span>
                       ) : null}
                       {reader.readMinutes ? (
                         <span className="eb-pages">
-                          <Clock size={13} /> {reader.readMinutes} min
+                          <Clock size={13} /> {t('ebooks.minutesShort', { count: reader.readMinutes })}
                         </span>
                       ) : null}
                     </div>
@@ -794,30 +879,30 @@ ${chaptersHtml}
                             style={{ width: `${reader.progress || 0}%`, background: readerTheme.accent }}
                           />
                         </div>
-                        <span>{reader.progress || 0}% read</span>
+                        <span>{t('ebooks.percentRead', { percent: reader.progress || 0 })}</span>
                       </div>
                     ) : null}
                     {reader.onShelf ? (
                       <p className="eb-reader-locked" style={{ color: readerTheme.accent }}>
-                        <BadgeCheck size={13} /> On your shelf
+                        <BadgeCheck size={13} /> {t('ebooks.onYourShelf')}
                       </p>
                     ) : reader.isFree ? (
                       <p className="eb-reader-locked" style={{ color: readerTheme.accent }}>
-                        <BookOpen size={13} /> Free to read · add it to keep it on your shelf
+                        <BookOpen size={13} /> {t('ebooks.freeToRead')}
                       </p>
                     ) : (
                       <p className="eb-reader-locked">
-                        <Lock size={13} /> Read chapter one free · unlock to keep reading
+                        <Lock size={13} /> {t('ebooks.readChapterOneFree')}
                       </p>
                     )}
                   </div>
                 </div>
 
                 <div className="eb-reader-body">
-                  <h3 className="eb-toc-head">Contents</h3>
+                  <h3 className="eb-toc-head">{t('ebooks.contents')}</h3>
                   {readerBusy && !reader.chapters ? (
                     <p className="eb-empty">
-                      <Loader2 size={16} className="ap-spin" /> Loading…
+                      <Loader2 size={16} className="ap-spin" /> {t('ebooks.loading')}
                     </p>
                   ) : (
                     <ol className="eb-toc">
@@ -842,7 +927,7 @@ ${chaptersHtml}
                                 />
                               ) : open ? (
                                 idx === 0 && !reader.unlocked ? (
-                                  <em className="eb-toc-tag">Free</em>
+                                  <em className="eb-toc-tag">{t('ebooks.tocFree')}</em>
                                 ) : (
                                   <ChevronRight size={15} className="eb-toc-go" />
                                 )
@@ -861,29 +946,29 @@ ${chaptersHtml}
                   {reader.onShelf ? (
                     <>
                       <button className="btn btn-primary eb-btn" onClick={() => setOpenChapter(0)}>
-                        <BookOpen size={16} /> Start reading
+                        <BookOpen size={16} /> {t('ebooks.startReading')}
                       </button>
                       <button className="eb-download" onClick={() => downloadBook(reader)}>
-                        <Download size={15} /> Download PDF
+                        <Download size={15} /> {t('ebooks.downloadPdf')}
                       </button>
                     </>
                   ) : reader.isFree ? (
                     <>
                       <button className="btn btn-primary eb-btn" onClick={() => setOpenChapter(0)}>
-                        <BookOpen size={16} /> Start reading
+                        <BookOpen size={16} /> {t('ebooks.startReading')}
                       </button>
                       <button
                         className="eb-textlink"
                         onClick={() => startGet(reader)}
                         disabled={busy}
                       >
-                        <Plus size={14} /> Add to shelf
+                        <Plus size={14} /> {t('ebooks.addToShelf')}
                       </button>
                     </>
                   ) : (
                     <>
                       <button className="btn btn-primary eb-btn" onClick={() => setOpenChapter(0)}>
-                        <BookOpen size={16} /> Read chapter one
+                        <BookOpen size={16} /> {t('ebooks.readChapterOne')}
                       </button>
                       <button
                         className="eb-textlink"
@@ -893,7 +978,9 @@ ${chaptersHtml}
                           startGet(b)
                         }}
                       >
-                        {isStripeMode ? `Unlock · ${priceTag(reader)}` : 'Add to shelf'}
+                        {isStripeMode
+                          ? t('ebooks.buyPrice', { price: priceTag(reader) })
+                          : t('ebooks.addToShelf')}
                       </button>
                     </>
                   )}
@@ -904,10 +991,13 @@ ${chaptersHtml}
                 {/* ---- reading view ---- */}
                 <div className="eb-read-head">
                   <button className="eb-read-back" onClick={() => setOpenChapter(null)}>
-                    <ChevronLeft size={16} /> Contents
+                    <ChevronLeft size={16} /> {t('ebooks.contents')}
                   </button>
                   <span className="eb-read-of">
-                    Chapter {openChapter + 1} of {reader.chapters?.length || 0}
+                    {t('ebooks.chapterOf', {
+                      current: openChapter + 1,
+                      total: reader.chapters?.length || 0,
+                    })}
                   </span>
                 </div>
 
@@ -931,11 +1021,11 @@ ${chaptersHtml}
                   >
                     {reader.chapters[openChapter].read ? (
                       <>
-                        <Check size={15} /> Marked as read
+                        <Check size={15} /> {t('ebooks.markedAsRead')}
                       </>
                     ) : (
                       <>
-                        <Circle size={15} /> Mark as read
+                        <Circle size={15} /> {t('ebooks.markAsRead')}
                       </>
                     )}
                   </button>
@@ -947,7 +1037,7 @@ ${chaptersHtml}
                     disabled={openChapter === 0}
                     onClick={() => setOpenChapter((c) => Math.max(0, c - 1))}
                   >
-                    <ChevronLeft size={16} /> Previous
+                    <ChevronLeft size={16} /> {t('ebooks.previous')}
                   </button>
 
                   {openChapter < (reader.chapters?.length || 0) - 1 ? (
@@ -956,7 +1046,7 @@ ${chaptersHtml}
                         className="eb-read-step primary"
                         onClick={() => setOpenChapter((c) => c + 1)}
                       >
-                        Next <ChevronRight size={16} />
+                        {t('ebooks.next')} <ChevronRight size={16} />
                       </button>
                     ) : (
                       <button
@@ -967,11 +1057,12 @@ ${chaptersHtml}
                           startGet(b)
                         }}
                       >
-                        <Lock size={14} /> {isStripeMode ? 'Unlock to continue' : 'Add to shelf'}
+                        <Lock size={14} />{' '}
+                        {isStripeMode ? t('ebooks.buyToKeepReading') : t('ebooks.addToShelf')}
                       </button>
                     )
                   ) : (
-                    <span className="eb-read-end">The end · {reader.author}</span>
+                    <span className="eb-read-end">{t('ebooks.theEnd', { author: reader.author })}</span>
                   )}
                 </div>
               </>
@@ -986,28 +1077,64 @@ ${chaptersHtml}
           className="ap-modal-overlay"
           role="dialog"
           aria-modal="true"
-          aria-label={`Buy ${buy.book.title}`}
+          aria-label={t('ebooks.buyAria', { title: buy.book.title })}
           onClick={(e) => e.target === e.currentTarget && buy.step !== 'pay' && setBuy(null)}
         >
           <div className="ap-modal eb-modal">
             {buy.step === 'loading' && (
               <div className="apl-pay-loading">
-                <Loader2 size={22} className="ap-spin" /> Preparing secure checkout…
+                <Loader2 size={22} className="ap-spin" /> {t('ebooks.preparingCheckout')}
               </div>
             )}
 
             {buy.step === 'pay' && (
               <>
-                <div className="eb-modal-top">
-                  <Cover book={buy.book} theme={themeFor(gIndex(buy.book))} size="md" />
-                  <div>
+                <div className="eb-checkout-head">
+                  <Cover book={buy.book} theme={themeFor(gIndex(buy.book))} size="sm" />
+                  <div className="eb-checkout-meta">
+                    <span className="eb-checkout-eyebrow">{t('ebooks.oneTimePurchase')}</span>
                     <h3>{buy.book.title}</h3>
                     <p className="eb-modal-author">{buy.book.author}</p>
-                    <span className="eb-modal-price">{priceTag(buy.book)}</span>
                   </div>
+                  <span className="eb-modal-price">{priceTag(buy.book)}</span>
                 </div>
-                <EbookPay clientSecret={buy.clientSecret} amount={buy.amount} onPaid={onPaid} />
-                <button className="ap-modal-close" onClick={() => setBuy(null)} aria-label="Close">
+
+                <ul className="eb-checkout-perks">
+                  <li>
+                    <BadgeCheck size={15} /> {t('ebooks.lifetimeAccess')}
+                  </li>
+                  {buy.book.availableLanguages?.length > 0 && (
+                    <li>
+                      <Languages size={15} />{' '}
+                      {t('ebooks.availableIn', {
+                        languages: languageLabel(buy.book.availableLanguages, t),
+                      })}
+                    </li>
+                  )}
+                  {buy.book.chaptersCount > 0 && (
+                    <li>
+                      <FileText size={15} /> {t('ebooks.chaptersCount', { count: buy.book.chaptersCount })}
+                    </li>
+                  )}
+                </ul>
+
+                <div className="eb-pay-panel">
+                  <span className="eb-pay-label">
+                    <CreditCard size={14} /> {t('ebooks.paymentDetails')}
+                  </span>
+                  <EbookPay
+                    clientSecret={buy.clientSecret}
+                    amount={buy.amount}
+                    billingDetails={billingDetails}
+                    onPaid={onPaid}
+                  />
+                </div>
+
+                <button
+                  className="ap-modal-close"
+                  onClick={() => setBuy(null)}
+                  aria-label={t('ebooks.close')}
+                >
                   <X size={18} />
                 </button>
               </>
@@ -1018,14 +1145,14 @@ ${chaptersHtml}
                 <span className="ap-done-check">
                   <Check size={26} />
                 </span>
-                <h3>{buy.book.title} is yours</h3>
-                <p>It’s on your shelf now — start whenever you like.</p>
+                <h3>{t('ebooks.isYours', { title: buy.book.title })}</h3>
+                <p>{t('ebooks.onShelfNow')}</p>
                 <div className="ap-modal-actions">
                   <button className="btn btn-light" onClick={() => finishBuy(true)}>
-                    <BookOpen size={16} /> Read now
+                    <BookOpen size={16} /> {t('ebooks.readNow')}
                   </button>
                   <button className="ap-ghostlink" onClick={() => finishBuy(false)}>
-                    To my shelf
+                    {t('ebooks.toMyShelf')}
                   </button>
                 </div>
               </div>

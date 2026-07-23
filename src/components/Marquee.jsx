@@ -1,25 +1,16 @@
-const TOPICS = [
-  'Stress & Burnout',
-  'Sleep & Rest',
-  'Anxiety & Worry',
-  'Focus & Clarity',
-  'Self-Esteem',
-  'Emotional Intelligence',
-  'Relationships',
-  'Life Transitions',
-  'Resilience',
-  'Mindful Habits',
-]
+import { useTranslation } from 'react-i18next'
 
 export default function Marquee() {
+  const { t } = useTranslation()
+  const topics = t('home.marquee.topics', { returnObjects: true })
   return (
     <div className="marquee" aria-hidden="true">
       <div className="marquee-track">
         {[0, 1].map((dup) => (
           <span key={dup} className="marquee-item">
-            {TOPICS.map((t) => (
-              <span key={t} className="marquee-item">
-                {t}
+            {topics.map((topic) => (
+              <span key={topic} className="marquee-item">
+                {topic}
               </span>
             ))}
           </span>

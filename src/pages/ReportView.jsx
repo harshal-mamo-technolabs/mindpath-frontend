@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Loader2, X } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
 import { useAuth } from '../hooks/useAuth.js'
@@ -11,6 +12,7 @@ import { getRichReport } from '../components/report/registry.js'
    score by id and recompute the live report from its subCategoryScores — same
    engine as the post-submit render, so it's always the full report. */
 export default function ReportView() {
+  const { t, i18n } = useTranslation()
   const { scoreId } = useParams()
   const navigate = useNavigate()
   const { user, isAuthenticated } = useAuth()
@@ -36,7 +38,7 @@ export default function ReportView() {
       <div className="take">
         <div className="take-center">
           <Loader2 size={28} className="ap-spin" />
-          <p>Loading your report…</p>
+          <p>{t('reports.viewLoading')}</p>
         </div>
       </div>
     )
@@ -46,10 +48,10 @@ export default function ReportView() {
     return (
       <div className="take">
         <div className="take-center" role="alert">
-          <h1>{state.code === 404 ? 'Report not found' : 'We couldn’t load this report'}</h1>
+          <h1>{state.code === 404 ? t('reports.notFoundTitle') : t('reports.viewErrorTitle')}</h1>
           <p>{state.error}</p>
           <Link to="/reports" className="btn btn-primary">
-            Back to reports
+            {t('reports.backToReports')}
           </Link>
         </div>
       </div>
@@ -63,9 +65,9 @@ export default function ReportView() {
   // No rich report for this assessment — send them to the library.
   if (!rich) return <Navigate to="/reports" replace />
 
-  const firstName = (user?.name || '').split(' ')[0] || 'You'
+  const firstName = (user?.name || '').split(' ')[0] || t('reports.you')
   const taken = score.createdAt
-    ? new Date(score.createdAt).toLocaleDateString('en-US', {
+    ? new Date(score.createdAt).toLocaleDateString(i18n.language, {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
@@ -76,8 +78,8 @@ export default function ReportView() {
     <div className="take" style={{ '--topic': rich.accent }}>
       <header className="take-bar">
         <Logo />
-        <p className="take-topic">{taken ? `Report · ${taken}` : 'Your report'}</p>
-        <Link to="/reports" className="take-exit" aria-label="Back to your reports">
+        <p className="take-topic">{taken ? t('reports.reportDate', { date: taken }) : t('reports.yourReport')}</p>
+        <Link to="/reports" className="take-exit" aria-label={t('reports.backAria')}>
           <X size={20} />
         </Link>
       </header>
@@ -85,7 +87,7 @@ export default function ReportView() {
       <main className="take-report-stage">
         <AssessmentReport
           report={rich.build(score)}
-          ui={rich.ui}
+          ui={rich.ui()}
           name={firstName}
           attempt={score.attemptNumber}
           onRetake={() => navigate(`/assessments/${slug}/take`)}

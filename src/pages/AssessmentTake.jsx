@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
 import {
   ArrowLeft,
@@ -35,15 +36,9 @@ const ACCENT = '#6450cf'
 const titleCase = (s) => (s || '').replace(/\b\w/g, (c) => c.toUpperCase())
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-// The post-submit "generating your report" ceremony: its steps, and the floor
-// on how long it shows (4 steps × 1350ms + a 700ms beat ≈ the component's own
-// run, so a fast API still gets the full ~6s ceremony).
-const REPORT_GEN_STEPS = [
-  'Scoring your answers',
-  'Mapping your dimensions',
-  'Writing your interpretation',
-  'Sequencing your audio plan',
-]
+// The post-submit "generating your report" ceremony floor: how long it shows at
+// minimum (its steps come from i18n — assess.take.genSteps), so a fast API still
+// gets the full ~6s ceremony.
 const GEN_MIN_MS = 6100
 
 const cardStyle = (isDark) => ({
@@ -59,6 +54,7 @@ const cardStyle = (isDark) => ({
 
 /* ---- new-card form (must live inside <Elements>) ---- */
 function NewCardForm({ clientSecret, priceLabel, onPaid, onError }) {
+  const { t } = useTranslation()
   const stripe = useStripe()
   const elements = useElements()
   const { theme } = useTheme()
@@ -75,7 +71,7 @@ function NewCardForm({ clientSecret, priceLabel, onPaid, onError }) {
       payment_method: { card },
     })
     if (error) {
-      onError(error.message || 'Your card could not be charged. Try another card.')
+      onError(error.message || t('assess.take.pay.chargeFail'))
       setBusy(false)
       return
     }
@@ -84,7 +80,7 @@ function NewCardForm({ clientSecret, priceLabel, onPaid, onError }) {
 
   return (
     <form onSubmit={handle} className="take-card-form">
-      <label className="take-card-field-label">Card details</label>
+      <label className="take-card-field-label">{t('assess.take.pay.cardDetails')}</label>
       <div className={`take-card-field${focused ? ' focused' : ''}`}>
         <CardElement
           options={{ style: cardStyle(theme === 'dark'), hidePostalCode: true }}
@@ -95,11 +91,11 @@ function NewCardForm({ clientSecret, priceLabel, onPaid, onError }) {
       <button className="btn btn-primary take-pay-btn" disabled={!stripe || busy}>
         {busy ? (
           <>
-            <Loader2 size={17} className="ap-spin" /> Processing…
+            <Loader2 size={17} className="ap-spin" /> {t('assess.take.pay.processing')}
           </>
         ) : (
           <>
-            <Lock size={16} /> Pay {priceLabel}
+            <Lock size={16} /> {t('assess.take.pay.payBtn', { price: priceLabel })}
           </>
         )}
       </button>
@@ -109,6 +105,7 @@ function NewCardForm({ clientSecret, priceLabel, onPaid, onError }) {
 
 /* ---- the payment step (only ever shown when requiresPayment) ---- */
 function PaymentStep({ clientSecret, amount, currency, onPaid }) {
+  const { t } = useTranslation()
   const [cards, setCards] = useState([])
   const [selected, setSelected] = useState(null)
   const [useNew, setUseNew] = useState(false)
@@ -140,11 +137,11 @@ function PaymentStep({ clientSecret, amount, currency, onPaid }) {
     setError('')
     try {
       const stripe = await stripePromise
-      if (!stripe) throw new Error('Payments are not configured (missing Stripe key).')
+      if (!stripe) throw new Error(t('assess.take.pay.notConfigured'))
       const { error: err } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: selected,
       })
-      if (err) throw new Error(err.message || 'Your card could not be charged.')
+      if (err) throw new Error(err.message || t('assess.take.pay.chargeFailSaved'))
       await onPaid()
     } catch (e) {
       setError(e.message)
@@ -156,8 +153,7 @@ function PaymentStep({ clientSecret, amount, currency, onPaid }) {
   if (!stripeConfigured) {
     return (
       <p className="checkout-error" role="alert">
-        Payments aren’t configured. Add <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to{' '}
-        <code>.env</code> and restart the dev server.
+        {t('assess.take.pay.notConfiguredLong')}
       </p>
     )
   }
@@ -166,7 +162,7 @@ function PaymentStep({ clientSecret, amount, currency, onPaid }) {
     return (
       <div className="checkout-status checkout-status-inline">
         <Loader2 size={22} className="ap-spin" />
-        <p>Preparing secure checkout…</p>
+        <p>{t('assess.take.pay.gettingReady')}</p>
       </div>
     )
   }
@@ -196,7 +192,9 @@ function PaymentStep({ clientSecret, amount, currency, onPaid }) {
                     {titleCase(c.brand)} •••• {c.last4}
                   </strong>
                   <small>
-                    Expires {String(c.expMonth).padStart(2, '0')}/{c.expYear}
+                    {t('assess.take.pay.expires', {
+                      exp: `${String(c.expMonth).padStart(2, '0')}/${c.expYear}`,
+                    })}
                   </small>
                 </span>
                 {selected === c.id && <Check size={16} className="pay-card-check" />}
@@ -210,16 +208,16 @@ function PaymentStep({ clientSecret, amount, currency, onPaid }) {
           >
             {busy ? (
               <>
-                <Loader2 size={17} className="ap-spin" /> Processing…
+                <Loader2 size={17} className="ap-spin" /> {t('assess.take.pay.processing')}
               </>
             ) : (
               <>
-                <Lock size={16} /> Pay {priceLabel}
+                <Lock size={16} /> {t('assess.take.pay.payBtn', { price: priceLabel })}
               </>
             )}
           </button>
           <button type="button" className="pay-switch" onClick={() => setUseNew(true)}>
-            Pay with a new card instead
+            {t('assess.take.pay.newCard')}
           </button>
         </>
       ) : (
@@ -229,20 +227,21 @@ function PaymentStep({ clientSecret, amount, currency, onPaid }) {
           </Elements>
           {cards.length > 0 && (
             <button type="button" className="pay-switch" onClick={() => setUseNew(false)}>
-              ← Use a saved card
+              {t('assess.take.pay.savedCard')}
             </button>
           )}
         </>
       )}
 
       <p className="checkout-secure">
-        <ShieldCheck size={14} /> Secured by Stripe · 3D Secure handled automatically.
+        <ShieldCheck size={14} /> {t('assess.take.pay.secure')}
       </p>
     </div>
   )
 }
 
 export default function AssessmentTake() {
+  const { t } = useTranslation()
   const { id: slug } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -358,7 +357,7 @@ export default function AssessmentTake() {
         await sleep(1500)
       }
       // still pending — let them retry the gate
-      setFlowError('Payment received — still finalizing. Give it a moment and try again.')
+      setFlowError(t('assess.take.pendingError'))
       setPhase('error')
     } catch (err) {
       if (err.status === 403) setPhase('denied')
@@ -430,7 +429,7 @@ export default function AssessmentTake() {
     }
     const rich = RICH_REPORTS[slug]
     const report = rich
-      ? buildReportJson(rich.build(s), rich.ui, meta)
+      ? buildReportJson(rich.build(s), rich.ui(), meta)
       : buildBasicReportJson(s, { ...meta, assessmentName: a?.name })
     sendScoreReport(scoreId, report).catch((err) => {
       console.warn('Could not persist report JSON:', err?.message || err)
@@ -455,7 +454,7 @@ export default function AssessmentTake() {
       <div className="take">
         <div className="take-center">
           <Loader2 size={28} className="ap-spin" />
-          <p>Loading assessment…</p>
+          <p>{t('assess.take.loading')}</p>
         </div>
       </div>
     )
@@ -465,10 +464,10 @@ export default function AssessmentTake() {
     return (
       <div className="take">
         <div className="take-center" role="alert">
-          <h1>We couldn’t load this assessment</h1>
+          <h1>{t('assess.take.errorTitle')}</h1>
           <p>{load.error}</p>
           <Link to="/assessments" className="btn btn-primary">
-            All assessments
+            {t('assess.take.allAssessments')}
           </Link>
         </div>
       </div>
@@ -480,9 +479,9 @@ export default function AssessmentTake() {
   if (phase === 'submitting') {
     return (
       <GeneratingScreen
-        title="Reading your answers…"
-        steps={REPORT_GEN_STEPS}
-        note="Deterministic framework · same answers, same report, every time"
+        title={t('assess.take.genTitle')}
+        steps={t('assess.take.genSteps', { returnObjects: true })}
+        note={t('assess.take.genNote')}
       />
     )
   }
@@ -496,7 +495,7 @@ export default function AssessmentTake() {
       <header className="take-bar">
         <Logo />
         <p className="take-topic">{a.name}</p>
-        <Link to={exitTo} className="take-exit" aria-label="Exit assessment">
+        <Link to={exitTo} className="take-exit" aria-label={t('assess.take.exitAria')}>
           <X size={20} />
         </Link>
       </header>
@@ -516,13 +515,10 @@ export default function AssessmentTake() {
         <main className="take-stage">
           <div className="take-card take-intro">
             <span className="dim-tag">
-              {a.name} · {total} questions
+              {a.name} · {t('assess.take.introTag', { count: total })}
             </span>
-            <h1>Answer as this week’s you.</h1>
-            <p>
-              Not your best week, not your worst just the one you’re in. Each statement asks how
-              often it’s true for you lately. There are no right answers, only honest ones.
-            </p>
+            <h1>{t('assess.take.introH1')}</h1>
+            <p>{t('assess.take.introP')}</p>
             <div className="take-scale-preview" aria-hidden="true">
               {labels.map((l, i) => (
                 <span key={l}>
@@ -532,10 +528,10 @@ export default function AssessmentTake() {
               ))}
             </div>
             <button className="btn btn-primary" onClick={begin}>
-              Start <ArrowRight size={18} />
+              {t('assess.take.start')} <ArrowRight size={18} />
             </button>
             <p className="take-legal">
-              <ShieldCheck size={13} /> Self-reflection instrument not a clinical or diagnostic tool.
+              <ShieldCheck size={13} /> {t('assess.take.legal')}
             </p>
           </div>
         </main>
@@ -546,7 +542,7 @@ export default function AssessmentTake() {
         <main className="take-stage">
           <div className="take-center">
             <Loader2 size={28} className="ap-spin" />
-            <p>Checking your access…</p>
+            <p>{t('assess.take.checking')}</p>
           </div>
         </main>
       )}
@@ -555,10 +551,13 @@ export default function AssessmentTake() {
       {phase === 'pay' && (
         <main className="take-stage">
           <div className="take-card take-pay">
-            <h1>Unlock this assessment</h1>
+            <h1>{t('assess.take.unlockH1')}</h1>
             <p className="take-pay-sub">
-              {a.name} · {formatPrice(start?.amount ?? a.cost, start?.currency || a.currency)} · one
-              assessment, with up to {a.maxAttempts || 3} attempts.
+              {t('assess.take.unlockSub', {
+                name: a.name,
+                price: formatPrice(start?.amount ?? a.cost, start?.currency || a.currency),
+                tries: a.maxAttempts || 3,
+              })}
             </p>
             <PaymentStep
               clientSecret={start.clientSecret}
@@ -577,13 +576,18 @@ export default function AssessmentTake() {
           <div className="take-card take-card-q">
             <div className={`take-q-body ${leaving ? 'is-dim' : ''}`} key={step}>
               <div className="take-card-top">
-                <span className="dim-tag">{titleCase(q.subCategory || a.category || 'Reflect')}</span>
+                <span className="dim-tag">
+                  {t(
+                    `subCat.${(q.subCategory || a.category || '').toLowerCase().replace(/[^a-z0-9]/g, '')}.label`,
+                    titleCase(q.subCategory || a.category || ''),
+                  ) || t('assess.take.reflect')}
+                </span>
                 <span className="take-count">
                   {step + 1} <em>/ {total}</em>
                 </span>
               </div>
               <h1 className="take-q">{q.text}</h1>
-              <div className="likert" role="group" aria-label="How often is this true for you?">
+              <div className="likert" role="group" aria-label={t('assess.take.likertAria')}>
                 {labels.map((label, i) => (
                   <button
                     key={label}
@@ -599,12 +603,12 @@ export default function AssessmentTake() {
               <div className="take-foot">
                 {step > 0 ? (
                   <button className="take-back" onClick={back}>
-                    <ArrowLeft size={15} /> Previous
+                    <ArrowLeft size={15} /> {t('assess.take.previous')}
                   </button>
                 ) : (
                   <span />
                 )}
-                <p className="take-hint">Lately = the last two weeks</p>
+                <p className="take-hint">{t('assess.take.hint')}</p>
               </div>
             </div>
           </div>
@@ -616,8 +620,8 @@ export default function AssessmentTake() {
         <main className="take-report-stage">
           <AssessmentReport
             report={RICH_REPORTS[slug].build(score)}
-            ui={RICH_REPORTS[slug].ui}
-            name={(user?.name || '').split(' ')[0] || 'You'}
+            ui={RICH_REPORTS[slug].ui()}
+            name={(user?.name || '').split(' ')[0] || t('assess.take.you')}
             attempt={score.attemptNumber}
             onRetake={retake}
             assessmentId={score.assessment?.id || a?._id}
@@ -631,22 +635,27 @@ export default function AssessmentTake() {
             <span className="ap-done-check take-result-check">
               <CheckCheck size={26} />
             </span>
-            <h1>Assessment scored.</h1>
+            <h1>{t('assess.take.resultH1')}</h1>
             <p className="take-result-sub">
-              {a.name} · attempt {score.attemptNumber}
+              {a.name} · {t('assess.take.resultTry', { n: score.attemptNumber })}
             </p>
 
             <div className="take-result-overall">
               <strong>{score.rawPercentage ?? score.percentage}%</strong>
               <small>
-                overall · {score.totalScore}/{score.maxScore}
+                {t('assess.take.resultOverall')} · {score.totalScore}/{score.maxScore}
               </small>
             </div>
 
             <ul className="take-result-dims">
               {(score.subCategoryScores || []).map((s) => (
                 <li key={s.subCategory}>
-                  <span className="take-result-dim-label">{titleCase(s.subCategory)}</span>
+                  <span className="take-result-dim-label">
+                    {t(
+                      `subCat.${(s.subCategory || '').toLowerCase().replace(/[^a-z0-9]/g, '')}.label`,
+                      titleCase(s.subCategory),
+                    )}
+                  </span>
                   <span className="take-result-dim-bar">
                     <i style={{ width: `${s.percentage}%` }} />
                   </span>
@@ -657,10 +666,10 @@ export default function AssessmentTake() {
 
             <div className="take-result-actions">
               <Link to="/reports" className="btn btn-primary">
-                View my reports <ArrowRight size={16} />
+                {t('assess.take.viewReports')} <ArrowRight size={16} />
               </Link>
               <Link to="/assessments" className="btn btn-ghost">
-                Another assessment
+                {t('assess.take.another')}
               </Link>
             </div>
           </div>
@@ -674,17 +683,14 @@ export default function AssessmentTake() {
             <span className="take-denied-ico">
               <Lock size={24} />
             </span>
-            <h1>You’re out of assessments this cycle.</h1>
-            <p>
-              Your plan’s assessment allowance is used up. It refreshes at the start of your next
-              billing period {isMsisdnMode ? '— carrier billing has no pay-as-you-go.' : '.'}
-            </p>
+            <h1>{t('assess.take.deniedH1')}</h1>
+            <p>{isMsisdnMode ? t('assess.take.deniedMsisdn') : t('assess.take.deniedStripe')}</p>
             <div className="take-result-actions">
               <Link to="/subscription" className="btn btn-primary">
-                View subscription
+                {t('assess.take.viewSubscription')}
               </Link>
               <Link to="/assessments" className="btn btn-ghost">
-                Back to assessments
+                {t('assess.take.backToAssessments')}
               </Link>
             </div>
           </div>
@@ -695,14 +701,14 @@ export default function AssessmentTake() {
       {phase === 'error' && (
         <main className="take-stage">
           <div className="take-card take-denied" role="alert">
-            <h1>Something went wrong</h1>
+            <h1>{t('assess.take.errorH1')}</h1>
             <p>{flowError}</p>
             <div className="take-result-actions">
               <button className="btn btn-primary" onClick={() => setCheckKey((k) => k + 1)}>
-                <RefreshCcw size={16} /> Try again
+                <RefreshCcw size={16} /> {t('assess.take.retry')}
               </button>
               <Link to={exitTo} className="btn btn-ghost">
-                Back
+                {t('assess.take.back')}
               </Link>
             </div>
           </div>

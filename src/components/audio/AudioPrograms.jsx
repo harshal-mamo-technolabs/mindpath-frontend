@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
 import {
   ArrowRight,
@@ -48,14 +49,15 @@ const fmtLen = (s) => {
 const priceTag = (p) => `€${Number(p.price || 0).toFixed(2)}`
 
 // Badge shown on a card cover: the user's relationship to this program.
-const badgeFor = (p) => {
-  if (p.isFree) return { label: 'Free', tone: 'free' }
-  if (p.unlocked) return { label: isStripeMode ? 'Owned' : 'Included', tone: 'owned' }
+const badgeFor = (p, t) => {
+  if (p.isFree) return { label: t('audio.free'), tone: 'free' }
+  if (p.unlocked) return { label: isStripeMode ? t('audio.owned') : t('audio.included'), tone: 'owned' }
   return { label: priceTag(p), tone: 'price' }
 }
 
 /* ---- new-card form (must live inside <Elements>) ---- */
 function NewCardForm({ clientSecret, label, onPaid, onError }) {
+  const { t } = useTranslation()
   const stripe = useStripe()
   const elements = useElements()
   const [busy, setBusy] = useState(false)
@@ -70,7 +72,7 @@ function NewCardForm({ clientSecret, label, onPaid, onError }) {
       payment_method: { card },
     })
     if (error) {
-      onError(error.message || 'Your card could not be charged. Try another card.')
+      onError(error.message || t('audio.cardChargeError'))
       setBusy(false)
       return
     }
@@ -80,7 +82,7 @@ function NewCardForm({ clientSecret, label, onPaid, onError }) {
 
   return (
     <form onSubmit={submit} className="apl-payform">
-      <label className="apl-payform-label">Card details</label>
+      <label className="apl-payform-label">{t('audio.cardDetails')}</label>
       <div className="apl-cardfield">
         <CardElement
           options={{
@@ -101,11 +103,11 @@ function NewCardForm({ clientSecret, label, onPaid, onError }) {
       <button className="btn btn-primary apl-paybtn" disabled={!stripe || busy}>
         {busy ? (
           <>
-            <Loader2 size={15} className="ap-spin" /> Processing…
+            <Loader2 size={15} className="ap-spin" /> {t('audio.processing')}
           </>
         ) : (
           <>
-            <Lock size={15} /> Pay {label}
+            <Lock size={15} /> {t('audio.payAmount', { amount: label })}
           </>
         )}
       </button>
@@ -115,6 +117,7 @@ function NewCardForm({ clientSecret, label, onPaid, onError }) {
 
 /* ---- payment step: one-click with a saved card, or a new card ---- */
 function ProgramPay({ clientSecret, amount, onPaid }) {
+  const { t } = useTranslation()
   const [cards, setCards] = useState(null) // null = loading
   const [selected, setSelected] = useState(null)
   const [useNew, setUseNew] = useState(false)
@@ -149,11 +152,11 @@ function ProgramPay({ clientSecret, amount, onPaid }) {
     setError('')
     try {
       const stripe = await stripePromise
-      if (!stripe) throw new Error('Payments are not configured (missing Stripe key).')
+      if (!stripe) throw new Error(t('audio.errNoStripeKey'))
       const { error: err } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: selected,
       })
-      if (err) throw new Error(err.message || 'Your card could not be charged.')
+      if (err) throw new Error(err.message || t('audio.cardChargeErrorShort'))
       await onPaid()
     } catch (e) {
       setError(e.message)
@@ -163,16 +166,12 @@ function ProgramPay({ clientSecret, amount, onPaid }) {
   }
 
   if (!stripeConfigured) {
-    return (
-      <p className="apl-error">
-        Payments aren’t configured — add VITE_STRIPE_PUBLISHABLE_KEY and restart.
-      </p>
-    )
+    return <p className="apl-error">{t('audio.paymentsNotSetUp')}</p>
   }
   if (cards === null) {
     return (
       <div className="apl-pay-loading">
-        <Loader2 size={18} className="ap-spin" /> Preparing secure checkout…
+        <Loader2 size={18} className="ap-spin" /> {t('audio.preparingCheckout')}
       </div>
     )
   }
@@ -198,8 +197,8 @@ function ProgramPay({ clientSecret, amount, onPaid }) {
                     {titleCase(c.brand)} •••• {c.last4}
                   </strong>
                   <small>
-                    Expires {String(c.expMonth).padStart(2, '0')}/{c.expYear}
-                    {c.isDefault ? ' · default' : ''}
+                    {t('audio.cardExpires')} {String(c.expMonth).padStart(2, '0')}/{c.expYear}
+                    {c.isDefault ? ` · ${t('audio.cardDefault')}` : ''}
                   </small>
                 </span>
                 {selected === c.id && <Check size={15} className="apl-pay-check" />}
@@ -209,16 +208,16 @@ function ProgramPay({ clientSecret, amount, onPaid }) {
           <button className="btn btn-primary apl-paybtn" onClick={paySaved} disabled={busy || !selected}>
             {busy ? (
               <>
-                <Loader2 size={15} className="ap-spin" /> Processing…
+                <Loader2 size={15} className="ap-spin" /> {t('audio.processing')}
               </>
             ) : (
               <>
-                <Lock size={15} /> Pay {label}
+                <Lock size={15} /> {t('audio.payAmount', { amount: label })}
               </>
             )}
           </button>
           <button type="button" className="apl-pay-switch" onClick={() => setUseNew(true)}>
-            Use a new card instead
+            {t('audio.useNewCard')}
           </button>
         </>
       ) : (
@@ -228,20 +227,21 @@ function ProgramPay({ clientSecret, amount, onPaid }) {
           </Elements>
           {cards.length > 0 && (
             <button type="button" className="apl-pay-switch" onClick={() => setUseNew(false)}>
-              ← Use a saved card
+              {t('audio.useSavedCard')}
             </button>
           )}
         </>
       )}
 
       <p className="apl-pay-secure">
-        <ShieldCheck size={13} /> Secured by Stripe · 3D Secure handled automatically.
+        <ShieldCheck size={13} /> {t('audio.secureNote')}
       </p>
     </div>
   )
 }
 
 export default function AudioPrograms({ pathKey = 0, onChange }) {
+  const { t } = useTranslation()
   const [programs, setPrograms] = useState(null) // null = loading
   const [listError, setListError] = useState('')
 
@@ -378,7 +378,7 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
     return (
       <section className="ap-section apl-store">
         <div className="container">
-          <p className="apl-error">Couldn’t load the audio library — {listError}</p>
+          <p className="apl-error">{t('audio.libraryLoadError', { error: listError })}</p>
         </div>
       </section>
     )
@@ -392,24 +392,23 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
   return (
     <section className="ap-section apl-store">
       <div className="container">
-        <div className="ap-section-head">
-          <h2 className="rp-h2 on-night">
-            <Headphones size={19} /> Audio library
-          </h2>
+        <div className="ap-section-head apl-store-head">
+          <div>
+            <h2 className="rp-h2 on-night">
+              <Headphones size={19} /> {t('audio.audioLibrary')}
+            </h2>
+            <p className="apl-store-sub">{t('audio.librarySub')}</p>
+          </div>
         </div>
-        <p className="apl-store-sub">
-          Guided programs you can start anytime — standalone audio journeys, no assessment needed.
-          Some are free; others unlock with a one-time purchase.
-        </p>
 
         {programs === null ? (
           <div className="apl-loading">
-            <Loader2 size={22} className="ap-spin" /> Loading the library…
+            <Loader2 size={22} className="ap-spin" /> {t('audio.loadingLibrary')}
           </div>
         ) : (
           <div className="ap-plans-grid">
             {programs.map((p, i) => {
-              const badge = badgeFor(p)
+              const badge = badgeFor(p, t)
               const owned = p.isFree || p.unlocked
               return (
                 <article key={idOf(p)} className="ap-plan-card apl-store-card" onClick={() => openDetail(idOf(p))}>
@@ -417,7 +416,7 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
                     <span className={`apl-cover-badge ${badge.tone}`}>{badge.label}</span>
                     {inPath.has(String(idOf(p))) && (
                       <span className="apl-path-tag">
-                        <Check size={11} /> In your path
+                        <Check size={11} /> {t('audio.inYourPath')}
                       </span>
                     )}
                   </div>
@@ -425,8 +424,8 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
                     <h3>{p.title}</h3>
                     <p className="apl-store-desc">{p.subDescription || p.description}</p>
                     <div className="apl-store-meta">
-                      {p.clipsCount} {p.clipsCount === 1 ? 'track' : 'tracks'}
-                      {p.totalMinutes ? ` · ${p.totalMinutes} min` : ''}
+                      {t('audio.tracksCount', { count: p.clipsCount })}
+                      {p.totalMinutes ? ` · ${p.totalMinutes} ${t('audio.minShort')}` : ''}
                     </div>
                     <div className="ap-plan-actions">
                       <button
@@ -438,11 +437,11 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
                       >
                         {owned ? (
                           <>
-                            <Play size={14} fill="currentColor" strokeWidth={0} /> Open
+                            <Play size={14} fill="currentColor" strokeWidth={0} /> {t('audio.open')}
                           </>
                         ) : (
                           <>
-                            <Lock size={14} /> Unlock · {priceTag(p)}
+                            <Lock size={14} /> {t('audio.get')} · {priceTag(p)}
                           </>
                         )}
                       </button>
@@ -453,7 +452,7 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
                           openDetail(idOf(p))
                         }}
                       >
-                        Details <ArrowRight size={14} />
+                        {t('audio.details')} <ArrowRight size={14} />
                       </button>
                     </div>
                   </div>
@@ -478,21 +477,21 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
       {(detail || detailBusy) && (
         <div className="ap-modal-overlay" onClick={closeDetail}>
           <div className="ap-modal ap-detail-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="ap-modal-close" onClick={closeDetail} aria-label="Close">
+            <button className="ap-modal-close" onClick={closeDetail} aria-label={t('audio.close')}>
               <X size={18} />
             </button>
 
             {detailBusy || !detail ? (
               <div className="apl-loading">
-                <Loader2 size={22} className="ap-spin" /> Loading…
+                <Loader2 size={22} className="ap-spin" /> {t('audio.loading')}
               </div>
             ) : (
               <>
                 <div className={`ap-modal-cover ${detailCover}`} aria-hidden="true" />
                 <p className="ap-kicker">
-                  {detail.author} · {detail.clipsCount} {detail.clipsCount === 1 ? 'track' : 'tracks'}
-                  {detail.totalMinutes ? ` · ${detail.totalMinutes} min` : ''} ·{' '}
-                  {detail.isFree ? 'Free' : detail.unlocked ? 'Unlocked' : priceTag(detail)}
+                  {detail.author} · {t('audio.tracksCount', { count: detail.clipsCount })}
+                  {detail.totalMinutes ? ` · ${detail.totalMinutes} ${t('audio.minShort')}` : ''} ·{' '}
+                  {detail.isFree ? t('audio.free') : detail.unlocked ? t('audio.owned') : priceTag(detail)}
                 </p>
                 <h3>{detail.title}</h3>
                 <p className="ap-modal-pitch">{detail.description}</p>
@@ -507,17 +506,16 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
                     >
                       {unlocking ? (
                         <>
-                          <Loader2 size={16} className="ap-spin" /> Preparing…
+                          <Loader2 size={16} className="ap-spin" /> {t('audio.preparing')}
                         </>
                       ) : (
                         <>
-                          <Lock size={15} /> Unlock full program · {priceTag(detail)}
+                          <Lock size={15} /> {t('audio.getFullProgram')} · {priceTag(detail)}
                         </>
                       )}
                     </button>
                     <span className="apl-unlock-note">
-                      First {detail.freePreviewCount || 1} track
-                      {(detail.freePreviewCount || 1) > 1 ? 's' : ''} free to preview.
+                      {t('audio.previewNote', { count: detail.freePreviewCount || 1 })}
                     </span>
                     {payError && <span className="apl-error">{payError}</span>}
                   </div>
@@ -534,7 +532,7 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
                 {(detail.isFree || detail.unlocked) && !pay && (
                   inPath.has(String(idOf(detail))) ? (
                     <div className="apl-inpath">
-                      <Check size={15} /> In your path
+                      <Check size={15} /> {t('audio.inYourPath')}
                     </div>
                   ) : (
                     <button
@@ -544,11 +542,11 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
                     >
                       {adding ? (
                         <>
-                          <Loader2 size={15} className="ap-spin" /> Adding…
+                          <Loader2 size={15} className="ap-spin" /> {t('audio.adding')}
                         </>
                       ) : (
                         <>
-                          <Plus size={15} /> Add to your path
+                          <Plus size={15} /> {t('audio.addToPath')}
                         </>
                       )}
                     </button>
@@ -578,7 +576,7 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
                           <strong>{c.session.title}</strong>
                         </span>
                         <span className="ap-also-len">
-                          {c.free && !detail.isFree ? 'free' : fmtLen(c.session.durationSeconds)}
+                          {c.free && !detail.isFree ? t('audio.freeLower') : fmtLen(c.session.durationSeconds)}
                         </span>
                       </button>
                     )
@@ -597,9 +595,13 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
             <span className={`ap-mini-cover lg ${now.cover || 'cover-violet'}`} aria-hidden="true" />
             <div className="ap-player-meta">
               <strong>{now.title}</strong>
-              <small>Audio library · preview</small>
+              <small>{t('audio.libraryPreview')}</small>
             </div>
-            <button className="ap-player-toggle" onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}>
+            <button
+              className="ap-player-toggle"
+              onClick={togglePlay}
+              aria-label={playing ? t('audio.pause') : t('audio.play')}
+            >
               {playing ? (
                 <Pause size={20} fill="currentColor" strokeWidth={0} />
               ) : (
@@ -612,7 +614,7 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
                 audioRef.current?.pause()
                 setNow(null)
               }}
-              aria-label="Close player"
+              aria-label={t('audio.closePlayer')}
             >
               <X size={17} />
             </button>

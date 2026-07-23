@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowRight,
   Cake,
@@ -15,6 +16,8 @@ import {
   Users,
 } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
+import LanguageSwitcher from '../components/LanguageSwitcher.jsx'
+import ThemeToggle from '../components/ThemeToggle.jsx'
 import { login, saveSession, signup } from '../lib/auth.js'
 import { isMsisdnMode } from '../lib/billingMode.js'
 import MsisdnAuthPage from './MsisdnAuthPage.jsx'
@@ -30,6 +33,7 @@ export default function AuthPage({ mode }) {
 }
 
 function EmailAuthPage({ mode }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const isLogin = mode === 'login'
@@ -57,15 +61,15 @@ function EmailAuthPage({ mode }) {
     const er = {}
     if (!isLogin) {
       const name = form.name.trim()
-      if (name.length < 2 || name.length > 50) er.name = 'Use between 2 and 50 characters.'
+      if (name.length < 2 || name.length > 50) er.name = t('auth.errName')
     }
-    if (!EMAIL_RE.test(form.email)) er.email = 'That email doesn’t look complete.'
+    if (!EMAIL_RE.test(form.email)) er.email = t('auth.errEmail')
     // No password rules on the client — the backend is the source of truth.
     if (!isLogin) {
-      if (!form.gender) er.gender = 'Choose one.'
+      if (!form.gender) er.gender = t('auth.errGender')
       const age = Number(form.age)
       if (!form.age || !Number.isInteger(age) || age < 1 || age > 120)
-        er.age = 'Enter an age from 1 to 120.'
+        er.age = t('auth.errAge')
     }
     return er
   }
@@ -106,10 +110,14 @@ function EmailAuthPage({ mode }) {
     }
   }
 
-  const firstName = (account?.name || form.name).trim().split(' ')[0] || 'there'
+  const firstName = (account?.name || form.name).trim().split(' ')[0] || t('auth.defaultName')
 
   return (
     <div className="auth">
+      <div className="auth-topbar">
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
       <main className="auth-main">
         <div className="auth-card">
           <div className="auth-card-logo">
@@ -121,28 +129,32 @@ function EmailAuthPage({ mode }) {
                 <Check size={26} />
               </span>
               <h1>
-                {isLogin ? `Welcome back, ${firstName}.` : `Welcome to the path, ${firstName}.`}
+                {isLogin
+                  ? t('auth.successBack', { name: firstName })
+                  : t('auth.successName', { name: firstName })}
               </h1>
-              <p>Opening your dashboard…</p>
+              <p>{t('auth.opening')}</p>
             </div>
           ) : (
             <>
-              <p className="auth-kicker">{isLogin ? 'Log in' : 'Create your account'}</p>
+              <p className="auth-kicker">
+                {isLogin ? t('auth.kickerLogin') : t('auth.kickerSignup')}
+              </p>
               <h1 className="auth-title">
                 {isLogin ? (
                   <>
-                    Pick up <em>where you paused.</em>
+                    {t('auth.titleBackA') && <>{t('auth.titleBackA')} </>}
+                    <em>{t('auth.titleBackEm')}</em>
                   </>
                 ) : (
                   <>
-                    Ten quiet minutes <em>starts here.</em>
+                    {t('auth.titleStartA') && <>{t('auth.titleStartA')} </>}
+                    <em>{t('auth.titleStartEm')}</em>
                   </>
                 )}
               </h1>
               <p className="auth-subtitle">
-                {isLogin
-                  ? 'Your sessions, your mood trend, and tomorrow’s unlock are exactly where you left them.'
-                  : 'One honest assessment, a report that reads you back, and ten quiet minutes a day.'}
+                {isLogin ? t('auth.subtitleLogin') : t('auth.subtitleSignup')}
               </p>
 
               <form className="auth-form" onSubmit={submit} noValidate>
@@ -161,14 +173,14 @@ function EmailAuthPage({ mode }) {
 
                 {!isLogin && (
                   <label className={`auth-field ${errors.name ? 'has-error' : ''}`}>
-                    <span className="auth-label">Your name</span>
+                    <span className="auth-label">{t('auth.nameLabel')}</span>
                     <span className="auth-input">
                       <User size={16} />
                       <input
                         type="text"
                         value={form.name}
                         onChange={set('name')}
-                        placeholder="What should we call you?"
+                        placeholder={t('auth.namePlaceholder')}
                         autoComplete="name"
                       />
                     </span>
@@ -177,14 +189,14 @@ function EmailAuthPage({ mode }) {
                 )}
 
                 <label className={`auth-field ${errors.email ? 'has-error' : ''}`}>
-                  <span className="auth-label">Email</span>
+                  <span className="auth-label">{t('auth.emailLabel')}</span>
                   <span className="auth-input">
                     <Mail size={16} />
                     <input
                       type="email"
                       value={form.email}
                       onChange={set('email')}
-                      placeholder="you@somewhere.com"
+                      placeholder={t('auth.emailPlaceholder')}
                       autoComplete="email"
                     />
                   </span>
@@ -193,10 +205,10 @@ function EmailAuthPage({ mode }) {
 
                 <label className={`auth-field ${errors.password ? 'has-error' : ''}`}>
                   <span className="auth-label">
-                    Password
+                    {t('auth.passwordLabel')}
                     {isLogin && (
                       <Link to="#" className="auth-forgot">
-                        Forgot?
+                        {t('auth.forgot')}
                       </Link>
                     )}
                   </span>
@@ -206,14 +218,18 @@ function EmailAuthPage({ mode }) {
                       type={showPw ? 'text' : 'password'}
                       value={form.password}
                       onChange={set('password')}
-                      placeholder={isLogin ? 'Your password' : 'Choose a password'}
+                      placeholder={
+                        isLogin
+                          ? t('auth.passwordPlaceholderLogin')
+                          : t('auth.passwordPlaceholderSignup')
+                      }
                       autoComplete={isLogin ? 'current-password' : 'new-password'}
                     />
                     <button
                       type="button"
                       className="auth-eye"
                       onClick={() => setShowPw((s) => !s)}
-                      aria-label={showPw ? 'Hide password' : 'Show password'}
+                      aria-label={showPw ? t('auth.hidePassword') : t('auth.showPassword')}
                     >
                       {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -224,16 +240,16 @@ function EmailAuthPage({ mode }) {
                 {!isLogin && (
                   <div className="auth-row">
                     <label className={`auth-field ${errors.gender ? 'has-error' : ''}`}>
-                      <span className="auth-label">Gender</span>
+                      <span className="auth-label">{t('auth.genderLabel')}</span>
                       <span className="auth-input">
                         <Users size={16} />
                         <select value={form.gender} onChange={set('gender')} required>
                           <option value="" disabled>
-                            Select
+                            {t('auth.select')}
                           </option>
-                          <option value="female">Female</option>
-                          <option value="male">Male</option>
-                          <option value="other">Other</option>
+                          <option value="female">{t('auth.female')}</option>
+                          <option value="male">{t('auth.male')}</option>
+                          <option value="other">{t('auth.other')}</option>
                         </select>
                         <ChevronDown size={16} className="auth-select-caret" />
                       </span>
@@ -241,14 +257,14 @@ function EmailAuthPage({ mode }) {
                     </label>
 
                     <label className={`auth-field ${errors.age ? 'has-error' : ''}`}>
-                      <span className="auth-label">Age</span>
+                      <span className="auth-label">{t('auth.ageLabel')}</span>
                       <span className="auth-input">
                         <Cake size={16} />
                         <input
                           type="number"
                           value={form.age}
                           onChange={set('age')}
-                          placeholder="28"
+                          placeholder={t('auth.agePlaceholder')}
                           min="1"
                           max="120"
                           inputMode="numeric"
@@ -263,44 +279,39 @@ function EmailAuthPage({ mode }) {
                 <button className="btn btn-primary auth-submit" disabled={status === 'loading'}>
                   {status === 'loading' ? (
                     <>
-                      <Loader2 size={17} className="ap-spin" /> One moment…
+                      <Loader2 size={17} className="ap-spin" /> {t('auth.submitLoading')}
                     </>
                   ) : isLogin ? (
                     <>
-                      Continue your path <ArrowRight size={17} />
+                      {t('auth.submitLogin')} <ArrowRight size={17} />
                     </>
                   ) : (
                     <>
-                      Begin your path <ArrowRight size={17} />
+                      {t('auth.submitCreate')} <ArrowRight size={17} />
                     </>
                   )}
                 </button>
               </form>
 
-              {!isLogin && (
-                <p className="auth-legal">
-                  By continuing you agree to our Terms and acknowledge that Daybreak is a
-                  self-reflection tool, not a clinical service.
-                </p>
-              )}
+              {!isLogin && <p className="auth-legal">{t('auth.legalEmail')}</p>}
 
               <p className="auth-swap">
                 {isLogin ? (
                   <>
-                    New here?{' '}
+                    {t('auth.swapNew')}{' '}
                     <Link to={swapTo('/signup')}>
-                      Create an account <Sparkles size={13} />
+                      {t('auth.createLink')} <Sparkles size={13} />
                     </Link>
                   </>
                 ) : (
                   <>
-                    Already walking a path? <Link to={swapTo('/login')}>Log in</Link>
+                    {t('auth.haveAccount')} <Link to={swapTo('/login')}>{t('auth.loginLink')}</Link>
                   </>
                 )}
               </p>
 
               <Link to="/" className="auth-guest">
-                ← Just browsing back to Daybreak
+                {t('auth.guest')}
               </Link>
             </>
           )}

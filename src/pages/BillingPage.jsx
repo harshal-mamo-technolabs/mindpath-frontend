@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, Navigate } from 'react-router-dom'
-import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
 import {
   ArrowRight,
   ArrowUpRight,
@@ -37,73 +38,67 @@ import {
   WOULD_STAY_FOR,
 } from '../lib/payments.js'
 
-// Billing-history category → label + badge class.
-const TX_KIND = {
-  subscription: { label: 'Subscription', cls: 'subscription' },
-  assessment: { label: 'Assessment', cls: 'assessment' },
-  ebook: { label: 'Ebook', cls: 'ebook' },
-  audio: { label: 'Audio program', cls: 'audio' },
-  counselling: { label: 'Counselling', cls: 'counselling' },
-  payg: { label: 'Pay-as-you-go', cls: 'payg' },
+// Billing-history category → badge class (label is translated per key).
+const TX_KIND_CLS = {
+  subscription: 'subscription',
+  assessment: 'assessment',
+  ebook: 'ebook',
+  audio: 'audio',
+  counselling: 'counselling',
+  payg: 'payg',
 }
 
 const ACCENT = '#6450cf'
 
-const STRIPE_APPEARANCE = {
-  theme: 'stripe',
-  variables: { colorPrimary: ACCENT, fontFamily: 'Manrope, sans-serif', borderRadius: '12px' },
+// Dark Card Element style for the add-card modal (card-only — no Link/contact fields).
+const CARD_STYLE = {
+  hidePostalCode: true,
+  style: {
+    base: {
+      fontFamily: 'Manrope, sans-serif',
+      fontSize: '15px',
+      fontWeight: '600',
+      color: '#ece9fa',
+      '::placeholder': { color: '#8a83a8', fontWeight: '500' },
+    },
+    invalid: { color: '#e2725b' },
+  },
 }
 
 // Plan names arrive lowercase from the API ("balance") — capitalize for display.
 const titleCase = (s) => (s || '').replace(/\b\w/g, (c) => c.toUpperCase())
 
-const formatDate = (iso) =>
+const formatDate = (iso, locale = 'en-US') =>
   iso
-    ? new Date(iso).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+    ? new Date(iso).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })
     : ''
 
-// status → label + the dot modifier class used on .bl-plan-status
-const STATUS = {
-  active: { label: 'Active', cls: 'live' },
-  trialing: { label: 'Trial', cls: 'live' },
-  past_due: { label: 'Past due', cls: 'warn' },
-  incomplete: { label: 'Incomplete', cls: 'warn' },
-  canceled: { label: 'Canceled', cls: 'off' },
+// status → the dot modifier class on .bl-plan-status (label is translated per code)
+const STATUS_CLS = {
+  active: 'live',
+  trialing: 'live',
+  past_due: 'warn',
+  incomplete: 'warn',
+  canceled: 'off',
 }
 
 // allowance/usage/remaining keys come straight from /subscriptions/me
+// (label + cta are translated per key under billing.allowance.<key>)
 const ALLOWANCE_ROWS = [
-  {
-    key: 'assessments',
-    label: 'Assessments',
-    icon: ClipboardList,
-    unit: '',
-    accent: '#4d3da8',
-    to: '/assessments',
-    cta: 'Buy an assessment',
-  },
-  {
-    key: 'ebooks',
-    label: 'Ebooks',
-    icon: BookOpen,
-    unit: '',
-    accent: '#8a5420',
-    to: '/ebooks',
-    cta: 'Browse the shop',
-  },
+  { key: 'assessments', icon: ClipboardList, unit: '', accent: '#4d3da8', to: '/assessments' },
+  { key: 'ebooks', icon: BookOpen, unit: '', accent: '#8a5420', to: '/ebooks' },
   {
     key: 'counsellingMinutes',
-    label: 'Counselling minutes',
     icon: MessagesSquare,
     unit: ' min',
     accent: '#2e5f49',
     to: '/counselling',
-    cta: 'Buy minutes',
   },
 ]
 
-/** Add-a-card form — lives inside <Elements>; confirms a SetupIntent. */
-function AddCardForm({ onSaved, onError }) {
+/** Add-a-card form — lives inside <Elements>; confirms a SetupIntent with the Card Element. */
+function AddCardForm({ clientSecret, onSaved, onError }) {
+  const { t } = useTranslation()
   const stripe = useStripe()
   const elements = useElements()
   const [submitting, setSubmitting] = useState(false)
@@ -113,13 +108,11 @@ function AddCardForm({ onSaved, onError }) {
     if (!stripe || !elements) return
     setSubmitting(true)
     onError('')
-    const { error } = await stripe.confirmSetup({
-      elements,
-      confirmParams: { return_url: `${window.location.origin}/subscription` },
-      redirect: 'if_required',
+    const { error } = await stripe.confirmCardSetup(clientSecret, {
+      payment_method: { card: elements.getElement(CardElement) },
     })
     if (error) {
-      onError(error.message || 'That card could not be saved.')
+      onError(error.message || t('billing.cardSaveFailed'))
       setSubmitting(false)
       return
     }
@@ -128,14 +121,17 @@ function AddCardForm({ onSaved, onError }) {
 
   return (
     <form onSubmit={handleSave} className="checkout-form">
-      <PaymentElement options={{ paymentMethodOrder: ['card'] }} />
+      <label className="apl-payform-label">{t('billing.cardDetailsLabel')}</label>
+      <div className="apl-cardfield">
+        <CardElement options={CARD_STYLE} />
+      </div>
       <button className="btn btn-primary checkout-pay" disabled={!stripe || submitting}>
         {submitting ? (
           <>
-            <Loader2 size={17} className="ap-spin" /> Saving…
+            <Loader2 size={17} className="ap-spin" /> {t('billing.saving')}
           </>
         ) : (
-          'Save card'
+          t('billing.saveCard')
         )}
       </button>
     </form>
@@ -143,6 +139,7 @@ function AddCardForm({ onSaved, onError }) {
 }
 
 export default function BillingPage() {
+  const { t, i18n } = useTranslation()
   const { isAuthenticated, logout } = useAuth()
 
   const [status, setStatus] = useState('loading') // loading | ready | none | error
@@ -225,7 +222,7 @@ export default function BillingPage() {
 
   async function confirmCancel() {
     if (!reason) {
-      setCancelError('Please choose a reason.')
+      setCancelError(t('billing.chooseReason'))
       return
     }
     setBusy(true)
@@ -234,7 +231,7 @@ export default function BillingPage() {
       const updated = await cancelSubscription({ reason, wouldStayFor })
       setSub((prev) => ({ ...prev, ...updated }))
       setModal(null)
-      say(`Your plan ends on ${formatDate(updated.currentPeriodEnd)}.`)
+      say(t('billing.toastPlanEnds', { date: formatDate(updated.currentPeriodEnd, i18n.language) }))
     } catch (err) {
       if (err.status === 401) {
         logout() // token expired → the auth gate redirects to /login
@@ -243,7 +240,7 @@ export default function BillingPage() {
         reload() // no active subscription anymore — refresh /me
       } else {
         // 422 (invalid/missing reason) or anything else — keep the modal open
-        setCancelError(err.message || 'We couldn’t cancel just now. Please try again.')
+        setCancelError(err.message || t('billing.cancelFailed'))
       }
     } finally {
       setBusy(false)
@@ -255,7 +252,7 @@ export default function BillingPage() {
     try {
       const updated = await setDefaultPaymentMethod(id)
       setCards(updated || [])
-      say('Default card updated.')
+      say(t('billing.toastDefaultUpdated'))
     } catch (err) {
       say(err.message)
     } finally {
@@ -268,7 +265,7 @@ export default function BillingPage() {
     try {
       const updated = await deletePaymentMethod(id)
       setCards(updated || [])
-      say('Card removed.')
+      say(t('billing.toastCardRemoved'))
     } catch (err) {
       say(err.message)
     } finally {
@@ -278,7 +275,7 @@ export default function BillingPage() {
 
   async function openAddCard() {
     if (!stripeConfigured) {
-      say('Payments aren’t configured (missing Stripe key).')
+      say(t('billing.paymentsNotSetup'))
       return
     }
     setAddCardError('')
@@ -296,7 +293,7 @@ export default function BillingPage() {
   async function onCardAdded() {
     setModal(null)
     setAddCardSecret('')
-    say('Card saved.')
+    say(t('billing.toastCardSaved'))
     try {
       const list = await getPaymentMethods()
       setCards(list || [])
@@ -312,7 +309,7 @@ export default function BillingPage() {
       <main className="billing">
         <div className="container bl-state">
           <Loader2 size={28} className="ap-spin" />
-          <p>Loading your subscription…</p>
+          <p>{t('billing.loading')}</p>
         </div>
       </main>
     )
@@ -322,10 +319,10 @@ export default function BillingPage() {
     return (
       <main className="billing">
         <div className="container bl-state" role="alert">
-          <h1>We couldn’t load your subscription</h1>
+          <h1>{t('billing.errorTitle')}</h1>
           <p>{error}</p>
           <button className="btn btn-primary" onClick={reload}>
-            <RefreshCcw size={16} /> Try again
+            <RefreshCcw size={16} /> {t('billing.tryAgain')}
           </button>
         </div>
       </main>
@@ -339,19 +336,19 @@ export default function BillingPage() {
           <span className="bl-state-ico">
             <Sparkles size={22} />
           </span>
-          <h1>No active subscription</h1>
+          <h1>{t('billing.noneTitle')}</h1>
           {isMsisdnMode ? (
             <>
-              <p>Sign up with your mobile number to start your plan  it&rsquo;s billed to your phone.</p>
+              <p>{t('billing.noneMsisdnBody')}</p>
               <Link to="/signup" className="btn btn-primary">
-                Create your account <ArrowRight size={16} />
+                {t('billing.createAccount')} <ArrowRight size={16} />
               </Link>
             </>
           ) : (
             <>
-              <p>Choose a plan to unlock assessments, ebooks, and counselling each month.</p>
+              <p>{t('billing.noneBody')}</p>
               <Link to="/pricing" className="btn btn-primary">
-                View plans <ArrowRight size={16} />
+                {t('billing.viewPlans')} <ArrowRight size={16} />
               </Link>
             </>
           )}
@@ -362,17 +359,20 @@ export default function BillingPage() {
 
   const planName = titleCase(sub.plan?.name)
   const priceLabel = sub.plan ? formatPrice(sub.plan.price, sub.plan.currency) : ''
-  const per = sub.interval === 'year' ? 'yr' : 'mo'
-  const statusInfo = STATUS[sub.status] || { label: sub.status, cls: 'warn' }
-  const endsOn = formatDate(sub.currentPeriodEnd)
+  const per = sub.interval === 'year' ? t('billing.perYr') : t('billing.perMo')
+  const statusCls = STATUS_CLS[sub.status] || 'warn'
+  const statusLabel = STATUS_CLS[sub.status] ? t(`billing.status.${sub.status}`) : sub.status
+  const endsOn = formatDate(sub.currentPeriodEnd, i18n.language)
+  const reasonLabels = t('billing.cancelReasons', { returnObjects: true })
+  const stayLabels = t('billing.wouldStayFor', { returnObjects: true })
 
   return (
     <main className="billing">
       <div className="container">
         <Reveal as="header" className="bl-head">
           <div>
-            <span className="eyebrow">Subscription</span>
-            <h1 className="bl-title">Your subscription</h1>
+            <span className="eyebrow">{t('billing.eyebrow')}</span>
+            <h1 className="bl-title">{t('billing.title')}</h1>
           </div>
         </Reveal>
 
@@ -383,24 +383,27 @@ export default function BillingPage() {
               <Sparkles size={20} />
             </span>
             <div>
-              <p className={`bl-plan-status ${statusInfo.cls}`}>
-                <span className="bl-status-dot" /> {statusInfo.label}
+              <p className={`bl-plan-status ${statusCls}`}>
+                <span className="bl-status-dot" /> {statusLabel}
               </p>
-              <h2>{planName} plan</h2>
+              <h2>{t('billing.planLabel', { name: planName })}</h2>
               <p className="bl-plan-sub">
-                {priceLabel}/{per} · {sub.cancelAtPeriodEnd ? `ends ${endsOn}` : `renews ${endsOn}`}
+                {priceLabel}/{per} ·{' '}
+                {sub.cancelAtPeriodEnd
+                  ? t('billing.endsShort', { date: endsOn })
+                  : t('billing.renewsShort', { date: endsOn })}
               </p>
             </div>
           </div>
           <div className="bl-plan-actions">
             {isMsisdnMode ? (
-              <span className="bl-cancel-note">Billed to your mobile</span>
+              <span className="bl-cancel-note">{t('billing.billedToMobile')}</span>
             ) : sub.cancelAtPeriodEnd ? (
-              <span className="bl-cancel-note">Cancels {endsOn}</span>
+              <span className="bl-cancel-note">{t('billing.cancelsOn', { date: endsOn })}</span>
             ) : (
               sub.status !== 'canceled' && (
                 <button className="bl-cancel" onClick={openCancel}>
-                  Cancel plan
+                  {t('billing.cancelPlan')}
                 </button>
               )
             )}
@@ -409,12 +412,10 @@ export default function BillingPage() {
 
         {/* allowance usage */}
         <section className="bl-section">
-          <h2 className="bl-section-title">This cycle&rsquo;s allowance</h2>
+          <h2 className="bl-section-title">{t('billing.includedTitle')}</h2>
           <p className="bl-section-sub">
-            Resets {endsOn}.{' '}
-            {isMsisdnMode
-              ? 'When an allowance is used up it refreshes next cycle  mobile billing has no pay-as-you-go.'
-              : 'When an allowance is used up, that item switches to pay-as-you-go.'}
+            {t('billing.resetsOn', { date: endsOn })}{' '}
+            {isMsisdnMode ? t('billing.resetsMsisdn') : t('billing.resetsStripe')}
           </p>
 
           <div className="bl-allowance-grid">
@@ -434,17 +435,19 @@ export default function BillingPage() {
                     <span className="bl-allowance-ico" style={{ color: row.accent }}>
                       <Icon size={18} />
                     </span>
-                    <h3>{row.label}</h3>
+                    <h3>{t(`billing.allowance.${row.key}.label`)}</h3>
                     {exhausted ? (
                       isMsisdnMode ? (
-                        <span className="bl-allowance-left bl-used-up">Used up</span>
+                        <span className="bl-allowance-left bl-used-up">{t('billing.usedUp')}</span>
                       ) : (
                         <span className="bl-badge-payg">
-                          <Zap size={12} /> Pay-as-you-go
+                          <Zap size={12} /> {t('billing.payPerItem')}
                         </span>
                       )
                     ) : (
-                      <span className="bl-allowance-left">{unlimited ? '∞' : left} left</span>
+                      <span className="bl-allowance-left">
+                        {unlimited ? t('billing.leftInfinite') : t('billing.left', { count: left })}
+                      </span>
                     )}
                   </div>
 
@@ -458,31 +461,28 @@ export default function BillingPage() {
                   </div>
 
                   <p className="bl-allowance-meta">
-                    {unlimited ? (
-                      <>Unlimited on {planName}</>
-                    ) : (
-                      <>
-                        {used} of {total}
-                        {row.unit} used this cycle
-                      </>
-                    )}
+                    {unlimited
+                      ? t('billing.unlimitedOn', { name: planName })
+                      : row.unit
+                        ? t('billing.usageMetaMin', { used, total })
+                        : t('billing.usageMeta', { used, total })}
                   </p>
 
                   {exhausted ? (
                     isMsisdnMode ? (
                       <p className="bl-allowance-ok">
-                        <RefreshCcw size={13} /> Refreshes {endsOn}
+                        <RefreshCcw size={13} /> {t('billing.comesBack', { date: endsOn })}
                       </p>
                     ) : (
                       <div className="bl-payg-cta">
                         <Link to={row.to} className="bl-payg-btn">
-                          <Plus size={14} /> {row.cta}
+                          <Plus size={14} /> {t(`billing.allowance.${row.key}.cta`)}
                         </Link>
                       </div>
                     )
                   ) : (
                     <p className="bl-allowance-ok">
-                      <Check size={13} /> Included in your plan
+                      <Check size={13} /> {t('billing.includedInPlan')}
                     </p>
                   )}
                 </div>
@@ -495,14 +495,14 @@ export default function BillingPage() {
         {!isMsisdnMode && (
         <section className="bl-section bl-pay">
           <div className="bl-invoices-head">
-            <h2 className="bl-section-title">Payment methods</h2>
+            <h2 className="bl-section-title">{t('billing.paymentMethods')}</h2>
             <button className="bl-link-btn" onClick={openAddCard}>
-              <Plus size={14} /> Add card
+              <Plus size={14} /> {t('billing.addCard')}
             </button>
           </div>
 
           {cards.length === 0 ? (
-            <p className="bl-empty">No saved cards yet.</p>
+            <p className="bl-empty">{t('billing.noCards')}</p>
           ) : (
             <div className="bl-cards">
               {cards.map((c) => (
@@ -513,10 +513,12 @@ export default function BillingPage() {
                   <div className="bl-card-info">
                     <strong>
                       {titleCase(c.brand)} •••• {c.last4}
-                      {c.isDefault && <span className="bl-card-default">Default</span>}
+                      {c.isDefault && <span className="bl-card-default">{t('billing.default')}</span>}
                     </strong>
                     <small>
-                      Expires {String(c.expMonth).padStart(2, '0')}/{c.expYear}
+                      {t('billing.expires', {
+                        exp: `${String(c.expMonth).padStart(2, '0')}/${c.expYear}`,
+                      })}
                     </small>
                   </div>
                   <div className="bl-card-actions">
@@ -526,14 +528,14 @@ export default function BillingPage() {
                         onClick={() => makeDefault(c.id)}
                         disabled={busy}
                       >
-                        <Star size={14} /> Make default
+                        <Star size={14} /> {t('billing.makeDefault')}
                       </button>
                     )}
                     <button
                       className="bl-link-btn danger"
                       onClick={() => removeCard(c.id)}
                       disabled={busy}
-                      aria-label="Remove card"
+                      aria-label={t('billing.removeCardAria')}
                     >
                       <Trash2 size={14} />
                     </button>
@@ -542,7 +544,7 @@ export default function BillingPage() {
               ))}
             </div>
           )}
-          <p className="bl-pay-note">Securely stored by Stripe.</p>
+          <p className="bl-pay-note">{t('billing.securelyStored')}</p>
         </section>
         )}
 
@@ -550,34 +552,32 @@ export default function BillingPage() {
         {!isMsisdnMode && (
         <section className="bl-section">
           <div className="bl-invoices-head">
-            <h2 className="bl-section-title">Billing history</h2>
+            <h2 className="bl-section-title">{t('billing.historyTitle')}</h2>
             {transactions.length > 0 && (
               <button
                 className="bl-link-btn"
                 onClick={() =>
-                  transactions.forEach((t) => t.receiptUrl && window.open(t.receiptUrl, '_blank'))
+                  transactions.forEach((tx) => tx.receiptUrl && window.open(tx.receiptUrl, '_blank'))
                 }
               >
-                <Download size={14} /> Export all
+                <Download size={14} /> {t('billing.exportAll')}
               </button>
             )}
           </div>
-          <p className="bl-section-sub">
-            Subscription renewals plus every one-time purchase — assessments, ebooks, audio
-            programs, and counselling top-ups.
-          </p>
+          <p className="bl-section-sub">{t('billing.historySub')}</p>
           {transactions.length === 0 ? (
-            <p className="bl-empty">No charges yet.</p>
+            <p className="bl-empty">{t('billing.noCharges')}</p>
           ) : (
             <div className="bl-invoices">
               {transactions.map((tx) => {
-                const kind = TX_KIND[tx.type] || { label: tx.label, cls: 'payg' }
+                const kindCls = TX_KIND_CLS[tx.type] || 'payg'
+                const kindLabel = TX_KIND_CLS[tx.type] ? t(`billing.txKind.${tx.type}`) : tx.label
                 return (
                   <div className="bl-invoice" key={tx.id}>
-                    <span className="bl-inv-date">{formatDate(tx.date)}</span>
+                    <span className="bl-inv-date">{formatDate(tx.date, i18n.language)}</span>
                     <span className="bl-inv-desc">
-                      {tx.description || kind.label}
-                      <em className={`bl-inv-kind ${kind.cls}`}>{kind.label}</em>
+                      {tx.description || kindLabel}
+                      <em className={`bl-inv-kind ${kindCls}`}>{kindLabel}</em>
                     </span>
                     <span className="bl-inv-amount">{formatPrice(tx.amount, tx.currency)}</span>
                     {tx.receiptUrl ? (
@@ -586,7 +586,7 @@ export default function BillingPage() {
                         href={tx.receiptUrl}
                         target="_blank"
                         rel="noreferrer"
-                        aria-label="View receipt"
+                        aria-label={t('billing.viewReceiptAria')}
                       >
                         <ArrowUpRight size={16} />
                       </a>
@@ -617,14 +617,13 @@ export default function BillingPage() {
           className="ap-modal-overlay"
           role="dialog"
           aria-modal="true"
-          aria-label="Cancel plan"
+          aria-label={t('billing.cancelPlan')}
           onClick={(e) => e.target === e.currentTarget && setModal(null)}
         >
           <div className="ap-modal bl-cancel-modal">
-            <h3>Before you go…</h3>
+            <h3>{t('billing.cancelHeading')}</h3>
             <p className="bl-cancel-lede">
-              You&rsquo;ll keep {planName} until {endsOn}, then move to pay-as-you-go everything
-              you&rsquo;ve unlocked stays yours.
+              {t('billing.cancelLede', { name: planName, date: endsOn })}
             </p>
 
             {cancelError && (
@@ -635,7 +634,7 @@ export default function BillingPage() {
 
             <fieldset className="bl-survey">
               <legend className="bl-survey-q">
-                Tell us why you&rsquo;re canceling <span className="bl-req">*</span>
+                {t('billing.surveyReasonQ')} <span className="bl-req">*</span>
               </legend>
               <div className="bl-survey-opts">
                 {CANCEL_REASONS.map((r) => (
@@ -651,14 +650,14 @@ export default function BillingPage() {
                       }}
                     />
                     <span className="bl-radio-dot" />
-                    {r.label}
+                    {reasonLabels[r.key]}
                   </label>
                 ))}
               </div>
             </fieldset>
 
             <fieldset className="bl-survey">
-              <legend className="bl-survey-q">Would you have stayed if we offered:</legend>
+              <legend className="bl-survey-q">{t('billing.surveyStayQ')}</legend>
               <div className="bl-survey-opts">
                 {WOULD_STAY_FOR.map((o) => {
                   const on = wouldStayFor.includes(o.key)
@@ -668,7 +667,7 @@ export default function BillingPage() {
                       <span className="bl-check-box">
                         <Check size={12} />
                       </span>
-                      {o.label}
+                      {stayLabels[o.key]}
                     </label>
                   )
                 })}
@@ -683,17 +682,21 @@ export default function BillingPage() {
               >
                 {busy ? (
                   <>
-                    <Loader2 size={16} className="ap-spin" /> Cancelling…
+                    <Loader2 size={16} className="ap-spin" /> {t('billing.cancelling')}
                   </>
                 ) : (
-                  'Confirm cancellation'
+                  t('billing.yesCancel')
                 )}
               </button>
               <button className="ap-ghostlink" onClick={() => setModal(null)} disabled={busy}>
-                Back
+                {t('billing.back')}
               </button>
             </div>
-            <button className="ap-modal-close" onClick={() => setModal(null)} aria-label="Close">
+            <button
+              className="ap-modal-close"
+              onClick={() => setModal(null)}
+              aria-label={t('billing.close')}
+            >
               <X size={18} />
             </button>
           </div>
@@ -706,30 +709,35 @@ export default function BillingPage() {
           className="ap-modal-overlay"
           role="dialog"
           aria-modal="true"
-          aria-label="Add a card"
+          aria-label={t('billing.addCardTitle')}
           onClick={(e) => e.target === e.currentTarget && setModal(null)}
         >
           <div className="ap-modal bl-addcard-modal">
-            <h3>Add a card</h3>
+            <h3>{t('billing.addCardTitle')}</h3>
             {addCardError && (
               <p className="checkout-error" role="alert">
                 {addCardError}
               </p>
             )}
             {addCardSecret ? (
-              <Elements
-                stripe={stripePromise}
-                options={{ clientSecret: addCardSecret, appearance: STRIPE_APPEARANCE }}
-              >
-                <AddCardForm onSaved={onCardAdded} onError={setAddCardError} />
+              <Elements stripe={stripePromise}>
+                <AddCardForm
+                  clientSecret={addCardSecret}
+                  onSaved={onCardAdded}
+                  onError={setAddCardError}
+                />
               </Elements>
             ) : (
               <div className="checkout-status checkout-status-inline">
                 <Loader2 size={22} className="ap-spin" />
-                <p>Preparing secure form…</p>
+                <p>{t('billing.preparingForm')}</p>
               </div>
             )}
-            <button className="ap-modal-close" onClick={() => setModal(null)} aria-label="Close">
+            <button
+              className="ap-modal-close"
+              onClick={() => setModal(null)}
+              aria-label={t('billing.close')}
+            >
               <X size={18} />
             </button>
           </div>

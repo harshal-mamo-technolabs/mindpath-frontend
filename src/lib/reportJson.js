@@ -9,17 +9,28 @@
  * Pure: reads the engine view-model (lib/*Report.js) and the assessment's UI
  * copy (components/report/reportUi.jsx); never touches React or icon objects.
  */
+import i18n from '../i18n/index.js'
 
-/* static copy that the report component renders as fixed strings */
-const HEADER_NOTE =
-  'A self-awareness tool generated from your answers — not a clinical or diagnostic assessment.'
-const LEAN_ON_TEXT =
-  'This is what’s working for you right now. Spend it deliberately on the focus areas above — it’s what makes the rest of the plan stick.'
-const DISCLAIMER =
-  'Daybreak is a self-reflection tool, not a clinical assessment, diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.'
+/* static copy the report component renders as fixed strings — resolved through
+   i18next so a stored report snapshots in the user's language (English default). */
+const headerNote = () =>
+  i18n.t('report.json.headerNote', {
+    defaultValue:
+      'A self-awareness tool generated from your answers — not a clinical or diagnostic assessment.',
+  })
+const leanOnText = () =>
+  i18n.t('report.json.leanOnText', {
+    defaultValue:
+      'This is what’s working for you right now. Spend it deliberately on the focus areas above — it’s what makes the rest of the plan stick.',
+  })
+const disclaimer = () =>
+  i18n.t('report.json.disclaimer', {
+    defaultValue:
+      'Daybreak is a self-reflection tool, not a clinical assessment, diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.',
+  })
 
 const dateLabel = (iso) =>
-  iso ? new Date(iso).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : null
+  iso ? new Date(iso).toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric' }) : null
 
 /**
  * @param report view-model from build*Report(data)
@@ -50,10 +61,15 @@ export function buildReportJson(report, ui, meta = {}) {
     archetype: { name: r.archetype.name, summary: r.archetype.summary },
 
     header: {
-      eyebrow: `${ui.kicker} · attempt ${r.attempt}`,
+      eyebrow: `${ui.kicker} · ${i18n.t('report.json.attempt', 'attempt {{n}}', { n: r.attempt })}`,
       title: ui.headTitle(name),
-      completed: completed ? `Completed ${completed} · ${ui.assessmentName}` : ui.assessmentName,
-      note: HEADER_NOTE,
+      completed: completed
+        ? i18n.t('report.json.completed', 'Completed {{date}} · {{name}}', {
+            date: completed,
+            name: ui.assessmentName,
+          })
+        : ui.assessmentName,
+      note: headerNote(),
     },
 
     snapshot: {
@@ -107,7 +123,7 @@ export function buildReportJson(report, ui, meta = {}) {
     },
 
     categories: {
-      title: 'Category by category',
+      title: i18n.t('report.json.categoryByCategory', 'Category by category'),
       legend: [ui.legendWarm, ui.legendGreen].filter(Boolean),
       items: r.dims.map((d) => ({
         key: d.key,
@@ -124,7 +140,7 @@ export function buildReportJson(report, ui, meta = {}) {
     },
 
     closerRead: {
-      title: 'A closer read',
+      title: i18n.t('report.json.closerRead', 'A closer read'),
       items: r.insights.map((d) => ({
         label: d.label,
         tag: d.tagText,
@@ -135,10 +151,20 @@ export function buildReportJson(report, ui, meta = {}) {
     },
 
     actionPlan: {
-      title: 'Your action plan',
-      focus: planFocus.map((d) => ({ tag: 'Focus', label: d.label, action: d.tryThis })),
+      title: i18n.t('report.json.actionPlan', 'Your action plan'),
+      focus: planFocus.map((d) => ({
+        tag: i18n.t('report.json.focusTag', 'Focus'),
+        label: d.label,
+        action: d.tryThis,
+      })),
       leanOn: leanOn
-        ? { tag: 'Lean on this', title: `Lean on your ${leanOn.strengthLabel}`, text: LEAN_ON_TEXT }
+        ? {
+            tag: i18n.t('report.json.leanOnTag', 'Lean on this'),
+            title: i18n.t('report.json.leanOnTitle', 'Lean on your {{label}}', {
+              label: leanOn.strengthLabel,
+            }),
+            text: leanOnText(),
+          }
         : null,
     },
 
@@ -147,7 +173,7 @@ export function buildReportJson(report, ui, meta = {}) {
     closing: {
       text: r.attempt > 1 ? ui.closingReturn : ui.closingBaseline,
       doors: ui.doors.map((d) => d.label),
-      disclaimer: DISCLAIMER,
+      disclaimer: disclaimer(),
     },
   }
 }
@@ -162,7 +188,7 @@ export function buildBasicReportJson(score, meta = {}) {
     headline: {
       value: score.rawPercentage ?? score.percentage,
       outOf: 100,
-      label: 'Overall',
+      label: i18n.t('report.json.overall', 'Overall'),
       raw: score.totalScore,
       max: score.maxScore,
     },

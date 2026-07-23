@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowRight,
   BellRing,
@@ -38,7 +39,9 @@ const PALETTE = [
 const estMinutes = (q) => Math.max(5, Math.round((q || 0) * 0.5))
 
 export default function AssessmentCatalog() {
+  const { t } = useTranslation()
   const showPrice = useShowAssessmentPrice()
+  const comingSoon = t('assess.catalog.comingSoon', { returnObjects: true })
   const [state, setState] = useState({ status: 'loading', items: [], error: '' })
   const [reloadKey, setReloadKey] = useState(0)
 
@@ -73,25 +76,23 @@ export default function AssessmentCatalog() {
         </div>
         <div className="container">
           <Reveal as="span" className="eyebrow">
-            The catalog
+            {t('assess.catalog.eyebrow')}
           </Reveal>
           <Reveal as="h1" className="h1 catalog-title" delay={0.08}>
-            Start with the one <em>that aches.</em>
+            {t('assess.catalog.h1a')} <em>{t('assess.catalog.h1em')}</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.16}>
-            Every Daybreak journey begins with one honest assessment a psychometric-style
-            questionnaire scored across real dimensions. Pick the topic that names what you&rsquo;re
-            carrying.
+            {t('assess.catalog.lede')}
           </Reveal>
           <Reveal className="catalog-trust" delay={0.24}>
             <span>
-              <ShieldCheck size={15} /> Self-report instruments, not diagnosis
+              <ShieldCheck size={15} /> {t('assess.catalog.trust1')}
             </span>
             <span>
-              <Sparkles size={15} /> Deterministic reports no AI guesswork
+              <Sparkles size={15} /> {t('assess.catalog.trust2')}
             </span>
             <span>
-              <Layers size={15} /> A report, an audio plan &amp; an ebook from every one
+              <Layers size={15} /> {t('assess.catalog.trust3')}
             </span>
           </Reveal>
         </div>
@@ -100,10 +101,10 @@ export default function AssessmentCatalog() {
       <section className="section catalog-live">
         <div className="container">
           <Reveal className="catalog-section-head">
-            <h2 className="h2 catalog-h2">Available now</h2>
+            <h2 className="h2 catalog-h2">{t('assess.catalog.availableNow')}</h2>
             {status === 'ready' && (
               <span className="catalog-count">
-                {String(items.length).padStart(2, '0')} paths · scored, not guessed
+                {t('assess.catalog.count', { count: items.length })}
               </span>
             )}
           </Reveal>
@@ -111,24 +112,24 @@ export default function AssessmentCatalog() {
           {status === 'loading' && (
             <div className="catalog-state">
               <Loader2 size={26} className="ap-spin" />
-              <p>Loading assessments…</p>
+              <p>{t('assess.catalog.loading')}</p>
             </div>
           )}
 
           {status === 'error' && (
             <div className="catalog-state" role="alert">
-              <h3>We couldn’t load the assessments</h3>
+              <h3>{t('assess.catalog.errorTitle')}</h3>
               <p>{error}</p>
               <button className="btn btn-ghost" onClick={retry}>
-                <RefreshCcw size={16} /> Try again
+                <RefreshCcw size={16} /> {t('assess.catalog.retry')}
               </button>
             </div>
           )}
 
           {status === 'ready' && items.length === 0 && (
             <div className="catalog-state">
-              <h3>No assessments available yet</h3>
-              <p>Please check back soon.</p>
+              <h3>{t('assess.catalog.emptyTitle')}</h3>
+              <p>{t('assess.catalog.emptyText')}</p>
             </div>
           )}
 
@@ -144,7 +145,9 @@ export default function AssessmentCatalog() {
                     className={`cat-card ${a.mostTaken ? 'cat-featured' : ''}`}
                     delay={(i % 2) * 0.1}
                   >
-                    {a.mostTaken && <span className="featured-tag">Most taken</span>}
+                    {a.mostTaken && (
+                      <span className="featured-tag">{t('assess.catalog.mostTaken')}</span>
+                    )}
                     <div className="cat-card-head">
                       <span className="topic-ico" style={{ background: bg, color: fg }}>
                         <Icon size={26} strokeWidth={1.8} />
@@ -167,14 +170,16 @@ export default function AssessmentCatalog() {
                     <div className="cat-card-foot">
                       <p className="topic-meta">
                         <span>
-                          <Clock size={14} /> ~{estMinutes(a.questionsCount)} min
+                          <Clock size={14} />{' '}
+                          {t('assess.catalog.minAbbr', { min: estMinutes(a.questionsCount) })}
                         </span>
                         <span>
-                          <ListChecks size={14} /> {a.questionsCount} questions
+                          <ListChecks size={14} />{' '}
+                          {t('assess.catalog.questions', { count: a.questionsCount })}
                         </span>
                       </p>
                       <span className="cat-go">
-                        Explore this path
+                        {t('assess.catalog.explore')}
                         <span className="arrow">
                           <ArrowRight size={16} />
                         </span>
@@ -191,21 +196,21 @@ export default function AssessmentCatalog() {
       <section className="section catalog-soon">
         <div className="container">
           <Reveal as="h2" className="h2 catalog-h2">
-            On the path ahead
+            {t('assess.catalog.soonTitle')}
           </Reveal>
           <Reveal as="p" className="lede" delay={0.08}>
-            The next topics being calibrated one new assessment lands each month.
+            {t('assess.catalog.soonLede')}
           </Reveal>
           <div className="soon-grid">
-            {COMING_SOON.map(({ title, icon: Icon, dims }, i) => (
-              <Reveal as="article" key={title} className="soon-card" delay={(i % 3) * 0.08}>
+            {COMING_SOON.map(({ icon: Icon }, i) => (
+              <Reveal as="article" key={i} className="soon-card" delay={(i % 3) * 0.08}>
                 <span className="soon-ico">
                   <Icon size={22} strokeWidth={1.8} />
                 </span>
-                <h3>{title}</h3>
-                <p>{dims.join(' · ')}</p>
+                <h3>{comingSoon[i]?.title}</h3>
+                <p>{comingSoon[i]?.dims.join(' · ')}</p>
                 <span className="soon-bell">
-                  <BellRing size={13} /> Notify me
+                  <BellRing size={13} /> {t('assess.catalog.notifyMe')}
                 </span>
               </Reveal>
             ))}

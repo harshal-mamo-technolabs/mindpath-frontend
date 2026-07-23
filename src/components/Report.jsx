@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   BookOpen,
   Headphones,
@@ -9,96 +10,58 @@ import {
 } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
-const POINTS = [
-  {
-    icon: ScanSearch,
-    title: 'Plain language, not clinical jargon',
-    text: 'Every score is interpreted for you — what it means, why it shows up, and what tends to help.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Deterministic, consistent, safe',
-    text: 'Reports come from a validated scoring framework — the same answers always produce the same insight. No AI guesswork.',
-  },
-  {
-    icon: Sparkles,
-    title: 'It powers everything after',
-    text: 'Your audio plan, your personalized ebook, your counselling sessions — all sequenced from this one document.',
-  },
-]
+const POINT_ICONS = [ScanSearch, ShieldCheck, Sparkles]
 
 const RING_C = 326.7 // 2πr, r = 52
 
-const REPORTS = [
+/* Visual/numeric fields per sample report; the text (topic, date, ring label, bar
+   labels, quote) comes from the `home.report.samples` translations by index. */
+const REPORT_META = [
   {
     initial: 'M',
     name: 'Maya',
-    topic: 'Stress & Burnout',
-    date: 'June 2026',
     overall: 62,
-    ringLabel: 'Overall load',
     accent: '#6450cf',
     avatar: 'linear-gradient(135deg, #eeb381, #e2906a)',
-    plan: '14-day audio plan',
+    days: 14,
     bars: [
-      { label: 'Exhaustion', value: 72, color: '#d98b50' },
-      { label: 'Cynicism', value: 58, color: '#6450cf' },
-      { label: 'Sense of control', value: 41, color: '#8a76e8' },
-      { label: 'Recovery capacity', value: 35, color: '#3c7a5e' },
-    ],
-    quote: [
-      'Maya, your exhaustion runs high while your recovery capacity is stretched thin — ',
-      'your energy isn’t broken, your rest is.',
-      ' Your 14-day plan starts there: evenings first.',
+      { value: 72, color: '#d98b50' },
+      { value: 58, color: '#6450cf' },
+      { value: 41, color: '#8a76e8' },
+      { value: 35, color: '#3c7a5e' },
     ],
   },
   {
     initial: 'J',
     name: 'Jonas',
-    topic: 'Sleep & Rest',
-    date: 'May 2026',
     overall: 58,
-    ringLabel: 'Sleep strain',
     accent: '#4d3da8',
     avatar: 'linear-gradient(135deg, #8d76ec, #5a48bd)',
-    plan: '14-day audio plan',
+    days: 14,
     bars: [
-      { label: 'Sleep pressure', value: 66, color: '#6450cf' },
-      { label: 'Wind-down', value: 74, color: '#8a76e8' },
-      { label: 'Rhythm', value: 52, color: '#3c7a5e' },
-      { label: 'Worry at night', value: 61, color: '#d98b50' },
-    ],
-    quote: [
-      'Jonas, your wind-down genuinely works — it’s the consistency that slips. ',
-      'Anchor one fixed wake time',
-      ' and let bedtime come to meet it. Your nights can hold.',
+      { value: 66, color: '#6450cf' },
+      { value: 74, color: '#8a76e8' },
+      { value: 52, color: '#3c7a5e' },
+      { value: 61, color: '#d98b50' },
     ],
   },
   {
     initial: 'A',
     name: 'Aisha',
-    topic: 'Emotional Intelligence',
-    date: 'June 2026',
     overall: 71,
-    ringLabel: 'EQ profile',
     accent: '#3c7a5e',
     avatar: 'linear-gradient(135deg, #6fbf8f, #2e5f49)',
-    plan: '21-day audio plan',
+    days: 21,
     bars: [
-      { label: 'Self-awareness', value: 58, color: '#cf6450' },
-      { label: 'Regulation', value: 64, color: '#d98b50' },
-      { label: 'Empathy', value: 82, color: '#3c7a5e' },
-      { label: 'Expression', value: 70, color: '#6450cf' },
-    ],
-    quote: [
-      'Aisha, you read others beautifully — empathy is a real strength. ',
-      'The growth edge is turning that inward',
-      ', one honest sentence a day.',
+      { value: 58, color: '#cf6450' },
+      { value: 64, color: '#d98b50' },
+      { value: 82, color: '#3c7a5e' },
+      { value: 70, color: '#6450cf' },
     ],
   },
 ]
 
-function ReportCard({ r, active }) {
+function ReportCard({ r, text, active, t }) {
   const [filled, setFilled] = useState(false)
   useEffect(() => {
     if (!active) {
@@ -106,8 +69,8 @@ function ReportCard({ r, active }) {
       return
     }
     // wait for the crossfade-in to begin, then animate the ring + bars
-    const t = setTimeout(() => setFilled(true), 240)
-    return () => clearTimeout(t)
+    const to = setTimeout(() => setFilled(true), 240)
+    return () => clearTimeout(to)
   }, [active])
 
   return (
@@ -117,12 +80,12 @@ function ReportCard({ r, active }) {
           {r.initial}
         </span>
         <div>
-          <h4>{r.name}&rsquo;s Report</h4>
+          <h4>{t('home.report.reportTitle', { name: r.name })}</h4>
           <p>
-            {r.topic} · {r.date}
+            {text.topic} · {text.date}
           </p>
         </div>
-        <span className="rc-badge">Complete</span>
+        <span className="rc-badge">{t('home.report.complete')}</span>
       </div>
 
       <div className="rc-body">
@@ -145,15 +108,15 @@ function ReportCard({ r, active }) {
           </svg>
           <div className="rc-ring-label">
             <strong>{r.overall}</strong>
-            <small>{r.ringLabel}</small>
+            <small>{text.ringLabel}</small>
           </div>
         </div>
 
         <div className="rc-bars">
-          {r.bars.map((b) => (
-            <div className="rc-bar-row" key={b.label}>
+          {r.bars.map((b, i) => (
+            <div className="rc-bar-row" key={i}>
               <header>
-                <span>{b.label}</span>
+                <span>{text.bars[i]}</span>
                 <em>{b.value} / 100</em>
               </header>
               <span className="rc-bar">
@@ -165,21 +128,21 @@ function ReportCard({ r, active }) {
       </div>
 
       <blockquote className="rc-quote">
-        &ldquo;{r.quote[0]}
-        <strong>{r.quote[1]}</strong>
-        {r.quote[2]}&rdquo;
+        &ldquo;{text.quote[0]}
+        <strong>{text.quote[1]}</strong>
+        {text.quote[2]}&rdquo;
       </blockquote>
 
       <footer className="rc-foot">
-        <span className="lbl">This report builds</span>
+        <span className="lbl">{t('home.report.builds')}</span>
         <span>
-          <Headphones size={13} /> {r.plan}
+          <Headphones size={13} /> {t('home.report.planDays', { days: r.days })}
         </span>
         <span>
-          <BookOpen size={13} /> Personal ebook
+          <BookOpen size={13} /> {t('home.report.ebook')}
         </span>
         <span>
-          <MessagesSquare size={13} /> Counselling context
+          <MessagesSquare size={13} /> {t('home.report.counsellingNotes')}
         </span>
       </footer>
     </figure>
@@ -187,12 +150,15 @@ function ReportCard({ r, active }) {
 }
 
 export default function Report() {
+  const { t } = useTranslation()
   const [idx, setIdx] = useState(0)
   const [paused, setPaused] = useState(false)
+  const points = t('home.report.points', { returnObjects: true })
+  const samples = t('home.report.samples', { returnObjects: true })
 
   useEffect(() => {
     if (paused) return
-    const id = setInterval(() => setIdx((i) => (i + 1) % REPORTS.length), 5000)
+    const id = setInterval(() => setIdx((i) => (i + 1) % REPORT_META.length), 5000)
     return () => clearInterval(id)
   }, [paused])
 
@@ -201,25 +167,24 @@ export default function Report() {
       <div className="container report-inner">
         <div>
           <Reveal as="span" className="eyebrow">
-            Your personal report
+            {t('home.report.eyebrow')}
           </Reveal>
           <Reveal as="h2" className="h2" delay={0.08}>
-            A report that <em>reads you back.</em>
+            {t('home.report.h2a')} <em>{t('home.report.h2em')}</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.16}>
-            Not a percentage and a pat on the back — a detailed profile of where you are, written
-            like a kind, clear-eyed friend.
+            {t('home.report.lede')}
           </Reveal>
 
           <div className="report-points">
-            {POINTS.map(({ icon: Icon, title, text }, i) => (
-              <Reveal key={title} className="rpoint" delay={0.2 + i * 0.1}>
+            {POINT_ICONS.map((Icon, i) => (
+              <Reveal key={i} className="rpoint" delay={0.2 + i * 0.1}>
                 <span className="rpoint-ico">
                   <Icon size={21} strokeWidth={1.9} />
                 </span>
                 <div>
-                  <h4>{title}</h4>
-                  <p>{text}</p>
+                  <h4>{points[i]?.title}</h4>
+                  <p>{points[i]?.text}</p>
                 </div>
               </Reveal>
             ))}
@@ -231,23 +196,23 @@ export default function Report() {
           delay={0.15}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
-          aria-label="Example personal reports, cycling"
+          aria-label={t('home.report.ariaExamples', 'Example personal reports')}
         >
           <div className="report-stack">
             <span className="report-back b2" aria-hidden="true" />
             <span className="report-back b1" aria-hidden="true" />
             <div className="report-cards">
-              {REPORTS.map((rep, i) => (
-                <ReportCard key={rep.name} r={rep} active={i === idx} />
+              {REPORT_META.map((rep, i) => (
+                <ReportCard key={rep.name} r={rep} text={samples[i]} active={i === idx} t={t} />
               ))}
             </div>
           </div>
-          <div className="report-dots" role="tablist" aria-label="Sample report">
-            {REPORTS.map((rep, i) => (
+          <div className="report-dots" role="tablist" aria-label={t('home.report.ariaTablist', 'Sample report')}>
+            {REPORT_META.map((rep, i) => (
               <button
                 key={rep.name}
                 className={i === idx ? 'on' : ''}
-                aria-label={`${rep.name}'s report`}
+                aria-label={t('home.report.dotAria', { name: rep.name })}
                 aria-selected={i === idx}
                 onClick={() => setIdx(i)}
               />

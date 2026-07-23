@@ -1,6 +1,9 @@
+import { useState } from 'react'
+
 /**
- * Bespoke hand-drawn soundscape art — wide line-art "places" in the brand's
- * organic stroke style, drawn per-scene. Deliberately NOT gradient squares.
+ * Soundscape art. When a real scene image exists in /public/sound/image/<scene>.png
+ * we show it; otherwise (or if it fails to load) we fall back to the bespoke
+ * hand-drawn line-art below — wide "places" in the brand's organic stroke style.
  * Each scene paints onto a soft tinted panel; line color comes from `line`.
  */
 function Scene({ children, tint, line, className = '' }) {
@@ -186,6 +189,17 @@ export const SCENE_ART = {
 }
 
 export default function SceneArt({ scene, className }) {
+  const [failed, setFailed] = useState(false)
+  const src = scene in SCENE_ART ? `/sound/image/${scene}.png` : null
+
+  if (src && !failed) {
+    return (
+      <div className={`scene scene-photo ${className || ''}`}>
+        <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} />
+      </div>
+    )
+  }
+
   const Cmp = SCENE_ART[scene] || DawnScene
   return <Cmp className={className} />
 }

@@ -23,6 +23,28 @@
   display: block;
 }
 
+/* real scene photos (/public/sound/image/<scene>.png) — fill the same box as the art */
+.scene-photo {
+  overflow: hidden;
+  border-radius: inherit;
+}
+.scene-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+}
+/* match the gentle zoom the line-art had on the cards and the hero feature */
+.mz-scene-art .scene-photo img,
+.mz-feature-art .scene-photo img {
+  transition: transform 0.5s var(--ease-out);
+}
+.mz-scene-card:hover .mz-scene-art .scene-photo img,
+.mz-feature-art:hover .scene-photo img {
+  transform: scale(1.05);
+}
+
 /* ============================================================
    Editorial hero
    ============================================================ */

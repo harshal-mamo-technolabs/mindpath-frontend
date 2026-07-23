@@ -100,6 +100,27 @@
   overflow: hidden;
 }
 
+/* Photo cover — real art fills the book box; text elements are dropped. */
+.bk-photo {
+  padding: 0;
+  background: color-mix(in srgb, var(--accent) 40%, #000);
+}
+.bk-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+.bk-photo .bk-spine {
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.14);
+}
+.bk-photo::after {
+  display: none;
+}
+
 .bk-md {
   width: 150px;
 }
@@ -1038,6 +1059,147 @@
   color: #8fd4ae;
 }
 
+/* ---- refined checkout modal ---- */
+/* compact cover for the order summary */
+.bk-sm {
+  width: 88px;
+  padding: 12px 11px 11px 16px;
+  border-radius: 3px 7px 7px 3px;
+}
+.bk-sm .bk-press { font-size: 7px; }
+.bk-sm .bk-title { font-size: 12.5px; margin-top: 8px; }
+.bk-sm .bk-author { font-size: 9px; }
+.bk-sm .bk-spine { left: 5px; width: 2px; }
+
+.eb-modal {
+  width: min(470px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 26px;
+}
+
+/* order summary: cover · title/author · price, on a divider */
+.eb-checkout-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.eb-checkout-meta {
+  flex: 1;
+  min-width: 0;
+}
+.eb-checkout-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b9aef5;
+  margin-bottom: 5px;
+}
+.eb-checkout-head h3 {
+  font-family: var(--font-display);
+  font-weight: 460;
+  font-size: 21px;
+  color: #fff;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.eb-checkout-head .eb-modal-price {
+  margin: 0;
+  flex: none;
+  align-self: flex-start;
+}
+
+/* what you're getting */
+.eb-checkout-perks {
+  list-style: none;
+  display: grid;
+  gap: 9px;
+  margin: 0 0 20px;
+  padding: 0;
+}
+.eb-checkout-perks li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--night-ink);
+}
+.eb-checkout-perks svg {
+  flex: none;
+  color: #8fd4ae;
+}
+
+/* the payment area, as a labelled panel */
+.eb-pay-panel {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+}
+.eb-pay-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #cfc9ea;
+  margin-bottom: 13px;
+}
+.eb-pay-label svg {
+  color: #b9aef5;
+}
+
+.eb-modal .eb-payform {
+  gap: 14px;
+}
+.eb-modal .eb-paybtn {
+  align-self: stretch;
+  width: 100%;
+  justify-content: center;
+  padding: 13px;
+  font-size: 15px;
+}
+
+/* split card fields (card number / expiry / cvc) */
+.eb-field {
+  display: grid;
+  gap: 6px;
+}
+.eb-field-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #cfc9ea;
+}
+.eb-field-box {
+  padding: 12px 13px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 11px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.eb-field-box:focus-within {
+  border-color: rgba(140, 120, 240, 0.75);
+  box-shadow: 0 0 0 3px rgba(100, 80, 207, 0.22);
+}
+.eb-field-box .StripeElement {
+  width: 100%;
+}
+.eb-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
 .eb-btn-wide {
   width: 100%;
 }
@@ -1167,11 +1329,73 @@
   }
 
   .eb-card-cover {
-    padding: 18px 14px 12px;
+    padding: 16px 12px 10px;
   }
 
   .bk-md {
-    width: 120px;
+    width: 116px;
+  }
+
+  /* smaller, corner-hugging badges so they don't crowd the little cover */
+  .eb-premium,
+  .eb-card-owned {
+    top: 10px;
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  .eb-premium {
+    left: 10px;
+  }
+  .eb-card-owned {
+    right: 10px;
+  }
+
+  .eb-card-body {
+    padding: 0 12px 14px;
+  }
+
+  .eb-cat {
+    font-size: 10px;
+    padding: 4px 9px;
+    line-height: 1.25;
+  }
+
+  .eb-card-body h3 {
+    font-size: 15.5px;
+    margin-top: 9px;
+  }
+
+  .eb-author {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .eb-meta {
+    gap: 10px;
+    margin-top: 9px;
+  }
+  .eb-pages {
+    font-size: 11.5px;
+  }
+
+  /* stack the actions full-width so the price/label never wraps mid-word */
+  .eb-card-foot {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding-top: 14px;
+  }
+  .eb-btn-buy,
+  .eb-btn-read {
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .eb-textlink.sm {
+    align-self: center;
+    font-size: 13px;
   }
 
   .eb-reader {
@@ -1180,10 +1404,6 @@
 
   .eb-reader-top {
     gap: 16px;
-  }
-
-  .eb-card-body h3 {
-    font-size: 17px;
   }
 }
 

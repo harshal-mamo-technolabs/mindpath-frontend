@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowRight,
   BadgeCheck,
@@ -20,34 +21,6 @@ import { getMySubscription } from '../lib/payments.js'
 import { getMyMsisdnSubscription } from '../lib/msisdn.js'
 import { isMsisdnMode } from '../lib/billingMode.js'
 
-const FAQ_BASE = [
-  [
-    'What counts as one assessment?',
-    'Any topic you choose  Stress & Burnout, Sleep, EQ, and so on. Your plan unlocks that many full assessments (with reports and audio plans) each cycle.',
-  ],
-  [
-    'Can I change or cancel my plan?',
-    'Anytime, from your billing page. Upgrades apply immediately; downgrades and cancellations take effect at the end of your current cycle.',
-  ],
-  [
-    'Do unused allowances roll over?',
-    'Allowances reset each cycle and don’t roll over  but everything you’ve already unlocked stays yours forever.',
-  ],
-]
-
-// The "what happens when I run out" answer differs by billing model.
-const RUN_OUT_FAQ = isMsisdnMode
-  ? [
-      'What happens when my allowance runs out?',
-      'On mobile billing there is no pay-as-you-go. You simply wait for your allowance to reset at the start of the next cycle  everything you’ve already unlocked stays yours.',
-    ]
-  : [
-      'What happens when my allowance runs out?',
-      'Nothing breaks. You switch to pay-as-you-go for that item  buy an extra assessment, ebook, or counselling minutes individually, at the à-la-carte price.',
-    ]
-
-const FAQ = [FAQ_BASE[0], RUN_OUT_FAQ, FAQ_BASE[1], FAQ_BASE[2]]
-
 // The API carries no presentation, so card colors cycle through the brand
 // palette by position (cheapest first).
 const ACCENTS = [
@@ -59,7 +32,7 @@ const ACCENTS = [
 // Plan names arrive lowercase from the API ("calm"); capitalize for display.
 const titleCase = (s) => (s || '').replace(/\b\w/g, (c) => c.toUpperCase())
 
-const fmtDate = (iso) => {
+const fmtDate = (iso, fallback = 'next month') => {
   try {
     return new Date(iso).toLocaleDateString(undefined, {
       day: 'numeric',
@@ -67,7 +40,7 @@ const fmtDate = (iso) => {
       year: 'numeric',
     })
   } catch {
-    return 'next cycle'
+    return fallback
   }
 }
 
@@ -80,9 +53,22 @@ export default function PricingPage() {
 }
 
 function StripePricingPage() {
+  const { t } = useTranslation()
   const { isAuthenticated } = useAuth()
   const [state, setState] = useState({ status: 'loading', plans: [], sub: null, error: '' })
   const [reloadKey, setReloadKey] = useState(0)
+
+  // FAQ is built here (not at module scope) so the copy can be localized. The
+  // "what happens when I run out" answer differs by billing model.
+  const faq = [
+    { q: t('pricing.faq.assessment.q'), a: t('pricing.faq.assessment.a') },
+    {
+      q: t('pricing.faq.runOut.q'),
+      a: isMsisdnMode ? t('pricing.faq.runOut.aMsisdn') : t('pricing.faq.runOut.aStripe'),
+    },
+    { q: t('pricing.faq.change.q'), a: t('pricing.faq.change.a') },
+    { q: t('pricing.faq.carry.q'), a: t('pricing.faq.carry.a') },
+  ]
 
   useEffect(() => {
     let alive = true
@@ -143,16 +129,14 @@ function StripePricingPage() {
         </div>
         <div className="container">
           <Reveal as="span" className="eyebrow">
-            Plans &amp; pricing
+            {t('pricing.eyebrow')}
           </Reveal>
           <Reveal as="h1" className="h1 pricing-title" delay={0.07}>
-            Choose how you <em>walk the path.</em>
+            {t('pricing.h1a')} <em>{t('pricing.h1em')}</em>
           </Reveal>
           <Reveal as="p" className="lede" delay={0.14}>
-            A monthly plan unlocks a set number of assessments, ebooks, and counselling minutes.
-            {isMsisdnMode
-              ? ' Billed to your mobile  no card needed.'
-              : ' Run out? You only ever pay for the extras you choose.'}
+            {t('pricing.ledeBase')}{' '}
+            {isMsisdnMode ? t('pricing.ledeMsisdn') : t('pricing.ledeStripe')}
           </Reveal>
         </div>
       </header>
@@ -165,27 +149,24 @@ function StripePricingPage() {
               <span className="pricing-covered-ico">
                 <BadgeCheck size={26} />
               </span>
-              <h2>You&rsquo;re on the {titleCase(activeSub.plan?.name)} plan.</h2>
+              <h2>{t('pricing.coveredTitle', { plan: titleCase(activeSub.plan?.name) })}</h2>
               <p>
                 {typeof remaining === 'number' ? (
                   <>
-                    <strong>
-                      {remaining} of {allowance} assessments
-                    </strong>{' '}
-                    left this cycle.
+                    <strong>{t('pricing.coveredRemaining', { remaining, allowance })}</strong>{' '}
+                    {t('pricing.coveredLeft')}
                   </>
                 ) : (
-                  'Your plan is active.'
+                  t('pricing.coveredActive')
                 )}{' '}
-                Take one whenever you&rsquo;re ready  nothing more to buy until your allowance runs
-                out.
+                {t('pricing.coveredTake')}
               </p>
               <div className="pricing-covered-actions">
                 <Link to="/assessments" className="btn btn-primary">
-                  Take an assessment <ArrowRight size={17} />
+                  {t('pricing.takeAssessment')} <ArrowRight size={17} />
                 </Link>
                 <Link to="/subscription" className="btn btn-ghost">
-                  Manage subscription
+                  {t('pricing.manageSubscription')}
                 </Link>
               </div>
             </Reveal>
@@ -197,21 +178,20 @@ function StripePricingPage() {
               <span className="pricing-blocked-ico">
                 <Lock size={24} />
               </span>
-              <h2>Your assessment allowance is used up.</h2>
+              <h2>{t('pricing.blockedTitle')}</h2>
               <p>
-                You&rsquo;ve taken all {allowance} assessments on your{' '}
-                {titleCase(activeSub.plan?.name)} plan this cycle.
+                {t('pricing.blockedBody', {
+                  allowance,
+                  plan: titleCase(activeSub.plan?.name),
+                })}
               </p>
               <p className="pricing-blocked-reset">
-                <CalendarClock size={15} /> Resets on{' '}
-                <strong>{fmtDate(activeSub.currentPeriodEnd)}</strong>.
+                <CalendarClock size={15} /> {t('pricing.blockedResetPre')}{' '}
+                <strong>{fmtDate(activeSub.currentPeriodEnd, t('pricing.nextMonth'))}</strong>.
               </p>
-              <p className="pricing-blocked-note">
-                Carrier billing has no pay-as-you-go, so there&rsquo;s nothing to buy here  your
-                allowance simply refreshes next cycle.
-              </p>
+              <p className="pricing-blocked-note">{t('pricing.blockedNote')}</p>
               <Link to="/subscription" className="btn btn-ghost">
-                View subscription
+                {t('pricing.viewSubscription')}
               </Link>
             </Reveal>
           )}
@@ -221,12 +201,12 @@ function StripePricingPage() {
             <Reveal className="pricing-current-banner exhausted">
               <CalendarClock size={18} />
               <span>
-                You&rsquo;ve used all {allowance} assessments on your{' '}
-                <strong>{titleCase(activeSub.plan?.name)}</strong> plan. Extra assessments are now
-                pay-as-you-go (${PAYG.assessment} each)  charged when you take one.
+                {t('pricing.exhaustedPre', { allowance })}{' '}
+                <strong>{titleCase(activeSub.plan?.name)}</strong>{' '}
+                {t('pricing.exhaustedPost', { price: PAYG.assessment })}
               </span>
               <Link to="/subscription" className="pricing-current-link">
-                Manage subscription <ArrowRight size={15} />
+                {t('pricing.manageSubscription')} <ArrowRight size={15} />
               </Link>
             </Reveal>
           )}
@@ -249,8 +229,8 @@ function StripePricingPage() {
 
               {status === 'ready' && plans.length === 0 && (
                 <div className="pricing-status">
-                  <h3>No plans available right now</h3>
-                  <p>Please check back soon.</p>
+                  <h3>{t('pricing.emptyTitle')}</h3>
+                  <p>{t('pricing.emptyBody')}</p>
                 </div>
               )}
 
@@ -268,7 +248,7 @@ function StripePricingPage() {
                       delay={i * 0.08}
                       style={{ '--accent': color.accent }}
                     >
-                      {popular && <span className="plan-tag">Most popular</span>}
+                      {popular && <span className="plan-tag">{t('pricing.mostPopular')}</span>}
                       <header className="plan-card-head">
                         <span className="plan-dot" style={{ background: color.bg, color: color.fg }}>
                           <Sparkles size={18} />
@@ -279,32 +259,35 @@ function StripePricingPage() {
 
                       <div className="plan-price">
                         <strong>{formatPrice(plan.price, plan.currency)}</strong>
-                        <span>/mo</span>
+                        <span>{t('pricing.perMonth')}</span>
                       </div>
 
                       <ul className="plan-allowance">
                         <li>
                           <ClipboardList size={16} />
-                          <strong>{plan.allowedAssessments}</strong> assessments / month
+                          <strong>{plan.allowedAssessments}</strong> {t('pricing.rowAssessments')}
                         </li>
                         <li>
                           <BookOpen size={16} />
-                          <strong>{plan.allowedEbooks}</strong> ebooks / month
+                          <strong>{plan.allowedEbooks}</strong> {t('pricing.rowEbooks')}
                         </li>
                         <li>
                           <MessagesSquare size={16} />
-                          <strong>{plan.allowedCounsellingMinutes} min</strong> counselling / month
+                          <strong>
+                            {plan.allowedCounsellingMinutes} {t('pricing.unitMin')}
+                          </strong>{' '}
+                          {t('pricing.rowCounselling')}
                         </li>
                       </ul>
 
                       {activeSub ? (
                         isCurrent ? (
                           <Link to="/subscription" className="btn btn-ghost plan-btn">
-                            <BadgeCheck size={17} /> Your current plan
+                            <BadgeCheck size={17} /> {t('pricing.yourCurrentPlan')}
                           </Link>
                         ) : (
                           <button className="btn btn-ghost plan-btn" disabled>
-                            Choose {name}
+                            {t('pricing.choosePlan', { plan: name })}
                           </button>
                         )
                       ) : (
@@ -312,7 +295,7 @@ function StripePricingPage() {
                           to={`/checkout?plan=${plan._id}`}
                           className={`btn ${popular ? 'btn-primary' : 'btn-ghost'} plan-btn`}
                         >
-                          Choose {name} <ArrowRight size={17} />
+                          {t('pricing.choosePlan', { plan: name })} <ArrowRight size={17} />
                         </Link>
                       )}
                     </Reveal>
@@ -323,10 +306,10 @@ function StripePricingPage() {
 
           {status === 'error' && (
             <div className="pricing-status" role="alert">
-              <h3>We couldn’t load the plans</h3>
+              <h3>{t('pricing.errorTitle')}</h3>
               <p>{error}</p>
               <button className="btn btn-ghost" onClick={retry}>
-                <RefreshCcw size={16} /> Try again
+                <RefreshCcw size={16} /> {t('pricing.tryAgain')}
               </button>
             </div>
           )}
@@ -337,24 +320,25 @@ function StripePricingPage() {
               <div className="payg-head">
                 <Music size={20} />
                 <div>
-                  <h3>Prefer to pay as you go?</h3>
-                  <p>
-                    No plan needed and when a plan&rsquo;s allowance runs out, this is exactly what
-                    kicks in. Buy only what you need.
-                  </p>
+                  <h3>{t('pricing.paygTitle')}</h3>
+                  <p>{t('pricing.paygBody')}</p>
                 </div>
               </div>
               <div className="payg-items">
                 <span>
-                  <ClipboardList size={15} /> Assessment <strong>${PAYG.assessment}</strong>
+                  <ClipboardList size={15} /> {t('pricing.paygAssessment')}{' '}
+                  <strong>${PAYG.assessment}</strong>
                 </span>
                 <span>
-                  <BookOpen size={15} /> Ebook <strong>from ${PAYG.ebook}</strong>
-                </span>
-                <span>
-                  <MessagesSquare size={15} /> Counselling{' '}
+                  <BookOpen size={15} /> {t('pricing.paygEbook')}{' '}
                   <strong>
-                    ${PAYG.counselling.price}/{PAYG.counselling.minutes} min
+                    {t('pricing.paygFrom')} ${PAYG.ebook}
+                  </strong>
+                </span>
+                <span>
+                  <MessagesSquare size={15} /> {t('pricing.paygCounselling')}{' '}
+                  <strong>
+                    ${PAYG.counselling.price}/{PAYG.counselling.minutes} {t('pricing.unitMin')}
                   </strong>
                 </span>
               </div>
@@ -363,9 +347,9 @@ function StripePricingPage() {
 
           {/* faq */}
           <div className="pricing-faq">
-            <h2 className="h2">Questions, answered</h2>
+            <h2 className="h2">{t('pricing.faqTitle')}</h2>
             <div className="faq-grid">
-              {FAQ.map(([q, a]) => (
+              {faq.map(({ q, a }) => (
                 <Reveal as="div" key={q} className="faq-item">
                   <h4>{q}</h4>
                   <p>{a}</p>

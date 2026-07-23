@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowRight,
   Cake,
@@ -12,6 +13,8 @@ import {
   Users,
 } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
+import LanguageSwitcher from '../components/LanguageSwitcher.jsx'
+import ThemeToggle from '../components/ThemeToggle.jsx'
 import { msisdnLogin, msisdnSignup, saveSession } from '../lib/auth.js'
 
 /* Carrier-billing auth (VITE_BILLING_MODE=msisdn): no email/password.
@@ -22,6 +25,7 @@ const cleanMsisdn = (s) => s.replace(/[^\d+]/g, '')
 const validMsisdn = (s) => /^\+?\d{8,15}$/.test(s)
 
 export default function MsisdnAuthPage({ mode }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const isLogin = mode === 'login'
@@ -46,14 +50,13 @@ export default function MsisdnAuthPage({ mode }) {
     const er = {}
     if (!isLogin) {
       const name = form.name.trim()
-      if (name.length < 2 || name.length > 50) er.name = 'Use between 2 and 50 characters.'
-      if (!form.gender) er.gender = 'Choose one.'
+      if (name.length < 2 || name.length > 50) er.name = t('auth.errName')
+      if (!form.gender) er.gender = t('auth.errGender')
       const age = Number(form.age)
       if (!form.age || !Number.isInteger(age) || age < 1 || age > 120)
-        er.age = 'Enter an age from 1 to 120.'
+        er.age = t('auth.errAge')
     }
-    if (!validMsisdn(cleanMsisdn(form.msisdn)))
-      er.msisdn = 'Enter a valid mobile number (8–15 digits).'
+    if (!validMsisdn(cleanMsisdn(form.msisdn))) er.msisdn = t('auth.errMsisdn')
     return er
   }
 
@@ -82,15 +85,9 @@ export default function MsisdnAuthPage({ mode }) {
     } catch (err) {
       setStatus('idle')
       if (err.status === 409) {
-        setErrors((prev) => ({
-          ...prev,
-          msisdn: 'This number already has an account — log in instead.',
-        }))
+        setErrors((prev) => ({ ...prev, msisdn: t('auth.errMsisdnExists') }))
       } else if (err.status === 401) {
-        setErrors((prev) => ({
-          ...prev,
-          msisdn: 'No account found for this number — create one first.',
-        }))
+        setErrors((prev) => ({ ...prev, msisdn: t('auth.errMsisdnNoAccount') }))
       } else {
         // 422 validation (any field) and 404 default-plan-missing → banner.
         setSubmitError({ message: err.message, items: err.errors || [] })
@@ -98,10 +95,14 @@ export default function MsisdnAuthPage({ mode }) {
     }
   }
 
-  const firstName = form.name.trim().split(' ')[0] || 'there'
+  const firstName = form.name.trim().split(' ')[0] || t('auth.defaultName')
 
   return (
     <div className="auth">
+      <div className="auth-topbar">
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
       <main className="auth-main">
         <div className="auth-card">
           <div className="auth-card-logo">
@@ -114,28 +115,30 @@ export default function MsisdnAuthPage({ mode }) {
                 <Check size={26} />
               </span>
               <h1>
-                {isLogin ? 'Welcome back.' : `Welcome to the path, ${firstName}.`}
+                {isLogin ? t('auth.successBackPlain') : t('auth.successName', { name: firstName })}
               </h1>
-              <p>Opening your dashboard…</p>
+              <p>{t('auth.opening')}</p>
             </div>
           ) : (
             <>
-              <p className="auth-kicker">{isLogin ? 'Log in' : 'Create your account'}</p>
+              <p className="auth-kicker">
+                {isLogin ? t('auth.kickerLogin') : t('auth.kickerSignup')}
+              </p>
               <h1 className="auth-title">
                 {isLogin ? (
                   <>
-                    Pick up <em>where you paused.</em>
+                    {t('auth.titleBackA') && <>{t('auth.titleBackA')} </>}
+                    <em>{t('auth.titleBackEm')}</em>
                   </>
                 ) : (
                   <>
-                    Ten quiet minutes <em>starts here.</em>
+                    {t('auth.titleStartA') && <>{t('auth.titleStartA')} </>}
+                    <em>{t('auth.titleStartEm')}</em>
                   </>
                 )}
               </h1>
               <p className="auth-subtitle">
-                {isLogin
-                  ? 'Enter the mobile number you signed up with to continue.'
-                  : 'A few details and your number — that’s it. Your plan is billed to your phone and set up automatically.'}
+                {isLogin ? t('auth.subtitleLoginMsisdn') : t('auth.subtitleSignupMsisdn')}
               </p>
 
               <form className="auth-form" onSubmit={submit} noValidate>
@@ -154,14 +157,14 @@ export default function MsisdnAuthPage({ mode }) {
 
                 {!isLogin && (
                   <label className={`auth-field ${errors.name ? 'has-error' : ''}`}>
-                    <span className="auth-label">Your name</span>
+                    <span className="auth-label">{t('auth.nameLabel')}</span>
                     <span className="auth-input">
                       <User size={16} />
                       <input
                         type="text"
                         value={form.name}
                         onChange={set('name')}
-                        placeholder="What should we call you?"
+                        placeholder={t('auth.namePlaceholder')}
                         autoComplete="name"
                       />
                     </span>
@@ -172,16 +175,16 @@ export default function MsisdnAuthPage({ mode }) {
                 {!isLogin && (
                   <div className="auth-row">
                     <label className={`auth-field ${errors.gender ? 'has-error' : ''}`}>
-                      <span className="auth-label">Gender</span>
+                      <span className="auth-label">{t('auth.genderLabel')}</span>
                       <span className="auth-input">
                         <Users size={16} />
                         <select value={form.gender} onChange={set('gender')} required>
                           <option value="" disabled>
-                            Select
+                            {t('auth.select')}
                           </option>
-                          <option value="female">Female</option>
-                          <option value="male">Male</option>
-                          <option value="other">Other</option>
+                          <option value="female">{t('auth.female')}</option>
+                          <option value="male">{t('auth.male')}</option>
+                          <option value="other">{t('auth.other')}</option>
                         </select>
                         <ChevronDown size={16} className="auth-select-caret" />
                       </span>
@@ -189,14 +192,14 @@ export default function MsisdnAuthPage({ mode }) {
                     </label>
 
                     <label className={`auth-field ${errors.age ? 'has-error' : ''}`}>
-                      <span className="auth-label">Age</span>
+                      <span className="auth-label">{t('auth.ageLabel')}</span>
                       <span className="auth-input">
                         <Cake size={16} />
                         <input
                           type="number"
                           value={form.age}
                           onChange={set('age')}
-                          placeholder="28"
+                          placeholder={t('auth.agePlaceholder')}
                           min="1"
                           max="120"
                           inputMode="numeric"
@@ -209,14 +212,14 @@ export default function MsisdnAuthPage({ mode }) {
                 )}
 
                 <label className={`auth-field ${errors.msisdn ? 'has-error' : ''}`}>
-                  <span className="auth-label">Mobile number</span>
+                  <span className="auth-label">{t('auth.mobileLabel')}</span>
                   <span className="auth-input">
                     <Smartphone size={16} />
                     <input
                       type="tel"
                       value={form.msisdn}
                       onChange={set('msisdn')}
-                      placeholder="9876543210"
+                      placeholder={t('auth.mobilePlaceholder')}
                       autoComplete="tel"
                       inputMode="tel"
                     />
@@ -227,45 +230,39 @@ export default function MsisdnAuthPage({ mode }) {
                 <button className="btn btn-primary auth-submit" disabled={status === 'loading'}>
                   {status === 'loading' ? (
                     <>
-                      <Loader2 size={17} className="ap-spin" /> One moment…
+                      <Loader2 size={17} className="ap-spin" /> {t('auth.submitLoading')}
                     </>
                   ) : isLogin ? (
                     <>
-                      Continue your path <ArrowRight size={17} />
+                      {t('auth.submitLogin')} <ArrowRight size={17} />
                     </>
                   ) : (
                     <>
-                      Begin your path <ArrowRight size={17} />
+                      {t('auth.submitCreate')} <ArrowRight size={17} />
                     </>
                   )}
                 </button>
               </form>
 
-              {!isLogin && (
-                <p className="auth-legal">
-                  By continuing you agree to our Terms and acknowledge that Daybreak is a
-                  self-reflection tool, not a clinical service. Your subscription is charged to your
-                  mobile bill.
-                </p>
-              )}
+              {!isLogin && <p className="auth-legal">{t('auth.legalMsisdn')}</p>}
 
               <p className="auth-swap">
                 {isLogin ? (
                   <>
-                    New here?{' '}
+                    {t('auth.swapNew')}{' '}
                     <Link to={swapTo('/signup')}>
-                      Create an account <Sparkles size={13} />
+                      {t('auth.createLink')} <Sparkles size={13} />
                     </Link>
                   </>
                 ) : (
                   <>
-                    Already walking a path? <Link to={swapTo('/login')}>Log in</Link>
+                    {t('auth.haveAccount')} <Link to={swapTo('/login')}>{t('auth.loginLink')}</Link>
                   </>
                 )}
               </p>
 
               <Link to="/" className="auth-guest">
-                ← Just browsing — back to Daybreak
+                {t('auth.guest')}
               </Link>
             </>
           )}

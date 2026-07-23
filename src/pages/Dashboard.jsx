@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowRight,
   ArrowUpRight,
@@ -18,18 +19,15 @@ import {
   Loader2,
   Meh,
   MessagesSquare,
-  Moon,
   Music,
   Play,
   Plus,
   RefreshCcw,
   Smile,
-  Sun,
   TrendingDown,
   TrendingUp,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
-import { useTheme } from '../hooks/useTheme.js'
 import { useAuth } from '../hooks/useAuth.js'
 import { getAssessments, getScores } from '../lib/assessmentsApi.js'
 import { getAudioPlans } from '../lib/audioApi.js'
@@ -37,13 +35,7 @@ import { getMyPrograms } from '../lib/audioProgramsApi.js'
 import { listEbooks } from '../lib/ebooksApi.js'
 import { groupScores, reportTotals } from '../components/report/reportsData.js'
 
-const MOODS = [
-  ['Heavy', Frown],
-  ['Low', Meh],
-  ['Okay', Smile],
-  ['Good', Smile],
-  ['Light', Laugh],
-]
+const MOOD_ICONS = [Frown, Meh, Smile, Smile, Laugh]
 
 /* Cover gradients (defined in audio.css) + their accents, cycled by position. */
 const COVERS = ['violet', 'tide', 'meadow', 'dusk', 'ember']
@@ -55,7 +47,7 @@ const ACCENTS = {
   ember: '#c98a2c',
 }
 const coverAt = (i) => COVERS[((i % COVERS.length) + COVERS.length) % COVERS.length]
-const fmtLen = (s) => (s ? `${Math.round(s / 60)} min` : null)
+const fmtLen = (s) => (s ? Math.round(s / 60) : null) // minutes (unit added in render)
 const idOf = (x) => x._id || x.id
 const val = (r) => (r.status === 'fulfilled' && Array.isArray(r.value) ? r.value : [])
 
@@ -102,9 +94,10 @@ function shapeProgramLite(p, i) {
 }
 
 export default function Dashboard() {
-  const { theme, toggle } = useTheme()
+  const { t, i18n } = useTranslation()
   const { user } = useAuth()
   const firstName = (user?.name || 'there').trim().split(' ')[0]
+  const moods = t('dash.moods', { returnObjects: true })
 
   const [mood, setMood] = useState(null)
   const [toast, setToast] = useState(null)
@@ -144,8 +137,10 @@ export default function Dashboard() {
   }, [])
 
   const hour = new Date().getHours()
-  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
-  const dateLabel = new Date().toLocaleDateString('en-US', {
+  const greeting = t(
+    hour < 12 ? 'dash.greetingMorning' : hour < 18 ? 'dash.greetingAfternoon' : 'dash.greetingEvening',
+  )
+  const dateLabel = new Date().toLocaleDateString(i18n.language, {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
@@ -153,30 +148,8 @@ export default function Dashboard() {
 
   function copyInvite() {
     navigator.clipboard?.writeText('daybreak.app/invite/DAYBREAK').catch(() => {})
-    say('Invite link copied — you both get a free session.')
+    say(t('dash.linkCopied'))
   }
-
-  const ThemeToggle = (
-    <button
-      className="dash-theme-toggle"
-      onClick={toggle}
-      role="switch"
-      aria-checked={theme === 'dark'}
-      aria-label={theme === 'dark' ? 'Switch to day mode' : 'Switch to night mode'}
-      title={theme === 'dark' ? 'Day mode' : 'Night mode'}
-    >
-      <span className="dash-theme-track">
-        <span className="dash-theme-ico sun">
-          <Sun size={14} />
-        </span>
-        <span className="dash-theme-ico moon">
-          <Moon size={14} />
-        </span>
-        <span className="dash-theme-knob" />
-      </span>
-      <span className="dash-theme-label">{theme === 'dark' ? 'Night' : 'Day'}</span>
-    </button>
-  )
 
   if (data.status === 'loading') {
     return (
@@ -184,7 +157,7 @@ export default function Dashboard() {
         <div className="container">
           <div className="reports-state">
             <Loader2 size={26} className="ap-spin" />
-            <p>Loading your dashboard…</p>
+            <p>{t('dash.loading')}</p>
           </div>
         </div>
       </main>
@@ -216,10 +189,13 @@ export default function Dashboard() {
   const readingAccent = reading ? ACCENTS[coverAt((data.ebooks || []).indexOf(reading))] : '#6450cf'
 
   const subline = primary
-    ? `Day ${Math.min(primary.completed + 1, primary.total)} of your ${primary.title.replace(' path', '')} is ready.`
+    ? t('dash.sublineReady', {
+        day: Math.min(primary.completed + 1, primary.total),
+        title: primary.title.replace(' path', ''),
+      })
     : groups.length
-      ? `${totals.reports} ${totals.reports === 1 ? 'report' : 'reports'} and counting — keep going.`
-      : 'Take your first assessment to begin your path.'
+      ? t('dash.sublineReports', { count: totals.reports })
+      : t('dash.sublineFirst')
 
   return (
     <main className="dash">
@@ -228,12 +204,9 @@ export default function Dashboard() {
         <Reveal className="dash-head">
           <div>
             <p className="dash-date">{dateLabel}</p>
-            <h1 className="dash-greeting">
-              {greeting}, {firstName}.
-            </h1>
+            <h1 className="dash-greeting">{t('dash.greeting', { greeting, name: firstName })}</h1>
             <p className="dash-subline">{subline}</p>
           </div>
-          <div className="dash-head-right">{ThemeToggle}</div>
         </Reveal>
 
         {/* ===== TODAY ===== */}
@@ -246,18 +219,25 @@ export default function Dashboard() {
                 <div className="dash-feature-body">
                   <p className="dash-kicker">
                     {primary.completed < primary.total
-                      ? `Today's session · ${primary.title} · Day ${primary.completed + 1} of ${primary.total}`
-                      : `Complete · ${primary.title}`}
+                      ? t('dash.todaysSession', {
+                          title: primary.title,
+                          day: primary.completed + 1,
+                          total: primary.total,
+                        })
+                      : t('dash.complete', { title: primary.title })}
                   </p>
-                  <h2>{primary.nextTitle || 'Every session walked'}</h2>
+                  <h2>{primary.nextTitle || t('dash.allSessionsDone')}</h2>
                   <p className="dash-feature-meta">
-                    <Clock size={14} /> {primary.nextLen ? `${primary.nextLen} · ` : ''}
-                    guided session
+                    <Clock size={14} />{' '}
+                    {primary.nextLen ? `${primary.nextLen} ${t('dash.min')} · ` : ''}
+                    {t('dash.guidedSession')}
                   </p>
                   <div className="dash-feature-actions">
                     <Link to="/audio" className="btn btn-light">
                       <Play size={17} fill="currentColor" strokeWidth={0} />{' '}
-                      {primary.completed < primary.total ? 'Begin session' : 'Replay a session'}
+                      {primary.completed < primary.total
+                        ? t('dash.startSession')
+                        : t('dash.playAgain')}
                     </Link>
                   </div>
                 </div>
@@ -266,14 +246,14 @@ export default function Dashboard() {
               <Reveal className="dash-feature cover-violet">
                 <div className="dash-feature-scene" aria-hidden="true" />
                 <div className="dash-feature-body">
-                  <p className="dash-kicker">Your daily audio</p>
-                  <h2>Unlock a path made for you</h2>
+                  <p className="dash-kicker">{t('dash.yourDailyAudio')}</p>
+                  <h2>{t('dash.getPlan')}</h2>
                   <p className="dash-feature-meta">
-                    <Headphones size={14} /> Generated from your first assessment
+                    <Headphones size={14} /> {t('dash.madeFromFirst')}
                   </p>
                   <div className="dash-feature-actions">
                     <Link to="/assessments" className="btn btn-light">
-                      <ArrowRight size={17} /> Take an assessment
+                      <ArrowRight size={17} /> {t('dash.takeAnAssessment')}
                     </Link>
                   </div>
                 </div>
@@ -283,20 +263,20 @@ export default function Dashboard() {
             {/* mood check-in (a light daily check — not stored) */}
             <Reveal className="dash-card dash-mood" delay={0.1}>
               <div className="dash-card-head">
-                <h3>How are you arriving?</h3>
-                <span className="dash-card-tag">Daily</span>
+                <h3>{t('dash.moodTitle')}</h3>
+                <span className="dash-card-tag">{t('dash.moodDaily')}</span>
               </div>
-              <div className="dash-mood-row" role="radiogroup" aria-label="Mood check-in">
-                {MOODS.map(([label, Icon], i) => (
+              <div className="dash-mood-row" role="radiogroup" aria-label={t('dash.moodAria')}>
+                {MOOD_ICONS.map((Icon, i) => (
                   <button
-                    key={label}
+                    key={i}
                     role="radio"
                     aria-checked={mood === i}
-                    aria-label={label}
+                    aria-label={moods[i]}
                     className={`dash-mood-btn ${mood === i ? 'active' : ''}`}
                     onClick={() => {
                       setMood(i)
-                      say('Mood noted — be gentle with yourself today.')
+                      say(t('dash.moodToast'))
                     }}
                   >
                     <Icon size={22} strokeWidth={1.9} />
@@ -304,9 +284,7 @@ export default function Dashboard() {
                 ))}
               </div>
               <p className="dash-mood-note">
-                {mood === null
-                  ? 'One quiet tap before you begin.'
-                  : `Thanks for checking in, ${firstName}.`}
+                {mood === null ? t('dash.moodTapOne') : t('dash.moodThanks', { name: firstName })}
               </p>
             </Reveal>
           </div>
@@ -317,8 +295,8 @@ export default function Dashboard() {
               <div className="reports-explore-head">
                 <FileHeart size={20} />
                 <div>
-                  <h3>Topics you haven&rsquo;t explored yet</h3>
-                  <p>Each new assessment adds another report and another path to follow.</p>
+                  <h3>{t('dash.notTakenTitle')}</h3>
+                  <p>{t('dash.notTakenSub')}</p>
                 </div>
               </div>
               <div className="reports-explore-grid">
@@ -329,7 +307,7 @@ export default function Dashboard() {
                     </span>
                     <div>
                       <strong>{a.name}</strong>
-                      <small>{a.questionsCount} questions</small>
+                      <small>{t('dash.questions', { count: a.questionsCount })}</small>
                     </div>
                     <span className="reports-explore-add">
                       <Plus size={16} />
@@ -344,35 +322,35 @@ export default function Dashboard() {
           <div className="dash-ledger">
             <div className="dash-ledger-item">
               <strong>{totals.reports}</strong>
-              <small>{totals.reports === 1 ? 'report' : 'reports'} archived</small>
+              <small>{t('dash.ledgerReports', { count: totals.reports })}</small>
             </div>
             <div className="dash-ledger-item">
               <strong>{groups.length}</strong>
-              <small>topics explored</small>
+              <small>{t('dash.ledgerTopics')}</small>
             </div>
             <div className="dash-ledger-item">
               <strong>{sessionsDone}</strong>
-              <small>sessions walked</small>
+              <small>{t('dash.ledgerSessions')}</small>
             </div>
             <div className="dash-ledger-item">
               <strong>{shelf.length}</strong>
-              <small>{shelf.length === 1 ? 'book' : 'books'} on shelf</small>
+              <small>{t('dash.ledgerBooks', { count: shelf.length })}</small>
             </div>
           </div>
         </section>
 
         {/* ===== YOUR JOURNEY ===== */}
         <section className="dash-zone">
-          <h2 className="dash-zone-title">Your journey</h2>
+          <h2 className="dash-zone-title">{t('dash.yourProgress')}</h2>
           <div className="dash-journey-grid">
             {/* audio progress */}
             <Reveal className="dash-card dash-progress">
               <div className="dash-card-head">
                 <h3>
-                  <Headphones size={17} /> Audio progress
+                  <Headphones size={17} /> {t('dash.audioProgress')}
                 </h3>
                 <Link to="/audio" className="dash-card-link">
-                  Open <ChevronRight size={15} />
+                  {t('dash.open')} <ChevronRight size={15} />
                 </Link>
               </div>
               {audio.length ? (
@@ -386,7 +364,7 @@ export default function Dashboard() {
                           <span className="dash-plan-count">
                             {done ? (
                               <span className="dash-plan-done">
-                                <BadgeCheck size={13} /> Done
+                                <BadgeCheck size={13} /> {t('dash.done')}
                               </span>
                             ) : (
                               `${p.completed}/${p.total}`
@@ -407,8 +385,8 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <p className="dash-empty-note">
-                  No audio plan yet. <Link to="/assessments">Take an assessment</Link> to unlock a
-                  daily path.
+                  {t('dash.noAudioPre')} <Link to="/assessments">{t('dash.takeAnAssessment')}</Link>{' '}
+                  {t('dash.noAudioPost')}
                 </p>
               )}
             </Reveal>
@@ -417,10 +395,10 @@ export default function Dashboard() {
             <Reveal className="dash-card dash-report" delay={0.08}>
               <div className="dash-card-head">
                 <h3>
-                  <FileHeart size={17} /> Progress &amp; retake
+                  <FileHeart size={17} /> {t('dash.progressRetake')}
                 </h3>
                 <Link to="/reports" className="dash-card-link">
-                  Reports <ChevronRight size={15} />
+                  {t('dash.reportsLink')} <ChevronRight size={15} />
                 </Link>
               </div>
               {primaryGroup ? (
@@ -440,7 +418,11 @@ export default function Dashboard() {
                           <TrendingUp size={13} />
                         )}{' '}
                         {Math.abs(primaryGroup.delta)}{' '}
-                        {primaryGroup.improved ? 'better' : primaryGroup.betterWord}
+                        {primaryGroup.delta === 0
+                          ? t('dash.noChange')
+                          : primaryGroup.improved
+                            ? t('dash.better')
+                            : t(`dash.dir_${primaryGroup.betterWord}`)}
                       </span>
                     </div>
                   ) : (
@@ -455,24 +437,24 @@ export default function Dashboard() {
                   )}
                   <p className="dash-report-note">
                     {primaryGroup.count > 1
-                      ? `Across ${primaryGroup.count} check-ins. It's been ${primaryGroup.lastDays} days — a retake shows how far you've come.`
-                      : `Your first report. Retake in a few weeks to watch it move.`}
+                      ? t('dash.reportNoteMulti', {
+                          count: primaryGroup.count,
+                          days: primaryGroup.lastDays,
+                        })
+                      : t('dash.reportNoteFirst')}
                   </p>
                   <Link
                     to={`/assessments/${primaryGroup.slug}/take`}
                     className="btn btn-primary dash-report-btn"
                   >
-                    <RefreshCcw size={16} /> Retake now
+                    <RefreshCcw size={16} /> {t('dash.takeAgain')}
                   </Link>
                 </>
               ) : (
                 <>
-                  <p className="dash-report-note">
-                    No reports yet — take your first assessment and it&rsquo;ll appear here, then
-                    each retake stacks into a trend.
-                  </p>
+                  <p className="dash-report-note">{t('dash.reportNoteEmpty')}</p>
                   <Link to="/assessments" className="btn btn-primary dash-report-btn">
-                    <ArrowRight size={16} /> Take an assessment
+                    <ArrowRight size={16} /> {t('dash.takeAnAssessment')}
                   </Link>
                 </>
               )}
@@ -482,15 +464,25 @@ export default function Dashboard() {
             <Reveal className="dash-card dash-read" delay={0.16}>
               <div className="dash-card-head">
                 <h3>
-                  <BookOpen size={17} /> Continue reading
+                  <BookOpen size={17} /> {t('dash.continueReading')}
                 </h3>
                 <Link to="/ebooks" className="dash-card-link">
-                  Shelf <ChevronRight size={15} />
+                  {t('dash.shelfLink')} <ChevronRight size={15} />
                 </Link>
               </div>
               {reading ? (
                 <div className="dash-read-row">
                   <div className="dash-book" style={{ '--accent': readingAccent }} aria-hidden="true">
+                    {reading.slug && (
+                      <img
+                        className="dash-book-img"
+                        src={`/ebook-cover/${reading.slug}.png`}
+                        alt=""
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                        }}
+                      />
+                    )}
                     <span className="dash-book-title">{reading.coverText || reading.title}</span>
                     <span className="dash-book-for">{reading.author}</span>
                   </div>
@@ -503,15 +495,17 @@ export default function Dashboard() {
                       <i style={{ width: `${reading.progress || 0}%`, background: readingAccent }} />
                     </div>
                     <Link to="/ebooks" className="dash-read-link">
-                      {reading.progress ? `Continue · ${reading.progress}%` : 'Start reading'}{' '}
+                      {reading.progress
+                        ? t('dash.continuePct', { pct: reading.progress })
+                        : t('dash.startReading')}{' '}
                       <ArrowRight size={14} />
                     </Link>
                   </div>
                 </div>
               ) : (
                 <p className="dash-empty-note">
-                  Your shelf is empty. <Link to="/ebooks">Browse the ebook shop</Link> to add a
-                  book.
+                  {t('dash.shelfEmptyPre')} <Link to="/ebooks">{t('dash.shelfEmptyLink')}</Link>{' '}
+                  {t('dash.shelfEmptyPost')}
                 </p>
               )}
             </Reveal>
@@ -520,16 +514,16 @@ export default function Dashboard() {
 
         {/* ===== AROUND YOUR PATH ===== */}
         <section className="dash-zone">
-          <h2 className="dash-zone-title">Around your path</h2>
+          <h2 className="dash-zone-title">{t('dash.moreForYou')}</h2>
           <div className="dash-explore-grid">
             <Reveal className="dash-upsell dash-counsel">
               <span className="dash-upsell-ico">
                 <MessagesSquare size={22} />
               </span>
-              <h3>Talk it through</h3>
-              <p>An AI advisor that has already read your report — start where you are, out loud.</p>
+              <h3>{t('dash.counselTitle')}</h3>
+              <p>{t('dash.counselDesc')}</p>
               <Link to="/counselling" className="dash-upsell-link">
-                Explore counselling <ArrowRight size={15} />
+                {t('dash.seeCounselling')} <ArrowRight size={15} />
               </Link>
             </Reveal>
 
@@ -537,10 +531,10 @@ export default function Dashboard() {
               <span className="dash-upsell-ico">
                 <Gift size={22} />
               </span>
-              <h3>Bring a friend</h3>
-              <p>Invite someone walking their own path — you both get a free counselling session.</p>
+              <h3>{t('dash.referTitle')}</h3>
+              <p>{t('dash.referDesc')}</p>
               <button className="dash-upsell-link" onClick={copyInvite}>
-                <Copy size={15} /> Copy invite link
+                <Copy size={15} /> {t('dash.copyInvite')}
               </button>
             </Reveal>
 
@@ -548,10 +542,10 @@ export default function Dashboard() {
               <span className="dash-upsell-ico">
                 <Music size={22} />
               </span>
-              <h3>Free music</h3>
-              <p>Yoga &amp; meditation tracks, open whenever you need somewhere calm to land.</p>
-              <Link to="/music" className="dash-upsell-link">
-                Open the library <ArrowRight size={15} />
+              <h3>{t('dash.musicTitle')}</h3>
+              <p>{t('dash.musicDesc')}</p>
+              <Link to="/sound" className="dash-upsell-link">
+                {t('dash.openLibrary')} <ArrowRight size={15} />
               </Link>
             </Reveal>
           </div>
@@ -559,19 +553,19 @@ export default function Dashboard() {
 
         {/* ===== quick nav ===== */}
         <div className="dash-jump">
-          <span className="dash-jump-label">Everything, one tap away</span>
+          <span className="dash-jump-label">{t('dash.jumpLabel')}</span>
           <div className="dash-jump-row">
             {[
-              ['Assessments', ClipboardList, '/assessments'],
-              ['Your reports', FileHeart, '/reports'],
-              ['Daily audio', Headphones, '/audio'],
-              ['Ebook shop', BookOpen, '/ebooks'],
-              ['Counselling', MessagesSquare, '/counselling'],
-              ['Free music', Music, '/music'],
-            ].map(([label, Icon, to]) => (
-              <Link key={label} to={to} className="dash-jump-chip">
+              ['chipAssessments', ClipboardList, '/assessments'],
+              ['chipReports', FileHeart, '/reports'],
+              ['chipAudio', Headphones, '/audio'],
+              ['chipEbookShop', BookOpen, '/ebooks'],
+              ['chipCounselling', MessagesSquare, '/counselling'],
+              ['chipMusic', Music, '/sound'],
+            ].map(([labelKey, Icon, to]) => (
+              <Link key={to} to={to} className="dash-jump-chip">
                 <Icon size={16} strokeWidth={1.9} />
-                {label}
+                {t(`dash.${labelKey}`)}
                 <ArrowUpRight size={14} className="dash-jump-arrow" />
               </Link>
             ))}

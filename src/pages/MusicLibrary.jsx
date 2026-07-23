@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowRight,
   Heart,
@@ -36,7 +37,12 @@ function WaveLine({ playing, color = '#9bdfb6' }) {
 }
 
 export default function MusicLibrary() {
-  const [mood, setMood] = useState('All')
+  const { t } = useTranslation()
+  // localized display for a scene / mixer layer (falls back to the English data value)
+  const sceneTitle = (s) => t(`sound.scenes.${s.id}.title`, s.title)
+  const sceneMood = (s) => t(`sound.scenes.${s.id}.mood`, s.mood)
+  const layerLabel = (l) => t(`sound.layers.${l.id}`, l.label)
+  const [mood, setMood] = useState('all')
   const [liked, setLiked] = useState(() => new Set())
   const [current, setCurrent] = useState(null)
   const [playing, setPlaying] = useState(false)
@@ -45,8 +51,76 @@ export default function MusicLibrary() {
 
   const isMix = current?.id === 'mix'
 
+  // ---- real audio playback ----
+  // One looping element for scene mode; a map of looping elements for the mixer
+  // (one per active layer) so they all play and blend at once.
+  const sceneAudioRef = useRef(null)
+  const layerAudiosRef = useRef(new Map())
+
+  // Scene mode: play the current scene's looping track (swap on scene change,
+  // play/pause with the transport). Idle while mixing or when nothing is loaded.
+  useEffect(() => {
+    const a = sceneAudioRef.current || (sceneAudioRef.current = new Audio())
+    if (isMix || !current?.src) {
+      a.pause()
+      return
+    }
+    if (!a.src.endsWith(current.src)) {
+      a.src = current.src
+      a.loop = true
+    }
+    if (playing) a.play().catch(() => {})
+    else a.pause()
+  }, [current?.id, current?.src, isMix, playing])
+
+  // Mixer mode: keep one looping element per active layer, add/remove as layers
+  // toggle, and start/stop them all with the transport. Each has its own volume.
+  useEffect(() => {
+    const map = layerAudiosRef.current
+    if (!isMix) {
+      map.forEach((a) => a.pause())
+      map.forEach((a, id) => {
+        a.src = ''
+        map.delete(id)
+      })
+      return
+    }
+    sceneAudioRef.current?.pause()
+    layers.forEach((id) => {
+      if (!map.has(id)) {
+        const l = AMBIENT.find((x) => x.id === id)
+        if (l?.src) {
+          const a = new Audio(l.src)
+          a.loop = true
+          a.volume = l.vol ?? 0.7
+          map.set(id, a)
+        }
+      }
+    })
+    map.forEach((a, id) => {
+      if (!layers.has(id)) {
+        a.pause()
+        a.src = ''
+        map.delete(id)
+      }
+    })
+    map.forEach((a) => {
+      if (playing) a.play().catch(() => {})
+      else a.pause()
+    })
+  }, [isMix, layers, playing])
+
+  // Stop everything when the page unmounts.
+  useEffect(
+    () => () => {
+      sceneAudioRef.current?.pause()
+      layerAudiosRef.current.forEach((a) => a.pause())
+    },
+    [],
+  )
+
   const list = useMemo(
-    () => (mood === 'All' ? SOUNDSCAPES : SOUNDSCAPES.filter((s) => moodOf(s) === mood)),
+    () => (mood === 'all' ? SOUNDSCAPES : SOUNDSCAPES.filter((s) => moodOf(s) === mood)),
     [mood],
   )
 
@@ -107,19 +181,18 @@ export default function MusicLibrary() {
         <div className="container mz-hero-grid">
           <div className="mz-hero-copy">
             <Reveal as="p" className="mz-kicker">
-              Free · open to all · no account
+              {t('sound.kicker')}
             </Reveal>
             <Reveal as="h1" className="mz-title" delay={0.06}>
-              Somewhere
+              {t('sound.titleA')}
               <br />
-              quiet to <em>land.</em>
+              {t('sound.titleB')} <em>{t('sound.titleEm')}</em>
             </Reveal>
             <Reveal as="p" className="mz-lede" delay={0.13}>
-              Yoga &amp; meditation soundscapes — illustrated places you can step into, or layered
-              textures you can mix into your own calm. On us, always.
+              {t('sound.lede')}
             </Reveal>
             <Reveal className="mz-hero-index" delay={0.2}>
-              {SOUNDSCAPES.length} soundscapes · {AMBIENT.length} ambient layers · 0 sign-ups
+              {t('sound.index', { sounds: SOUNDSCAPES.length, layers: AMBIENT.length })}
             </Reveal>
           </div>
 
@@ -127,7 +200,7 @@ export default function MusicLibrary() {
             <button
               className="mz-feature-art"
               onClick={() => playScene(featured)}
-              aria-label={`Play ${featured.title}`}
+              aria-label={t('sound.playAria', { title: sceneTitle(featured) })}
             >
               <SceneArt scene={featured.scene} />
               <span className="mz-feature-play">
@@ -135,10 +208,10 @@ export default function MusicLibrary() {
               </span>
             </button>
             <div className="mz-feature-meta">
-              <span className="mz-feature-tag">Start here</span>
-              <h2>{featured.title}</h2>
+              <span className="mz-feature-tag">{t('sound.startHere')}</span>
+              <h2>{sceneTitle(featured)}</h2>
               <p>
-                {featured.mood} · {featured.len}
+                {sceneMood(featured)} · {featured.len}
               </p>
             </div>
           </Reveal>
@@ -152,14 +225,14 @@ export default function MusicLibrary() {
             <div className="mz-mixer-head">
               <div>
                 <h2 className="mz-section-title">
-                  <Layers size={18} /> Build your own quiet
+                  <Layers size={18} /> {t('sound.makeMix')}
                 </h2>
-                <p>Tap to layer textures. They blend live — no two mixes the same.</p>
+                <p>{t('sound.makeMixSub')}</p>
               </div>
               <span className="mz-mixer-count">
                 {layers.size === 0
-                  ? 'Nothing playing yet'
-                  : `${layers.size} layer${layers.size > 1 ? 's' : ''} blending`}
+                  ? t('sound.nothingPlaying')
+                  : t('sound.layersPlaying', { count: layers.size })}
               </span>
             </div>
             <div className="mz-layers">
@@ -178,7 +251,7 @@ export default function MusicLibrary() {
                     </span>
                     <span className="mz-layer-foot">
                       <span className="mz-layer-dot" />
-                      {l.label}
+                      {layerLabel(l)}
                     </span>
                   </button>
                 )
@@ -193,9 +266,9 @@ export default function MusicLibrary() {
         <div className="container">
           <div className="mz-library-head">
             <h2 className="mz-section-title">
-              <Sparkles size={18} /> The soundscapes
+              <Sparkles size={18} /> {t('sound.theSounds')}
             </h2>
-            <div className="mz-filters" role="tablist" aria-label="Moods">
+            <div className="mz-filters" role="tablist" aria-label={t('sound.moodsAria')}>
               {MOODS.map((m) => (
                 <button
                   key={m}
@@ -204,7 +277,7 @@ export default function MusicLibrary() {
                   className={`mz-chip ${mood === m ? 'active' : ''}`}
                   onClick={() => setMood(m)}
                 >
-                  {m}
+                  {t(`sound.moods.${m}`)}
                 </button>
               ))}
             </div>
@@ -223,7 +296,7 @@ export default function MusicLibrary() {
                   <button
                     className="mz-scene-art"
                     onClick={() => playScene(s)}
-                    aria-label={`Play ${s.title}`}
+                    aria-label={t('sound.playAria', { title: sceneTitle(s) })}
                   >
                     <SceneArt scene={s.scene} />
                     <span className="mz-scene-num">{String(i + 1).padStart(2, '0')}</span>
@@ -237,15 +310,15 @@ export default function MusicLibrary() {
                   </button>
                   <div className="mz-scene-info">
                     <div className="mz-scene-text">
-                      <h3>{s.title}</h3>
+                      <h3>{sceneTitle(s)}</h3>
                       <p>
-                        {s.mood} · {s.len} · {s.plays} plays
+                        {sceneMood(s)} · {s.len} · {t('sound.plays', { plays: s.plays })}
                       </p>
                     </div>
                     <button
                       className={`mz-like ${liked.has(s.id) ? 'on' : ''}`}
                       onClick={() => toggleLike(s.id)}
-                      aria-label="Like"
+                      aria-label={t('sound.like')}
                     >
                       <Heart size={16} fill={liked.has(s.id) ? 'currentColor' : 'none'} />
                     </button>
@@ -266,14 +339,11 @@ export default function MusicLibrary() {
             </div>
             <div className="mz-cta-text">
               <h2>
-                The music is the doorway. <em>Your path is just inside.</em>
+                {t('sound.ctaA')} <em>{t('sound.ctaEm')}</em>
               </h2>
-              <p>
-                When you&rsquo;re ready for sessions shaped around you, it starts with one honest
-                assessment.
-              </p>
+              <p>{t('sound.ctaP')}</p>
               <Link to="/assessments" className="btn btn-light">
-                Find your path <ArrowRight size={18} />
+                {t('sound.findPath')} <ArrowRight size={18} />
               </Link>
             </div>
           </Reveal>
@@ -289,11 +359,11 @@ export default function MusicLibrary() {
                 {isMix ? <Layers size={18} /> : <SceneArt scene={current.scene} />}
               </span>
               <div className="mz-player-meta">
-                <strong>{isMix ? 'Your mix' : current.title}</strong>
+                <strong>{isMix ? t('sound.yourMix') : sceneTitle(current)}</strong>
                 <small>
                   {isMix
-                    ? layerObjs.map((l) => l.label).join(' + ') || 'silence'
-                    : `${current.mood} · free`}
+                    ? layerObjs.map((l) => layerLabel(l)).join(' + ') || t('sound.silence')
+                    : `${sceneMood(current)} · ${t('sound.free')}`}
                 </small>
               </div>
             </div>
@@ -305,7 +375,7 @@ export default function MusicLibrary() {
                   if (!isMix && elapsed >= current.secs) setElapsed(0)
                   setPlaying((p) => !p)
                 }}
-                aria-label={playing ? 'Pause' : 'Play'}
+                aria-label={playing ? t('sound.pause') : t('sound.play')}
               >
                 {playing ? (
                   <Pause size={20} fill="currentColor" strokeWidth={0} />
@@ -314,13 +384,13 @@ export default function MusicLibrary() {
                 )}
               </button>
               {!isMix && (
-                <button className="mz-pc" onClick={next} aria-label="Next">
+                <button className="mz-pc" onClick={next} aria-label={t('sound.next')}>
                   <SkipForward size={18} fill="currentColor" strokeWidth={0} />
                 </button>
               )}
               <WaveLine playing={playing} />
               {isMix ? (
-                <span className="mz-player-infinity">∞ looping</span>
+                <span className="mz-player-infinity">{t('sound.looping')}</span>
               ) : (
                 <span className="mz-player-time">
                   {formatTime(Math.min(elapsed, current.secs))} / {current.len}
@@ -336,10 +406,14 @@ export default function MusicLibrary() {
                     className={`mz-mini-layer ${layers.has(l.id) ? 'on' : ''}`}
                     onClick={() => toggleLayer(l.id)}
                     style={{ '--accent': l.accent }}
-                    aria-label={`${layers.has(l.id) ? 'Remove' : 'Add'} ${l.label}`}
-                    title={l.label}
+                    aria-label={
+                      layers.has(l.id)
+                        ? t('sound.removeLayer', { label: layerLabel(l) })
+                        : t('sound.addLayer', { label: layerLabel(l) })
+                    }
+                    title={layerLabel(l)}
                   >
-                    {layers.has(l.id) ? l.label : <Plus size={13} />}
+                    {layers.has(l.id) ? layerLabel(l) : <Plus size={13} />}
                   </button>
                 ))}
               </div>
@@ -352,7 +426,7 @@ export default function MusicLibrary() {
                 setCurrent(null)
                 setLayers(new Set())
               }}
-              aria-label="Close player"
+              aria-label={t('sound.closePlayer')}
             >
               <X size={18} />
             </button>

@@ -13,6 +13,24 @@
   overflow: hidden;
 }
 
+/* language + day/night controls, floating top-right (the auth pages have no nav) */
+.auth-topbar {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 30;
+}
+
+@media (max-width: 560px) {
+  .auth-topbar {
+    top: 14px;
+    right: 14px;
+  }
+}
+
 /* soft aurora behind the card */
 .auth::before,
 .auth::after {
