@@ -1107,7 +1107,6 @@
     "setup": {
       "yourSession": "Votre séance",
       "howOpens": "Comment {{name}} commence",
-      "talkIn": "Parler en",
       "resume": "Reprendre là où nous nous étions arrêtés la dernière fois",
       "start": "Démarrer la séance avec {{name}}",
       "metaMin": "{{minutes}} min",

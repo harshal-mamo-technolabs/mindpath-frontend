@@ -638,52 +638,6 @@
   line-height: 1.5;
 }
 
-/* language picker (lobby pick panel) */
-.cn-lang {
-  margin-bottom: 18px;
-}
-
-.cn-lang-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  margin-bottom: 8px;
-}
-
-.cn-lang-opts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
-.cn-lang-opt {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--ink-2);
-  background: var(--surface);
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 999px;
-  padding: 7px 13px;
-  transition:
-    color 0.2s,
-    border-color 0.2s,
-    background 0.2s;
-}
-
-.cn-lang-opt:hover {
-  color: var(--violet-deep);
-  border-color: rgba(var(--line-rgb), 0.24);
-}
-
-.cn-lang-opt.active {
-  color: #fff;
-  background: var(--violet-deep);
-  border-color: var(--violet-deep);
-}
-
 /* resume toggle (lobby pick main) */
 .cn-resume {
   display: inline-flex;
