@@ -42,7 +42,6 @@ const SUGGEST_ICONS = {
   assessment: ClipboardList,
 }
 
-const LANG_LABELS = { en: 'English', hi: 'हिन्दी', de: 'Deutsch', fr: 'Français', es: 'Español' }
 
 /* Premium living voice orb for the live call — a soft 3D blob whose internal
    light swirls, edge morphs, and halo pulses as the advisor speaks. */
@@ -74,13 +73,12 @@ const fmtClock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')
 
 export default function CounsellingPage() {
   const navigate = useNavigate()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { isAuthenticated, token } = useAuth()
 
   const [phase, setPhase] = useState('lobby') // lobby | call | summary
   const [topicId, setTopicId] = useState(TOPICS[0].id)
   const [data, setData] = useState(null) // backend topics response
-  const [language, setLanguage] = useState(null)
   const [resume, setResume] = useState(false)
   const [messages, setMessages] = useState([]) // { who: 'advisor' | 'you', text }
   const [elapsed, setElapsed] = useState(0)
@@ -182,8 +180,8 @@ export default function CounsellingPage() {
 
   const topic = topics.find((tp) => tp.id === topicId) || topics[0]
   const script = useMemo(() => getSession(topic, t), [topic, t])
-  const languages = data?.languages ?? ['en']
-  const lang = language ?? languages[0]
+  // Sol talks in the app's selected language — no separate picker.
+  const lang = i18n.language
   const pricing = data?.pricing ?? null
   const minutesAvail = data?.minutes?.available ?? null // number when signed in, else null
   // MSISDN users buy minutes via their carrier plan, not here — no counselling top-ups.
@@ -581,23 +579,6 @@ export default function CounsellingPage() {
                 </span>
                 <p>&ldquo;{topic.opening}&rdquo;</p>
               </div>
-
-              {languages.length > 1 && (
-                <div className="cn-lang">
-                  <span className="cn-lang-label">{t('counsel.setup.talkIn')}</span>
-                  <div className="cn-lang-opts">
-                    {languages.map((code) => (
-                      <button
-                        key={code}
-                        className={`cn-lang-opt ${lang === code ? 'active' : ''}`}
-                        onClick={() => setLanguage(code)}
-                      >
-                        {LANG_LABELS[code] || code.toUpperCase()}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {topic.canResume && (
                 <label className="cn-resume">
