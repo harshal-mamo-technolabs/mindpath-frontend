@@ -1,5 +1,5 @@
 services:
-  bazinggo-frontend:
+  selfmap-frontend:
     build: .
     env_file:
       - .env
