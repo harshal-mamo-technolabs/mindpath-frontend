@@ -83,7 +83,7 @@
       "eyebrow": "How it works",
       "h2a": "One loop.",
       "h2em": "Lasting change.",
-      "lede": "At Daybreak, it all starts with understanding yourself and everything after is built on that.",
+      "lede": "At {{appName}}, it all starts with understanding yourself and everything after is built on that.",
       "step": "Step",
       "steps": [
         {
@@ -321,13 +321,13 @@
     "submitLoading": "One moment…",
     "submitLogin": "Log in",
     "submitCreate": "Create account",
-    "legalEmail": "By continuing you agree to our Terms. Daybreak is a self-help tool, not medical care.",
-    "legalMsisdn": "By continuing you agree to our Terms. Daybreak is a self-help tool, not medical care. Your plan is charged to your phone bill.",
+    "legalEmail": "By continuing you agree to our Terms. {{appName}} is a self-help tool, not medical care.",
+    "legalMsisdn": "By continuing you agree to our Terms. {{appName}} is a self-help tool, not medical care. Your plan is charged to your phone bill.",
     "swapNew": "New here?",
     "createLink": "Create an account",
     "haveAccount": "Already have an account?",
     "loginLink": "Log in",
-    "guest": "← Just looking? Back to Daybreak",
+    "guest": "← Just looking? Back to {{appName}}",
     "defaultName": "there",
     "errName": "Use 2 to 50 characters.",
     "errEmail": "That email doesn’t look right.",
@@ -342,7 +342,7 @@
       "eyebrow": "The catalog",
       "h1a": "Start with the one",
       "h1em": "that hurts most.",
-      "lede": "Every Daybreak path starts with one honest set of questions about real parts of your life. Pick the topic that fits what you’re going through.",
+      "lede": "Every {{appName}} path starts with one honest set of questions about real parts of your life. Pick the topic that fits what you’re going through.",
       "trust1": "Questions you answer yourself — not a diagnosis",
       "trust2": "Consistent results — never guessed by AI",
       "trust3": "Each one gives you a report, an audio plan, and an ebook",
@@ -969,7 +969,7 @@
   },
   "counsel": {
     "advisor": {
-      "role": "Your Daybreak advisor",
+      "role": "Your {{appName}} advisor",
       "blurb": "Pick whatever’s on your mind and talk it through out loud with an AI advisor you actually speak to. Anyone can, no report needed. Have one? It just helps Sol get to know you better."
     },
     "suggest": {
@@ -1402,7 +1402,7 @@
       "desc": "Your reports belong to you. Download them, or close your account.",
       "exportTitle": "Export my data",
       "exportDesc": "Download all your reports, scores, and mood logs as a file.",
-      "disclaimer": "Daybreak assessments help you think about yourself. They are not medical care. We never sell your data. If you are in crisis, please call your local emergency number or a crisis line.",
+      "disclaimer": "{{appName}} assessments help you think about yourself. They are not medical care. We never sell your data. If you are in crisis, please call your local emergency number or a crisis line.",
       "deleteTitle": "Delete account",
       "deleteDesc": "This deletes your reports, plans, and books for good. You can’t undo it.",
       "delete": "Delete"
@@ -2643,14 +2643,14 @@
       "useStrengthTag": "Use this strength",
       "useYour": "Use your {{label}}",
       "leanOnText": "This is what’s working well for you right now. Use it on the focus areas above — it’s what makes the rest of the plan stick.",
-      "disclaimer": "Daybreak is a tool to help you reflect. It is not a medical test, a diagnosis, or treatment. If you’re struggling, reaching out to a trained professional is a brave and worthwhile next step.",
+      "disclaimer": "{{appName}} is a tool to help you reflect. It is not a medical test, a diagnosis, or treatment. If you’re struggling, reaching out to a trained professional is a brave and worthwhile next step.",
       "downloadReport": "Download this report",
       "allReports": "All my reports"
     },
     "json": {
       "headerNote": "A self-awareness tool generated from your answers — not a clinical or diagnostic assessment.",
       "leanOnText": "This is what’s working for you right now. Spend it deliberately on the focus areas above — it’s what makes the rest of the plan stick.",
-      "disclaimer": "Daybreak is a self-reflection tool, not a clinical assessment, diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.",
+      "disclaimer": "{{appName}} is a self-reflection tool, not a clinical assessment, diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.",
       "attempt": "attempt {{n}}",
       "completed": "Completed {{date}} · {{name}}",
       "categoryByCategory": "Category by category",
@@ -2746,7 +2746,7 @@
       "takeAgainSmall": "See these numbers change — that’s the proof",
       "disclaimer": "This report is a tool to help you reflect. It is made from your answers using a fixed way of scoring. It is not a medical test, a diagnosis, or a treatment plan. If you’re struggling, talking to a trained professional is a good and brave next step.",
       "tryAnother": "Try another topic",
-      "backHome": "Back to Daybreak"
+      "backHome": "Back to {{appName}}"
     }
   },
   "subCat": {
@@ -2848,6 +2848,6 @@
     }
   },
   "meta": {
-    "title": "Daybreak — Your mind has a path"
+    "title": "{{appName}} — Your mind has a path"
   }
 }

@@ -18,6 +18,7 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
+import { APP_NAME } from '../lib/brand.js'
 import { bandOf, DEMO_SCORES, getAssessment, localizeAssessment } from '../data/assessments.js'
 
 /* CSS band colour by direction — not translatable */
@@ -353,7 +354,7 @@ export default function AssessmentReport() {
               {t('report.demo.tryAnother', 'Try another topic')}
             </Link>
             <Link to="/" className="btn btn-primary">
-              {t('report.demo.backHome', 'Back to Daybreak')}
+              {t('report.demo.backHome', `Back to ${APP_NAME}`)}
             </Link>
           </div>
         </footer>

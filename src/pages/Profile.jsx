@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
+import { APP_DOMAIN, APP_NAME } from '../lib/brand.js'
 import { ensurePushSubscription, pushSupported } from '../lib/push.js'
 import {
   getNotificationPrefs,
@@ -27,6 +28,9 @@ import {
   subscribePush,
   updateNotificationPrefs,
 } from '../lib/notificationsApi.js'
+
+/* Demo referral link — the domain follows the app name (see lib/brand.js). */
+const INVITE_LINK = `${APP_DOMAIN}/invite/MAYA-CALM`
 
 const SECTIONS = [
   ['account', User],
@@ -206,7 +210,7 @@ export default function Profile() {
       if (key === 'dailyReminder') patch.reminderTime = prefs.reminderTime
       await updateNotificationPrefs(patch)
       setPrefs((p) => ({ ...p, [key]: true }))
-      await sendTestPush({ title: 'Daybreak', body: confirmBody })
+      await sendTestPush({ title: APP_NAME, body: confirmBody })
       say(confirmBody)
     } catch (e) {
       if (e.message === 'permission-denied') {
@@ -258,7 +262,7 @@ export default function Profile() {
   }
 
   function copyInvite() {
-    navigator.clipboard?.writeText('daybreak.app/invite/MAYA-CALM').catch(() => {})
+    navigator.clipboard?.writeText(INVITE_LINK).catch(() => {})
     say(t('profile.toast.inviteCopied'))
   }
 
@@ -434,7 +438,7 @@ export default function Profile() {
                 <div className="pf-referral-code">
                   <span className="pf-code-label">{t('profile.referrals.inviteLabel')}</span>
                   <div className="pf-code-row">
-                    <code>daybreak.app/invite/MAYA-CALM</code>
+                    <code>{INVITE_LINK}</code>
                     <button className="pf-copy-btn" onClick={copyInvite}>
                       <Copy size={15} /> {t('profile.referrals.copy')}
                     </button>

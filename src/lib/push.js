@@ -1,5 +1,6 @@
 /* Web Push helpers — register the service worker and create a PushSubscription the backend
    can send to (with the server's VAPID public key). */
+import { APP_NAME } from './brand.js'
 
 const urlBase64ToUint8Array = (base64String) => {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -29,7 +30,11 @@ export const ensurePushSubscription = async (vapidPublicKey) => {
   if (permission === 'default') permission = await Notification.requestPermission()
   if (permission !== 'granted') throw new Error('permission-denied')
 
-  const registration = await navigator.serviceWorker.register('/sw.js')
+  // The app name rides along in the query string — the service worker lives in
+  // public/ so Vite can't inline env vars into it (see lib/brand.js).
+  const registration = await navigator.serviceWorker.register(
+    `/sw.js?app=${encodeURIComponent(APP_NAME)}`,
+  )
   await navigator.serviceWorker.ready
 
   let subscription = await registration.pushManager.getSubscription()

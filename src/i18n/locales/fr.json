@@ -83,7 +83,7 @@
       "eyebrow": "Comment ça marche",
       "h2a": "Une boucle.",
       "h2em": "Un changement durable.",
-      "lede": "Chez Daybreak, tout commence par se comprendre soi-même et tout le reste se construit là-dessus.",
+      "lede": "Chez {{appName}}, tout commence par se comprendre soi-même et tout le reste se construit là-dessus.",
       "step": "Étape",
       "steps": [
         {
@@ -321,13 +321,13 @@
     "submitLoading": "Un instant…",
     "submitLogin": "Se connecter",
     "submitCreate": "Créer un compte",
-    "legalEmail": "En continuant, vous acceptez nos Conditions. Daybreak est un outil d’entraide, pas un soin médical.",
-    "legalMsisdn": "En continuant, vous acceptez nos Conditions. Daybreak est un outil d’entraide, pas un soin médical. Votre offre est facturée sur votre facture téléphonique.",
+    "legalEmail": "En continuant, vous acceptez nos Conditions. {{appName}} est un outil d’entraide, pas un soin médical.",
+    "legalMsisdn": "En continuant, vous acceptez nos Conditions. {{appName}} est un outil d’entraide, pas un soin médical. Votre offre est facturée sur votre facture téléphonique.",
     "swapNew": "Nouveau ici ?",
     "createLink": "Créer un compte",
     "haveAccount": "Vous avez déjà un compte ?",
     "loginLink": "Se connecter",
-    "guest": "← Vous regardez seulement ? Retour à Daybreak",
+    "guest": "← Vous regardez seulement ? Retour à {{appName}}",
     "defaultName": "vous",
     "errName": "Utilisez 2 à 50 caractères.",
     "errEmail": "Cet e-mail ne semble pas valide.",
@@ -342,7 +342,7 @@
       "eyebrow": "Le catalogue",
       "h1a": "Commencez par celui",
       "h1em": "qui fait le plus mal.",
-      "lede": "Chaque parcours Daybreak commence par une série de questions honnêtes sur des aspects réels de votre vie. Choisissez le thème qui correspond à ce que vous traversez.",
+      "lede": "Chaque parcours {{appName}} commence par une série de questions honnêtes sur des aspects réels de votre vie. Choisissez le thème qui correspond à ce que vous traversez.",
       "trust1": "Des questions auxquelles vous répondez vous-même pas un diagnostic",
       "trust2": "Des résultats cohérents jamais devinés par une IA",
       "trust3": "Chacun vous donne un rapport, un programme audio et un e-book",
@@ -969,7 +969,7 @@
   },
   "counsel": {
     "advisor": {
-      "role": "Votre accompagnateur Daybreak",
+      "role": "Votre accompagnateur {{appName}}",
       "blurb": "Choisissez ce qui vous préoccupe et parlez-en à voix haute avec un accompagnateur IA à qui vous parlez vraiment. Tout le monde le peut, sans aucun rapport. Vous en avez un ? Il aide seulement Sol à mieux vous connaître."
     },
     "suggest": {
@@ -1402,7 +1402,7 @@
       "desc": "Vos rapports vous appartiennent. Téléchargez-les ou fermez votre compte.",
       "exportTitle": "Exporter mes données",
       "exportDesc": "Téléchargez tous vos rapports, résultats et journaux d’humeur dans un fichier.",
-      "disclaimer": "Les évaluations Daybreak vous aident à réfléchir sur vous-même. Elles ne constituent pas des soins médicaux. Nous ne vendons jamais vos données. Si vous êtes en situation de crise, appelez votre numéro d’urgence local ou une ligne d’écoute.",
+      "disclaimer": "Les évaluations {{appName}} vous aident à réfléchir sur vous-même. Elles ne constituent pas des soins médicaux. Nous ne vendons jamais vos données. Si vous êtes en situation de crise, appelez votre numéro d’urgence local ou une ligne d’écoute.",
       "deleteTitle": "Supprimer le compte",
       "deleteDesc": "Cela supprime définitivement vos rapports, vos plans et vos livres. Vous ne pourrez pas revenir en arrière.",
       "delete": "Supprimer"
@@ -2643,14 +2643,14 @@
       "useStrengthTag": "Utilisez cette force",
       "useYour": "Utilisez votre {{label}}",
       "leanOnText": "Voilà ce qui fonctionne bien pour vous en ce moment. Servez-vous-en sur les domaines à travailler ci-dessus — c’est ce qui fait tenir le reste du plan.",
-      "disclaimer": "Daybreak est un outil pour vous aider à réfléchir. Ce n’est ni un test médical, ni un diagnostic, ni un traitement. Si vous traversez une période difficile, faire appel à un professionnel qualifié est une prochaine étape courageuse et utile.",
+      "disclaimer": "{{appName}} est un outil pour vous aider à réfléchir. Ce n’est ni un test médical, ni un diagnostic, ni un traitement. Si vous traversez une période difficile, faire appel à un professionnel qualifié est une prochaine étape courageuse et utile.",
       "downloadReport": "Télécharger ce rapport",
       "allReports": "Tous mes rapports"
     },
     "json": {
       "headerNote": "Un outil de connaissance de soi généré à partir de vos réponses — ni évaluation clinique ni diagnostic.",
       "leanOnText": "Voilà ce qui fonctionne pour vous en ce moment. Investissez-le délibérément dans les domaines à travailler ci-dessus — c’est ce qui fait tenir le reste du plan.",
-      "disclaimer": "Daybreak est un outil d’introspection, pas une évaluation clinique, un diagnostic ou un traitement. Si vous traversez une période difficile, faire appel à un professionnel agréé est une prochaine étape courageuse et utile.",
+      "disclaimer": "{{appName}} est un outil d’introspection, pas une évaluation clinique, un diagnostic ou un traitement. Si vous traversez une période difficile, faire appel à un professionnel agréé est une prochaine étape courageuse et utile.",
       "attempt": "essai {{n}}",
       "completed": "Terminé {{date}} · {{name}}",
       "categoryByCategory": "Catégorie par catégorie",
@@ -2746,7 +2746,7 @@
       "takeAgainSmall": "Voyez ces chiffres évoluer — c’est la preuve",
       "disclaimer": "Ce rapport est un outil pour vous aider à réfléchir. Il est établi à partir de vos réponses selon une méthode de notation fixe. Ce n’est ni un test médical, ni un diagnostic, ni un plan de traitement. Si vous traversez une période difficile, parler à un professionnel qualifié est une bonne et courageuse prochaine étape.",
       "tryAnother": "Essayez un autre thème",
-      "backHome": "Retour à Daybreak"
+      "backHome": "Retour à {{appName}}"
     }
   },
   "subCat": {
@@ -2848,6 +2848,6 @@
     }
   },
   "meta": {
-    "title": "Daybreak — Votre esprit a une voie"
+    "title": "{{appName}} — Votre esprit a une voie"
   }
 }

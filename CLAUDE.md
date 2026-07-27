@@ -4,7 +4,7 @@ Guidance for Claude Code (and humans) working in this repository.
 
 ## What this is
 
-**Daybreak** is an assessment-led mental-wellness web app (demo/marketing build). A
+**MindPath** is an assessment-led mental-wellness web app (demo/marketing build). A
 visitor takes a short self-assessment, gets a **deterministic** scored report, and is
 guided into a matching daily-audio plan, ebooks, counselling, and free music. It is a
 React single-page app with no backend — all content lives in static data modules under
@@ -20,6 +20,13 @@ React single-page app with no backend — all content lives in static data modul
   `scoreAnswers` in `src/data/assessments.js` (mean of items per dimension, reverse-scored
   where flagged, scaled 0–100, averaged to an overall). Do not introduce randomness into
   scoring.
+- **Never hard-code the product name.** It comes from `VITE_APP_NAME` (`.env`) through
+  `src/lib/brand.js` — import `APP_NAME` / `APP_SLUG` / `APP_DOMAIN` / `APP_PRESS` in
+  code, and write `{{appName}}` in translation strings (registered as an i18next
+  `defaultVariables` entry, so no call site passes it). Note `{{brand}}` is already
+  taken — it means the *payment card* brand. `index.html` uses an `%APP_NAME%`
+  placeholder substituted by a small plugin in `vite.config.js`; `public/sw.js` can't
+  see env vars, so `src/lib/push.js` passes the name on the registration URL.
 
 ## Tech stack
 

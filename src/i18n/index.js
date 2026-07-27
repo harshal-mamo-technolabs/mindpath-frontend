@@ -12,6 +12,7 @@ import de from './locales/de.json'
 import fr from './locales/fr.json'
 import it from './locales/it.json'
 import { setLanguageProvider } from '../lib/api.js'
+import { APP_NAME } from '../lib/brand.js'
 
 export const LANGS = ['en', 'de', 'fr', 'it']
 export const LANG_NAMES = { en: 'English', de: 'Deutsch', fr: 'Français', it: 'Italiano' }
@@ -35,7 +36,9 @@ i18n.use(initReactI18next).init({
   lng: initial,
   fallbackLng: 'en',
   supportedLngs: LANGS,
-  interpolation: { escapeValue: false },
+  // `appName` is available to every string as {{appName}} without passing it at the
+  // call site — that's how the product name stays env-driven across all languages.
+  interpolation: { escapeValue: false, defaultVariables: { appName: APP_NAME } },
   returnEmptyString: false, // empty string → fall back to English
 })
 
@@ -49,7 +52,7 @@ const applyLang = (lng) => {
   if (typeof document !== 'undefined') {
     document.documentElement.setAttribute('lang', lng)
     // Localize the browser-tab title (the static index.html title is English-only).
-    document.title = i18n.t('meta.title', { defaultValue: 'Daybreak — Your mind has a path' })
+    document.title = i18n.t('meta.title', { defaultValue: `${APP_NAME} — Your mind has a path` })
   }
 }
 applyLang(i18n.language)

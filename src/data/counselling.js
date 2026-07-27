@@ -13,10 +13,11 @@ import {
 import { getAssessment } from './assessments.js'
 import { REPORT_GROUPS } from './reportHistory.js'
 import { getPlan, PAYG, SUBSCRIPTION } from './billing.js'
+import { APP_NAME } from '../lib/brand.js'
 
 export const ADVISOR = {
   name: 'Sol',
-  role: 'Your Daybreak advisor',
+  role: `Your ${APP_NAME} advisor`,
   blurb:
     'Pick whatever’s on your mind and talk it through out loud with an AI advisor you actually speak to. Anyone can, no report needed. Have one? It just helps Sol get to know you better.',
 }

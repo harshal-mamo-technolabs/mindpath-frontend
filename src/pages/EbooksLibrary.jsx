@@ -32,6 +32,7 @@ import {
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import { useAuth } from '../hooks/useAuth.js'
+import { APP_PRESS } from '../lib/brand.js'
 import { isStripeMode } from '../lib/billingMode.js'
 import { stripeConfigured, stripePromise } from '../lib/stripe.js'
 import { getPaymentMethods } from '../lib/payments.js'
@@ -130,7 +131,7 @@ function Cover({ book, theme, size = 'md' }) {
   return (
     <div className={`bk-cover bk-${size}`} style={{ '--accent': theme.accent, '--bg': theme.bg }}>
       <span className="bk-spine" />
-      <span className="bk-press">Daybreak Press</span>
+      <span className="bk-press">{APP_PRESS}</span>
       <span className="bk-title">{book.coverText || book.title}</span>
       <span className="bk-author">{book.author}</span>
     </div>
@@ -590,7 +591,7 @@ export default function EbooksLibrary() {
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>${esc(book.title)} — Daybreak Press</title>
+<title>${esc(book.title)} — ${esc(APP_PRESS)}</title>
 <style>
   @page { margin: 18mm 0; }
   /* Plain white page. print-color-adjust: exact keeps it white regardless of any dark UI. */
@@ -609,12 +610,12 @@ export default function EbooksLibrary() {
 </head>
 <body>
   <div class="cover">
-    <p class="press">Daybreak Press</p>
+    <p class="press">${esc(APP_PRESS)}</p>
     <h1>${esc(book.title)}</h1>
-    <p class="by">${esc(book.author || 'Daybreak Press')}</p>
+    <p class="by">${esc(book.author || APP_PRESS)}</p>
   </div>
 ${chaptersHtml}
-  <footer>© Daybreak Press · ${t('ebooks.pdfFooter')}</footer>
+  <footer>© ${esc(APP_PRESS)} · ${t('ebooks.pdfFooter')}</footer>
 </body>
 </html>`
 

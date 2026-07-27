@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ArrowRight, Play } from 'lucide-react'
 import Reveal from './Reveal.jsx'
+import { APP_PRESS } from '../lib/brand.js'
 
 const VOICE_BARS = [40, 75, 55, 90, 65, 100, 70, 85, 50, 78, 60, 92, 45, 70]
 const TRACK_LENS = ['24:00', '45:00', '12:00']
@@ -32,7 +33,7 @@ export default function Ecosystem() {
               {t('home.ecosystem.ebookLink')} <ArrowRight size={16} />
             </Link>
             <div className="eco-book-mock" aria-hidden="true">
-              <small>Daybreak Press</small>
+              <small>{APP_PRESS}</small>
               <h5>{t('home.ecosystem.ebookMockTitle')}</h5>
               <span className="for">{t('home.ecosystem.ebookMockFor')}</span>
             </div>

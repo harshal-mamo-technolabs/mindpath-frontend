@@ -1,5 +1,5 @@
 /**
- * Billing model. Daybreak sells two ways:
+ * Billing model. The app sells two ways:
  *  1) Subscriptions  a monthly/yearly plan grants an allowance of
  *     assessments (any topic), ebooks, and counselling minutes per cycle.
  *  2) Pay-as-you-go  once an allowance is exhausted (or with no plan),

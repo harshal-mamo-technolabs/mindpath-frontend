@@ -83,7 +83,7 @@
       "eyebrow": "So funktioniert’s",
       "h2a": "Ein Kreislauf.",
       "h2em": "Bleibende Veränderung.",
-      "lede": "Bei Daybreak beginnt alles damit, dich selbst zu verstehen und alles Weitere baut darauf auf.",
+      "lede": "Bei {{appName}} beginnt alles damit, dich selbst zu verstehen und alles Weitere baut darauf auf.",
       "step": "Schritt",
       "steps": [
         {
@@ -321,13 +321,13 @@
     "submitLoading": "Einen Moment …",
     "submitLogin": "Anmelden",
     "submitCreate": "Konto erstellen",
-    "legalEmail": "Mit dem Fortfahren stimmst du unseren AGB zu. Daybreak ist ein Selbsthilfe-Tool, keine medizinische Versorgung.",
-    "legalMsisdn": "Mit dem Fortfahren stimmst du unseren AGB zu. Daybreak ist ein Selbsthilfe-Tool, keine medizinische Versorgung. Dein Tarif wird über deine Handyrechnung abgerechnet.",
+    "legalEmail": "Mit dem Fortfahren stimmst du unseren AGB zu. {{appName}} ist ein Selbsthilfe-Tool, keine medizinische Versorgung.",
+    "legalMsisdn": "Mit dem Fortfahren stimmst du unseren AGB zu. {{appName}} ist ein Selbsthilfe-Tool, keine medizinische Versorgung. Dein Tarif wird über deine Handyrechnung abgerechnet.",
     "swapNew": "Neu hier?",
     "createLink": "Konto erstellen",
     "haveAccount": "Hast du schon ein Konto?",
     "loginLink": "Anmelden",
-    "guest": "← Nur am Umschauen? Zurück zu Daybreak",
+    "guest": "← Nur am Umschauen? Zurück zu {{appName}}",
     "defaultName": "du",
     "errName": "Verwende 2 bis 50 Zeichen.",
     "errEmail": "Diese E-Mail sieht nicht richtig aus.",
@@ -342,7 +342,7 @@
       "eyebrow": "Der Katalog",
       "h1a": "Beginne mit dem,",
       "h1em": "was am meisten wehtut.",
-      "lede": "Jeder Daybreak-Weg beginnt mit einem ehrlichen Satz Fragen zu echten Bereichen deines Lebens. Wähle das Thema, das zu dem passt, was du gerade durchmachst.",
+      "lede": "Jeder {{appName}}-Weg beginnt mit einem ehrlichen Satz Fragen zu echten Bereichen deines Lebens. Wähle das Thema, das zu dem passt, was du gerade durchmachst.",
       "trust1": "Fragen, die du selbst beantwortest keine Diagnose",
       "trust2": "Konsistente Ergebnisse nie von einer KI geraten",
       "trust3": "Jeder gibt dir einen Bericht, einen Audio-Plan und ein E-Book",
@@ -969,7 +969,7 @@
   },
   "counsel": {
     "advisor": {
-      "role": "Dein Daybreak-Berater",
+      "role": "Dein {{appName}}-Berater",
       "blurb": "Wähl einfach, was dir gerade auf dem Herzen liegt, und sprich es laut mit einem KI-Berater durch, mit dem du wirklich redest. Jeder kann das, ganz ohne Bericht. Du hast einen? Dann hilft er Sol nur, dich besser kennenzulernen."
     },
     "suggest": {
@@ -1402,7 +1402,7 @@
       "desc": "Deine Berichte gehören dir. Lade sie herunter oder schließe dein Konto.",
       "exportTitle": "Meine Daten exportieren",
       "exportDesc": "Lade alle deine Berichte, Ergebnisse und Stimmungsprotokolle als Datei herunter.",
-      "disclaimer": "Daybreak-Assessments helfen dir, über dich selbst nachzudenken. Sie sind keine medizinische Versorgung. Wir verkaufen deine Daten niemals. Wenn du in einer Krise bist, ruf bitte deinen örtlichen Notruf oder eine Krisenhotline an.",
+      "disclaimer": "{{appName}}-Assessments helfen dir, über dich selbst nachzudenken. Sie sind keine medizinische Versorgung. Wir verkaufen deine Daten niemals. Wenn du in einer Krise bist, ruf bitte deinen örtlichen Notruf oder eine Krisenhotline an.",
       "deleteTitle": "Konto löschen",
       "deleteDesc": "Damit werden deine Berichte, Pläne und Bücher endgültig gelöscht. Du kannst das nicht rückgängig machen.",
       "delete": "Löschen"
@@ -2643,14 +2643,14 @@
       "useStrengthTag": "Nutze diese Stärke",
       "useYour": "Nutze deine {{label}}",
       "leanOnText": "Das funktioniert gerade gut für dich. Setz es bei den Fokusbereichen oben ein — so bleibt der Rest des Plans hängen.",
-      "disclaimer": "Daybreak ist ein Werkzeug, das dir beim Nachdenken hilft. Es ist kein medizinischer Test, keine Diagnose und keine Behandlung. Wenn es dir schwerfällt, ist der Schritt zu einer ausgebildeten Fachperson mutig und lohnend.",
+      "disclaimer": "{{appName}} ist ein Werkzeug, das dir beim Nachdenken hilft. Es ist kein medizinischer Test, keine Diagnose und keine Behandlung. Wenn es dir schwerfällt, ist der Schritt zu einer ausgebildeten Fachperson mutig und lohnend.",
       "downloadReport": "Diesen Bericht herunterladen",
       "allReports": "Alle meine Berichte"
     },
     "json": {
       "headerNote": "Ein Werkzeug zur Selbstwahrnehmung, erstellt aus deinen Antworten — keine klinische oder diagnostische Beurteilung.",
       "leanOnText": "Das funktioniert gerade für dich. Setz es gezielt bei den Fokusbereichen oben ein — so bleibt der Rest des Plans hängen.",
-      "disclaimer": "Daybreak ist ein Werkzeug zur Selbstreflexion, keine klinische Beurteilung, Diagnose oder Behandlung. Wenn es dir schwerfällt, ist der Schritt zu einer zugelassenen Fachperson mutig und lohnend.",
+      "disclaimer": "{{appName}} ist ein Werkzeug zur Selbstreflexion, keine klinische Beurteilung, Diagnose oder Behandlung. Wenn es dir schwerfällt, ist der Schritt zu einer zugelassenen Fachperson mutig und lohnend.",
       "attempt": "Versuch {{n}}",
       "completed": "Abgeschlossen {{date}} · {{name}}",
       "categoryByCategory": "Kategorie für Kategorie",
@@ -2746,7 +2746,7 @@
       "takeAgainSmall": "Sieh, wie sich diese Zahlen verändern — das ist der Beweis",
       "disclaimer": "Dieser Bericht ist ein Werkzeug, das dir beim Nachdenken hilft. Er entsteht aus deinen Antworten nach einem festen Bewertungsverfahren. Er ist kein medizinischer Test, keine Diagnose und kein Behandlungsplan. Wenn es dir schwerfällt, ist ein Gespräch mit einer ausgebildeten Fachperson ein guter und mutiger nächster Schritt.",
       "tryAnother": "Probier ein anderes Thema",
-      "backHome": "Zurück zu Daybreak"
+      "backHome": "Zurück zu {{appName}}"
     }
   },
   "subCat": {
@@ -2848,6 +2848,6 @@
     }
   },
   "meta": {
-    "title": "Daybreak — Dein Geist hat einen Weg"
+    "title": "{{appName}} — Dein Geist hat einen Weg"
   }
 }

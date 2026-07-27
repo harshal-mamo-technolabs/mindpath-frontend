@@ -1,4 +1,5 @@
 import { REPORT_GROUPS } from './reportHistory.js'
+import { APP_PRESS } from '../lib/brand.js'
 
 const NAME = 'Maya'
 
@@ -241,7 +242,7 @@ export const GENERAL_EBOOKS = [
   G({
     id: 'five-minutes',
     title: 'Five Minutes of Quiet',
-    author: 'Daybreak Press',
+    author: APP_PRESS,
     category: 'Mindfulness',
     pages: 64,
     readMin: 48,

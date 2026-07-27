@@ -1,5 +1,11 @@
-/* Daybreak service worker — receives Web Push messages from the backend and shows a
-   system notification, even when the tab is backgrounded. */
+/* Service worker — receives Web Push messages from the backend and shows a system
+   notification, even when the tab is backgrounded.
+
+   This file is served from public/ as-is, so Vite can't inline VITE_APP_NAME here.
+   The app passes it on the registration URL instead (see src/lib/push.js). */
+
+const APP_NAME = new URL(self.location.href).searchParams.get('app') || 'MindPath'
+const APP_TAG = APP_NAME.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'app'
 
 self.addEventListener('push', (event) => {
   let data = {}
@@ -8,12 +14,12 @@ self.addEventListener('push', (event) => {
   } catch {
     data = { body: event.data && event.data.text() }
   }
-  const title = data.title || 'Daybreak'
+  const title = data.title || APP_NAME
   const options = {
     body: data.body || '',
     icon: '/favicon.svg',
     badge: '/favicon.svg',
-    tag: 'daybreak',
+    tag: APP_TAG,
     data: { url: data.url || '/' },
   }
   event.waitUntil(self.registration.showNotification(title, options))

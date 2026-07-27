@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth.js'
+import { APP_NAME } from '../lib/brand.js'
 
 export default function Logo() {
   const { isAuthenticated } = useAuth()
@@ -7,9 +8,13 @@ export default function Logo() {
   const to = isAuthenticated ? '/dashboard' : '/'
 
   return (
-    <Link to={to} className="logo" aria-label={isAuthenticated ? 'Daybreak dashboard' : 'Daybreak home'}>
+    <Link
+      to={to}
+      className="logo"
+      aria-label={isAuthenticated ? `${APP_NAME} dashboard` : `${APP_NAME} home`}
+    >
       <span className="logo-mark" aria-hidden="true">
-        {/* Daybreak — a sun rising over calm water */}
+        {/* a sun rising over calm water */}
         <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
           <path d="M21.5 32 A10.5 10.5 0 0 1 42.5 32 Z" fill="#F3C58A" />
           <path
@@ -28,7 +33,7 @@ export default function Logo() {
           />
         </svg>
       </span>
-      Daybreak
+      {APP_NAME}
     </Link>
   )
 }

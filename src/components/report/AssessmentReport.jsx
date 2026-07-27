@@ -18,6 +18,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getAudioPlanForAssessment } from '../../lib/audioApi.js'
+import { APP_NAME } from '../../lib/brand.js'
 
 /* gauge / pill colour keyed by health (good = green, whatever the direction).
    'growth' (blue) is the all-strength case — a low score is upside, not alarm. */
@@ -679,7 +680,7 @@ export default function AssessmentReport({
           <ShieldCheck size={14} />{' '}
           {t(
             'report.chrome.disclaimer',
-            'Daybreak is a tool to help you reflect. It is not a medical test, a diagnosis, or treatment. If you’re struggling, reaching out to a trained professional is a brave and worthwhile next step.',
+            `${APP_NAME} is a tool to help you reflect. It is not a medical test, a diagnosis, or treatment. If you’re struggling, reaching out to a trained professional is a brave and worthwhile next step.`,
           )}
         </p>
         <div className="srep-closing-actions">

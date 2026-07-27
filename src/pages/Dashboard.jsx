@@ -29,6 +29,7 @@ import {
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import { useAuth } from '../hooks/useAuth.js'
+import { APP_DOMAIN, APP_SLUG } from '../lib/brand.js'
 import { getAssessments, getScores } from '../lib/assessmentsApi.js'
 import { getAudioPlans } from '../lib/audioApi.js'
 import { getMyPrograms } from '../lib/audioProgramsApi.js'
@@ -147,7 +148,7 @@ export default function Dashboard() {
   })
 
   function copyInvite() {
-    navigator.clipboard?.writeText('daybreak.app/invite/DAYBREAK').catch(() => {})
+    navigator.clipboard?.writeText(`${APP_DOMAIN}/invite/${APP_SLUG.toUpperCase()}`).catch(() => {})
     say(t('dash.linkCopied'))
   }
 

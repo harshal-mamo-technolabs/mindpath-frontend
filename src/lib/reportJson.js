@@ -10,6 +10,7 @@
  * copy (components/report/reportUi.jsx); never touches React or icon objects.
  */
 import i18n from '../i18n/index.js'
+import { APP_NAME } from './brand.js'
 
 /* static copy the report component renders as fixed strings — resolved through
    i18next so a stored report snapshots in the user's language (English default). */
@@ -26,7 +27,7 @@ const leanOnText = () =>
 const disclaimer = () =>
   i18n.t('report.json.disclaimer', {
     defaultValue:
-      'Daybreak is a self-reflection tool, not a clinical assessment, diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.',
+      `${APP_NAME} is a self-reflection tool, not a clinical assessment, diagnosis, or treatment. If you’re struggling, reaching out to a licensed professional is a brave and worthwhile next step.`,
   })
 
 const dateLabel = (iso) =>

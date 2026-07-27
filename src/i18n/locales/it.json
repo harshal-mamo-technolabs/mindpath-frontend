@@ -83,7 +83,7 @@
       "eyebrow": "Come funziona",
       "h2a": "Un ciclo.",
       "h2em": "Un cambiamento duraturo.",
-      "lede": "Da Daybreak tutto inizia dal comprendere te stesso e tutto il resto si costruisce su questo.",
+      "lede": "Da {{appName}} tutto inizia dal comprendere te stesso e tutto il resto si costruisce su questo.",
       "step": "Passo",
       "steps": [
         {
@@ -321,13 +321,13 @@
     "submitLoading": "Un momento…",
     "submitLogin": "Accedi",
     "submitCreate": "Crea account",
-    "legalEmail": "Continuando accetti i nostri Termini. Daybreak è uno strumento di auto-aiuto, non un’assistenza medica.",
-    "legalMsisdn": "Continuando accetti i nostri Termini. Daybreak è uno strumento di auto-aiuto, non un’assistenza medica. Il tuo piano viene addebitato sulla bolletta del telefono.",
+    "legalEmail": "Continuando accetti i nostri Termini. {{appName}} è uno strumento di auto-aiuto, non un’assistenza medica.",
+    "legalMsisdn": "Continuando accetti i nostri Termini. {{appName}} è uno strumento di auto-aiuto, non un’assistenza medica. Il tuo piano viene addebitato sulla bolletta del telefono.",
     "swapNew": "Nuovo qui?",
     "createLink": "Crea un account",
     "haveAccount": "Hai già un account?",
     "loginLink": "Accedi",
-    "guest": "← Solo un’occhiata? Torna a Daybreak",
+    "guest": "← Solo un’occhiata? Torna a {{appName}}",
     "defaultName": "tu",
     "errName": "Usa da 2 a 50 caratteri.",
     "errEmail": "Questa e-mail non sembra valida.",
@@ -342,7 +342,7 @@
       "eyebrow": "Il catalogo",
       "h1a": "Inizia da quello",
       "h1em": "che fa più male.",
-      "lede": "Ogni percorso Daybreak inizia con una serie sincera di domande su aspetti reali della tua vita. Scegli il tema che corrisponde a ciò che stai attraversando.",
+      "lede": "Ogni percorso {{appName}} inizia con una serie sincera di domande su aspetti reali della tua vita. Scegli il tema che corrisponde a ciò che stai attraversando.",
       "trust1": "Domande a cui rispondi tu stesso non una diagnosi",
       "trust2": "Risultati coerenti mai indovinati da un’IA",
       "trust3": "Ognuno ti dà un report, un piano audio e un e-book",
@@ -969,7 +969,7 @@
   },
   "counsel": {
     "advisor": {
-      "role": "Il tuo consulente Daybreak",
+      "role": "Il tuo consulente {{appName}}",
       "blurb": "Scegli qualsiasi cosa ti passi per la testa e parlane a voce alta con un consulente IA con cui parli davvero. Chiunque può farlo, senza bisogno di alcun report. Ne hai uno? Aiuta solo Sol a conoscerti meglio."
     },
     "suggest": {
@@ -1402,7 +1402,7 @@
       "desc": "I tuoi report appartengono a te. Scaricali oppure chiudi il tuo account.",
       "exportTitle": "Esporta i miei dati",
       "exportDesc": "Scarica tutti i tuoi report, punteggi e diari dell’umore in un file.",
-      "disclaimer": "Le valutazioni Daybreak ti aiutano a riflettere su te stesso. Non sono assistenza medica. Non vendiamo mai i tuoi dati. Se sei in crisi, chiama il numero di emergenza locale o una linea di ascolto.",
+      "disclaimer": "Le valutazioni {{appName}} ti aiutano a riflettere su te stesso. Non sono assistenza medica. Non vendiamo mai i tuoi dati. Se sei in crisi, chiama il numero di emergenza locale o una linea di ascolto.",
       "deleteTitle": "Elimina account",
       "deleteDesc": "Questo elimina per sempre i tuoi report, i tuoi piani e i tuoi libri. Non potrai annullare l’operazione.",
       "delete": "Elimina"
@@ -2643,14 +2643,14 @@
       "useStrengthTag": "Usa questo punto di forza",
       "useYour": "Usa la tua {{label}}",
       "leanOnText": "Ecco ciò che al momento funziona bene per te. Usalo sulle aree di focus qui sopra — è ciò che fa reggere il resto del piano.",
-      "disclaimer": "Daybreak è uno strumento per aiutarti a riflettere. Non è un test medico, una diagnosi o una cura. Se stai attraversando un momento difficile, rivolgerti a un professionista qualificato è un passo coraggioso e prezioso.",
+      "disclaimer": "{{appName}} è uno strumento per aiutarti a riflettere. Non è un test medico, una diagnosi o una cura. Se stai attraversando un momento difficile, rivolgerti a un professionista qualificato è un passo coraggioso e prezioso.",
       "downloadReport": "Scarica questo report",
       "allReports": "Tutti i miei report"
     },
     "json": {
       "headerNote": "Uno strumento di consapevolezza di sé generato dalle tue risposte — non una valutazione clinica o diagnostica.",
       "leanOnText": "Ecco ciò che al momento funziona per te. Impiegalo con intenzione sulle aree di focus qui sopra — è ciò che fa reggere il resto del piano.",
-      "disclaimer": "Daybreak è uno strumento di auto-riflessione, non una valutazione clinica, una diagnosi o una cura. Se stai attraversando un momento difficile, rivolgerti a un professionista abilitato è un passo coraggioso e prezioso.",
+      "disclaimer": "{{appName}} è uno strumento di auto-riflessione, non una valutazione clinica, una diagnosi o una cura. Se stai attraversando un momento difficile, rivolgerti a un professionista abilitato è un passo coraggioso e prezioso.",
       "attempt": "tentativo {{n}}",
       "completed": "Completato {{date}} · {{name}}",
       "categoryByCategory": "Categoria per categoria",
@@ -2746,7 +2746,7 @@
       "takeAgainSmall": "Guarda questi numeri cambiare — è questa la prova",
       "disclaimer": "Questo report è uno strumento per aiutarti a riflettere. È creato dalle tue risposte con un metodo di punteggio fisso. Non è un test medico, una diagnosi o un piano di cura. Se stai attraversando un momento difficile, parlare con un professionista qualificato è un passo buono e coraggioso.",
       "tryAnother": "Prova un altro tema",
-      "backHome": "Torna a Daybreak"
+      "backHome": "Torna a {{appName}}"
     }
   },
   "subCat": {
@@ -2848,6 +2848,6 @@
     }
   },
   "meta": {
-    "title": "Daybreak — La tua mente ha un percorso"
+    "title": "{{appName}} — La tua mente ha un percorso"
   }
 }
