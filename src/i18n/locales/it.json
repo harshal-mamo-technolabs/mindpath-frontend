@@ -156,8 +156,7 @@
       "h2em": "Finisci sentendoti più leggero.",
       "text": "Dodici minuti di risposte sincere oggi. Un’immagine più chiara di te domani e un percorso che resta con te dopo.",
       "primary": "Fai il tuo primo test",
-      "secondary": "Solo la musica gratis, per ora",
-      "referral": "Aiuta avere un amico accanto. Invitane uno e ricevete entrambi una sessione gratuita."
+      "secondary": "Solo la musica gratis, per ora"
     },
     "report": {
       "eyebrow": "Il tuo report personale",
@@ -526,7 +525,6 @@
     "greetingEvening": "Buonasera",
     "greeting": "{{greeting}}, {{name}}.",
     "min": "min",
-    "linkCopied": "Link copiato. Ricevete entrambi una sessione gratuita.",
     "night": "Notte",
     "day": "Giorno",
     "switchToDay": "Passa alla modalità giorno",
@@ -583,16 +581,6 @@
     "shelfEmptyPre": "Il tuo scaffale è vuoto.",
     "shelfEmptyLink": "Sfoglia il negozio di e-book",
     "shelfEmptyPost": "per aggiungere un libro.",
-    "moreForYou": "Altro per te",
-    "counselTitle": "Parlane",
-    "counselDesc": "Un aiutante IA che ha letto il tuo report. Parla di come ti senti.",
-    "seeCounselling": "Vedi la consulenza",
-    "referTitle": "Porta un amico",
-    "referDesc": "Invita un amico. Ricevete entrambi una sessione di consulenza gratuita.",
-    "copyInvite": "Copia il link d’invito",
-    "musicTitle": "Musica gratis",
-    "musicDesc": "Brani per yoga & meditazione. Ascoltali quando vuoi rilassarti.",
-    "openLibrary": "Apri la libreria",
     "jumpLabel": "Tutto, a portata di tocco",
     "chipAssessments": "Test",
     "chipReports": "I tuoi report",
@@ -1108,11 +1096,13 @@
       "yourSession": "La tua sessione",
       "howOpens": "Come inizia {{name}}",
       "resume": "Riprendi da dove ci eravamo lasciati l’ultima volta",
+      "resumeCutOff": "Riprendi da dove siamo stati interrotti l’ultima volta",
       "start": "Avvia la sessione con {{name}}",
       "metaMin": "{{minutes}} min",
       "metaAvail": "disponibili · ~15 min è normale · fermati quando vuoi",
       "metaNoAuth": "Usa i tuoi minuti · ~15 min è normale · fermati quando vuoi",
-      "outOfMinutes": "Minuti esauriti — ricarica per iniziare"
+      "outOfMinutes": "Minuti esauriti — ricarica per iniziare",
+      "startShort": "Inizia"
     },
     "call": {
       "barLive": "In diretta · {{title}}",
@@ -1142,8 +1132,17 @@
       "complete": "Sessione completata",
       "meta": "{{title}} · {{clock}} · {{remaining}} min rimasti questo ciclo",
       "talkedAbout": "Di cosa avete parlato tu e {{name}}",
+      "continue": "Continua questa conversazione",
       "newSession": "Nuova sessione",
-      "buyMore": "Acquista più minuti"
+      "buyMore": "Acquista più minuti",
+      "saving": "Salvataggio della conversazione…"
+    },
+    "past": {
+      "title": "Riprendi da dove eri rimasto",
+      "lede": "Le tue conversazioni passate. {{name}} ricorda di cosa avete parlato, così puoi proseguire.",
+      "cutOff": "Interrotta",
+      "continue": "Continua questa conversazione",
+      "messages": "{{count}} messaggi"
     },
     "toast": {
       "minutesUp": "I tuoi minuti sono esauriti — la sessione è terminata.",
@@ -1267,6 +1266,7 @@
     "loading": "Caricamento…",
     "tocFree": "Gratis",
     "startReading": "Inizia a leggere",
+    "download": "Scarica",
     "downloadPdf": "Scarica il PDF",
     "readChapterOne": "Leggi il primo capitolo",
     "chapterOf": "Capitolo {{current}} di {{total}}",
@@ -1388,15 +1388,6 @@
       "productTitle": "Novità sul prodotto",
       "productDesc": "Nuovi temi e funzionalità. Non molto spesso."
     },
-    "referrals": {
-      "title": "Inviti",
-      "desc": "È più facile in compagnia. Ricevete entrambi una sessione di consulenza gratuita.",
-      "inviteLabel": "Il tuo link di invito",
-      "copy": "Copia",
-      "invited": "invitati",
-      "joined": "iscritti",
-      "earned": "sessione gratuita ottenuta"
-    },
     "privacy": {
       "title": "Privacy e dati",
       "desc": "I tuoi report appartengono a te. Scaricali oppure chiudi il tuo account.",
@@ -1421,7 +1412,6 @@
       "photoDemo": "Il caricamento della foto è solo una demo.",
       "profileUpdated": "Profilo aggiornato.",
       "exportStarted": "Esportazione avviata. Questa è solo una demo.",
-      "inviteCopied": "Link di invito copiato.",
       "accountSafe": "Questa è una demo. Il tuo account è al sicuro.",
       "reminderOn": "Promemoria giornaliero attivo. Ti ricorderemo alle {{time}}.",
       "reminderOff": "Promemoria giornaliero disattivato.",

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Annoyed, Bell, Frown, Laugh, Meh, Mic, Pause, Play, Smile, Sparkles } from 'lucide-react'
+import { Annoyed, Bell, Frown, Laugh, Meh, Mic, Pause, Play, Smile } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
 const MOOD_ICONS = [Frown, Annoyed, Meh, Smile, Laugh]
@@ -178,7 +178,6 @@ export default function AudioPlan() {
               </div>
               <MoodSpark />
               <p className="mood-spark-note">
-                <Sparkles size={14} />
                 {t('home.audioPlan.moodNote')} <strong>{t('home.audioPlan.moodNoteStrong')}</strong>
               </p>
             </Reveal>

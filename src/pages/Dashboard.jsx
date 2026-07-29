@@ -10,10 +10,8 @@ import {
   ChevronRight,
   ClipboardList,
   Clock,
-  Copy,
   FileHeart,
   Frown,
-  Gift,
   Headphones,
   Laugh,
   Loader2,
@@ -29,7 +27,6 @@ import {
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import { useAuth } from '../hooks/useAuth.js'
-import { APP_DOMAIN, APP_SLUG } from '../lib/brand.js'
 import { getAssessments, getScores } from '../lib/assessmentsApi.js'
 import { getAudioPlans } from '../lib/audioApi.js'
 import { getMyPrograms } from '../lib/audioProgramsApi.js'
@@ -146,11 +143,6 @@ export default function Dashboard() {
     month: 'long',
     day: 'numeric',
   })
-
-  function copyInvite() {
-    navigator.clipboard?.writeText(`${APP_DOMAIN}/invite/${APP_SLUG.toUpperCase()}`).catch(() => {})
-    say(t('dash.linkCopied'))
-  }
 
   if (data.status === 'loading') {
     return (
@@ -509,45 +501,6 @@ export default function Dashboard() {
                   {t('dash.shelfEmptyPost')}
                 </p>
               )}
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ===== AROUND YOUR PATH ===== */}
-        <section className="dash-zone">
-          <h2 className="dash-zone-title">{t('dash.moreForYou')}</h2>
-          <div className="dash-explore-grid">
-            <Reveal className="dash-upsell dash-counsel">
-              <span className="dash-upsell-ico">
-                <MessagesSquare size={22} />
-              </span>
-              <h3>{t('dash.counselTitle')}</h3>
-              <p>{t('dash.counselDesc')}</p>
-              <Link to="/counselling" className="dash-upsell-link">
-                {t('dash.seeCounselling')} <ArrowRight size={15} />
-              </Link>
-            </Reveal>
-
-            <Reveal className="dash-upsell dash-refer" delay={0.08}>
-              <span className="dash-upsell-ico">
-                <Gift size={22} />
-              </span>
-              <h3>{t('dash.referTitle')}</h3>
-              <p>{t('dash.referDesc')}</p>
-              <button className="dash-upsell-link" onClick={copyInvite}>
-                <Copy size={15} /> {t('dash.copyInvite')}
-              </button>
-            </Reveal>
-
-            <Reveal className="dash-upsell dash-music" delay={0.16}>
-              <span className="dash-upsell-ico">
-                <Music size={22} />
-              </span>
-              <h3>{t('dash.musicTitle')}</h3>
-              <p>{t('dash.musicDesc')}</p>
-              <Link to="/sound" className="dash-upsell-link">
-                {t('dash.openLibrary')} <ArrowRight size={15} />
-              </Link>
             </Reveal>
           </div>
         </section>

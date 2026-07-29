@@ -647,112 +647,6 @@
   max-width: 44ch;
 }
 
-/* referrals */
-.pf-referral {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 18px;
-}
-
-.pf-referral-code {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: var(--r-md);
-  padding: 20px;
-}
-
-.pf-code-label {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-
-.pf-code-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.pf-code-row code {
-  flex: 1;
-  min-width: 0;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink);
-  background: var(--surface);
-  border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 10px;
-  padding: 11px 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.pf-copy-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  flex: none;
-  font-size: 13.5px;
-  font-weight: 800;
-  color: var(--paper);
-  background: var(--ink);
-  border-radius: 10px;
-  padding: 11px 16px;
-  transition:
-    background 0.2s,
-    transform 0.2s var(--ease-out);
-}
-
-.pf-copy-btn:hover {
-  background: var(--violet-deep);
-  transform: translateY(-2px);
-}
-
-.pf-referral-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.pf-referral-stats > div {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: var(--r-md);
-  padding: 16px 12px;
-  text-align: center;
-}
-
-.pf-referral-stats strong {
-  font-family: var(--font-display);
-  font-weight: 520;
-  font-size: 26px;
-  display: block;
-  line-height: 1;
-}
-
-.pf-referral-stats small {
-  font-size: 11.5px;
-  color: var(--ink-3);
-  font-weight: 600;
-  margin-top: 5px;
-  display: block;
-}
-
-.pf-referral-stats .reward {
-  background: var(--sage-soft);
-  border-color: transparent;
-}
-
-.pf-referral-stats .reward strong,
-.pf-referral-stats .reward small {
-  color: var(--sage-deep);
-}
-
 /* privacy */
 .pf-disclaimer {
   display: flex;
@@ -893,10 +787,6 @@
 
   .pf-owned-grid {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .pf-referral {
-    grid-template-columns: 1fr;
   }
 }
 

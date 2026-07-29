@@ -27,7 +27,6 @@ import {
   Plus,
   Search,
   ShieldCheck,
-  Sparkles,
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
@@ -362,6 +361,7 @@ export default function EbooksLibrary() {
 
   const [reader, setReader] = useState(null) // full ebook (with chapters)
   const [readerBusy, setReaderBusy] = useState(false)
+  const [downloadingId, setDownloadingId] = useState(null) // shelf card fetching its chapters
   const [openChapter, setOpenChapter] = useState(null) // null = contents view, number = reading
 
   const [buy, setBuy] = useState(null) // { book, step: 'loading'|'pay'|'done', clientSecret, amount }
@@ -442,6 +442,19 @@ export default function EbooksLibrary() {
   const closeReader = () => {
     setReader(null)
     setOpenChapter(null)
+  }
+
+  // Download straight from a shelf card. Grid cards are lightweight (no chapter bodies), so
+  // fetch the full book first — then hand it to the same print-to-PDF path the reader uses.
+  const downloadFromCard = async (book) => {
+    setDownloadingId(idOf(book))
+    try {
+      downloadBook(await getEbook(idOf(book)))
+    } catch (e) {
+      say(e.message || t('ebooks.openError'))
+    } finally {
+      setDownloadingId(null)
+    }
   }
 
   const refreshDetail = async (id) => {
@@ -686,9 +699,27 @@ ${chaptersHtml}
           ) : null}
           <div className="eb-card-foot">
             {book.onShelf ? (
-              <button className="eb-btn-read" onClick={() => openReader(book, 0)}>
-                <BookOpen size={15} /> {t('ebooks.read')}
-              </button>
+              <>
+                {/* Opens the contents — chapters, progress, and the download button — not
+                    chapter one directly; the menu is the point of "Read" from the shelf. */}
+                <button className="eb-btn-read" onClick={() => openReader(book)}>
+                  <BookOpen size={15} /> {t('ebooks.read')}
+                </button>
+                <button
+                  className="eb-btn-download"
+                  onClick={() => downloadFromCard(book)}
+                  disabled={downloadingId === idOf(book)}
+                  title={t('ebooks.downloadPdf')}
+                  aria-label={t('ebooks.downloadPdf')}
+                >
+                  {downloadingId === idOf(book) ? (
+                    <Loader2 size={15} className="ap-spin" />
+                  ) : (
+                    <Download size={15} />
+                  )}
+                  <span>{t('ebooks.download')}</span>
+                </button>
+              </>
             ) : (
               <>
                 <button className="eb-btn-buy" onClick={() => startGet(book)}>
@@ -753,7 +784,7 @@ ${chaptersHtml}
           <div className="container">
             <div className="eb-section-head">
               <h2 className="rp-h2">
-                <Sparkles size={19} /> {t('ebooks.yourShelf')}
+                {t('ebooks.yourShelf')}
               </h2>
               <span className="eb-section-count">
                 {t('ebooks.booksCount', { count: shelf.length })}

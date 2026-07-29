@@ -156,8 +156,7 @@
       "h2em": "End up feeling lighter.",
       "text": "Twelve minutes of honest answers today. A clearer picture of yourself tomorrow and a path that stays with you after that.",
       "primary": "Take your first assessment",
-      "secondary": "Just the free music, for now",
-      "referral": "It helps to have a friend along. Invite one and you both get a free session."
+      "secondary": "Just the free music, for now"
     },
     "report": {
       "eyebrow": "Your personal report",
@@ -526,7 +525,6 @@
     "greetingEvening": "Good evening",
     "greeting": "{{greeting}}, {{name}}.",
     "min": "min",
-    "linkCopied": "Link copied. You both get a free session.",
     "night": "Night",
     "day": "Day",
     "switchToDay": "Switch to day mode",
@@ -583,16 +581,6 @@
     "shelfEmptyPre": "Your shelf is empty.",
     "shelfEmptyLink": "Browse the ebook shop",
     "shelfEmptyPost": "to add a book.",
-    "moreForYou": "More for you",
-    "counselTitle": "Talk it through",
-    "counselDesc": "An AI helper that has read your report. Talk about how you feel.",
-    "seeCounselling": "See counselling",
-    "referTitle": "Bring a friend",
-    "referDesc": "Invite a friend. You both get a free counselling session.",
-    "copyInvite": "Copy invite link",
-    "musicTitle": "Free music",
-    "musicDesc": "Yoga & meditation tracks. Play them anytime you want to feel calm.",
-    "openLibrary": "Open the library",
     "jumpLabel": "Everything, one tap away",
     "chipAssessments": "Assessments",
     "chipReports": "Your reports",
@@ -1108,11 +1096,13 @@
       "yourSession": "Your session",
       "howOpens": "How {{name}} opens",
       "resume": "Pick up where we left off last time",
+      "resumeCutOff": "Pick up where we were cut off last time",
       "start": "Start session with {{name}}",
       "metaMin": "{{minutes}} min",
       "metaAvail": "available · ~15 min is normal · stop anytime",
       "metaNoAuth": "Uses your minutes · ~15 min is normal · stop anytime",
-      "outOfMinutes": "Out of minutes — top up to start"
+      "outOfMinutes": "Out of minutes — top up to start",
+      "startShort": "Start"
     },
     "call": {
       "barLive": "Live · {{title}}",
@@ -1142,8 +1132,17 @@
       "complete": "Session complete",
       "meta": "{{title}} · {{clock}} · {{remaining}} min left this cycle",
       "talkedAbout": "What you and {{name}} talked about",
+      "continue": "Continue this conversation",
       "newSession": "New session",
-      "buyMore": "Buy more minutes"
+      "buyMore": "Buy more minutes",
+      "saving": "Saving your conversation…"
+    },
+    "past": {
+      "title": "Pick up where you left off",
+      "lede": "Your past conversations. {{name}} remembers what you talked about, so you can carry on.",
+      "cutOff": "Ended unexpectedly",
+      "continue": "Continue this conversation",
+      "messages": "{{count}} messages"
     },
     "toast": {
       "minutesUp": "Your minutes are up — the session has ended.",
@@ -1267,6 +1266,7 @@
     "loading": "Loading…",
     "tocFree": "Free",
     "startReading": "Start reading",
+    "download": "Download",
     "downloadPdf": "Download PDF",
     "readChapterOne": "Read chapter one",
     "chapterOf": "Chapter {{current}} of {{total}}",
@@ -1388,15 +1388,6 @@
       "productTitle": "Product news",
       "productDesc": "New topics and features. Not very often."
     },
-    "referrals": {
-      "title": "Referrals",
-      "desc": "It helps to go with a friend. You both get a free counselling session.",
-      "inviteLabel": "Your invite link",
-      "copy": "Copy",
-      "invited": "invited",
-      "joined": "joined",
-      "earned": "free session earned"
-    },
     "privacy": {
       "title": "Privacy & data",
       "desc": "Your reports belong to you. Download them, or close your account.",
@@ -1421,7 +1412,6 @@
       "photoDemo": "Photo upload is just a demo.",
       "profileUpdated": "Profile updated.",
       "exportStarted": "Export started. This is just a demo.",
-      "inviteCopied": "Invite link copied.",
       "accountSafe": "This is a demo. Your account is safe.",
       "reminderOn": "Daily reminder on. We'll remind you at {{time}}.",
       "reminderOff": "Daily reminder turned off.",

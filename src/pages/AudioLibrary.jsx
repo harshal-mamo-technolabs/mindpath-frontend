@@ -12,7 +12,6 @@ import {
   Lock,
   Pause,
   Play,
-  Sparkles,
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
@@ -333,7 +332,7 @@ export default function AudioLibrary() {
           }}
         >
           <span className="ap-also-state">
-            {plan.welcomePlayed ? <Check size={13} /> : <Sparkles size={12} />}
+            {plan.welcomePlayed ? <Check size={13} /> : <Play size={12} />}
           </span>
           <span className="ap-also-text">
             <strong>{t('audio.welcomeRow')}</strong>
@@ -635,7 +634,7 @@ export default function AudioLibrary() {
                             </span>
                           </div>
                           <p className="ap-locked-note">
-                            <Sparkles size={13} /> {t('audio.lockedNote', { day: nextD.day })}
+                            {t('audio.lockedNote', { day: nextD.day })}
                           </p>
                         </>
                       )}
@@ -677,7 +676,7 @@ export default function AudioLibrary() {
                   </p>
                   {renderSessions(primary)}
                   <p className="ap-also-note">
-                    <Sparkles size={13} /> {t('audio.oneNewSessionDaily')}
+                    {t('audio.oneNewSessionDaily')}
                   </p>
                 </div>
               </Reveal>

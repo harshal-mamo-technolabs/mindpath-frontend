@@ -11,7 +11,6 @@ import {
   Loader2,
   Minus,
   Plus,
-  Sparkles,
   TrendingDown,
   TrendingUp,
 } from 'lucide-react'
@@ -163,7 +162,6 @@ function ReportGroup({ g, i }) {
         </>
       ) : (
         <div className="r-baseline">
-          <Sparkles size={17} />
           <p>
             {t('reports.baselinePre')}
             <strong>{t('reports.baselineStrong')}</strong>

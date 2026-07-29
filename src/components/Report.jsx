@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next'
 import {
   BookOpen,
   Headphones,
+  Lightbulb,
   MessagesSquare,
   ScanSearch,
   ShieldCheck,
-  Sparkles,
 } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
-const POINT_ICONS = [ScanSearch, ShieldCheck, Sparkles]
+const POINT_ICONS = [ScanSearch, ShieldCheck, Lightbulb]
 
 const RING_C = 326.7 // 2πr, r = 52
 

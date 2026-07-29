@@ -8,7 +8,6 @@ import {
   ChevronDown,
   Loader2,
   Smartphone,
-  Sparkles,
   User,
   Users,
 } from 'lucide-react'
@@ -251,7 +250,7 @@ export default function MsisdnAuthPage({ mode }) {
                   <>
                     {t('auth.swapNew')}{' '}
                     <Link to={swapTo('/signup')}>
-                      {t('auth.createLink')} <Sparkles size={13} />
+                      {t('auth.createLink')}
                     </Link>
                   </>
                 ) : (

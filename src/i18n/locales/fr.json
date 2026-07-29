@@ -156,8 +156,7 @@
       "h2em": "Repartez plus léger.",
       "text": "Douze minutes de réponses honnêtes aujourd’hui. Une image plus claire de vous demain et un chemin qui reste avec vous ensuite.",
       "primary": "Faites votre premier test",
-      "secondary": "Juste la musique gratuite, pour l’instant",
-      "referral": "C’est plus facile avec un ami. Invitez-en un et vous recevez tous les deux une séance gratuite."
+      "secondary": "Juste la musique gratuite, pour l’instant"
     },
     "report": {
       "eyebrow": "Votre rapport personnel",
@@ -526,7 +525,6 @@
     "greetingEvening": "Bonsoir",
     "greeting": "{{greeting}}, {{name}}.",
     "min": "min",
-    "linkCopied": "Lien copié. Vous recevez tous les deux une séance gratuite.",
     "night": "Nuit",
     "day": "Jour",
     "switchToDay": "Passer en mode jour",
@@ -583,16 +581,6 @@
     "shelfEmptyPre": "Votre étagère est vide.",
     "shelfEmptyLink": "Parcourir la boutique d’e-books",
     "shelfEmptyPost": "pour ajouter un livre.",
-    "moreForYou": "Plus pour vous",
-    "counselTitle": "Exprimez-vous",
-    "counselDesc": "Un accompagnateur IA qui a lu votre rapport. Parlez de ce que vous ressentez.",
-    "seeCounselling": "Voir l’accompagnement",
-    "referTitle": "Amenez un ami",
-    "referDesc": "Invitez un ami. Vous recevez tous les deux une séance d’accompagnement gratuite.",
-    "copyInvite": "Copier le lien d’invitation",
-    "musicTitle": "Musique gratuite",
-    "musicDesc": "Des morceaux de yoga & méditation. Écoutez-les dès que vous voulez vous apaiser.",
-    "openLibrary": "Ouvrir la bibliothèque",
     "jumpLabel": "Tout, à un toucher",
     "chipAssessments": "Tests",
     "chipReports": "Vos rapports",
@@ -1108,11 +1096,13 @@
       "yourSession": "Votre séance",
       "howOpens": "Comment {{name}} commence",
       "resume": "Reprendre là où nous nous étions arrêtés la dernière fois",
+      "resumeCutOff": "Reprendre là où nous avons été coupés la dernière fois",
       "start": "Démarrer la séance avec {{name}}",
       "metaMin": "{{minutes}} min",
       "metaAvail": "disponibles · ~15 min, c’est normal · arrêtez quand vous voulez",
       "metaNoAuth": "Utilise vos minutes · ~15 min, c’est normal · arrêtez quand vous voulez",
-      "outOfMinutes": "Plus de minutes — rechargez pour démarrer"
+      "outOfMinutes": "Plus de minutes — rechargez pour démarrer",
+      "startShort": "Démarrer"
     },
     "call": {
       "barLive": "En direct · {{title}}",
@@ -1142,8 +1132,17 @@
       "complete": "Séance terminée",
       "meta": "{{title}} · {{clock}} · {{remaining}} min restantes ce cycle",
       "talkedAbout": "Ce dont vous et {{name}} avez parlé",
+      "continue": "Poursuivre cette conversation",
       "newSession": "Nouvelle séance",
-      "buyMore": "Acheter plus de minutes"
+      "buyMore": "Acheter plus de minutes",
+      "saving": "Enregistrement de votre conversation…"
+    },
+    "past": {
+      "title": "Reprenez là où vous en étiez",
+      "lede": "Vos conversations passées. {{name}} se souvient de ce dont vous avez parlé, vous pouvez donc continuer.",
+      "cutOff": "Interrompue",
+      "continue": "Poursuivre cette conversation",
+      "messages": "{{count}} messages"
     },
     "toast": {
       "minutesUp": "Vos minutes sont épuisées — la séance est terminée.",
@@ -1267,6 +1266,7 @@
     "loading": "Chargement…",
     "tocFree": "Gratuit",
     "startReading": "Commencer la lecture",
+    "download": "Télécharger",
     "downloadPdf": "Télécharger le PDF",
     "readChapterOne": "Lire le premier chapitre",
     "chapterOf": "Chapitre {{current}} sur {{total}}",
@@ -1388,15 +1388,6 @@
       "productTitle": "Actualités produit",
       "productDesc": "Nouveaux thèmes et fonctionnalités. Pas très souvent."
     },
-    "referrals": {
-      "title": "Parrainage",
-      "desc": "C’est plus facile à deux. Vous recevez tous les deux une séance de conseil gratuite.",
-      "inviteLabel": "Votre lien d’invitation",
-      "copy": "Copier",
-      "invited": "invités",
-      "joined": "inscrits",
-      "earned": "séance gratuite gagnée"
-    },
     "privacy": {
       "title": "Confidentialité et données",
       "desc": "Vos rapports vous appartiennent. Téléchargez-les ou fermez votre compte.",
@@ -1421,7 +1412,6 @@
       "photoDemo": "L’envoi de photo n’est qu’une démo.",
       "profileUpdated": "Profil mis à jour.",
       "exportStarted": "Export lancé. Ce n’est qu’une démo.",
-      "inviteCopied": "Lien d’invitation copié.",
       "accountSafe": "Ceci est une démo. Votre compte est en sécurité.",
       "reminderOn": "Rappel quotidien activé. Nous vous rappellerons à {{time}}.",
       "reminderOff": "Rappel quotidien désactivé.",

@@ -10,7 +10,6 @@ import {
   Loader2,
   RefreshCcw,
   ShieldCheck,
-  Sparkles,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import {
@@ -89,7 +88,7 @@ export default function AssessmentCatalog() {
               <ShieldCheck size={15} /> {t('assess.catalog.trust1')}
             </span>
             <span>
-              <Sparkles size={15} /> {t('assess.catalog.trust2')}
+              {t('assess.catalog.trust2')}
             </span>
             <span>
               <Layers size={15} /> {t('assess.catalog.trust3')}

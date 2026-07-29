@@ -7,11 +7,11 @@ import {
   BookOpen,
   CalendarClock,
   ClipboardList,
+  Crown,
   Lock,
   MessagesSquare,
   Music,
   RefreshCcw,
-  Sparkles,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import { useAuth } from '../hooks/useAuth.js'
@@ -251,7 +251,7 @@ function StripePricingPage() {
                       {popular && <span className="plan-tag">{t('pricing.mostPopular')}</span>}
                       <header className="plan-card-head">
                         <span className="plan-dot" style={{ background: color.bg, color: color.fg }}>
-                          <Sparkles size={18} />
+                          <Crown size={18} />
                         </span>
                         <h2>{name}</h2>
                         {plan.description && <p>{plan.description}</p>}

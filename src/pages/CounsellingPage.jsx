@@ -4,12 +4,14 @@ import { useConversation } from '@elevenlabs/react'
 import { useTranslation } from 'react-i18next'
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
 import {
+  AlertTriangle,
   ArrowRight,
   BookOpen,
   Check,
   ClipboardList,
   Clock,
   Headphones,
+  History,
   Loader2,
   Lock,
   Mic,
@@ -17,7 +19,7 @@ import {
   PhoneCall,
   PhoneOff,
   Plus,
-  Sparkles,
+  RotateCcw,
   X,
   Zap,
 } from 'lucide-react'
@@ -30,6 +32,8 @@ import { getPaymentMethods } from '../lib/payments.js'
 import { ADVISOR, getSession, MINUTE_PACKS, TOPICS } from '../data/counselling.js'
 import {
   endCounsellingSession,
+  getCounsellingMe,
+  getCounsellingSession,
   getCounsellingTopics,
   startCounsellingSession,
   topUpCounselling,
@@ -87,6 +91,11 @@ export default function CounsellingPage() {
   const [toast, setToast] = useState(null)
   const [minutesAtStart, setMinutesAtStart] = useState(0)
 
+  const [history, setHistory] = useState([]) // past sessions, newest first
+  const [endedSessionId, setEndedSessionId] = useState(null) // the call we just finished
+  const [recap, setRecap] = useState(null) // that session, once the summary lands
+  const [recapWaiting, setRecapWaiting] = useState(false)
+
   const startedAtRef = useRef(null)
   const convIdRef = useRef(null)
   const sessionRef = useRef(null)
@@ -95,6 +104,7 @@ export default function CounsellingPage() {
   const warnedRef = useRef(false)
   const transcriptRef = useRef(null)
   const toastTimer = useRef(null)
+  const messagesRef = useRef([]) // latest transcript, readable from onDisconnect
 
   const say = useCallback((msg) => {
     clearTimeout(toastTimer.current)
@@ -109,9 +119,19 @@ export default function CounsellingPage() {
       .catch(() => {})
   }, [])
 
+  // Past sessions — also where the backend closes out any call that ended abnormally, so
+  // "ended unexpectedly · continue" appears here without the user doing anything.
+  const refreshHistory = useCallback(() => {
+    if (!isAuthenticated) return
+    getCounsellingMe()
+      .then((me) => setHistory(me.sessions ?? []))
+      .catch(() => {})
+  }, [isAuthenticated])
+
   // Finalize a call exactly once — report the end (so minutes reconcile) and move to the
   // summary. Runs whether the USER ends it or SOL / the connection ends it (onDisconnect),
-  // guarded so the two triggers don't double-fire.
+  // guarded so the two triggers don't double-fire. The transcript goes up with it, so the
+  // recap works even if the post-call webhook is slow or never arrives.
   const finalizeCall = useCallback(() => {
     if (finishingRef.current) return
     if (!sessionRef.current && !startedAtRef.current) return
@@ -121,9 +141,15 @@ export default function CounsellingPage() {
       const durationSeconds = startedAtRef.current
         ? Math.round((Date.now() - startedAtRef.current) / 1000)
         : undefined
+      setEndedSessionId(s.sessionId)
+      setRecapWaiting(true)
       endCounsellingSession(s.sessionId, {
         conversationId: convIdRef.current || undefined,
         durationSeconds,
+        transcript: messagesRef.current.map((m) => ({
+          role: m.who === 'you' ? 'user' : 'agent',
+          message: m.text,
+        })),
       }).catch(() => {})
     }
     sessionRef.current = null
@@ -131,7 +157,8 @@ export default function CounsellingPage() {
     convIdRef.current = null
     setPhase('summary')
     refreshTopics()
-  }, [refreshTopics])
+    refreshHistory()
+  }, [refreshTopics, refreshHistory])
 
   // ---- ElevenLabs voice conversation ----
   const conversation = useConversation({
@@ -152,7 +179,54 @@ export default function CounsellingPage() {
 
   useEffect(() => {
     refreshTopics()
-  }, [refreshTopics, token])
+    refreshHistory()
+  }, [refreshTopics, refreshHistory, token])
+
+  useEffect(() => {
+    messagesRef.current = messages
+  }, [messages])
+
+  // The stored conversation is finalized server-side once the call is reconciled (the
+  // ElevenLabs post-call webhook, or our own transcript if that never lands) — poll for it.
+  // The screen doesn't wait on this: the browser already has the live transcript to show.
+  useEffect(() => {
+    if (phase !== 'summary' || !endedSessionId) return
+
+    let alive = true
+    let tries = 0
+    let timer = null
+
+    const tick = async () => {
+      tries += 1
+      try {
+        const session = await getCounsellingSession(endedSessionId)
+        if (!alive) return
+        setRecap(session)
+        // Done once the call is reconciled — that's when the stored conversation and the
+        // billed minutes are final. Nothing is being summarized, so there's nothing else
+        // to wait for.
+        if (session.status === 'completed') {
+          setRecapWaiting(false)
+          refreshHistory()
+          return
+        }
+      } catch {
+        /* keep trying — the session may still be reconciling */
+      }
+      if (!alive) return
+      if (tries >= 15) {
+        setRecapWaiting(false)
+        return
+      }
+      timer = setTimeout(tick, 2500)
+    }
+
+    timer = setTimeout(tick, 1200)
+    return () => {
+      alive = false
+      clearTimeout(timer)
+    }
+  }, [phase, endedSessionId, refreshHistory])
 
   const backendByKey = useMemo(() => {
     const map = {}
@@ -172,6 +246,7 @@ export default function CounsellingPage() {
           line: t(`counsel.topics.${tp.id}.line`, tp.line),
           hasReport: b ? b.hasReport : tp.hasReport,
           canResume: b?.canResume ?? false,
+          wasCutOff: b?.wasCutOff ?? false,
         }
         return { ...merged, opening: b?.opening ?? getSession(merged, t).lines[0].text }
       }),
@@ -189,6 +264,23 @@ export default function CounsellingPage() {
 
   const speaking = phase === 'call' && connected && conversation.isSpeaking
   const remaining = Math.max(0, (minutesAtStart || 0) - Math.ceil(elapsed / 60))
+
+  // The transcript to read back on the summary screen: the server's once it's reconciled
+  // (authoritative), else what the browser collected during the call.
+  const transcriptLines = useMemo(
+    () =>
+      recap?.transcript?.length
+        ? recap.transcript
+        : messages.map((m) => ({ role: m.who === 'you' ? 'user' : 'agent', message: m.text })),
+    [recap, messages],
+  )
+
+  // Conversations worth offering to pick back up — only ones Sol can actually resume from
+  // (i.e. that have a recap). Signed out, there's nothing to show.
+  const resumable = useMemo(
+    () => (isAuthenticated ? history.filter((s) => s.canResume) : []),
+    [history, isAuthenticated],
+  )
 
   // call timer (only while actually connected)
   useEffect(() => {
@@ -229,7 +321,9 @@ export default function CounsellingPage() {
 
   useEffect(() => () => clearTimeout(toastTimer.current), [])
 
-  async function startCall() {
+  // `continueFrom` is a past session to pick up (from the recap or the history list); it can
+  // belong to another topic, so the stage switches to that topic too.
+  async function startCall({ continueFrom } = {}) {
     if (!isAuthenticated) {
       navigate('/login?next=/counselling')
       return
@@ -238,16 +332,26 @@ export default function CounsellingPage() {
       if (canTopUp) setBuyOpen(true)
       return
     }
+    const target = continueFrom ? topics.find((tp) => tp.key === continueFrom.topic) || topic : topic
+    setTopicId(target.id)
     setMessages([])
+    messagesRef.current = []
     setElapsed(0)
     setMinutesAtStart(minutesAvail ?? 0)
+    setEndedSessionId(null)
+    setRecap(null)
     finishingRef.current = false
     endingRef.current = false
     warnedRef.current = false
     setPhase('call')
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true })
-      const res = await startCounsellingSession({ topic: topic.key, language: lang, resume })
+      const res = await startCounsellingSession({
+        topic: target.key,
+        language: lang,
+        resume: continueFrom ? true : resume,
+        resumeSessionId: continueFrom?.id,
+      })
       sessionRef.current = res
       await conversation.startSession({
         signedUrl: res.signedUrl,
@@ -281,6 +385,7 @@ export default function CounsellingPage() {
     setPhase('lobby')
     setElapsed(0)
     setMessages([])
+    refreshHistory()
   }
 
   // ---- top-up ----
@@ -332,20 +437,40 @@ export default function CounsellingPage() {
             <p className="cn-summary-meta">
               {t('counsel.summary.meta', {
                 title: topic.title,
-                clock: fmtClock(elapsed),
+                // The reconciled duration once it's known — it's the one that was billed.
+                clock: fmtClock(recap?.durationSeconds || elapsed),
                 remaining,
               })}
             </p>
 
             <div className="cn-summary-card">
               <h3>{t('counsel.summary.talkedAbout', { name: ADVISOR.name })}</h3>
-              <ul className="cn-takeaways">
-                {script.takeaways.map((item) => (
-                  <li key={item}>
-                    <Check size={15} /> {item}
-                  </li>
-                ))}
-              </ul>
+
+              {/* The conversation itself is the record — nothing is ever summarized. */}
+              {transcriptLines.length > 0 ? (
+                <div className="cn-summary-transcript">
+                  {transcriptLines.map((line, i) => (
+                    <div key={i} className={`cn-msg ${line.role === 'user' ? 'you' : 'advisor'}`}>
+                      <span className="cn-msg-who">
+                        {line.role === 'user' ? t('counsel.call.you') : ADVISOR.name}
+                      </span>
+                      <p>{line.message}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : recapWaiting ? (
+                <p className="cn-recap-wait">
+                  <Loader2 size={15} className="ap-spin" /> {t('counsel.summary.saving')}
+                </p>
+              ) : (
+                <ul className="cn-takeaways">
+                  {script.takeaways.map((item) => (
+                    <li key={item}>
+                      <Check size={15} /> {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               <Link to={script.suggest.to} className="cn-suggest cn-suggest-summary">
                 <span className="cn-suggest-ico">
@@ -363,6 +488,11 @@ export default function CounsellingPage() {
             </div>
 
             <div className="cn-summary-actions">
+              {recap?.canResume && (
+                <button className="btn btn-primary" onClick={() => startCall({ continueFrom: recap })}>
+                  <RotateCcw size={16} /> {t('counsel.summary.continue', { name: ADVISOR.name })}
+                </button>
+              )}
               <button className="btn btn-light" onClick={backToLobby}>
                 <PhoneCall size={16} /> {t('counsel.summary.newSession')}
               </button>
@@ -395,7 +525,6 @@ export default function CounsellingPage() {
             {/* transcript */}
             <div className="cn-transcript" ref={transcriptRef}>
               <p className="cn-grounded-note">
-                <Sparkles size={13} />{' '}
                 {topic.hasReport
                   ? t('counsel.call.groundedReport', { name: ADVISOR.name, title: topic.title })
                   : topic.open
@@ -527,7 +656,7 @@ export default function CounsellingPage() {
         <section className="cn-studio">
           <div className="cn-studio-topics">
             <h2 className="rp-h2 on-night">
-              <Sparkles size={18} /> {t('counsel.lobby.whatTalk')}
+              {t('counsel.lobby.whatTalk')}
             </h2>
             <div className="cn-topics">
               {topics.map((tp, i) => {
@@ -575,22 +704,22 @@ export default function CounsellingPage() {
 
               <div className="cn-pick-preview">
                 <span className="cn-pick-label">
-                  <Sparkles size={13} /> {t('counsel.setup.howOpens', { name: ADVISOR.name })}
+                  {t('counsel.setup.howOpens', { name: ADVISOR.name })}
                 </span>
                 <p>&ldquo;{topic.opening}&rdquo;</p>
               </div>
 
               {topic.canResume && (
-                <label className="cn-resume">
+                <label className={`cn-resume ${topic.wasCutOff ? 'is-cutoff' : ''}`}>
                   <input type="checkbox" checked={resume} onChange={(e) => setResume(e.target.checked)} />
-                  {t('counsel.setup.resume')}
+                  {topic.wasCutOff ? t('counsel.setup.resumeCutOff') : t('counsel.setup.resume')}
                 </label>
               )}
 
               <div className="cn-setup-foot">
                 <button
                   className="btn btn-primary cn-start"
-                  onClick={startCall}
+                  onClick={() => startCall()}
                   disabled={isAuthenticated && minutesAvail != null && minutesAvail < 1}
                 >
                   <PhoneCall size={18} /> {t('counsel.setup.start', { name: ADVISOR.name })}
@@ -620,6 +749,75 @@ export default function CounsellingPage() {
           </aside>
         </section>
 
+        {/* Conversations to pick back up — including any that were cut off mid-call. */}
+        {isAuthenticated && resumable.length > 0 && (
+          <Reveal as="section" className="cn-past">
+            <h2 className="rp-h2 on-night">
+              <History size={18} /> {t('counsel.past.title')}
+            </h2>
+            <p className="cn-past-lede">{t('counsel.past.lede', { name: ADVISOR.name })}</p>
+            <div className="cn-past-list">
+              {resumable.map((s) => {
+                const tp = topics.find((x) => x.key === s.topic)
+                const cutOff = s.endReason === 'dropped'
+                return (
+                  <article
+                    key={s.id}
+                    className={`cn-past-card ${cutOff ? 'is-cutoff' : ''}`}
+                    style={{ '--accent': tp?.accent || '#6450cf' }}
+                  >
+                    <header className="cn-past-head">
+                      <strong>{tp?.title || s.topicTitle}</strong>
+                      <span className="cn-past-meta">
+                        {new Date(s.createdAt).toLocaleDateString(i18n.language, {
+                          day: 'numeric',
+                          month: 'short',
+                        })}{' '}
+                        · {fmtClock(s.durationSeconds || 0)}
+                      </span>
+                    </header>
+                    {cutOff && (
+                      <p className="cn-past-flag">
+                        <AlertTriangle size={13} /> {t('counsel.past.cutOff')}
+                      </p>
+                    )}
+                    {/* How the conversation opened — enough to recognise which one this
+                        was, with no summarization anywhere. */}
+                    <p className="cn-past-summary">{s.preview}</p>
+                    {s.messageCount > 0 && (
+                      <span className="cn-past-count">
+                        {t('counsel.past.messages', { count: s.messageCount })}
+                      </span>
+                    )}
+                    <button className="cn-past-continue" onClick={() => startCall({ continueFrom: s })}>
+                      <RotateCcw size={14} /> {t('counsel.past.continue')}
+                    </button>
+                  </article>
+                )
+              })}
+            </div>
+          </Reveal>
+        )}
+      </div>
+
+      {/* Mobile only: the setup card stacks below the topic list, so picking a topic would
+          mean scrolling to the bottom to start. This bar names the chosen topic and starts
+          the session right where the user tapped. */}
+      <div className="cn-startbar">
+        <span className="cn-startbar-ico" style={{ background: topic.bg, color: topic.fg }}>
+          <Icon size={20} strokeWidth={1.8} />
+        </span>
+        <span className="cn-startbar-text">
+          <small>{t('counsel.setup.yourSession')}</small>
+          <strong>{topic.title}</strong>
+        </span>
+        <button
+          className="btn btn-primary cn-startbar-btn"
+          onClick={() => startCall()}
+          disabled={isAuthenticated && minutesAvail != null && minutesAvail < 1}
+        >
+          <PhoneCall size={16} /> {t('counsel.setup.startShort')}
+        </button>
       </div>
 
       <Toasts toast={toast} />

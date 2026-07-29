@@ -8,12 +8,12 @@ import {
   Check,
   ClipboardList,
   CreditCard,
+  Crown,
   Loader2,
   Lock,
   MessagesSquare,
   RefreshCcw,
   ShieldCheck,
-  Sparkles,
 } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
 import { useAuth } from '../hooks/useAuth.js'
@@ -412,7 +412,7 @@ export default function CheckoutPage() {
             <div className="checkout-summary-card">
               <div className="checkout-plan">
                 <span className="plan-dot" style={{ background: '#e2dcf8', color: '#4d3da8' }}>
-                  <Sparkles size={18} />
+                  <Crown size={18} />
                 </span>
                 <div>
                   <h3>{t('checkout.summaryPlan', { plan: name })}</h3>

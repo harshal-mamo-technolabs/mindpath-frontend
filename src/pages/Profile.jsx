@@ -7,20 +7,17 @@ import {
   ChevronDown,
   ChevronRight,
   Clock,
-  Copy,
   Download,
-  Gift,
   LogOut,
   Mail,
   Pencil,
   Shield,
-  Sparkles,
   Trash2,
   User,
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
-import { APP_DOMAIN, APP_NAME } from '../lib/brand.js'
+import { APP_NAME } from '../lib/brand.js'
 import { ensurePushSubscription, pushSupported } from '../lib/push.js'
 import {
   getNotificationPrefs,
@@ -29,13 +26,10 @@ import {
   updateNotificationPrefs,
 } from '../lib/notificationsApi.js'
 
-/* Demo referral link — the domain follows the app name (see lib/brand.js). */
-const INVITE_LINK = `${APP_DOMAIN}/invite/MAYA-CALM`
 
 const SECTIONS = [
   ['account', User],
   ['notifications', Bell],
-  ['referrals', Gift],
   ['privacy', Shield],
 ]
 
@@ -261,10 +255,6 @@ export default function Profile() {
     sectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  function copyInvite() {
-    navigator.clipboard?.writeText(INVITE_LINK).catch(() => {})
-    say(t('profile.toast.inviteCopied'))
-  }
 
   function signOut() {
     navigate('/login')
@@ -288,7 +278,7 @@ export default function Profile() {
               <h2>{form.name}</h2>
               <p>{form.email}</p>
               <span className="pf-plan">
-                <Sparkles size={13} /> {t('profile.memberSince', { date: 'March 2025' })}
+                {t('profile.memberSince', { date: 'March 2025' })}
               </span>
             </div>
 
@@ -417,46 +407,6 @@ export default function Profile() {
                     onChange={toggleProductNews}
                     label={t('profile.notifications.productTitle')}
                   />
-                </div>
-              </div>
-            </section>
-
-            {/* REFERRALS */}
-            <section
-              id="referrals"
-              ref={(el) => (sectionRefs.current.referrals = el)}
-              className="pf-section"
-            >
-              <div className="pf-section-head">
-                <h2>
-                  <Gift size={18} /> {t('profile.referrals.title')}
-                </h2>
-                <p>{t('profile.referrals.desc')}</p>
-              </div>
-
-              <div className="pf-referral">
-                <div className="pf-referral-code">
-                  <span className="pf-code-label">{t('profile.referrals.inviteLabel')}</span>
-                  <div className="pf-code-row">
-                    <code>{INVITE_LINK}</code>
-                    <button className="pf-copy-btn" onClick={copyInvite}>
-                      <Copy size={15} /> {t('profile.referrals.copy')}
-                    </button>
-                  </div>
-                </div>
-                <div className="pf-referral-stats">
-                  <div>
-                    <strong>2</strong>
-                    <small>{t('profile.referrals.invited')}</small>
-                  </div>
-                  <div>
-                    <strong>1</strong>
-                    <small>{t('profile.referrals.joined')}</small>
-                  </div>
-                  <div className="reward">
-                    <strong>1</strong>
-                    <small>{t('profile.referrals.earned')}</small>
-                  </div>
                 </div>
               </div>
             </section>

@@ -14,7 +14,7 @@ import {
   MessagesSquare,
   RefreshCcw,
   ShieldCheck,
-  Sparkles,
+  Unlock,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import {
@@ -307,7 +307,7 @@ export default function AssessmentDetail() {
 
             <Reveal as="article" className="receive-card" delay={0.3}>
               <span className="receive-ico" style={{ background: '#f9e3cd', color: '#8a5420' }}>
-                <Sparkles size={24} strokeWidth={1.8} />
+                <Unlock size={24} strokeWidth={1.8} />
               </span>
               <h3>{t('assess.detail.unlockTitle')}</h3>
               <p>{t('assess.detail.unlockDesc')}</p>

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Gift, Headphones } from 'lucide-react'
+import { ArrowRight, Headphones } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
 export default function Cta() {
@@ -31,10 +31,6 @@ export default function Cta() {
               <Headphones size={18} /> {t('home.cta.secondary')}
             </Link>
           </div>
-          <span className="cta-referral">
-            <Gift size={16} />
-            {t('home.cta.referral')}
-          </span>
         </Reveal>
       </div>
     </section>

@@ -12,7 +12,6 @@ import {
   Quote,
   RefreshCcw,
   ShieldCheck,
-  Sparkles,
   Target,
 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -437,7 +436,7 @@ export default function AssessmentReport({
         </div>
         <div className="srep-snapshot-body">
           <h2 className="srep-archetype">
-            <Sparkles size={18} /> {r.archetype.name}
+            {r.archetype.name}
           </h2>
           <p className="srep-snapshot-text">
             {r.archetype.summary} {ui.scoreSentence(r.headline.value)}

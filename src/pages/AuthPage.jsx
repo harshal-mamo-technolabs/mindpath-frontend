@@ -11,7 +11,6 @@ import {
   Loader2,
   Lock,
   Mail,
-  Sparkles,
   User,
   Users,
 } from 'lucide-react'
@@ -300,7 +299,7 @@ function EmailAuthPage({ mode }) {
                   <>
                     {t('auth.swapNew')}{' '}
                     <Link to={swapTo('/signup')}>
-                      {t('auth.createLink')} <Sparkles size={13} />
+                      {t('auth.createLink')}
                     </Link>
                   </>
                 ) : (

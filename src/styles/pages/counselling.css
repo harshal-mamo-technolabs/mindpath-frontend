@@ -258,14 +258,23 @@
   color: var(--night-ink);
 }
 
-.cn-topic:hover {
-  transform: translateY(-3px);
-  background: rgba(255, 255, 255, 0.07);
+/* Touch devices keep :hover applied after a tap and only drop it when you tap elsewhere,
+   which reads as "nothing got selected". Hover styling is therefore pointer-only. */
+@media (hover: hover) {
+  .cn-topic:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.07);
+  }
 }
 
 .cn-topic.active {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* Immediate feedback on tap, before React has re-rendered the selection. */
+.cn-topic:active {
+  transform: scale(0.985);
 }
 
 .cn-topic-ico {
@@ -655,6 +664,12 @@
   accent-color: var(--violet-deep);
 }
 
+/* Last call on this topic was cut off — worth reading before the rest. */
+.cn-resume.is-cutoff {
+  font-weight: 650;
+  color: var(--ink);
+}
+
 .cn-pick-side .cn-start {
   width: 100%;
   justify-content: center;
@@ -688,52 +703,176 @@
   }
 }
 
-/* ------- past sessions ------- */
-.cn-past {
-  margin-top: 22px;
-  display: grid;
-  gap: 10px;
+/* ------- mobile start bar ------- */
+/* Desktop keeps the sticky setup card in the right rail, so this is mobile-only. It's
+   pinned just above the bottom tab bar (64px + the phone's safe area). */
+.cn-startbar {
+  display: none;
 }
 
-.cn-past-row {
+@media (max-width: 760px) {
+  .cn-startbar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(64px + env(safe-area-inset-bottom));
+    z-index: 70;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    /* Same theme-aware surface as the bottom tab bar it sits on top of. */
+    background: var(--surface);
+    border-top: 1px solid rgba(var(--line-rgb), 0.12);
+    box-shadow: 0 -10px 26px -14px rgba(var(--line-rgb), 0.5);
+  }
+
+  .cn-startbar-ico {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    flex: none;
+  }
+
+  .cn-startbar-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cn-startbar-text small {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .cn-startbar-text strong {
+    display: block;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    /* long topic names must not push the button off-screen */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cn-startbar-btn {
+    flex: none;
+    padding: 11px 16px;
+    font-size: 14px;
+  }
+
+  /* keep the last card clear of the bar */
+  .cn {
+    padding-bottom: 78px;
+  }
+}
+
+/* ------- past sessions (pick a conversation back up) ------- */
+.cn-past {
+  margin-top: 56px;
+}
+
+.cn-past-lede {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--night-ink-2);
+}
+
+.cn-past-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.cn-past-card {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  gap: 10px;
   background: rgba(255, 255, 255, 0.045);
   border: 1px solid rgba(255, 255, 255, 0.09);
+  border-left: 3px solid var(--accent);
   border-radius: var(--r-md);
-  padding: 16px 20px;
+  padding: 18px 20px;
+  transition: border-color 0.2s, background 0.2s;
 }
 
-.cn-past-date {
+.cn-past-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* A call that was cut off — the one most likely to be worth resuming. */
+.cn-past-card.is-cutoff {
+  border-color: rgba(217, 156, 58, 0.45);
+  border-left-color: #d99c3a;
+}
+
+.cn-past-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cn-past-head strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cn-past-meta {
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--night-ink-2);
+}
+
+.cn-past-flag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 12.5px;
   font-weight: 700;
+  color: #e8c07a;
+}
+
+.cn-past-summary {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--night-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cn-past-count {
+  font-size: 12px;
+  font-weight: 600;
   color: var(--night-ink-2);
-  width: 110px;
-  flex: none;
 }
 
-.cn-past-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.cn-past-info strong {
-  font-size: 14.5px;
+.cn-past-continue {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 4px;
+  font-size: 13.5px;
   font-weight: 700;
-  display: block;
+  color: #c8b9f8;
+  background: none;
+  transition: color 0.2s;
 }
 
-.cn-past-info small {
-  font-size: 12.5px;
-  color: var(--night-ink-2);
-}
-
-.cn-past-min {
-  font-size: 13px;
-  font-weight: 800;
-  color: #b9a7f7;
-  flex: none;
+.cn-past-continue:hover {
+  color: #fff;
 }
 
 /* ============================================================
@@ -1507,6 +1646,28 @@
   flex: none;
   margin-top: 3px;
   color: #8fd4ae;
+}
+
+.cn-recap-wait {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--night-ink-2);
+}
+
+/* The conversation itself — this is the record of the session, not a summary of it. */
+.cn-summary-transcript {
+  display: grid;
+  gap: 14px;
+  max-height: 420px;
+  overflow-y: auto;
+  margin-top: 16px;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: var(--r-md);
 }
 
 .cn-suggest-summary {

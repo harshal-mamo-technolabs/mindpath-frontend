@@ -9,7 +9,6 @@ import {
   Play,
   Plus,
   SkipForward,
-  Sparkles,
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
@@ -266,7 +265,7 @@ export default function MusicLibrary() {
         <div className="container">
           <div className="mz-library-head">
             <h2 className="mz-section-title">
-              <Sparkles size={18} /> {t('sound.theSounds')}
+              {t('sound.theSounds')}
             </h2>
             <div className="mz-filters" role="tablist" aria-label={t('sound.moodsAria')}>
               {MOODS.map((m) => (

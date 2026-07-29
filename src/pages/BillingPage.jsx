@@ -9,12 +9,12 @@ import {
   Check,
   ClipboardList,
   CreditCard,
+  Crown,
   Download,
   Loader2,
   MessagesSquare,
   Plus,
   RefreshCcw,
-  Sparkles,
   Star,
   Trash2,
   X,
@@ -334,7 +334,7 @@ export default function BillingPage() {
       <main className="billing">
         <div className="container bl-state">
           <span className="bl-state-ico">
-            <Sparkles size={22} />
+            <CreditCard size={22} />
           </span>
           <h1>{t('billing.noneTitle')}</h1>
           {isMsisdnMode ? (
@@ -380,7 +380,7 @@ export default function BillingPage() {
         <Reveal className="bl-plan-card" style={{ '--accent': ACCENT }}>
           <div className="bl-plan-main">
             <span className="plan-dot" style={{ background: '#e2dcf8', color: '#4d3da8' }}>
-              <Sparkles size={20} />
+              <Crown size={20} />
             </span>
             <div>
               <p className={`bl-plan-status ${statusCls}`}>
