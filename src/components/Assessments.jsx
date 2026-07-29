@@ -3,9 +3,11 @@ import { ArrowRight, ArrowUpRight, Clock, ListChecks } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import Reveal from './Reveal.jsx'
 import { ASSESSMENTS, localizeAssessment } from '../data/assessments.js'
+import { useShowAssessmentPrice } from '../hooks/useShowAssessmentPrice.js'
 
 export default function Assessments() {
   const { t } = useTranslation()
+  const showPrice = useShowAssessmentPrice()
   return (
     <section className="section assessments" id="assessments">
       <div className="container">
@@ -57,7 +59,7 @@ export default function Assessments() {
                   >
                     <Icon size={24} strokeWidth={1.8} />
                   </span>
-                  <span className="topic-price">{price}</span>
+                  {showPrice && <span className="topic-price">{price}</span>}
                 </div>
                 <h3>{title}</h3>
                 <p className="topic-meta">
@@ -103,13 +105,15 @@ export default function Assessments() {
           </Reveal>
         </div>
 
-        <Reveal as="p" className="bundle-note" delay={0.1}>
-          <strong>{t('home.assess.bundleStrong', 'Bundle & save')}</strong>{' '}
-          {t(
-            'home.assess.bundleText',
-            'Take linked assessments like Stress & Burnout → Emotional Intelligence together and save 30%.',
-          )}
-        </Reveal>
+        {showPrice && (
+          <Reveal as="p" className="bundle-note" delay={0.1}>
+            <strong>{t('home.assess.bundleStrong', 'Bundle & save')}</strong>{' '}
+            {t(
+              'home.assess.bundleText',
+              'Take linked assessments like Stress & Burnout → Emotional Intelligence together and save 30%.',
+            )}
+          </Reveal>
+        )}
       </div>
     </section>
   )

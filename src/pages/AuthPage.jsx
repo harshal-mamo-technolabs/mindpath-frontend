@@ -206,7 +206,7 @@ function EmailAuthPage({ mode }) {
                   <span className="auth-label">
                     {t('auth.passwordLabel')}
                     {isLogin && (
-                      <Link to="#" className="auth-forgot">
+                      <Link to="/reset-password" className="auth-forgot">
                         {t('auth.forgot')}
                       </Link>
                     )}

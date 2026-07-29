@@ -1,0 +1,9 @@
+# Keep the build context clean: without this, `COPY . .` overlays the macOS
+# node_modules on top of the linux `npm ci` install and ships a stale local dist/.
+# NOTE: .env is deliberately NOT ignored — Vite inlines VITE_* vars at build time,
+# so the .env present on the machine that builds the image is what ships.
+node_modules
+dist
+.git
+Archive.zip
+*.zip

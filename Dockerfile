@@ -28,7 +28,7 @@ RUN mkdir -p /var/log/nginx && \
     chown -R nginx:nginx /usr/share/nginx/html && \
     chown -R nginx:nginx /var/log/nginx
 
-EXPOSE 5037
+EXPOSE 5045
 
 CMD ["nginx", "-g", "daemon off;"]
 

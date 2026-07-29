@@ -18,6 +18,8 @@ import BillingPage from './pages/BillingPage.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
 import CounsellingPage from './pages/CounsellingPage.jsx'
 import AuthPage from './pages/AuthPage.jsx'
+import Handoff from './pages/Handoff.jsx'
+import ResetPassword from './pages/ResetPassword.jsx'
 
 /* Scroll to top on route change; honor in-page #hash targets. */
 function ScrollManager() {
@@ -71,6 +73,9 @@ export default function App() {
         <Route path="/reports/:scoreId" element={<ReportView />} />
         <Route path="/login" element={<AuthPage mode="login" />} />
         <Route path="/signup" element={<AuthPage mode="signup" />} />
+        {/* Signs in a buyer arriving from the landing-page funnel. */}
+        <Route path="/handoff" element={<Handoff />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/checkout" element={<CheckoutPage />} />
       </Routes>
     </>
