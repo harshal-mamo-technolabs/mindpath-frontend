@@ -51,12 +51,9 @@
       "h1a": "You have",
       "h1swash": "a path",
       "h1b": "Let’s walk it together.",
-      "sub": "Take a short assessment. Get a report made just for you. Then follow a daily audio plan, ebooks, and counselling built around your results. Just ten quiet minutes a day.",
+      "sub": "Take a short assessment. Get a report made from your answers. Then follow a daily audio plan, ebooks, and counselling built around your results.",
       "findPath": "Find your path",
       "listenFree": "Listen free first",
-      "starsAria": "Rated 4.9 out of 5 stars",
-      "ratingFrom": "from 12,000+ people",
-      "ratingCalmer": "feel calmer in the morning by day 14",
       "imageAlt": "A calm person sitting at a tidy desk with a hand on their heart, next to a plant, a cup of tea, an open journal and books",
       "fcReportLabel": "Energy to recover",
       "fcReportDelta": "+21 since last time",
@@ -154,7 +151,7 @@
     "cta": {
       "h2a": "Start where you are.",
       "h2em": "End up feeling lighter.",
-      "text": "Twelve minutes of honest answers today. A clearer picture of yourself tomorrow and a path that stays with you after that.",
+      "text": "A few minutes of honest answers today. A clearer picture of yourself tomorrow — and a path that stays with you after that.",
       "primary": "Take your first assessment",
       "secondary": "Just the free music, for now"
     },
@@ -198,7 +195,7 @@
           "quote": [
             "Maya, your exhaustion is high and your energy to recover is running low — ",
             "your energy isn’t broken, your rest is.",
-            " Your 14-day plan starts there: evenings first."
+            " Your 7-day plan starts there: evenings first."
           ]
         },
         {
@@ -249,14 +246,12 @@
         "Good",
         "Light"
       ],
-      "planTitle": "Your 14-day plan",
-      "planDone": "3 of 14 done",
-      "trailAria": "Your 14-day plan — 3 days done, day 4 is today, the rest open one each morning",
+      "planTitle": "Your 7-day plan",
+      "planDone": "3 of 7 done",
+      "trailAria": "Your 7-day plan — 3 days done, day 4 is today, the rest open one each morning",
       "beforeTitle": "Before today’s session",
       "beforeEm": "one tap, that’s all",
       "moodQuestion": "How do you feel today?",
-      "moodNote": "How your mood is going over the plan",
-      "moodNoteStrong": "up 32% since day 1.",
       "welcome": "“Hi Maya, this plan starts with your evenings, because that’s where your report says rest slips away…”",
       "sessionTitle": "Day 4 · Letting go",
       "sessionMeta": "Stress & Burnout path · 7 min · evening session",
@@ -269,18 +264,14 @@
       "eyebrow": "The assessments",
       "h2A": "Start where it",
       "h2Em": "hurts most.",
-      "lede": "Careful, well-made assessments thoughtful questions scored across real areas, not a quick five-question quiz. Twenty topics, one honest place to start.",
-      "browseAll": "Browse all 20 topics",
+      "lede": "Careful, well-made assessments — thoughtful questions scored across real areas, not a quick five-question quiz.",
       "mostTaken": "Most taken",
       "min": "min",
       "questions": "questions",
       "begin": "Begin assessment",
-      "more": "+15 more",
-      "moreTitle": "Relationships, self-esteem, life transitions…",
-      "moreMeta": "New topics added monthly",
-      "seeAll": "See the full list",
-      "bundleStrong": "Bundle & save",
-      "bundleText": "Take linked assessments like Stress & Burnout → Emotional Intelligence together and save 30%."
+      "browseCount": "Browse all {{count}} topics",
+      "browse": "Browse the topics",
+      "priceNote": "Every assessment is {{price}} — your report and audio plan are included."
     }
   },
   "auth": {

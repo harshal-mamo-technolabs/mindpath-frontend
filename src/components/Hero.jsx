@@ -1,15 +1,8 @@
 import { Link } from 'react-router-dom'
 import { landingCheckinUrl } from '../lib/landing.js'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Headphones, Leaf, Play, Star, TrendingUp } from 'lucide-react'
+import { ArrowRight, Headphones, Leaf, Play, TrendingUp } from 'lucide-react'
 import Reveal from './Reveal.jsx'
-
-const AVATARS = [
-  ['SK', '#6450cf'],
-  ['JM', '#3c7a5e'],
-  ['AL', '#d98b50'],
-  ['RT', '#4d3da8'],
-]
 
 function Spark() {
   return (
@@ -89,25 +82,9 @@ export default function Hero() {
             </Link>
           </Reveal>
 
-          <Reveal className="hero-proof" delay={0.32}>
-            <div className="avatar-stack" aria-hidden="true">
-              {AVATARS.map(([initials, bg]) => (
-                <span key={initials} style={{ background: bg }}>
-                  {initials}
-                </span>
-              ))}
-            </div>
-            <p className="hero-proof-text">
-              <span className="stars" aria-label={t('home.hero.starsAria')}>
-                {Array.from({ length: 5 }, (_, i) => (
-                  <Star key={i} size={13} fill="currentColor" strokeWidth={0} />
-                ))}
-              </span>{' '}
-              <strong>4.9</strong> {t('home.hero.ratingFrom')}
-              <br />
-              <strong>87%</strong> {t('home.hero.ratingCalmer')}
-            </p>
-          </Reveal>
+          {/* The star rating, "12,000+ people" and "87% feel calmer by day 14"
+              lived here. All three were invented figures, so they're gone until
+              there is real evidence to put in their place. */}
         </div>
 
         <Reveal className="hero-scene" delay={0.2}>

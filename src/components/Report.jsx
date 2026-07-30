@@ -23,7 +23,7 @@ const REPORT_META = [
     overall: 62,
     accent: '#6450cf',
     avatar: 'linear-gradient(135deg, #eeb381, #e2906a)',
-    days: 14,
+    days: 7,
     bars: [
       { value: 72, color: '#d98b50' },
       { value: 58, color: '#6450cf' },
@@ -37,7 +37,7 @@ const REPORT_META = [
     overall: 58,
     accent: '#4d3da8',
     avatar: 'linear-gradient(135deg, #8d76ec, #5a48bd)',
-    days: 14,
+    days: 7,
     bars: [
       { value: 66, color: '#6450cf' },
       { value: 74, color: '#8a76e8' },
@@ -51,7 +51,7 @@ const REPORT_META = [
     overall: 71,
     accent: '#3c7a5e',
     avatar: 'linear-gradient(135deg, #6fbf8f, #2e5f49)',
-    days: 21,
+    days: 7,
     bars: [
       { value: 58, color: '#cf6450' },
       { value: 64, color: '#d98b50' },
