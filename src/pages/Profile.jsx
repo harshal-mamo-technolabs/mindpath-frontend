@@ -10,13 +10,15 @@ import {
   Download,
   LogOut,
   Mail,
-  Pencil,
   Shield,
   Trash2,
   User,
   X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
+import { useAuth } from '../hooks/useAuth.js'
+import { getToken, saveSession } from '../lib/auth.js'
+import { getProfile, updateProfile } from '../lib/profileApi.js'
 import { APP_NAME } from '../lib/brand.js'
 import { ensurePushSubscription, pushSupported } from '../lib/push.js'
 import {
@@ -122,13 +124,14 @@ function Toggle({ on, onChange, label }) {
 }
 
 export default function Profile() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
-  const [form, setForm] = useState({
-    name: 'Maya Kapoor',
-    displayName: 'Maya',
-    email: 'maya@example.com',
-  })
+  const { user, logout } = useAuth()
+  // Seeded from the session so the page paints instantly, then refreshed from
+  // the API (which also carries createdAt for the "member since" line).
+  const [form, setForm] = useState({ name: user?.name ?? '', email: user?.email ?? '' })
+  const [memberSince, setMemberSince] = useState(null)
+  const [saving, setSaving] = useState(false)
   const [prefs, setPrefs] = useState({
     dailyReminder: false,
     reminderTime: '7:00 AM',
@@ -183,6 +186,41 @@ export default function Profile() {
       alive = false
     }
   }, [])
+
+  // Pull the authoritative profile once signed in.
+  useEffect(() => {
+    let alive = true
+    getProfile()
+      .then((p) => {
+        if (!alive || !p) return
+        setForm({ name: p.name ?? '', email: p.email ?? '' })
+        setMemberSince(p.createdAt ?? null)
+      })
+      .catch(() => {})
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  async function saveAccount() {
+    const name = form.name.trim()
+    if (name.length < 2) {
+      say(t('profile.toast.nameTooShort', 'Please enter your name.'))
+      return
+    }
+    setSaving(true)
+    try {
+      const updated = await updateProfile(name)
+      // Keep the session in step so the nav avatar and reports update too.
+      saveSession({ token: getToken(), user: { ...user, name: updated.name } })
+      setForm((f) => ({ ...f, name: updated.name }))
+      say(t('profile.toast.profileUpdated'))
+    } catch (err) {
+      say(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const tzOffset = () => new Date().getTimezoneOffset()
 
@@ -245,11 +283,14 @@ export default function Profile() {
     updateNotificationPrefs({ reminderTime: time, tzOffsetMinutes: tzOffset() }).catch(() => {})
   }
 
-  const initials = form.name
-    .split(' ')
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
+  const initials =
+    (form.name || '')
+      .split(' ')
+      .filter(Boolean)
+      .map((w) => w[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || '·'
 
   function go(id) {
     sectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -257,6 +298,7 @@ export default function Profile() {
 
 
   function signOut() {
+    logout()
     navigate('/login')
   }
 
@@ -277,9 +319,16 @@ export default function Profile() {
               </span>
               <h2>{form.name}</h2>
               <p>{form.email}</p>
-              <span className="pf-plan">
-                {t('profile.memberSince', { date: 'March 2025' })}
-              </span>
+              {memberSince && (
+                <span className="pf-plan">
+                  {t('profile.memberSince', {
+                    date: new Date(memberSince).toLocaleDateString(i18n.language, {
+                      month: 'long',
+                      year: 'numeric',
+                    }),
+                  })}
+                </span>
+              )}
             </div>
 
             <nav className="pf-nav" aria-label={t('profile.aria.settingsSections')}>
@@ -316,18 +365,6 @@ export default function Profile() {
                 <p>{t('profile.account.desc')}</p>
               </div>
 
-              <div className="pf-avatar-row">
-                <span className="pf-avatar lg" aria-hidden="true">
-                  {initials}
-                </span>
-                <div>
-                  <button className="pf-mini-btn" onClick={() => say(t('profile.toast.photoDemo'))}>
-                    <Pencil size={14} /> {t('profile.account.changePhoto')}
-                  </button>
-                  <p className="pf-avatar-note">{t('profile.account.photoNote')}</p>
-                </div>
-              </div>
-
               <div className="pf-fields">
                 <label className="pf-field">
                   <span>{t('profile.account.fullName')}</span>
@@ -337,14 +374,6 @@ export default function Profile() {
                     autoComplete="name"
                   />
                 </label>
-                <label className="pf-field">
-                  <span>{t('profile.account.reportName')}</span>
-                  <input
-                    value={form.displayName}
-                    onChange={(e) => setForm((f) => ({ ...f, displayName: e.target.value }))}
-                    maxLength={24}
-                  />
-                </label>
                 <label className="pf-field pf-field-wide">
                   <span>{t('profile.account.email')}</span>
                   <span className="pf-input-icon">
@@ -352,16 +381,23 @@ export default function Profile() {
                     <input
                       type="email"
                       value={form.email}
-                      onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                      readOnly
                       autoComplete="email"
+                      aria-describedby="email-note"
                     />
                   </span>
+                  <small id="email-note" className="pf-field-note">
+                    {t(
+                      'profile.account.emailNote',
+                      'This is how you sign in and where your reports are sent.',
+                    )}
+                  </small>
                 </label>
               </div>
 
               <div className="pf-section-foot">
-                <button className="btn btn-primary" onClick={() => say(t('profile.toast.profileUpdated'))}>
-                  {t('profile.account.save')}
+                <button className="btn btn-primary" onClick={saveAccount} disabled={saving}>
+                  {saving ? t('profile.account.saving', 'Saving…') : t('profile.account.save')}
                 </button>
               </div>
             </section>

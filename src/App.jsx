@@ -1,5 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import GuidedTour from './components/tour/GuidedTour.jsx'
+import { consumeTourPending, startTour } from './lib/tour.js'
 import Nav from './components/Nav.jsx'
 import Home from './pages/Home.jsx'
 import AssessmentCatalog from './pages/AssessmentCatalog.jsx'
@@ -48,10 +50,35 @@ function SiteLayout() {
   )
 }
 
+/**
+ * Starts the onboarding walkthrough for someone arriving from the funnel.
+ *
+ * The handoff page queues it and then navigates, so this waits for the
+ * destination route before consuming the flag — that way the tour begins on the
+ * report, with the score id it needs, rather than on /handoff itself.
+ */
+function TourBoot() {
+  const { pathname } = useLocation()
+  const startedRef = useRef(false)
+
+  useEffect(() => {
+    if (startedRef.current || pathname === '/handoff') return
+    if (!consumeTourPending()) return
+
+    startedRef.current = true
+    const match = pathname.match(/^\/reports\/([^/]+)/)
+    startTour({ scoreId: match?.[1] ?? null })
+  }, [pathname])
+
+  return null
+}
+
 export default function App() {
   return (
     <>
       <ScrollManager />
+      <TourBoot />
+      <GuidedTour />
       <Routes>
         <Route element={<SiteLayout />}>
           <Route path="/" element={<Home />} />

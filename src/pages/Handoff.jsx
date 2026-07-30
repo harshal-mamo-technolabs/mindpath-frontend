@@ -5,6 +5,7 @@ import { LoaderCircle, TriangleAlert } from 'lucide-react'
 import Logo from '../components/Logo.jsx'
 import { saveSession } from '../lib/auth.js'
 import { exchangeHandoff } from '../lib/handoffApi.js'
+import { markTourPending } from '../lib/tour.js'
 
 /**
  * Signs in a buyer arriving from the landing-page funnel.
@@ -34,6 +35,9 @@ export default function Handoff() {
       .then((data) => {
         // Persist before navigating so the report's first fetch carries the JWT.
         saveSession({ token: data.token, user: data.user })
+        // Queue the walkthrough for the page we're about to land on — arriving
+        // here means this is someone's very first minute in the app.
+        if (data.isFirstVisit) markTourPending()
         navigate(data.redirectPath || '/dashboard', { replace: true })
       })
       .catch((err) => setError(err.message))

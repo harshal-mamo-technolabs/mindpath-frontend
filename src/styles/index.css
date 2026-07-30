@@ -1381,6 +1381,9 @@ a {
   border-radius: 15px;
   display: grid;
   place-items: center;
+  /* Never let a long title squeeze the tile — without this it shrinks and the
+     icon inside spills over the text next to it. */
+  flex: none;
 }
 
 .topic-price {

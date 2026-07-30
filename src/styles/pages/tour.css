@@ -1,0 +1,341 @@
+/* Guided onboarding tour.
+   The veil is drawn as one enormous shadow cast by the spotlight box, so the
+   highlighted element sits in a genuine hole rather than behind four panels.
+   Card position comes from JS (measured, not guessed) — this file only styles. */
+
+.tour {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+body.tour-open {
+  overflow: hidden;
+}
+
+.tour-veil,
+.tour-spot {
+  position: fixed;
+  pointer-events: auto;
+}
+
+.tour-veil {
+  inset: 0;
+  background: rgba(16, 13, 34, 0.74);
+  backdrop-filter: blur(3px);
+}
+
+.tour-spot {
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 9999px rgba(16, 13, 34, 0.74),
+    0 0 0 2px rgba(160, 142, 245, 0.95),
+    0 0 0 7px rgba(139, 120, 240, 0.22),
+    0 0 40px 6px rgba(139, 120, 240, 0.35);
+  transition:
+    top 0.34s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.34s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.34s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------------------------------- card ---------------------------------- */
+
+.tour-card {
+  position: fixed;
+  pointer-events: auto;
+  background: var(--surface, #fff);
+  color: var(--ink);
+  border-radius: 22px;
+  padding: 20px 20px 16px;
+  box-shadow:
+    0 2px 8px rgba(16, 13, 34, 0.14),
+    0 28px 70px -20px rgba(16, 13, 34, 0.6);
+  outline: none;
+  animation: tour-in 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+  transition: top 0.28s cubic-bezier(0.4, 0, 0.2, 1), left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tour-card-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 26px 24px 20px;
+  animation: tour-in-center 0.34s cubic-bezier(0.2, 0.8, 0.3, 1);
+  transition: none;
+}
+
+@keyframes tour-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes tour-in-center {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 10px)) scale(0.97); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* the little pointer joining card to spotlight */
+.tour-caret {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--surface, #fff);
+  transform: rotate(45deg) translateX(-50%);
+  transform-origin: center;
+}
+.tour-caret-below { top: -6px; }
+.tour-caret-above { bottom: -6px; }
+
+/* chapter rail across the top of the card */
+.tour-chapters {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  gap: 4px;
+  transform: translateY(-50%);
+}
+
+.tour-chapter {
+  height: 3px;
+  flex: 1;
+  border-radius: 999px;
+  background: rgba(var(--line-rgb, 35, 32, 59), 0.18);
+  transition: background 0.3s;
+}
+.tour-chapter.done { background: rgba(100, 80, 207, 0.45); }
+.tour-chapter.current { background: var(--violet, #6450cf); }
+
+.tour-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  color: var(--ink-3);
+  transition: background 0.15s, color 0.15s;
+}
+.tour-close:hover {
+  background: var(--violet-ghost, #f0edfb);
+  color: var(--ink);
+}
+
+/* eyebrow: icon + chapter + position */
+.tour-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 2px 0 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--violet, #6450cf);
+}
+
+.tour-eyebrow-icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+  background: var(--violet-ghost, #f0edfb);
+  color: var(--violet, #6450cf);
+  flex: none;
+}
+
+.tour-eyebrow-count {
+  margin-left: auto;
+  margin-right: 24px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+}
+
+.tour-card-title {
+  font-family: var(--font-display, Georgia, serif);
+  font-weight: 560;
+  font-size: 21px;
+  line-height: 1.24;
+  letter-spacing: -0.01em;
+  margin: 10px 0 0;
+}
+
+.tour-card-body {
+  margin: 8px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.tour-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 12px 0 0;
+  padding: 9px 11px;
+  border-radius: 12px;
+  background: var(--violet-ghost, #f0edfb);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.45;
+  color: var(--violet-deep, #4d3da8);
+}
+.tour-tip svg { flex: none; margin-top: 2px; }
+
+/* intro / outro cards */
+.tour-bookend-logo {
+  display: inline-flex;
+  margin-bottom: 6px;
+}
+
+.tour-agenda {
+  display: grid;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--paper-deep, #efe9dd);
+  text-align: left;
+}
+.tour-agenda li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.tour-agenda svg { color: var(--violet, #6450cf); flex: none; }
+
+/* ---------------------------------- actions -------------------------------- */
+
+.tour-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.tour-card-center .tour-actions {
+  justify-content: center;
+}
+
+.tour-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-3);
+  padding: 8px 2px;
+  transition: color 0.15s;
+}
+.tour-back:hover { color: var(--ink); }
+
+.tour-count {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.tour-card-center .tour-count { display: none; }
+
+.tour-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 999px;
+  flex: none;
+}
+
+/* On phones the card spans the width. Vertical placement still comes from JS,
+   so it sits clear of whatever it points at rather than covering it. */
+@media (max-width: 620px) {
+  .tour-card:not(.tour-card-center) {
+    left: 12px !important;
+    right: 12px;
+    width: auto !important;
+  }
+  .tour-card-center {
+    width: min(420px, calc(100vw - 24px));
+  }
+  .tour-card-title { font-size: 19px; }
+  .tour-card-body { font-size: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-spot,
+  .tour-card,
+  .tour-card-center {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ---- peek ------------------------------------------------------------------
+   Some report sections are taller than the space the card can leave free. Rather
+   than pretend that never happens, the card can be tucked away to a slim strip
+   so the highlighted content is fully readable, then brought back. */
+.tour-card-tools {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tour-card-tools .tour-close {
+  position: static;
+}
+
+.tour-peek {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--ink-3);
+  transition: background 0.15s, color 0.15s;
+}
+
+.tour-peek:hover {
+  background: var(--violet-ghost, #f0edfb);
+  color: var(--ink);
+}
+
+/* Collapsed: everything but the tool row folds away. */
+.tour-card-peek {
+  padding-bottom: 10px;
+}
+
+.tour-card-peek .tour-eyebrow,
+.tour-card-peek .tour-card-title,
+.tour-card-peek .tour-card-body,
+.tour-card-peek .tour-tip,
+.tour-card-peek .tour-bookend,
+.tour-card-peek .tour-caret {
+  display: none;
+}
+
+.tour-card-peek .tour-actions {
+  margin-top: 0;
+  padding-right: 92px;
+}
+
+.tour-card-peek .tour-chapters {
+  opacity: 0.5;
+}

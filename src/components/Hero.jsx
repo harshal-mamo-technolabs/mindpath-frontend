@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { landingCheckinUrl } from '../lib/landing.js'
 import { useTranslation } from 'react-i18next'
 import { ArrowRight, Headphones, Leaf, Play, Star, TrendingUp } from 'lucide-react'
 import Reveal from './Reveal.jsx'
@@ -72,9 +73,17 @@ export default function Hero() {
           </Reveal>
 
           <Reveal className="hero-actions" delay={0.24}>
-            <Link to="/assessments" className="btn btn-primary">
-              {t('home.hero.findPath')} <ArrowRight size={18} />
-            </Link>
+            {/* Sends people to the check-in funnel when one is configured,
+                falling back to the in-app catalogue when it isn't. */}
+            {landingCheckinUrl() ? (
+              <a href={landingCheckinUrl()} className="btn btn-primary">
+                {t('home.hero.findPath')} <ArrowRight size={18} />
+              </a>
+            ) : (
+              <Link to="/assessments" className="btn btn-primary">
+                {t('home.hero.findPath')} <ArrowRight size={18} />
+              </Link>
+            )}
             <Link to="/sound" className="btn btn-ghost">
               <Headphones size={18} /> {t('home.hero.listenFree')}
             </Link>

@@ -161,6 +161,9 @@
   align-self: center;
   position: relative;
   z-index: 1;
+  /* The "most taken" tag is absolutely positioned over this card, so the head
+     reserves room for it. Without this the tag lands on top of the title. */
+  padding-top: 32px;
 }
 
 .cat-featured .cat-card-head h3 {
@@ -1884,6 +1887,15 @@
     align-self: start;
   }
 
+  /* the tag is absolute — keep it aligned with the card's own padding */
+  .featured-tag {
+    left: 26px;
+  }
+
+  .cat-featured .cat-card-head h3 {
+    font-size: 24px;
+  }
+
   .detail-hero {
     padding-top: 120px;
   }
@@ -1967,5 +1979,69 @@
 
   .gen-steps li.active .gen-check {
     animation: none;
+  }
+}
+
+/* ---- catalog cards on phones ------------------------------------------------
+   At this width the icon, title and price can't share one row: the title is the
+   longest thing on the card and needs the full column. So the head becomes a
+   grid — icon and price on the top row, title and tagline spanning beneath. */
+@media (max-width: 560px) {
+  .cat-card {
+    padding: 22px 20px;
+    gap: 16px;
+  }
+
+  .cat-featured {
+    padding: 22px 20px;
+  }
+
+  .featured-tag {
+    top: 18px;
+    left: 20px;
+  }
+
+  .cat-featured .cat-card-head {
+    padding-top: 30px;
+  }
+
+  .cat-card-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'ico  price'
+      'text text';
+    align-items: center;
+    gap: 14px 12px;
+  }
+
+  .cat-card-head > .topic-ico {
+    grid-area: ico;
+  }
+
+  .cat-card-head > div {
+    grid-area: text;
+    min-width: 0;
+  }
+
+  .cat-card-head .topic-price {
+    grid-area: price;
+    justify-self: end;
+  }
+
+  .cat-card-head h3,
+  .cat-featured .cat-card-head h3 {
+    font-size: 21px;
+    line-height: 1.18;
+  }
+
+  .cat-tagline {
+    font-size: 13.5px;
+  }
+
+  /* the meta row and CTA stack rather than squeezing onto one line */
+  .cat-card-foot {
+    align-items: flex-start;
+    gap: 12px;
   }
 }
