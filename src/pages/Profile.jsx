@@ -20,6 +20,7 @@ import { useAuth } from '../hooks/useAuth.js'
 import { getToken, saveSession } from '../lib/auth.js'
 import { getProfile, updateProfile } from '../lib/profileApi.js'
 import { APP_NAME } from '../lib/brand.js'
+import { isMsisdnMode } from '../lib/billingMode.js'
 import { ensurePushSubscription, pushSupported } from '../lib/push.js'
 import {
   getNotificationPrefs,
@@ -318,7 +319,8 @@ export default function Profile() {
                 {initials}
               </span>
               <h2>{form.name}</h2>
-              <p>{form.email}</p>
+              {/* Carrier-billed users sign in by MSISDN — they have no email to show. */}
+              {!isMsisdnMode && <p>{form.email}</p>}
               {memberSince && (
                 <span className="pf-plan">
                   {t('profile.memberSince', {
@@ -374,25 +376,27 @@ export default function Profile() {
                     autoComplete="name"
                   />
                 </label>
-                <label className="pf-field pf-field-wide">
-                  <span>{t('profile.account.email')}</span>
-                  <span className="pf-input-icon">
-                    <Mail size={16} />
-                    <input
-                      type="email"
-                      value={form.email}
-                      readOnly
-                      autoComplete="email"
-                      aria-describedby="email-note"
-                    />
-                  </span>
-                  <small id="email-note" className="pf-field-note">
-                    {t(
-                      'profile.account.emailNote',
-                      'This is how you sign in and where your reports are sent.',
-                    )}
-                  </small>
-                </label>
+                {!isMsisdnMode && (
+                  <label className="pf-field pf-field-wide">
+                    <span>{t('profile.account.email')}</span>
+                    <span className="pf-input-icon">
+                      <Mail size={16} />
+                      <input
+                        type="email"
+                        value={form.email}
+                        readOnly
+                        autoComplete="email"
+                        aria-describedby="email-note"
+                      />
+                    </span>
+                    <small id="email-note" className="pf-field-note">
+                      {t(
+                        'profile.account.emailNote',
+                        'This is how you sign in and where your reports are sent.',
+                      )}
+                    </small>
+                  </label>
+                )}
               </div>
 
               <div className="pf-section-foot">

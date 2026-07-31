@@ -59,8 +59,8 @@ applyLang(i18n.language)
 i18n.on('languageChanged', applyLang)
 setLanguageProvider(() => i18n.language || 'en')
 
-/** The ebook edition to request for a UI language: German has its own edition;
-    every other language (en/fr/it) reads the English edition (per product rule). */
-export const ebookLang = (lng = i18n.language) => (lng === 'de' ? 'de' : 'en')
+/** The ebook edition to request for a UI language — each language reads its own
+    edition; the backend serves the English one for books not yet authored in it. */
+export const ebookLang = (lng = i18n.language) => (LANGS.includes(lng) ? lng : 'en')
 
 export default i18n

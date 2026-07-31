@@ -32,6 +32,8 @@ import {
 import Reveal from '../components/Reveal.jsx'
 import { useAuth } from '../hooks/useAuth.js'
 import { APP_PRESS } from '../lib/brand.js'
+import ChapterBody from '../components/ChapterBody.jsx'
+import { chapterHtml } from '../lib/bookBlocks.js'
 import { isStripeMode } from '../lib/billingMode.js'
 import { stripeConfigured, stripePromise } from '../lib/stripe.js'
 import { getPaymentMethods } from '../lib/payments.js'
@@ -80,13 +82,6 @@ const COVER_THEMES = [
 const themeFor = (i) =>
   COVER_THEMES[((i % COVER_THEMES.length) + COVER_THEMES.length) % COVER_THEMES.length]
 
-/* Split a chapter body (blank-line separated) into paragraphs for the reader. */
-const toParas = (body) =>
-  (body || '')
-    .split(/\n{2,}/)
-    .map((p) => p.trim())
-    .filter(Boolean)
-
 /* Shelf badge shown on a card the caller has added/bought (null otherwise). */
 const shelfBadge = (b, t) => {
   if (!b.onShelf) return null
@@ -104,7 +99,11 @@ const coverImageFor = (book) => (book?.slug ? `/ebook-cover/${book.slug}.png` : 
 // Maps a category name to a stable i18n key (ebooks.cat.<key>), e.g.
 // "Anxiety & Mental Health" → "anxiety-mental-health". The category name itself
 // is the English fallback, so an unmapped category still renders.
-const catKey = (c) => (c || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+const catKey = (c) =>
+  (c || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
 
 /* A reusable book cover — shows the real cover art when we have it, otherwise falls back
    to a styled CSS cover (books with no art, or if the image fails to load). */
@@ -341,7 +340,8 @@ function EbookPay({ clientSecret, amount, billingDetails, onPaid }) {
 }
 
 export default function EbooksLibrary() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language
   const { isAuthenticated, user } = useAuth()
   const navigate = useNavigate()
 
@@ -377,7 +377,8 @@ export default function EbooksLibrary() {
   }, [])
   useEffect(() => () => clearTimeout(toastTimer.current), [])
 
-  /* fetch the catalog (JWT auto-attached → cards carry `onShelf`/`unlocked`) */
+  /* fetch the catalog (JWT auto-attached → cards carry `onShelf`/`unlocked`).
+     Re-runs on a language switch so cards show that language's edition. */
   useEffect(() => {
     let alive = true
     listEbooks()
@@ -386,7 +387,23 @@ export default function EbooksLibrary() {
     return () => {
       alive = false
     }
-  }, [])
+  }, [lang])
+
+  /* An open book re-loads in the new language, keeping the reader where it was. */
+  useEffect(() => {
+    const id = reader && idOf(reader)
+    if (!id) return
+    let alive = true
+    getEbook(id)
+      .then((full) => alive && setReader((r) => (r && idOf(r) === id ? full : r)))
+      .catch(() => {})
+    return () => {
+      alive = false
+    }
+    // `reader` is read but deliberately not a dependency — it changes on every
+    // refetch, so depending on it would loop. Language is the only trigger.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang])
 
   const shelfCount = useMemo(() => (books || []).filter((b) => b.onShelf).length, [books])
 
@@ -594,10 +611,8 @@ export default function EbooksLibrary() {
     const theme = themeFor(gIndex(book))
     const chaptersHtml = (book.chapters || [])
       .map((ch, i) => {
-        const paras = toParas(ch.body)
-          .map((p) => `      <p>${esc(p)}</p>`)
-          .join('\n')
-        return `    <section class="ch">\n      <span class="kic">${t('ebooks.chapterKicker', { n: i + 1 })}</span>\n      <h2>${esc(ch.title)}</h2>\n${paras}\n    </section>`
+        const blocks = chapterHtml(ch.body, book.slug)
+        return `    <section class="ch">\n      <span class="kic">${t('ebooks.chapterKicker', { n: i + 1 })}</span>\n      <h2>${esc(ch.title)}</h2>\n${blocks}\n    </section>`
       })
       .join('\n')
     const html = `<!doctype html>
@@ -617,7 +632,22 @@ export default function EbooksLibrary() {
   .ch { margin: 0 0 44px; }
   .ch .kic { letter-spacing: .18em; text-transform: uppercase; font-size: 11px; color: ${theme.accent}; font-family: Arial, sans-serif; }
   .ch h2 { font-size: 24px; margin: 4px 0 18px; break-after: avoid; }
+  .ch h3 { font-size: 16px; margin: 26px 0 10px; break-after: avoid; font-family: Arial, sans-serif; letter-spacing: .01em; }
   .ch p { margin: 0 0 15px; orphans: 2; widows: 2; }
+  .ch ul, .ch ol { margin: 0 0 15px; padding-left: 22px; }
+  .ch li { margin: 0 0 7px; }
+  .ch blockquote { margin: 22px 0; padding-left: 16px; border-left: 3px solid ${theme.accent}; font-size: 19px; font-style: italic; color: #4a4560; break-inside: avoid; }
+  .box { break-inside: avoid; margin: 20px 0; padding: 16px 18px; background: #faf7f1; border: 1px solid #e3dccc; border-radius: 8px; }
+  .box-label { display: block; font-family: Arial, sans-serif; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: ${theme.accent}; margin-bottom: 8px; }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .tbl { break-inside: avoid; margin: 22px 0; }
+  .tbl figcaption { font-family: Arial, sans-serif; font-size: 12px; color: #6b6680; margin-bottom: 8px; }
+  .tbl table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12.5px; }
+  .tbl th, .tbl td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e3dccc; vertical-align: top; }
+  .tbl th { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #6b6680; }
+  .fig { break-inside: avoid; margin: 24px 0; }
+  .fig img { display: block; width: auto; max-width: 100%; max-height: 105mm; height: auto; margin: 0 auto; border-radius: 8px; }
+  .fig figcaption { font-family: Arial, sans-serif; font-size: 12px; color: #6b6680; margin-top: 8px; text-align: center; }
   footer { text-align: center; color: #9a93a8; font-size: 13px; font-family: Arial, sans-serif; padding-top: 24px; border-top: 1px solid #d8d0c2; }
 </style>
 </head>
@@ -783,9 +813,7 @@ ${chaptersHtml}
         <section className="eb-section">
           <div className="container">
             <div className="eb-section-head">
-              <h2 className="rp-h2">
-                {t('ebooks.yourShelf')}
-              </h2>
+              <h2 className="rp-h2">{t('ebooks.yourShelf')}</h2>
               <span className="eb-section-count">
                 {t('ebooks.booksCount', { count: shelf.length })}
               </span>
@@ -900,7 +928,8 @@ ${chaptersHtml}
                       ) : null}
                       {reader.readMinutes ? (
                         <span className="eb-pages">
-                          <Clock size={13} /> {t('ebooks.minutesShort', { count: reader.readMinutes })}
+                          <Clock size={13} />{' '}
+                          {t('ebooks.minutesShort', { count: reader.readMinutes })}
                         </span>
                       ) : null}
                     </div>
@@ -908,7 +937,10 @@ ${chaptersHtml}
                       <div className="eb-reader-progress">
                         <div className="eb-reader-bar">
                           <i
-                            style={{ width: `${reader.progress || 0}%`, background: readerTheme.accent }}
+                            style={{
+                              width: `${reader.progress || 0}%`,
+                              background: readerTheme.accent,
+                            }}
                           />
                         </div>
                         <span>{t('ebooks.percentRead', { percent: reader.progress || 0 })}</span>
@@ -947,9 +979,7 @@ ${chaptersHtml}
                               disabled={!open}
                               onClick={() => open && setOpenChapter(idx)}
                             >
-                              <span className="eb-toc-num">
-                                {String(idx + 1).padStart(2, '0')}
-                              </span>
+                              <span className="eb-toc-num">{String(idx + 1).padStart(2, '0')}</span>
                               <span className="eb-toc-title">{ch.title}</span>
                               {ch.read ? (
                                 <Check
@@ -1036,9 +1066,7 @@ ${chaptersHtml}
                 <article className="eb-read-body">
                   <span className="eb-read-eyebrow">{reader.title}</span>
                   <h2 className="eb-read-title">{reader.chapters?.[openChapter]?.title}</h2>
-                  {toParas(reader.chapters?.[openChapter]?.body).map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
+                  <ChapterBody body={reader.chapters?.[openChapter]?.body} slug={reader.slug} />
                 </article>
 
                 {reader.onShelf && reader.chapters?.[openChapter] && (
@@ -1094,7 +1122,9 @@ ${chaptersHtml}
                       </button>
                     )
                   ) : (
-                    <span className="eb-read-end">{t('ebooks.theEnd', { author: reader.author })}</span>
+                    <span className="eb-read-end">
+                      {t('ebooks.theEnd', { author: reader.author })}
+                    </span>
                   )}
                 </div>
               </>
@@ -1145,7 +1175,8 @@ ${chaptersHtml}
                   )}
                   {buy.book.chaptersCount > 0 && (
                     <li>
-                      <FileText size={15} /> {t('ebooks.chaptersCount', { count: buy.book.chaptersCount })}
+                      <FileText size={15} />{' '}
+                      {t('ebooks.chaptersCount', { count: buy.book.chaptersCount })}
                     </li>
                   )}
                 </ul>

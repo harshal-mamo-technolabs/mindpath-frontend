@@ -128,7 +128,8 @@ export default function Nav() {
                     </span>
                     <div>
                       <strong>{displayName}</strong>
-                      <small>{email}</small>
+                      {/* Carrier-billed users sign in by MSISDN — no email to show. */}
+                      {!isMsisdnMode && <small>{email}</small>}
                     </div>
                   </div>
 

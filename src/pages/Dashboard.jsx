@@ -132,7 +132,7 @@ export default function Dashboard() {
     return () => {
       alive = false
     }
-  }, [])
+  }, [i18n.language])
 
   const hour = new Date().getHours()
   const greeting = t(

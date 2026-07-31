@@ -975,13 +975,196 @@
   color: #cfcae2;
 }
 
-.eb-read-body p:first-of-type::first-letter {
+/* the drop cap belongs to the chapter's opening paragraph only — never to the first
+   paragraph inside a box or a figure */
+.eb-read-body > p:first-of-type::first-letter {
   font-size: 52px;
   line-height: 0.78;
   float: left;
   margin: 7px 10px 0 0;
   color: var(--violet);
   font-weight: 500;
+}
+
+/* ===== chapter blocks (SECTION / QUOTE / list / BOX / TABLE / IMAGE) ===== */
+
+.eb-h3 {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--violet-deep);
+  margin: 34px 0 14px;
+}
+
+.eb-h3:first-child {
+  margin-top: 4px;
+}
+
+.eb-pull {
+  font-family: var(--font-display);
+  font-size: 21px;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--ink);
+  margin: 26px 0;
+  padding: 2px 0 2px 20px;
+  border-left: 3px solid var(--violet);
+}
+
+.eb-list {
+  margin: 0 0 18px;
+  padding-left: 22px;
+  font-family: var(--font-display);
+  font-size: 17.5px;
+  line-height: 1.72;
+  color: #38334f;
+}
+
+.eb-list li {
+  margin-bottom: 8px;
+}
+
+.eb-list li::marker {
+  color: var(--violet);
+}
+
+.eb-box {
+  margin: 26px 0;
+  padding: 18px 20px;
+  background: var(--violet-ghost);
+  border: 1px solid var(--violet-soft);
+  border-radius: 14px;
+}
+
+.eb-box-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--violet-deep);
+  margin-bottom: 10px;
+}
+
+.eb-box p,
+.eb-box .eb-list {
+  font-size: 16.5px;
+  margin-bottom: 12px;
+}
+
+.eb-box > :last-child {
+  margin-bottom: 0;
+}
+
+.eb-table {
+  margin: 28px 0;
+}
+
+.eb-table figcaption {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+
+/* a wide table scrolls inside itself rather than stretching the reader */
+.eb-table-scroll {
+  overflow-x: auto;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 12px;
+}
+
+.eb-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+}
+
+.eb-table th,
+.eb-table td {
+  text-align: left;
+  padding: 11px 14px;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+}
+
+.eb-table th {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+
+.eb-table td {
+  color: #38334f;
+}
+
+.eb-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.eb-fig {
+  margin: 28px 0;
+}
+
+/* Art is capped by height, not stretched to the column: a portrait illustration would
+   otherwise run taller than the screen. Landscape art still fills the width, because
+   max-width hits first there. */
+.eb-fig img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: min(52vh, 400px);
+  height: auto;
+  margin: 0 auto;
+  border-radius: 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.eb-fig figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+:root[data-theme='dark'] .eb-h3 {
+  color: #b3a8f0;
+}
+
+:root[data-theme='dark'] .eb-pull {
+  color: var(--night-ink);
+  border-left-color: #7a68e0;
+}
+
+:root[data-theme='dark'] .eb-list,
+:root[data-theme='dark'] .eb-table td {
+  color: #cfcae2;
+}
+
+:root[data-theme='dark'] .eb-box {
+  background: rgba(100, 80, 207, 0.13);
+  border-color: rgba(140, 120, 230, 0.28);
+}
+
+:root[data-theme='dark'] .eb-box-label,
+:root[data-theme='dark'] .eb-table th {
+  color: #b3a8f0;
+}
+
+:root[data-theme='dark'] .eb-table th {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+:root[data-theme='dark'] .eb-table-scroll,
+:root[data-theme='dark'] .eb-fig img {
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .eb-read-nav {
@@ -1094,10 +1277,20 @@
   padding: 12px 11px 11px 16px;
   border-radius: 3px 7px 7px 3px;
 }
-.bk-sm .bk-press { font-size: 7px; }
-.bk-sm .bk-title { font-size: 12.5px; margin-top: 8px; }
-.bk-sm .bk-author { font-size: 9px; }
-.bk-sm .bk-spine { left: 5px; width: 2px; }
+.bk-sm .bk-press {
+  font-size: 7px;
+}
+.bk-sm .bk-title {
+  font-size: 12.5px;
+  margin-top: 8px;
+}
+.bk-sm .bk-author {
+  font-size: 9px;
+}
+.bk-sm .bk-spine {
+  left: 5px;
+  width: 2px;
+}
 
 .eb-modal {
   width: min(470px, 100%);
@@ -1213,7 +1406,9 @@
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 11px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 .eb-field-box:focus-within {
   border-color: rgba(140, 120, 240, 0.75);
