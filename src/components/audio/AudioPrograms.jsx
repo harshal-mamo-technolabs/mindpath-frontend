@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   X,
 } from 'lucide-react'
+import { mediaUrl } from '../../lib/api.js'
 import { isStripeMode } from '../../lib/billingMode.js'
 import { stripeConfigured, stripePromise } from '../../lib/stripe.js'
 import { getPaymentMethods } from '../../lib/payments.js'
@@ -335,7 +336,7 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
     const el = audioRef.current
     if (el) {
       document.querySelectorAll('audio').forEach((a) => a !== el && a.pause())
-      el.src = clip.session.audioUrl
+      el.src = mediaUrl(clip.session.audioUrl)
       el.play().catch(() => {})
     }
   }

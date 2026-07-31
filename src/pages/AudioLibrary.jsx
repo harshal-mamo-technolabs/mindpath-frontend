@@ -17,6 +17,7 @@ import {
 import Reveal from '../components/Reveal.jsx'
 import AudioPrograms from '../components/audio/AudioPrograms.jsx'
 import { useAuth } from '../hooks/useAuth.js'
+import { mediaUrl } from '../lib/api.js'
 import { getAudioPlans, markPlayed } from '../lib/audioApi.js'
 import { getMyPrograms, markProgramPlayed } from '../lib/audioProgramsApi.js'
 import { formatTime } from '../lib/time.js'
@@ -828,7 +829,7 @@ export default function AudioLibrary() {
       {/* real audio element (hidden) */}
       <audio
         ref={audioRef}
-        src={nowPlaying?.url || undefined}
+        src={mediaUrl(nowPlaying?.url) || undefined}
         preload="metadata"
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
