@@ -361,7 +361,7 @@ export default function EbooksLibrary() {
 
   const [reader, setReader] = useState(null) // full ebook (with chapters)
   const [readerBusy, setReaderBusy] = useState(false)
-  const [downloadingId, setDownloadingId] = useState(null) // shelf card fetching its chapters
+  const [pdfBusy, setPdfBusy] = useState(null) // book title while a PDF is being prepared
   const [openChapter, setOpenChapter] = useState(null) // null = contents view, number = reading
 
   const [buy, setBuy] = useState(null) // { book, step: 'loading'|'pay'|'done', clientSecret, amount }
@@ -459,19 +459,6 @@ export default function EbooksLibrary() {
   const closeReader = () => {
     setReader(null)
     setOpenChapter(null)
-  }
-
-  // Download straight from a shelf card. Grid cards are lightweight (no chapter bodies), so
-  // fetch the full book first — then hand it to the same print-to-PDF path the reader uses.
-  const downloadFromCard = async (book) => {
-    setDownloadingId(idOf(book))
-    try {
-      downloadBook(await getEbook(idOf(book)))
-    } catch (e) {
-      say(e.message || t('ebooks.openError'))
-    } finally {
-      setDownloadingId(null)
-    }
   }
 
   const refreshDetail = async (id) => {
@@ -605,8 +592,11 @@ export default function EbooksLibrary() {
   /* ----- download an owned book as a PDF via the browser's print-to-PDF, keeping the
      same cream look as the styled HTML. Matches how the app's reports do "Download PDF"
      (window.print + print-color-adjust: exact). Renders in a hidden iframe so only the
-     book prints, not the app. ----- */
-  const downloadBook = (book) => {
+     book prints, not the app.
+     The whole wait (fetching chapters, rendering, loading the art) happens off screen, so
+     it runs behind a blocking overlay — the app is frozen until the print dialog is up,
+     then released so the user can save or cancel there. ----- */
+  const buildBookHtml = (book) => {
     const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     const theme = themeFor(gIndex(book))
     const chaptersHtml = (book.chapters || [])
@@ -615,7 +605,7 @@ export default function EbooksLibrary() {
         return `    <section class="ch">\n      <span class="kic">${t('ebooks.chapterKicker', { n: i + 1 })}</span>\n      <h2>${esc(ch.title)}</h2>\n${blocks}\n    </section>`
       })
       .join('\n')
-    const html = `<!doctype html>
+    return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -661,21 +651,42 @@ ${chaptersHtml}
   <footer>© ${esc(APP_PRESS)} · ${t('ebooks.pdfFooter')}</footer>
 </body>
 </html>`
+  }
 
+  const downloadBook = async (book) => {
+    setPdfBusy(book.title)
     const iframe = document.createElement('iframe')
-    iframe.setAttribute('aria-hidden', 'true')
-    iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;'
-    iframe.onload = () => {
+    try {
+      // Grid cards and a still-loading reader carry no chapter bodies — fetch them, or the
+      // PDF comes out as a cover page with nothing behind it.
+      const full = book.chapters ? book : await getEbook(idOf(book))
+      iframe.setAttribute('aria-hidden', 'true')
+      iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;'
+      // srcdoc's load event waits for the chapter art, so the document is complete by here.
+      const loaded = new Promise((resolve) => {
+        iframe.onload = resolve
+      })
+      iframe.srcdoc = buildBookHtml(full)
+      document.body.appendChild(iframe)
+      await loaded
+
+      say(t('ebooks.preparingPdf', { title: full.title }))
+      setPdfBusy(null)
+      // print() blocks the thread, so let the overlay actually repaint away before it opens.
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+
       const w = iframe.contentWindow
+      w.onafterprint = () => iframe.remove()
       w.focus()
       w.print()
-      w.onafterprint = () => iframe.remove()
       // safety cleanup if afterprint never fires (e.g. dialog dismissed)
       setTimeout(() => document.body.contains(iframe) && iframe.remove(), 120000)
+    } catch (e) {
+      iframe.remove()
+      say(e.message || t('ebooks.openError'))
+    } finally {
+      setPdfBusy(null)
     }
-    iframe.srcdoc = html
-    document.body.appendChild(iframe)
-    say(t('ebooks.preparingPdf', { title: book.title }))
   }
 
   /* A single catalog card — used by both the shelf and explore grids. */
@@ -737,16 +748,11 @@ ${chaptersHtml}
                 </button>
                 <button
                   className="eb-btn-download"
-                  onClick={() => downloadFromCard(book)}
-                  disabled={downloadingId === idOf(book)}
+                  onClick={() => downloadBook(book)}
                   title={t('ebooks.downloadPdf')}
                   aria-label={t('ebooks.downloadPdf')}
                 >
-                  {downloadingId === idOf(book) ? (
-                    <Loader2 size={15} className="ap-spin" />
-                  ) : (
-                    <Download size={15} />
-                  )}
+                  <Download size={15} />
                   <span>{t('ebooks.download')}</span>
                 </button>
               </>
@@ -1130,6 +1136,18 @@ ${chaptersHtml}
               </>
             )}
           </aside>
+        </div>
+      )}
+
+      {/* ===== PDF prep — blocks the app until the print dialog is ready ===== */}
+      {pdfBusy && (
+        <div className="ap-modal-overlay" role="dialog" aria-modal="true" aria-busy="true">
+          <div className="ap-modal eb-modal">
+            <div className="apl-pay-loading">
+              <Loader2 size={22} className="ap-spin" />{' '}
+              {t('ebooks.preparingPdf', { title: pdfBusy })}
+            </div>
+          </div>
         </div>
       )}
 
