@@ -325,7 +325,17 @@
     "errAge": "Enter an age from 1 to 120.",
     "errMsisdn": "Enter a real mobile number (8 to 15 digits).",
     "errMsisdnExists": "This number already has an account. Please log in.",
-    "errMsisdnNoAccount": "No account for this number. Please sign up first."
+    "errMsisdnNoAccount": "No account for this number. Please sign up first.",
+    "handoff": {
+      "welcome": "Welcome to {{appName}}",
+      "signingIn": "Signing you in…",
+      "openingReport": "Opening your report.",
+      "errorKicker": "Link problem",
+      "errorTitle": "This link didn’t work",
+      "errorBody": "Sign-in links are single-use and expire quickly — but your report is saved to your account, so signing in normally will take you straight to it.",
+      "errorCta": "Go to sign in",
+      "errorNoToken": "This sign-in link is missing its token."
+    }
   },
   "assess": {
     "catalog": {
@@ -1464,6 +1474,75 @@
     "backAria": "Back to your reports",
     "dir_higher": "higher",
     "dir_lower": "lower"
+  },
+  "tour": {
+    "ariaLabel": "Product tour",
+    "chapters": {
+      "report": "Your report",
+      "plan": "Your plan",
+      "explore": "What else is here"
+    },
+    "ui": {
+      "back": "Back",
+      "skip": "Skip tour",
+      "finish": "Finish",
+      "start": "Show me",
+      "next": "Next",
+      "peekShow": "Show",
+      "peekHide": "Peek",
+      "peekShowAria": "Show the tour card",
+      "peekHideAria": "Hide the card to look underneath",
+      "closeAria": "Leave the tour"
+    },
+    "steps": {
+      "welcome": {
+        "title": "Welcome to {{appName}}",
+        "body": "Your report is ready. Here’s a quick look at what’s in it and what happens next — about a minute, and you can leave any time."
+      },
+      "score": {
+        "title": "Your overall load",
+        "body": "All five areas blended into one number. Problems push it up, your strengths pull it down — so it moves as you do.",
+        "tip": "Retake the check-in any time to see it shift."
+      },
+      "pattern": {
+        "title": "The pattern behind it",
+        "body": "Your demands measured against your capacity to recover. Where those two sit relative to each other is what names your profile."
+      },
+      "categories": {
+        "title": "Where the load sits",
+        "body": "Warm bars are stress, green bars are strengths. This is the map of what to work on first."
+      },
+      "plan": {
+        "title": "What to actually do",
+        "body": "Each focus area comes with one concrete action. Small enough to fit a real week — that is the whole point."
+      },
+      "audio": {
+        "title": "Your 7-day audio plan",
+        "body": "A short guided session each day, chosen for your profile. One unlocks every day — the rhythm is what makes it work.",
+        "tip": "Start with day one; it takes three minutes."
+      },
+      "assessments": {
+        "title": "More check-ins",
+        "body": "Sleep, anxiety, focus and emotional intelligence each have their own profile and their own plan."
+      },
+      "ebooks": {
+        "title": "Guided reading",
+        "body": "Short, practical books on the things your report surfaced — read at your own pace."
+      },
+      "counselling": {
+        "title": "Someone to talk to",
+        "body": "When reading and listening are not enough, you can talk it through — whenever you need it."
+      },
+      "dashboard": {
+        "title": "Your home base",
+        "body": "Progress, streaks and everything you have unlocked, all in one place."
+      },
+      "done": {
+        "title": "That’s the tour",
+        "body": "Your report is the thing to come back to — it is the map everything else works from. Your audio plan is waiting under Daily audio whenever you are ready to start day one.",
+        "cta": "Back to my report"
+      }
+    }
   },
   "assessData": {
     "likert": [

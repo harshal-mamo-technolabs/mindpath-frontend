@@ -444,7 +444,7 @@
 
 .r-latest-tag {
   font-style: normal;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -625,6 +625,12 @@
   flex: none;
 }
 
+/* the title/meta column, between two fixed-size boxes — must be allowed to
+   shrink or a long assessment name pushes the card past the panel */
+.reports-explore-card > div {
+  min-width: 0;
+}
+
 .reports-explore-card strong {
   font-size: 15px;
   display: block;
@@ -699,19 +705,64 @@
     letter-spacing: 0.02em;
   }
 
-  /* compact the take row so the date never wraps */
+  .r-group {
+    padding: 18px 16px;
+  }
+
+  /* the score + band can't share the title's row here — let them wrap below it
+     so the topic name gets the card's full width instead of ~3 words per line */
+  .r-group-ico {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+  }
+
+  .r-group-titles h2 {
+    font-size: 20px;
+  }
+
+  .r-group-latest {
+    flex: 1 0 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  /* The date + "latest" tag are together wider than the row, and a nowrap date
+     would set the whole card's minimum width (which pushed the grid off-screen).
+     Give the date its own line; score / change / chevron sit underneath. */
   .r-take-row .band-chip {
     display: none;
   }
 
+  .r-take-row {
+    gap: 8px 10px;
+    padding: 12px 13px;
+    flex-wrap: wrap;
+  }
+
   .r-take-date {
-    white-space: nowrap;
+    flex: 1 0 100%;
     font-size: 13.5px;
   }
 
-  .r-take-row {
-    gap: 10px;
-    padding: 12px 13px;
+  .r-take-chev {
+    margin-left: auto;
+  }
+
+  /* 30px of panel padding is a fifth of the screen at this width */
+  .reports-explore {
+    padding: 22px 18px;
+  }
+
+  .reports-explore-card {
+    padding: 13px 14px;
+    gap: 11px;
+  }
+
+  .reports-explore-card .topic-ico {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
   }
 }
 

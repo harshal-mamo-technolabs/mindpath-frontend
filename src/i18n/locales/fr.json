@@ -325,7 +325,17 @@
     "errAge": "Indiquez un âge de 1 à 120.",
     "errMsisdn": "Saisissez un vrai numéro de mobile (8 à 15 chiffres).",
     "errMsisdnExists": "Ce numéro a déjà un compte. Veuillez vous connecter.",
-    "errMsisdnNoAccount": "Aucun compte pour ce numéro. Veuillez d’abord vous inscrire."
+    "errMsisdnNoAccount": "Aucun compte pour ce numéro. Veuillez d’abord vous inscrire.",
+    "handoff": {
+      "welcome": "Bienvenue sur {{appName}}",
+      "signingIn": "Connexion en cours…",
+      "openingReport": "Ouverture de votre rapport.",
+      "errorKicker": "Problème de lien",
+      "errorTitle": "Ce lien n’a pas fonctionné",
+      "errorBody": "Les liens de connexion sont à usage unique et expirent vite — mais votre rapport est enregistré dans votre compte : une connexion normale vous y mènera directement.",
+      "errorCta": "Aller à la connexion",
+      "errorNoToken": "Il manque son jeton à ce lien de connexion."
+    }
   },
   "assess": {
     "catalog": {
@@ -1464,6 +1474,75 @@
     "backAria": "Retour à vos rapports",
     "dir_higher": "plus haut",
     "dir_lower": "plus bas"
+  },
+  "tour": {
+    "ariaLabel": "Visite guidée",
+    "chapters": {
+      "report": "Votre rapport",
+      "plan": "Votre plan",
+      "explore": "Ce qu’il y a d’autre"
+    },
+    "ui": {
+      "back": "Retour",
+      "skip": "Passer la visite",
+      "finish": "Terminer",
+      "start": "Montrez-moi",
+      "next": "Suivant",
+      "peekShow": "Afficher",
+      "peekHide": "Masquer",
+      "peekShowAria": "Réafficher la carte de la visite",
+      "peekHideAria": "Masquer la carte pour voir ce qu’il y a dessous",
+      "closeAria": "Quitter la visite"
+    },
+    "steps": {
+      "welcome": {
+        "title": "Bienvenue sur {{appName}}",
+        "body": "Votre rapport est prêt. Voici un aperçu rapide de son contenu et de la suite — environ une minute, et vous pouvez partir à tout moment."
+      },
+      "score": {
+        "title": "Votre charge globale",
+        "body": "Les cinq domaines réunis en un seul chiffre. Les difficultés le font monter, vos ressources le font baisser — il évolue donc avec vous.",
+        "tip": "Refaites le point quand vous voulez pour voir comment il bouge."
+      },
+      "pattern": {
+        "title": "Le schéma derrière",
+        "body": "Vos exigences rapportées à votre capacité à récupérer. C’est la position de ces deux éléments l’un par rapport à l’autre qui donne son nom à votre profil."
+      },
+      "categories": {
+        "title": "Où se situe la charge",
+        "body": "Les barres chaudes sont les tensions, les vertes vos ressources. C’est la carte de ce sur quoi travailler en premier."
+      },
+      "plan": {
+        "title": "Ce qu’il y a à faire",
+        "body": "Chaque axe s’accompagne d’une action concrète. Assez petite pour tenir dans une vraie semaine — c’est tout l’intérêt."
+      },
+      "audio": {
+        "title": "Votre plan audio de 7 jours",
+        "body": "Une courte séance guidée chaque jour, choisie pour votre profil. Une nouvelle s’ouvre quotidiennement — c’est la régularité qui fait effet.",
+        "tip": "Commencez par le jour un ; il dure trois minutes."
+      },
+      "assessments": {
+        "title": "D’autres bilans",
+        "body": "Le sommeil, l’anxiété, la concentration et l’intelligence émotionnelle ont chacun leur profil et leur plan."
+      },
+      "ebooks": {
+        "title": "Lectures guidées",
+        "body": "Des livres courts et pratiques sur ce que votre rapport a mis en lumière — à lire à votre rythme."
+      },
+      "counselling": {
+        "title": "Quelqu’un à qui parler",
+        "body": "Quand lire et écouter ne suffisent plus, vous pouvez en parler — dès que vous en avez besoin."
+      },
+      "dashboard": {
+        "title": "Votre point de départ",
+        "body": "Votre progression, vos séries et tout ce que vous avez débloqué, au même endroit."
+      },
+      "done": {
+        "title": "Voilà pour la visite",
+        "body": "C’est à votre rapport qu’il faut revenir — c’est la carte dont tout le reste découle. Votre plan audio vous attend dans « Audio quotidien » dès que vous voulez commencer le jour un.",
+        "cta": "Retour à mon rapport"
+      }
+    }
   },
   "assessData": {
     "likert": [

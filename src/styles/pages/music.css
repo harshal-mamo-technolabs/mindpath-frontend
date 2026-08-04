@@ -348,7 +348,7 @@
   background: var(--surface);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 999px;
-  padding: 8px 16px;
+  padding: 10px 16px; /* 40px tall — thumb-sized */
   transition: all 0.2s var(--ease-out);
 }
 
@@ -467,8 +467,8 @@
 
 .mz-like {
   flex: none;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -544,7 +544,8 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  /* sit above the mobile tab bar instead of burying it — 0 on desktop */
+  bottom: var(--botnav-h);
   z-index: 95;
   background: rgba(22, 20, 44, 0.94);
   backdrop-filter: blur(16px);
@@ -715,8 +716,8 @@
 
 .mz-player-close {
   flex: none;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -779,6 +780,13 @@
   .mz-player-layers {
     display: none;
   }
+
+  /* Touch has no hover, so the play badge would never appear. The whole art is
+     the button — show its affordance. */
+  .mz-scene-play {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (max-width: 520px) {
@@ -792,6 +800,21 @@
 
   .mz-cta-text {
     padding: 30px 24px;
+  }
+
+  /* At 320px the chrome around the title left it ~40px and it ellipsized to
+     three characters. Reclaim the space from the gaps and the thumbnail. */
+  .mz-player-inner {
+    gap: 10px;
+  }
+
+  .mz-player-thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mz-player-center {
+    gap: 8px;
   }
 }
 

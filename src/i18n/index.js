@@ -59,6 +59,19 @@ applyLang(i18n.language)
 i18n.on('languageChanged', applyLang)
 setLanguageProvider(() => i18n.language || 'en')
 
+/**
+ * Adopt a language chosen on another origin.
+ *
+ * The landing page persists the visitor's choice under the same `mp-lang` key this app
+ * uses, but it runs on a different host, so localStorage never reaches us. The handoff
+ * exchange returns the language instead and this applies it — `applyLang` above then
+ * stores it, so the rest of the session and every later visit stay in that language.
+ * Ignores anything we don't ship a translation for.
+ */
+export const adoptLanguage = (lng) => {
+  if (LANGS.includes(lng) && lng !== i18n.language) i18n.changeLanguage(lng)
+}
+
 /** The ebook edition to request for a UI language — each language reads its own
     edition; the backend serves the English one for books not yet authored in it. */
 export const ebookLang = (lng = i18n.language) => (LANGS.includes(lng) ? lng : 'en')

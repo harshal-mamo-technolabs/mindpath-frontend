@@ -27,6 +27,15 @@
   align-items: start;
 }
 
+/* Grid items default to min-width:auto, so the widest thing inside them (the
+   nowrap labels in .pf-nav) becomes a floor the track has to honour. On a 320px
+   phone that floor was 313px against 280px of room and pushed the whole page
+   sideways. Letting the items shrink hands the overflow back to .pf-nav, which
+   already scrolls. */
+.pf-grid > * {
+  min-width: 0;
+}
+
 /* ------- left rail ------- */
 .pf-rail {
   position: sticky;
@@ -431,7 +440,8 @@
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(var(--line-rgb), 0.14);
   padding: 10px;
-  width: 252px;
+  /* never wider than the card it opens inside (280px viewport, 22px padding) */
+  width: min(252px, calc(100vw - 48px));
 }
 
 .pf-time-tabs {
@@ -491,34 +501,41 @@
 }
 
 /* toggle switch */
+/* The switch reads as 46×27, but a 27px-tall thumb target is too small on a
+   phone. The block padding is hit area only: background-clip keeps the track
+   painted at its original size and the knob centres on it. */
 .pf-toggle {
   flex: none;
+  box-sizing: content-box;
   width: 46px;
   height: 27px;
+  padding-block: 9px;
   border-radius: 999px;
-  background: rgba(var(--line-rgb), 0.18);
+  background-color: rgba(var(--line-rgb), 0.18);
+  background-clip: content-box;
   position: relative;
-  transition: background 0.25s var(--ease-out);
+  transition: background-color 0.25s var(--ease-out);
 }
 
 .pf-toggle.on {
-  background: var(--sage);
+  background-color: var(--sage);
 }
 
 .pf-toggle-knob {
   position: absolute;
-  top: 3px;
+  top: 50%;
   left: 3px;
   width: 21px;
   height: 21px;
   border-radius: 50%;
   background: var(--surface);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transform: translateY(-50%);
   transition: transform 0.25s var(--ease-out);
 }
 
 .pf-toggle.on .pf-toggle-knob {
-  transform: translateX(19px);
+  transform: translate(19px, -50%);
 }
 
 /* membership */
@@ -678,7 +695,9 @@
   padding: 20px 22px;
   border: 1px solid color-mix(in srgb, var(--danger) 28%, transparent);
   border-radius: var(--r-md);
-  background: color-mix(in srgb, var(--danger) 5%, #fff);
+  /* mixed into the surface token, not #fff — a white panel in night mode left
+     the .pf-danger small copy unreadable */
+  background: color-mix(in srgb, var(--danger) 7%, var(--surface));
 }
 
 .pf-danger strong {
@@ -807,6 +826,12 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+
+  /* three tabs across a 320px screen only fit once the pill padding gives way;
+     .pf-nav still scrolls if a translation runs longer */
+  .pf-nav-item {
+    padding: 12px 6px;
   }
 }
 

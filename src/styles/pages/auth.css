@@ -6,6 +6,12 @@
   min-height: 100dvh;
   display: grid;
   place-items: center;
+  /* minmax(0, …) caps the track at the viewport. An `auto`/`1fr` track takes its
+     minimum from content, and a bare <input> reports a ~20-character intrinsic
+     width — which pushed the whole card past the screen edge on small phones.
+     `overflow: hidden` below (there for the aurora blobs) was silently
+     clipping the result rather than showing it. */
+  grid-template-columns: minmax(0, 1fr);
   padding: 56px 20px;
   background:
     radial-gradient(680px 460px at 84% -6%, var(--lav-tint) 0%, transparent 58%),
@@ -118,6 +124,16 @@
   text-wrap: balance;
 }
 
+/* the "back to sign in" style links live in a subtitle paragraph — pad them
+   out to a touch target without changing the paragraph's height */
+.auth-subtitle a {
+  display: inline-block;
+  padding: 10px 8px;
+  margin: -10px -8px;
+  font-weight: 700;
+  color: var(--violet-deep);
+}
+
 .auth-form {
   margin-top: 28px;
 }
@@ -127,10 +143,11 @@
   margin-bottom: 16px;
 }
 
-/* gender + age side by side */
+/* gender + age side by side. minmax(0, …) so the two columns stay equal — a bare
+   1fr track floors at the field's content width and the pair ends up lopsided. */
 .auth-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 14px;
 }
 
@@ -147,10 +164,14 @@
   margin-bottom: 7px;
 }
 
+/* Padded to a comfortable touch target; the negative margin keeps the label row
+   the same height it was, so nothing below shifts. */
 .auth-forgot {
   font-size: 12.5px;
   font-weight: 700;
   color: var(--violet-deep);
+  padding: 10px 4px;
+  margin: -10px -4px;
 }
 
 .auth-forgot:hover {
@@ -180,13 +201,15 @@
   color: var(--ink-3);
 }
 
+/* 16px is the floor: iOS Safari auto-zooms the whole page when a focused field
+   is smaller than that, which throws the user out of the layout. */
 .auth-input input {
   flex: 1;
   min-width: 0;
   border: none;
   background: none;
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--ink);
   padding: 14px 0;
@@ -196,14 +219,15 @@
   outline: none;
 }
 
-/* gender select — strip native chrome, match the inputs, custom caret */
+/* gender select — strip native chrome, match the inputs, custom caret.
+   Same 16px floor as the inputs (iOS zooms focused selects too). */
 .auth-input select {
   flex: 1;
   min-width: 0;
   border: none;
   background: none;
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--ink);
   padding: 14px 0;
@@ -237,13 +261,15 @@
   font-weight: 500;
 }
 
+/* 40px so it clears the minimum touch target inside the field row */
 .auth-eye {
   flex: none;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 9px;
+  width: 40px;
+  height: 40px;
+  margin-right: -6px;
+  border-radius: 11px;
   color: var(--ink-3);
   transition:
     color 0.2s,
@@ -353,12 +379,15 @@
   text-align: center;
 }
 
+/* padded for touch; the negative block margin keeps the line height unchanged */
 .auth-swap a {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   font-weight: 800;
   color: var(--violet-deep);
+  padding: 10px 6px;
+  margin: -10px -6px;
 }
 
 .auth-swap a:hover {
@@ -367,7 +396,8 @@
 
 .auth-guest {
   display: block;
-  margin-top: 26px;
+  margin-top: 16px;
+  padding: 10px 0;
   text-align: center;
   font-size: 13px;
   font-weight: 700;
@@ -433,6 +463,17 @@
 
   .auth-card {
     padding: 30px 24px 28px;
+  }
+
+  /* the gender/age pair is the tightest row on the card — claw back the
+     horizontal chrome so the fields themselves stay usable */
+  .auth-row {
+    gap: 10px;
+  }
+
+  .auth-row .auth-input {
+    padding: 0 10px;
+    gap: 6px;
   }
 }
 

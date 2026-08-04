@@ -18,6 +18,7 @@
 /* ---- toolbar ---- */
 .srep-toolbar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
 }
@@ -118,7 +119,8 @@
 
 .srep-head-note {
   display: inline-flex;
-  align-items: center;
+  /* the note wraps to 2–3 lines on a phone — keep the shield on the first one */
+  align-items: flex-start;
   gap: 6px;
   font-size: 12.5px;
   color: var(--ink-3);
@@ -126,6 +128,8 @@
 }
 
 .srep-head-note svg {
+  flex: none;
+  margin-top: 2px;
   color: var(--sage);
 }
 
@@ -147,6 +151,7 @@
 .srep-gauge {
   position: relative;
   width: 220px;
+  max-width: 100%;
 }
 
 .srep-gauge-track {
@@ -275,6 +280,15 @@
   align-items: center;
 }
 
+/* The gauge / radar / quadrant have intrinsic widths. Without this their track
+   sets the *whole* grid's minimum, so on a phone every text block in the card
+   is laid out at the chart's width and spills out of the card. */
+.srep-snapshot > *,
+.srep-radar-wrap > *,
+.srep-pattern-wrap > * {
+  min-width: 0;
+}
+
 .srep-radar-box {
   display: flex;
   flex-direction: column;
@@ -283,7 +297,10 @@
 
 .srep-radar {
   width: 260px;
-  height: 260px;
+  max-width: 100%;
+  height: auto;
+  /* the axis labels sit just outside the viewBox — SVG clips them by default */
+  overflow: visible;
 }
 
 .srep-radar-grid {
@@ -310,7 +327,7 @@
 }
 
 .srep-radar-label {
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 700;
   fill: var(--ink-2);
 }
@@ -1043,7 +1060,8 @@
 
 .srep-quad {
   width: 240px;
-  height: 240px;
+  max-width: 100%;
+  height: auto;
 }
 
 .srep-quad-cell {
@@ -1066,8 +1084,10 @@
   stroke-width: 1;
 }
 
+/* SVG font sizes are viewBox units and shrink with the chart, so these sit a
+   little above the 11px floor to stay legible once the quadrant goes fluid */
 .srep-quad-label {
-  font-size: 8.5px;
+  font-size: 12px;
   font-weight: 700;
   fill: var(--ink-3);
 }
@@ -1076,7 +1096,7 @@
 }
 
 .srep-quad-axis {
-  font-size: 8.5px;
+  font-size: 11.5px;
   font-weight: 700;
   fill: var(--ink-3);
   text-transform: uppercase;
@@ -1236,6 +1256,63 @@
   }
   .srep-head {
     flex-direction: column;
+  }
+}
+
+/* ---- phones -----------------------------------------------------------------
+   Below ~560px the card padding alone eats a sixth of the screen, and the
+   category head puts a two-line score column beside a description that then
+   wraps every three words. Reclaim the width and give each block its own line. */
+@media (max-width: 560px) {
+  .take-report-stage {
+    padding: 22px 14px 80px;
+  }
+
+  .srep-card {
+    padding: 20px 16px;
+  }
+
+  .srep-head {
+    padding: 22px 18px 20px;
+  }
+
+  /* wrapped toolbar buttons read better ranged left than ragged right */
+  .srep-toolbar {
+    justify-content: flex-start;
+  }
+
+  .srep-cat {
+    padding: 14px;
+  }
+
+  /* unwrap the title block so the heading keeps the icon's row and the
+     description spans the full card width underneath the score */
+  .srep-cat-head {
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 8px;
+  }
+
+  .srep-cat-title {
+    display: contents;
+  }
+
+  /* basis 0, not auto: a wrapping flex line is chosen from the basis, so an
+     `auto` heading would bump the score onto its own row before shrinking */
+  .srep-cat-title h3 {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .srep-cat-title p {
+    flex: 1 0 100%;
+    order: 1;
+  }
+
+  .srep-cat-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }
 

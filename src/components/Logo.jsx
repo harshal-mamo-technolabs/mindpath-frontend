@@ -33,7 +33,7 @@ export default function Logo() {
           />
         </svg>
       </span>
-      {APP_NAME}
+      <span className="logo-text">{APP_NAME}</span>
     </Link>
   )
 }

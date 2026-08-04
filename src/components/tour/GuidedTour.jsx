@@ -7,6 +7,7 @@ import {
   useSyncExternalStore,
 } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowLeft,
   ArrowRight,
@@ -70,7 +71,19 @@ function findTarget(selectors = []) {
 
 const rectOf = (el) => {
   const r = el.getBoundingClientRect()
-  return { top: r.top - PAD, left: r.left - PAD, width: r.width + PAD * 2, height: r.height + PAD * 2 }
+  // Clamp to the viewport: the first and last bottom-nav tabs sit flush against
+  // the screen edges, so an unclamped PAD pushed the spotlight ring 10px
+  // off-screen and it rendered with a flat, cut-off side.
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+  const left = Math.max(0, r.left - PAD)
+  const top = Math.max(0, r.top - PAD)
+  return {
+    top,
+    left,
+    width: Math.min(vw, r.right + PAD) - left,
+    height: Math.min(vh, r.bottom + PAD) - top,
+  }
 }
 
 /**
@@ -168,9 +181,19 @@ export default function GuidedTour() {
   const cardRef = useRef(null)
   const fittedRef = useRef(null)
 
+  const { t, i18n } = useTranslation()
+
   const step = active ? TOUR_STEPS[index] : null
   const isLast = index === TOUR_STEPS.length - 1
   const chapter = step ? chapterProgress(index) : null
+  // Step copy is keyed off the step id. `tip` and `cta` only exist on some
+  // steps, so presence is tested with i18n.exists rather than an empty
+  // defaultValue — init sets returnEmptyString:false, which turns an empty
+  // result back into the raw key. exists() honours fallbackLng, so a language
+  // that hasn't translated a tip still shows the English one.
+  const copyKey = (field) => `tour.steps.${step.id}.${field}`
+  const copy = (field) => (step ? t(copyKey(field)) : '')
+  const hasCopy = (field) => Boolean(step) && i18n.exists(copyKey(field))
   const reduced =
     typeof window !== 'undefined' &&
     window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
@@ -320,7 +343,7 @@ export default function GuidedTour() {
     : { top: pos.top, left: pos.left, width: pos.width }
 
   return (
-    <div className="tour" role="dialog" aria-modal="true" aria-label="Product tour">
+    <div className="tour" role="dialog" aria-modal="true" aria-label={t('tour.ariaLabel')}>
       {rect && !centred ? (
         <div
           className="tour-spot"
@@ -368,13 +391,18 @@ export default function GuidedTour() {
               className="tour-peek"
               onClick={() => setPeeking((v) => !v)}
               aria-pressed={peeking}
-              aria-label={peeking ? 'Show the tour card' : 'Hide the card to look underneath'}
+              aria-label={peeking ? t('tour.ui.peekShowAria') : t('tour.ui.peekHideAria')}
             >
               <Eye size={15} />
-              <span>{peeking ? 'Show' : 'Peek'}</span>
+              <span>{peeking ? t('tour.ui.peekShow') : t('tour.ui.peekHide')}</span>
             </button>
           )}
-          <button type="button" className="tour-close" onClick={() => endTour()} aria-label="Leave the tour">
+          <button
+            type="button"
+            className="tour-close"
+            onClick={() => endTour()}
+            aria-label={t('tour.ui.closeAria')}
+          >
             <X size={16} />
           </button>
         </div>
@@ -384,13 +412,13 @@ export default function GuidedTour() {
             <span className="tour-bookend-logo">
               <Logo />
             </span>
-            <h2 className="tour-card-title">{step.title}</h2>
-            <p className="tour-card-body">{step.body}</p>
+            <h2 className="tour-card-title">{copy('title')}</h2>
+            <p className="tour-card-body">{copy('body')}</p>
             {step.kind === 'intro' && (
               <ul className="tour-agenda">
                 {TOUR_CHAPTERS.map((c) => (
                   <li key={c.id}>
-                    <Sparkles size={13} /> {c.label}
+                    <Sparkles size={13} /> {t(`tour.chapters.${c.id}`)}
                   </li>
                 ))}
               </ul>
@@ -402,16 +430,16 @@ export default function GuidedTour() {
               <span className="tour-eyebrow-icon">
                 <Icon size={13} />
               </span>
-              {chapter.label}
+              {t(`tour.chapters.${chapter.id}`)}
               <span className="tour-eyebrow-count">
                 {chapter.position}/{chapter.total}
               </span>
             </p>
-            <h2 className="tour-card-title">{step.title}</h2>
-            <p className="tour-card-body">{step.body}</p>
-            {step.tip && (
+            <h2 className="tour-card-title">{copy('title')}</h2>
+            <p className="tour-card-body">{copy('body')}</p>
+            {hasCopy('tip') && (
               <p className="tour-tip">
-                <Lightbulb size={13} /> {step.tip}
+                <Lightbulb size={13} /> {copy('tip')}
               </p>
             )}
           </>
@@ -420,11 +448,11 @@ export default function GuidedTour() {
         <div className="tour-actions">
           {index > 0 ? (
             <button type="button" className="tour-back" onClick={prevStep}>
-              <ArrowLeft size={15} /> Back
+              <ArrowLeft size={15} /> {t('tour.ui.back')}
             </button>
           ) : (
             <button type="button" className="tour-back" onClick={() => endTour()}>
-              Skip tour
+              {t('tour.ui.skip')}
             </button>
           )}
 
@@ -437,7 +465,13 @@ export default function GuidedTour() {
             className="btn btn-primary tour-next"
             onClick={isLast ? finish : nextStep}
           >
-            {isLast ? step.cta || 'Finish' : index === 0 ? 'Show me' : 'Next'}
+            {isLast
+              ? hasCopy('cta')
+                ? copy('cta')
+                : t('tour.ui.finish')
+              : index === 0
+                ? t('tour.ui.start')
+                : t('tour.ui.next')}
             <ArrowRight size={15} />
           </button>
         </div>

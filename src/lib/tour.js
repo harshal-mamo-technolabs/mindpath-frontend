@@ -13,23 +13,24 @@
 const DONE_KEY = 'mp-tour-done'
 const PENDING_KEY = 'mp-tour-pending'
 
-/** Chapters group the steps so progress reads as structure, not "3 of 11". */
-export const TOUR_CHAPTERS = [
-  { id: 'report', label: 'Your report' },
-  { id: 'plan', label: 'Your plan' },
-  { id: 'explore', label: 'What else is here' },
-]
+/** Chapters group the steps so progress reads as structure, not "3 of 11".
+ *  Labels are i18n keys — `tour.chapters.<id>`. */
+export const TOUR_CHAPTERS = [{ id: 'report' }, { id: 'plan' }, { id: 'explore' }]
 
 /**
- * Steps. `path` may be a string or a fn of the context passed to start().
- * `icon` is a lucide name resolved in the overlay.
+ * Steps — structure only. `path` may be a string or a fn of the context passed
+ * to start(). `icon` is a lucide name resolved in the overlay.
+ *
+ * All copy lives in the translation files under `tour.steps.<id>.*`
+ * (title / body / optional tip / optional cta) so the tour follows the language
+ * the visitor picked. The overlay resolves those keys from `id` — a step needs
+ * no copy fields here, and the product name comes from `{{appName}}` inside the
+ * strings rather than being written into any language.
  */
 export const TOUR_STEPS = [
   {
     id: 'welcome',
     kind: 'intro',
-    title: 'Welcome to MindPath',
-    body: "Your report is ready. Here's a quick look at what's in it and what happens next — about a minute, and you can leave any time.",
   },
   {
     id: 'score',
@@ -37,33 +38,24 @@ export const TOUR_STEPS = [
     icon: 'gauge',
     path: (ctx) => (ctx.scoreId ? `/reports/${ctx.scoreId}` : '/reports'),
     target: ['.srep-snapshot', '.srep-card'],
-    title: 'Your overall load',
-    body: 'All five areas blended into one number. Problems push it up, your strengths pull it down — so it moves as you do.',
-    tip: 'Retake the check-in any time to see it shift.',
   },
   {
     id: 'pattern',
     chapter: 'report',
     icon: 'compass',
     target: ['.srep-pattern'],
-    title: 'The pattern behind it',
-    body: 'Your demands measured against your capacity to recover. Where those two sit relative to each other is what names your profile.',
   },
   {
     id: 'categories',
     chapter: 'report',
     icon: 'bars',
     target: ['.srep-radar-section', '.srep-flow'],
-    title: 'Where the load sits',
-    body: 'Warm bars are stress, green bars are strengths. This is the map of what to work on first.',
   },
   {
     id: 'plan',
     chapter: 'report',
     icon: 'list',
     target: ['.srep-plan'],
-    title: 'What to actually do',
-    body: 'Each focus area comes with one concrete action. Small enough to fit a real week — that is the whole point.',
   },
   {
     id: 'audio',
@@ -71,9 +63,6 @@ export const TOUR_STEPS = [
     icon: 'headphones',
     path: '/audio',
     target: ['.botnav-item[href="/audio"]', '.nav-links a[href="/audio"]'],
-    title: 'Your 7-day audio plan',
-    body: 'A short guided session each day, chosen for your profile. One unlocks every day — the rhythm is what makes it work.',
-    tip: 'Start with day one; it takes three minutes.',
   },
   {
     id: 'assessments',
@@ -81,8 +70,6 @@ export const TOUR_STEPS = [
     icon: 'clipboard',
     path: '/assessments',
     target: ['.botnav-item[href="/assessments"]', '.nav-links a[href="/assessments"]'],
-    title: 'More check-ins',
-    body: 'Sleep, anxiety, focus and emotional intelligence each have their own profile and their own plan.',
   },
   {
     id: 'ebooks',
@@ -90,8 +77,6 @@ export const TOUR_STEPS = [
     icon: 'book',
     path: '/ebooks',
     target: ['.botnav-item[href="/ebooks"]', '.nav-links a[href="/ebooks"]'],
-    title: 'Guided reading',
-    body: 'Short, practical books on the things your report surfaced — read at your own pace.',
   },
   {
     id: 'counselling',
@@ -99,8 +84,6 @@ export const TOUR_STEPS = [
     icon: 'heart',
     path: '/counselling',
     target: ['.botnav-item[href="/counselling"]', '.nav-links a[href="/counselling"]'],
-    title: 'Someone to talk to',
-    body: 'When reading and listening are not enough, you can talk it through — whenever you need it.',
   },
   {
     id: 'dashboard',
@@ -108,15 +91,10 @@ export const TOUR_STEPS = [
     icon: 'home',
     path: '/dashboard',
     target: ['.botnav-item[href="/dashboard"]', '.nav-links a[href="/dashboard"]'],
-    title: 'Your home base',
-    body: 'Progress, streaks and everything you have unlocked, all in one place.',
   },
   {
     id: 'done',
     kind: 'outro',
-    title: "That's the tour",
-    body: 'Your report is the thing to come back to — it is the map everything else works from. Your audio plan is waiting under Daily audio whenever you are ready to start day one.',
-    cta: 'Back to my report',
     // Returns to the report rather than the audio library: the report is the
     // thing they bought, and it is where the rest of the app makes sense from.
     ctaPath: (ctx) => (ctx.scoreId ? `/reports/${ctx.scoreId}` : '/reports'),
@@ -204,14 +182,14 @@ export const pathForStep = (step, ctx) =>
 export const ctaPathForStep = (step, ctx) =>
   typeof step.ctaPath === 'function' ? step.ctaPath(ctx || {}) : step.ctaPath
 
-/** Where a step sits within its chapter, for the "2 of 4" line. */
+/** Where a step sits within its chapter, for the "2 of 4" line. Returns the
+ *  chapter `id`; the overlay translates it via `tour.chapters.<id>`. */
 export function chapterProgress(index) {
   const step = TOUR_STEPS[index]
   if (!step?.chapter) return null
   const siblings = TOUR_STEPS.filter((s) => s.chapter === step.chapter)
-  const chapter = TOUR_CHAPTERS.find((c) => c.id === step.chapter)
   return {
-    label: chapter?.label ?? '',
+    id: step.chapter,
     position: siblings.indexOf(step) + 1,
     total: siblings.length,
     chapterIndex: TOUR_CHAPTERS.findIndex((c) => c.id === step.chapter),

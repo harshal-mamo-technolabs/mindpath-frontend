@@ -88,7 +88,8 @@
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  padding: 9px 9px 9px 17px;
+  /* tight on the button side — the "top up" button carries its own 40px height */
+  padding: 5px 5px 5px 17px;
   flex-wrap: wrap;
 }
 
@@ -101,16 +102,21 @@
   font-weight: 800;
 }
 
-.cn-minutes-pill button {
+/* signed out this pill holds a "Sign in" link instead of the top-up button —
+   it needs the same 40px height, so match the anchor too */
+.cn-minutes-pill button,
+.cn-minutes-pill a {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
+  min-height: 40px;
   font-size: 12.5px;
   font-weight: 800;
   color: #4a2c0c;
   background: var(--peach);
   border-radius: 999px;
-  padding: 7px 13px;
+  padding: 7px 15px;
   transition: transform 0.2s var(--ease-out);
 }
 
@@ -308,7 +314,7 @@
 .cn-topic-tag {
   flex: none;
   align-self: flex-start;
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -356,9 +362,13 @@
   }
 }
 
+/* min-width:0 matters once this becomes a `1fr` track below 980px: without it the
+   auto minimum is the setup card's min-content width, which inflates the whole
+   grid past the container and pushes both columns into the page gutter. */
 .cn-setup {
   position: sticky;
   top: 92px;
+  min-width: 0;
 }
 
 .cn-setup-card {
@@ -404,7 +414,7 @@
 }
 
 .cn-setup-headtext small {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -592,11 +602,14 @@
   line-height: 1.5;
 }
 
+/* padded to a touch target; the negative block margin absorbs it so the card's
+   internal rhythm is unchanged */
 .cn-pick-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 16px;
+  margin: 6px -6px -10px;
+  padding: 10px 6px;
   font-size: 13.5px;
   font-weight: 700;
   color: var(--violet-deep);
@@ -683,6 +696,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
+  min-height: 40px;
   font-size: 13px;
   font-weight: 700;
   color: var(--violet-deep);
@@ -899,7 +913,10 @@
   color: #c8b9f8;
 }
 
+/* flex:none — the bar is a squeezed three-up row on phones and the exit button
+   would otherwise shrink below its 42px touch target */
 .cn-bar .take-exit {
+  flex: none;
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.12);
   color: var(--night-ink);
@@ -1752,7 +1769,7 @@
   top: -9px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1847,6 +1864,56 @@
 
   .cn-past-row {
     flex-wrap: wrap;
+  }
+}
+
+/* ------- narrow phones (320–400px) -------
+   Below ~400px the setup card's padding plus a nowrap CTA is wider than the
+   container, so trim the chrome and let the head row wrap instead. */
+@media (max-width: 400px) {
+  .cn-setup-card {
+    padding: 20px 18px;
+  }
+
+  /* The "your report" tag can't wrap its own text, so at these widths it either
+     drops to a second row or squeezes the topic title down to two words a line.
+     A min-width on the text forces the wrap; `margin-left: auto` parks the tag
+     at the end of the row it lands on. */
+  .cn-setup-head,
+  .cn-topic {
+    flex-wrap: wrap;
+  }
+
+  .cn-setup-headtext {
+    min-width: 140px;
+  }
+
+  .cn-topic-text {
+    min-width: 150px;
+  }
+
+  .cn-topic .cn-topic-tag {
+    margin-left: auto;
+  }
+
+  .cn-setup-foot .cn-start {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .cn-bar {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .cn-topic {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .cn-topic-ico {
+    width: 42px;
+    height: 42px;
   }
 }
 

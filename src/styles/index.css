@@ -48,6 +48,12 @@
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --container: 1200px;
+
+  /* Space reserved by the fixed mobile tab bar. 0 on desktop, where .botnav is
+     hidden. Anything else pinned to the bottom of the viewport (the music
+     player) should sit at `bottom: var(--botnav-h)` rather than hard-coding a
+     height that drifts when the bar's padding or type changes. */
+  --botnav-h: 0px;
 }
 
 /* ============================================================
@@ -315,11 +321,22 @@ a {
   font-size: 23px;
   font-weight: 520;
   letter-spacing: -0.01em;
+  /* the wordmark comes from VITE_APP_NAME and can be any length — let it
+     truncate instead of pushing .nav-cta off the right edge on narrow phones */
+  min-width: 0;
+}
+
+.logo-text {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .logo-mark {
   width: 38px;
   height: 38px;
+  flex: none;
   border-radius: 12px;
   background: var(--ink);
   display: grid;
@@ -353,6 +370,7 @@ a {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: none;
 }
 
 .btn-nav {
@@ -674,7 +692,7 @@ a {
 }
 
 .nav-menu-label {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -1514,6 +1532,14 @@ a {
   box-shadow: 0 2px 8px rgba(21, 20, 40, 0.18);
 }
 
+/* Those absolute coords are meant for the catalog's .cat-featured card. On the
+   home topic card they drop the tag straight on top of the 50px icon tile (at
+   every width), so keep it in normal flow as the card's first row instead. */
+.topic-card .featured-tag {
+  position: static;
+  align-self: flex-start;
+}
+
 .bundle-note {
   margin-top: 36px;
   display: flex;
@@ -1598,14 +1624,18 @@ a {
   border: 1px solid rgba(var(--line-rgb), 0.06);
   pointer-events: none;
 }
+/* Tilt is capped so the rotated bounding box stays inside .container's 32px
+   gutter. The original 4.6deg put b2 48px past the card and scrolled the page
+   sideways between 1081px and ~1250px, where the two-column layout leaves no
+   slack. Measured excursion now: b1 +17px, b2 +27px. */
 .report-back.b1 {
   background: var(--violet-soft);
-  transform: translate(11px, 13px) rotate(2.3deg);
+  transform: translate(6px, 9px) rotate(1.2deg);
 }
 .report-back.b2 {
   background: #ece6fb;
   opacity: 0.72;
-  transform: translate(21px, 25px) rotate(4.6deg);
+  transform: translate(11px, 16px) rotate(2.2deg);
 }
 
 /* all reports overlap in one cell; the active one crossfades on top */
@@ -1637,7 +1667,7 @@ a {
 
 .report-dots {
   display: flex;
-  gap: 8px;
+  gap: 16px;
   justify-content: center;
   align-items: center;
   margin-top: 22px;
@@ -1650,9 +1680,19 @@ a {
   border-radius: 99px;
   background: rgba(var(--line-rgb), 0.18);
   cursor: pointer;
+  position: relative;
   transition:
     width 0.4s var(--ease-out),
     background 0.4s var(--ease-out);
+}
+
+/* an 8px dot is far under the 24px minimum touch size. Keep the pill visual
+   (its width animates when active) and hang the tappable area off a pseudo —
+   24x44 each, which exactly meets the neighbour's without overlapping. */
+.report-dots button::after {
+  content: '';
+  position: absolute;
+  inset: -18px -8px;
 }
 .report-dots button:hover {
   background: rgba(var(--line-rgb), 0.34);
@@ -1758,7 +1798,7 @@ a {
 }
 
 .rc-ring-label small {
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -2364,7 +2404,7 @@ a {
 }
 
 .eco-book-mock small {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2748,7 +2788,7 @@ a {
   justify-content: center;
   gap: 3px;
   padding: 8px 2px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--ink-3);
   transition: color 0.2s;
@@ -2784,6 +2824,27 @@ a {
   .report-inner,
   .audio-inner {
     grid-template-columns: 1fr;
+  }
+
+  /* grid items default to min-width:auto, so a wide child forces the 1fr column
+     past the container instead of shrinking — the column measured 296px inside a
+     280px box on a 320px phone. Let them shrink. */
+  .hero-inner > *,
+  .report-inner > *,
+  .audio-inner > * {
+    min-width: 0;
+  }
+
+  /* Once .report-inner is single-column the card fills the container, and the
+     rotated "deck" cards behind it widen their own bounding box past the
+     viewport — that dragged the whole page sideways (9px at iPad widths, 8px on
+     a 320px phone). Offset only, no tilt, for the full single-column range. */
+  .report-back.b1 {
+    transform: translate(6px, 8px);
+  }
+
+  .report-back.b2 {
+    transform: translate(12px, 16px);
   }
 
   .hero {
@@ -2824,22 +2885,17 @@ a {
   }
 }
 
-@media (max-width: 760px) {
-  .container {
-    padding: 0 20px;
-  }
-
-  .section {
-    padding: 76px 0;
-  }
-
+/* The desktop top-nav needs 891px for logo + 6 links + the controls cluster, so
+   between 761px and 899px it used to spill ~130px off the right edge (iPad Mini
+   at 768 and iPad portrait at 834 both land in there). Swap to the bottom tab
+   bar for the whole range instead — it already covers the same 6 sections. */
+@media (max-width: 900px) {
   .nav-links,
   .nav-cta .btn-ghost,
   .nav-cta .nav-login {
     display: none;
   }
 
-  /* top-nav links are hidden on mobile — the bottom tab bar covers them */
   .botnav {
     display: flex;
     position: fixed;
@@ -2853,9 +2909,51 @@ a {
     padding-bottom: env(safe-area-inset-bottom);
   }
 
+  :root {
+    --botnav-h: calc(59px + env(safe-area-inset-bottom));
+  }
+
   /* keep page content clear of the fixed bottom bar */
   body {
-    padding-bottom: 64px;
+    padding-bottom: var(--botnav-h);
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  .section {
+    padding: 76px 0;
+  }
+
+  /* the logo/controls cluster has to fit 320px-wide phones — tighten the gaps
+     before the wordmark is forced to ellipsize */
+  .nav-inner {
+    gap: 12px;
+  }
+
+  /* 34px of padding each side leaves only ~212px of content on a 320px phone */
+  .report-card {
+    padding: 22px;
+  }
+
+  .rc-head > div {
+    min-width: 0;
+  }
+
+  .logo {
+    font-size: 20px;
+    gap: 8px;
+    /* the 34px-tall brand link was the only real sub-44px target in the nav */
+    min-height: 44px;
+  }
+
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
   }
 
   .hide-sm {
@@ -2920,6 +3018,66 @@ a {
   .cta-panel {
     padding: 68px 24px;
     border-radius: 28px;
+  }
+}
+
+/* Touch devices keep the pointer layout above 900px (iPad landscape), where the
+   top-nav links sit at 39px and the logo at 38px. Width can't distinguish those
+   from a desktop, so key off the pointer instead. */
+@media (hover: none) {
+  .nav-links a {
+    padding-block: 13px;
+  }
+
+  .logo {
+    min-height: 44px;
+  }
+
+  /* inline card links sit at ~23px — too small to tap at any width, including
+     the tablet range where the phone breakpoints don't reach */
+  .eco-link {
+    min-height: 44px;
+  }
+}
+
+/* ------- small phones (320–400px) ------- */
+@media (max-width: 400px) {
+  /* the EN label + chevron cost the wordmark ~45px and squeezed it to "S…".
+     Collapse to the flag alone — the button keeps its aria-label, so the
+     accessible name is unchanged. */
+  .nav-lang-code,
+  .nav-lang-chevron {
+    display: none;
+  }
+
+  .nav-lang-btn {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .nav-cta {
+    gap: 6px;
+  }
+
+  /* 5 mood buttons share the panel row; at 26px panel padding + 10px gaps they
+     land at 37px each. Trimming both gets them to a full 44px square. */
+  .panel-dark {
+    padding: 18px;
+  }
+
+  .mood-row {
+    gap: 6px;
+  }
+
+  /* avatar + title + status pill can't share one 212px row — the title was
+     wrapping to three words a line. Drop the pill onto its own line. */
+  .rc-head {
+    flex-wrap: wrap;
+  }
+
+  .rc-badge {
+    margin-left: 0;
   }
 }
 

@@ -224,6 +224,10 @@
   font-size: 13px;
   font-weight: 700;
   color: var(--ink-2);
+  /* 13px of text is a 21px tap target — pad the hit area, cancel it with the
+     margin so the head row lays out exactly as before */
+  padding-block: 10px;
+  margin-block: -10px;
   transition: color 0.2s;
 }
 
@@ -791,6 +795,25 @@
   .dash-streak-badge {
     padding: 11px 16px;
   }
+
+  /* 24px of card padding on a 280px screen squeezed the mood buttons below a
+     40px tap target and left the retake button no room at all */
+  .dash-card {
+    padding: 20px;
+  }
+
+  .dash-feature-body {
+    padding: 24px 20px;
+  }
+
+  /* The desktop pill (28px sides, nowrap) is wider than a 280px phone card, so
+     it was clipped by .dash-feature and widened its own grid column in
+     .dash-journey-grid. Tighten it, and let a long label wrap as a last resort. */
+  .dash-feature-actions .btn,
+  .dash-report-btn {
+    padding-inline: 18px;
+    white-space: normal;
+  }
 }
 
 /* ------- reduced motion ------- */
@@ -816,6 +839,11 @@
 .dash-empty-note a {
   color: var(--violet);
   font-weight: 700;
+  /* same trick as .dash-card-link: a real hit area on an inline prose link,
+     with the line box left untouched */
+  display: inline-block;
+  padding-block: 11px;
+  margin-block: -11px;
 }
 .dash-empty-note a:hover {
   text-decoration: underline;

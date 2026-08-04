@@ -359,7 +359,8 @@
   background: var(--surface);
   border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 999px;
-  padding: 8px 16px;
+  /* 10px keeps the pill at a ~44px tap target */
+  padding: 10px 16px;
   transition:
     color 0.2s,
     transform 0.2s;
@@ -394,7 +395,7 @@
 .detail-title-row h1 {
   font-family: var(--font-display);
   font-weight: 420;
-  font-size: clamp(36px, 4.6vw, 56px);
+  font-size: clamp(30px, 4.6vw, 56px);
   line-height: 1.02;
   letter-spacing: -0.015em;
 }
@@ -440,7 +441,8 @@
 
 .detail-note {
   display: inline-flex;
-  align-items: center;
+  /* the note wraps to two lines on a phone — keep the shield on the first one */
+  align-items: flex-start;
   gap: 7px;
   font-size: 13px;
   font-weight: 600;
@@ -448,6 +450,8 @@
 }
 
 .detail-note svg {
+  flex: none;
+  margin-top: 2px;
   color: var(--sage);
 }
 
@@ -630,6 +634,8 @@
 
 .receive-session small {
   margin-left: auto;
+  /* <small> would otherwise inherit down to ~10.8px here */
+  font-size: 12px;
   color: var(--night-ink-2);
   font-variant-numeric: tabular-nums;
 }
@@ -734,7 +740,18 @@
   padding: 16px 28px;
 }
 
+/* Between the logo and the exit button. Long assessment names used to wrap to
+   three lines here and make the bar taller than the question card, so it stays
+   on one line and truncates instead. `flex-basis: 0` means it only ever claims
+   space the wordmark and exit button have already taken, so the logo never
+   truncates to make room for it. */
 .take-topic {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -743,6 +760,7 @@
 }
 
 .take-exit {
+  flex: none;
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -1285,7 +1303,8 @@
 
 .take-legal {
   display: flex;
-  align-items: center;
+  /* wraps to two lines on a phone — keep the shield on the first one */
+  align-items: flex-start;
   gap: 7px;
   margin-top: 22px;
   font-size: 12.5px;
@@ -1294,6 +1313,8 @@
 }
 
 .take-legal svg {
+  flex: none;
+  margin-top: 2px;
   color: var(--sage);
 }
 
@@ -1743,7 +1764,7 @@
 
 .rp-session-day {
   display: inline-flex;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -2043,5 +2064,49 @@
   .cat-card-foot {
     align-items: flex-start;
     gap: 12px;
+  }
+
+  /* ---- detail page ----
+     The 68px icon leaves the title barely 190px, so it stacks instead. */
+  .detail-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .detail-ico {
+    width: 56px;
+    height: 56px;
+    border-radius: 17px;
+  }
+
+  .detail-dims-card,
+  .receive-card {
+    padding: 22px 18px;
+  }
+
+  .detail-cta-panel {
+    padding: 28px 20px;
+  }
+
+  /* ---- take flow + report chrome ----
+     28px of side padding is nearly a fifth of a 320px screen. */
+  .take-bar {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .take-stage {
+    padding: clamp(24px, 5vh, 92px) 14px 56px;
+  }
+
+  .take-card {
+    padding: 24px 18px;
+  }
+
+  .rp-head,
+  .rp-dims,
+  .rp-plan {
+    padding: 20px 16px;
   }
 }

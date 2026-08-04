@@ -84,6 +84,9 @@
 .bk-cover {
   position: relative;
   flex: none;
+  /* the size variants below set a fixed px width — cap it so a narrow card or drawer
+     column never gets a cover wider than its own slot (aspect-ratio keeps the shape) */
+  max-width: 100%;
   aspect-ratio: 25 / 34;
   border-radius: 4px 9px 9px 4px;
   background: linear-gradient(
@@ -151,9 +154,10 @@
 }
 
 .bk-press {
-  font-size: 8.5px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
   text-transform: uppercase;
   opacity: 0.82;
 }
@@ -172,7 +176,7 @@
 }
 
 .bk-author {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
   opacity: 0.85;
   margin-top: auto;
@@ -807,7 +811,7 @@
 
 .eb-toc-tag {
   font-style: normal;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1277,15 +1281,16 @@
   padding: 12px 11px 11px 16px;
   border-radius: 3px 7px 7px 3px;
 }
-.bk-sm .bk-press {
-  font-size: 7px;
+/* At 88px the imprint and author lines can only exist below 11px, and they duplicate
+   the real title/author/press text printed beside the thumbnail in .eb-checkout-head.
+   Drop them rather than ship unreadable type — the jacket still reads as a jacket. */
+.bk-sm .bk-press,
+.bk-sm .bk-author {
+  display: none;
 }
 .bk-sm .bk-title {
   font-size: 12.5px;
-  margin-top: 8px;
-}
-.bk-sm .bk-author {
-  font-size: 9px;
+  margin-top: 0;
 }
 .bk-sm .bk-spine {
   left: 5px;
@@ -1521,6 +1526,32 @@
   .eb-reader.reading .eb-read-body p {
     font-size: 17.5px;
   }
+
+  /* ---- touch targets: nothing tappable under 44px ---- */
+  .eb-reader-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  .eb-chip,
+  .eb-btn-read,
+  .eb-btn-buy,
+  .eb-btn-download,
+  .eb-read-step,
+  .eb-mark-read,
+  .eb-download,
+  .eb-read-back,
+  .eb-textlink {
+    min-height: 44px;
+  }
+
+  /* these two are plain text links — give them a tap box without a visible change */
+  .eb-read-back,
+  .eb-textlink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 560px) {
@@ -1543,6 +1574,68 @@
     width: 100%;
     justify-content: center;
   }
+
+  /* ---- reader drawer: contents view ----
+     Side by side, the 172px cover leaves the title column ~90px on a 320px screen —
+     the book title breaks one word per line and the category chip runs under the
+     floating close button. Stacking gives the info column the full width and moves
+     it clear of the close button entirely. */
+  .eb-reader-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .eb-reader-top .bk-cover {
+    width: 132px;
+  }
+
+  /* The foot holds two nowrap pills (.btn is white-space:nowrap); side by side they
+     are wider than the drawer, so "Download PDF" was being clipped off the edge.
+     Stack them full-width instead. */
+  .eb-reader-foot {
+    flex-wrap: wrap;
+  }
+
+  .eb-reader-foot .btn,
+  .eb-reader-foot .eb-download,
+  .eb-reader-foot .eb-textlink {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  /* same story for the chapter pager when the "next" step is the long locked CTA */
+  .eb-read-nav {
+    flex-wrap: wrap;
+  }
+
+  .eb-read-step {
+    min-width: 0;
+  }
+
+  /* ---- checkout modal order summary ----
+     cover (88px, fixed) + title + price pill on one row squeezes the title to a
+     ~40px column at 320px. Let the price drop to its own line first. */
+  .eb-checkout-head {
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+
+  .eb-checkout-meta {
+    flex: 1 1 150px;
+  }
+
+  .eb-checkout-head .eb-modal-price {
+    align-self: center;
+  }
+
+  .eb-modal {
+    padding: 20px 18px;
+  }
+
+  .eb-pay-panel {
+    padding: 13px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1559,11 +1652,23 @@
     width: 116px;
   }
 
-  /* smaller, corner-hugging badges so they don't crowd the little cover */
+  /* A ~110px jacket can't hold the imprint on one line at a readable size, and the
+     cover badges sit right on top of it anyway. Drop it here — the press name is
+     printed as real text on the card body directly below. */
+  .bk-md .bk-press {
+    display: none;
+  }
+
+  /* start the title below the badge that floats over the cover's top corners */
+  .bk-md .bk-title {
+    margin-top: 14px;
+  }
+
+  /* corner-hugging badges so they don't crowd the little cover (11px is the floor —
+     any smaller stops being readable on a phone) */
   .eb-premium,
   .eb-card-owned {
     top: 10px;
-    font-size: 10px;
     padding: 4px 8px;
   }
   .eb-premium {
@@ -1573,12 +1678,17 @@
     right: 10px;
   }
 
+  /* Both badges on one ~110px-wide cover overlap into an unreadable pile. Once a book
+     is on the shelf the price tier is moot, so the shelf badge wins. */
+  .eb-card-cover:has(.eb-card-owned) .eb-premium {
+    display: none;
+  }
+
   .eb-card-body {
     padding: 0 12px 14px;
   }
 
   .eb-cat {
-    font-size: 10px;
     padding: 4px 9px;
     line-height: 1.25;
   }
@@ -1626,8 +1736,35 @@
     padding: 26px 20px 36px;
   }
 
-  .eb-reader-top {
-    gap: 16px;
+  .eb-reader-info h2 {
+    font-size: 23px;
+  }
+
+  /* The sticky foot bleeds to the drawer's base 32px padding. This tier drops the
+     drawer to 20px, so the old bleed hung 12px off each edge — that was the drawer's
+     horizontal scroll. Match the bleed to the padding. */
+  .eb-reader-foot {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* the reading pager is centered (margin:auto) — it only needs its inner padding
+     relaxed so the two steps aren't squeezed into the middle third */
+  .eb-read-nav {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .eb-read-head {
+    padding-right: 44px;
+  }
+
+  /* the drop cap is 52px against 17.5px body text — too heavy on a narrow column */
+  .eb-read-body > p:first-of-type::first-letter {
+    font-size: 44px;
+    margin-right: 8px;
   }
 }
 
@@ -1713,4 +1850,23 @@
   border-radius: 999px;
   padding: 5px 10px 5px 8px;
   box-shadow: 0 1px 5px rgba(160, 110, 20, 0.28);
+}
+
+/* ============================================================
+   Touch targets
+   ============================================================ */
+/* Chips/buy buttons render at 38px and the "Preview" link at 17px. The phone
+   breakpoints above don't reach tablet widths, and a tablet is still a touch
+   device — so key off the pointer rather than the viewport. */
+@media (hover: none) {
+  .eb-chip,
+  .eb-btn-buy {
+    min-height: 44px;
+  }
+
+  .eb-textlink {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }

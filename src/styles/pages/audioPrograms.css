@@ -402,7 +402,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.05em;
   color: #eafff2;
@@ -474,4 +474,47 @@
   height: 34px;
   background: rgba(255, 255, 255, 0.08);
   color: #cfc9ea;
+}
+
+/* ---- responsive ----
+   This section renders inside the shared .ap-modal on /audio, so it inherits the
+   modal's mobile sizing (audio.css). What it has to fix on its own are the .btn
+   pills — .btn is white-space:nowrap, so "Get the full program · €4.99" sets a
+   min-content width no phone can hold and drags the whole modal off-screen. */
+@media (max-width: 760px) {
+  .apl-unlock-btn,
+  .apl-addpath-btn,
+  .apl-paybtn {
+    align-self: stretch;
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* saved cards and the "use another card" link are the tappable rows in checkout */
+  .apl-pay-card { min-height: 56px; }
+  .apl-pay-switch { min-height: 44px; }
+}
+
+@media (max-width: 480px) {
+  .apl-unlock {
+    padding: 13px;
+    gap: 10px;
+  }
+  .apl-cardfield { padding: 12px 11px; }
+  .apl-pay-card {
+    gap: 9px;
+    padding: 11px;
+  }
+
+  /* keep the cover badges from crowding a 120px-tall card cover */
+  .apl-cover-badge {
+    top: 10px;
+    left: 10px;
+    padding: 4px 9px;
+  }
+  .apl-path-tag {
+    top: 10px;
+    right: 10px;
+  }
 }

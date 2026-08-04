@@ -578,6 +578,12 @@
   align-items: start;
 }
 
+/* The shared `.crumb` pill lands at ~39px tall, just under a comfortable touch
+   target. Scoped here so only the checkout flow is affected. */
+.checkout .crumb {
+  min-height: 44px;
+}
+
 .checkout-form-side h1 {
   font-family: var(--font-display);
   font-weight: 420;
@@ -1016,10 +1022,14 @@
   text-decoration: underline;
 }
 
+/* text-only actions — padded out to a touch target, pulled back in with a
+   negative margin so the surrounding rows keep their spacing */
 .bl-cancel {
   font-size: 13.5px;
   font-weight: 700;
   color: var(--ink-3);
+  padding: 11px 8px;
+  margin: -11px -8px;
   transition: color 0.2s;
 }
 
@@ -1233,9 +1243,15 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  flex: none;
   font-size: 13.5px;
   font-weight: 800;
   color: var(--violet-deep);
+  /* nowrap + padding: keeps "Add card" / "Export all" on one line and gives
+     them a real touch target instead of an 18px-tall word */
+  white-space: nowrap;
+  padding: 11px 8px;
+  margin: -11px -8px;
   transition: color 0.2s;
 }
 
@@ -1267,7 +1283,7 @@
   border-radius: 999px;
   background: var(--violet-ghost);
   color: var(--violet-deep);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1345,9 +1361,13 @@
   color: var(--violet-deep);
 }
 
-/* add-card modal — roomier for the Stripe Payment Element */
+/* add-card modal — roomier for the Stripe Payment Element. The overlay centres
+   its child, so without a max-height a tall Payment Element (extra fields, an
+   error banner) would run off both ends of a phone screen with no way to scroll. */
 .bl-addcard-modal {
   width: min(460px, 100%);
+  max-height: 86vh;
+  overflow-y: auto;
   text-align: left;
 }
 
@@ -1397,11 +1417,13 @@
 }
 
 /* invoices */
+/* wraps on phones: the title and its action would otherwise both break mid-word */
 .bl-invoices-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 10px 16px;
 }
 
 .bl-invoices {
@@ -1445,7 +1467,7 @@
 
 .bl-inv-kind {
   font-style: normal;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1495,9 +1517,9 @@
 }
 
 .bl-inv-dl {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
   display: grid;
   place-items: center;
   color: var(--ink-3);
@@ -1749,6 +1771,37 @@
     padding: 20px 18px 60px;
   }
 
+  /* the checkout bar is a squeezed three-up row on phones: tighten the gutters
+     and stop the exit button from being shrunk below its touch target */
+  .checkout .take-bar {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .checkout .take-exit {
+    flex: none;
+  }
+
+  .checkout .take-topic {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .checkout-summary-card {
+    padding: 20px 18px;
+  }
+
+  /* plan name + price stop fitting on one line — let the price drop below */
+  .checkout-plan {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .checkout-plan strong {
+    font-size: 21px;
+  }
+
   .bl-invoice {
     flex-wrap: wrap;
     padding: 14px 18px;
@@ -1761,6 +1814,24 @@
   .bl-inv-desc {
     width: 100%;
     order: 3;
+  }
+}
+
+/* ------- narrow phones (320–400px) -------
+   The secure-checkout label no longer fits beside the logo and the exit button;
+   the same reassurance is repeated under the card form, so drop the label here. */
+@media (max-width: 400px) {
+  .checkout .take-topic {
+    display: none;
+  }
+
+  .checkout-grid {
+    padding: 16px 14px 56px;
+  }
+
+  .plan-card,
+  .payg-strip {
+    padding: 22px 18px;
   }
 }
 

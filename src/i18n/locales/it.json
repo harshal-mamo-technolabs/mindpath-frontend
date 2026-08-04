@@ -325,7 +325,17 @@
     "errAge": "Inserisci un’età da 1 a 120.",
     "errMsisdn": "Inserisci un numero di cellulare reale (da 8 a 15 cifre).",
     "errMsisdnExists": "Questo numero ha già un account. Accedi.",
-    "errMsisdnNoAccount": "Nessun account per questo numero. Registrati prima."
+    "errMsisdnNoAccount": "Nessun account per questo numero. Registrati prima.",
+    "handoff": {
+      "welcome": "Benvenuto su {{appName}}",
+      "signingIn": "Accesso in corso…",
+      "openingReport": "Sto aprendo il tuo report.",
+      "errorKicker": "Problema con il link",
+      "errorTitle": "Questo link non ha funzionato",
+      "errorBody": "I link di accesso sono validi una sola volta e scadono in fretta — ma il tuo report è salvato nel tuo account, quindi accedendo normalmente ci arrivi subito.",
+      "errorCta": "Vai all’accesso",
+      "errorNoToken": "A questo link di accesso manca il token."
+    }
   },
   "assess": {
     "catalog": {
@@ -1464,6 +1474,75 @@
     "backAria": "Torna ai tuoi report",
     "dir_higher": "più alto",
     "dir_lower": "più basso"
+  },
+  "tour": {
+    "ariaLabel": "Tour del prodotto",
+    "chapters": {
+      "report": "Il tuo report",
+      "plan": "Il tuo piano",
+      "explore": "Cos’altro c’è"
+    },
+    "ui": {
+      "back": "Indietro",
+      "skip": "Salta il tour",
+      "finish": "Fine",
+      "start": "Mostrami",
+      "next": "Avanti",
+      "peekShow": "Mostra",
+      "peekHide": "Nascondi",
+      "peekShowAria": "Mostra di nuovo la scheda del tour",
+      "peekHideAria": "Nascondi la scheda per vedere cosa c’è sotto",
+      "closeAria": "Esci dal tour"
+    },
+    "steps": {
+      "welcome": {
+        "title": "Benvenuto su {{appName}}",
+        "body": "Il tuo report è pronto. Ecco una rapida panoramica di cosa contiene e di cosa succede dopo — circa un minuto, e puoi uscire quando vuoi."
+      },
+      "score": {
+        "title": "Il tuo carico complessivo",
+        "body": "Tutte e cinque le aree unite in un solo numero. Le difficoltà lo spingono in alto, i tuoi punti di forza lo tirano giù — quindi si muove insieme a te.",
+        "tip": "Rifai il check-in quando vuoi per vedere come cambia."
+      },
+      "pattern": {
+        "title": "Lo schema dietro",
+        "body": "Le tue richieste messe a confronto con la tua capacità di recuperare. È il rapporto tra queste due cose a dare il nome al tuo profilo."
+      },
+      "categories": {
+        "title": "Dove si concentra il carico",
+        "body": "Le barre calde sono le tensioni, quelle verdi i punti di forza. Questa è la mappa di cosa affrontare per primo."
+      },
+      "plan": {
+        "title": "Cosa fare davvero",
+        "body": "Ogni area di lavoro porta con sé un’azione concreta. Abbastanza piccola da entrare in una settimana vera — è tutto qui."
+      },
+      "audio": {
+        "title": "Il tuo piano audio di 7 giorni",
+        "body": "Ogni giorno una breve sessione guidata, scelta per il tuo profilo. Se ne sblocca una al giorno — è la costanza a farla funzionare.",
+        "tip": "Parti dal giorno uno; dura tre minuti."
+      },
+      "assessments": {
+        "title": "Altri check-in",
+        "body": "Sonno, ansia, concentrazione e intelligenza emotiva hanno ciascuno il proprio profilo e il proprio piano."
+      },
+      "ebooks": {
+        "title": "Letture guidate",
+        "body": "Libri brevi e pratici sui temi emersi dal tuo report — da leggere con i tuoi tempi."
+      },
+      "counselling": {
+        "title": "Qualcuno con cui parlare",
+        "body": "Quando leggere e ascoltare non bastano, puoi parlarne — ogni volta che ne hai bisogno."
+      },
+      "dashboard": {
+        "title": "Il tuo punto di partenza",
+        "body": "Progressi, serie e tutto ciò che hai sbloccato, in un unico posto."
+      },
+      "done": {
+        "title": "Il tour finisce qui",
+        "body": "Il report è la cosa a cui tornare — è la mappa da cui parte tutto il resto. Il tuo piano audio ti aspetta in «Audio quotidiano» quando vuoi iniziare dal giorno uno.",
+        "cta": "Torna al mio report"
+      }
+    }
   },
   "assessData": {
     "likert": [

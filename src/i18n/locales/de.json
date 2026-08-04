@@ -325,7 +325,17 @@
     "errAge": "Gib ein Alter von 1 bis 120 an.",
     "errMsisdn": "Gib eine echte Handynummer ein (8 bis 15 Ziffern).",
     "errMsisdnExists": "Für diese Nummer gibt es bereits ein Konto. Bitte melde dich an.",
-    "errMsisdnNoAccount": "Für diese Nummer gibt es kein Konto. Bitte registriere dich zuerst."
+    "errMsisdnNoAccount": "Für diese Nummer gibt es kein Konto. Bitte registriere dich zuerst.",
+    "handoff": {
+      "welcome": "Willkommen bei {{appName}}",
+      "signingIn": "Du wirst angemeldet …",
+      "openingReport": "Dein Bericht wird geöffnet.",
+      "errorKicker": "Problem mit dem Link",
+      "errorTitle": "Dieser Link hat nicht funktioniert",
+      "errorBody": "Anmelde-Links sind nur einmal gültig und laufen schnell ab — dein Bericht ist aber in deinem Konto gespeichert, eine normale Anmeldung bringt dich also direkt dorthin.",
+      "errorCta": "Zur Anmeldung",
+      "errorNoToken": "Diesem Anmelde-Link fehlt sein Token."
+    }
   },
   "assess": {
     "catalog": {
@@ -1464,6 +1474,75 @@
     "backAria": "Zurück zu deinen Berichten",
     "dir_higher": "höher",
     "dir_lower": "niedriger"
+  },
+  "tour": {
+    "ariaLabel": "Produkt-Tour",
+    "chapters": {
+      "report": "Dein Bericht",
+      "plan": "Dein Plan",
+      "explore": "Was es sonst noch gibt"
+    },
+    "ui": {
+      "back": "Zurück",
+      "skip": "Tour überspringen",
+      "finish": "Fertig",
+      "start": "Zeig es mir",
+      "next": "Weiter",
+      "peekShow": "Zeigen",
+      "peekHide": "Ausblenden",
+      "peekShowAria": "Tour-Karte wieder einblenden",
+      "peekHideAria": "Karte ausblenden, um darunter zu schauen",
+      "closeAria": "Tour verlassen"
+    },
+    "steps": {
+      "welcome": {
+        "title": "Willkommen bei {{appName}}",
+        "body": "Dein Bericht ist fertig. Hier ein kurzer Blick darauf, was darin steht und wie es weitergeht — etwa eine Minute, und du kannst jederzeit aussteigen."
+      },
+      "score": {
+        "title": "Deine Gesamtbelastung",
+        "body": "Alle fünf Bereiche zu einer Zahl verbunden. Belastungen treiben sie nach oben, deine Stärken ziehen sie nach unten — sie bewegt sich also mit dir.",
+        "tip": "Mach den Check-in jederzeit erneut, um zu sehen, wie er sich verändert."
+      },
+      "pattern": {
+        "title": "Das Muster dahinter",
+        "body": "Deine Anforderungen im Verhältnis zu deiner Fähigkeit, dich zu erholen. Wie diese beiden zueinander stehen, gibt deinem Profil seinen Namen."
+      },
+      "categories": {
+        "title": "Wo die Belastung liegt",
+        "body": "Warme Balken sind Belastung, grüne Balken sind Stärken. Das ist die Karte dafür, woran du zuerst arbeitest."
+      },
+      "plan": {
+        "title": "Was du konkret tun kannst",
+        "body": "Zu jedem Schwerpunkt gehört eine konkrete Handlung. Klein genug für eine echte Woche — genau darum geht es."
+      },
+      "audio": {
+        "title": "Dein 7-Tage-Audioplan",
+        "body": "Jeden Tag eine kurze geführte Session, passend zu deinem Profil. Jeden Tag wird eine freigeschaltet — der Rhythmus ist es, der wirkt.",
+        "tip": "Fang mit Tag eins an; er dauert drei Minuten."
+      },
+      "assessments": {
+        "title": "Weitere Check-ins",
+        "body": "Schlaf, Ängstlichkeit, Fokus und emotionale Intelligenz haben jeweils ihr eigenes Profil und ihren eigenen Plan."
+      },
+      "ebooks": {
+        "title": "Begleitendes Lesen",
+        "body": "Kurze, praktische Bücher zu den Themen aus deinem Bericht — lies in deinem eigenen Tempo."
+      },
+      "counselling": {
+        "title": "Jemand zum Reden",
+        "body": "Wenn Lesen und Hören nicht genügen, kannst du darüber sprechen — wann immer du es brauchst."
+      },
+      "dashboard": {
+        "title": "Dein Ausgangspunkt",
+        "body": "Fortschritt, Serien und alles, was du freigeschaltet hast, an einem Ort."
+      },
+      "done": {
+        "title": "Das war die Tour",
+        "body": "Dein Bericht ist das, worauf du zurückkommst — er ist die Karte, aus der alles andere folgt. Dein Audioplan wartet unter „Tägliches Audio“, sobald du mit Tag eins starten möchtest.",
+        "cta": "Zurück zu meinem Bericht"
+      }
+    }
   },
   "assessData": {
     "likert": [
