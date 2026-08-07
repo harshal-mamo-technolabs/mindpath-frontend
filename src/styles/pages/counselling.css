@@ -1344,6 +1344,33 @@
   color: #b9a7f7;
 }
 
+/* AI disclosure — shown on the light setup card and on the dark call stage. */
+.cn-ai-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 600;
+  text-align: center;
+  color: var(--ink-3);
+}
+
+.cn-ai-notice svg {
+  flex: none;
+  color: var(--accent);
+}
+
+.cn-stage .cn-ai-notice {
+  margin-top: 10px;
+  color: var(--night-ink-2);
+}
+
+.cn-stage .cn-ai-notice svg {
+  color: #b9a7f7;
+}
+
 .cn-msg {
   max-width: 82%;
   animation: cnMsgIn 0.4s var(--ease-out);

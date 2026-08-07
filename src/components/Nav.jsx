@@ -47,10 +47,10 @@ export default function Nav() {
   const userRef = useRef(null)
 
   const { t } = useTranslation()
-  const { user, logout } = useAuth()
-  const displayName = user?.name || 'Maya Kapoor'
-  const email = user?.email || 'maya@example.com'
-  const initial = displayName.trim().charAt(0).toUpperCase() || 'M'
+  const { user, isAuthenticated, logout } = useAuth()
+  const displayName = user?.name || ''
+  const email = user?.email || ''
+  const initial = displayName.trim().charAt(0).toUpperCase() || '·'
 
   const isActive = (to) => pathname === to || (to !== '/' && pathname.startsWith(to))
 
@@ -109,52 +109,64 @@ export default function Nav() {
           <div className="nav-cta">
             <LanguageSwitcher />
             <ThemeToggle />
-            <div className="nav-user" ref={userRef}>
-              <button
-                className={`nav-avatar ${menuOpen ? 'open' : ''}`}
-                aria-label={t('nav.accountMenu')}
-                aria-haspopup="menu"
-                aria-expanded={menuOpen}
-                onClick={() => setMenuOpen((o) => !o)}
-              >
-                {initial}
-              </button>
+            {/* Signed out there's no account to show — offer the way in instead. */}
+            {!isAuthenticated ? (
+              <>
+                <Link to="/login" className="nav-login">
+                  {t('nav.login')}
+                </Link>
+                <Link to="/signup" className="btn btn-primary btn-nav">
+                  {t('nav.register')}
+                </Link>
+              </>
+            ) : (
+              <div className="nav-user" ref={userRef}>
+                <button
+                  className={`nav-avatar ${menuOpen ? 'open' : ''}`}
+                  aria-label={t('nav.accountMenu')}
+                  aria-haspopup="menu"
+                  aria-expanded={menuOpen}
+                  onClick={() => setMenuOpen((o) => !o)}
+                >
+                  {initial}
+                </button>
 
-              {menuOpen && (
-                <div className="nav-menu" role="menu">
-                  <div className="nav-menu-head">
-                    <span className="nav-menu-avatar" aria-hidden="true">
-                      {initial}
-                    </span>
-                    <div>
-                      <strong>{displayName}</strong>
-                      {/* Carrier-billed users sign in by MSISDN — no email to show. */}
-                      {!isMsisdnMode && <small>{email}</small>}
+                {menuOpen && (
+                  <div className="nav-menu" role="menu">
+                    <div className="nav-menu-head">
+                      <span className="nav-menu-avatar" aria-hidden="true">
+                        {initial}
+                      </span>
+                      <div>
+                        <strong>{displayName}</strong>
+                        {/* Carrier-billed users sign in by MSISDN — no email to show. */}
+                        {!isMsisdnMode && <small>{email}</small>}
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="nav-menu-group">
-                    <span className="nav-menu-label">{t('nav.explore')}</span>
-                    {EXPLORE.map(MenuItem)}
-                  </div>
+                    <div className="nav-menu-group">
+                      <span className="nav-menu-label">{t('nav.explore')}</span>
+                      {EXPLORE.map(MenuItem)}
+                    </div>
 
-                  <div className="nav-menu-group">
-                    <span className="nav-menu-label">{t('nav.account')}</span>
-                    {ACCOUNT.map(MenuItem)}
-                  </div>
+                    <div className="nav-menu-group">
+                      <span className="nav-menu-label">{t('nav.account')}</span>
+                      {ACCOUNT.map(MenuItem)}
+                    </div>
 
-                  <div className="nav-menu-divider" />
-                  <Link
-                    to="/login"
-                    className="nav-menu-item danger"
-                    role="menuitem"
-                    onClick={logout}
-                  >
-                    <LogOut size={16} /> {t('nav.logout')}
-                  </Link>
-                </div>
-              )}
-            </div>
+                    <div className="nav-menu-divider" />
+                    <Link
+                      to="/login"
+                      className="nav-menu-item danger"
+                      role="menuitem"
+                      onClick={logout}
+                    >
+                      <LogOut size={16} /> {t('nav.logout')}
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </header>

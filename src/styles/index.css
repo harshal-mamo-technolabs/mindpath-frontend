@@ -316,31 +316,37 @@ a {
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
   font-family: var(--font-display);
   font-size: 23px;
-  font-weight: 520;
-  letter-spacing: -0.01em;
+  /* heavier and tighter than body copy so the wordmark reads as a logotype */
+  font-weight: 620;
+  letter-spacing: -0.025em;
   /* the wordmark comes from VITE_APP_NAME and can be any length — let it
      truncate instead of pushing .nav-cta off the right edge on narrow phones */
   min-width: 0;
 }
 
+/* Green gradient wordmark. The plain colour is the gradient's deep stop and is
+   what shows if background-clip: text is unsupported, so the logotype is never
+   invisible — it reads on paper and on the night/nav-dark surfaces alike. */
 .logo-text {
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: #0e9f6e;
 }
 
-.logo-mark {
-  width: 38px;
-  height: 38px;
-  flex: none;
-  border-radius: 12px;
-  background: var(--ink);
-  display: grid;
-  place-items: center;
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .logo-text {
+    /* Every stop clears 3:1 on the cream paper and 5:1 on the dark one — a
+       brighter lime washes out at the start of the wordmark on light. */
+    background: linear-gradient(95deg, #40a100 0%, #17a34a 38%, #0e9f6e 72%, #0d9488 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 .nav-links {
@@ -717,15 +723,8 @@ a {
   background: rgba(255, 255, 255, 0.12);
 }
 
-/* dark-page variant (e.g. /audio) until the frosted bar kicks in */
-.nav.nav-dark:not(.scrolled) .logo {
-  color: #fff;
-}
-
-.nav.nav-dark:not(.scrolled) .logo-mark {
-  background: rgba(255, 255, 255, 0.12);
-}
-
+/* dark-page variant (e.g. /audio) until the frosted bar kicks in — the gradient
+   wordmark carries its own colour, so only the links need flipping here */
 .nav.nav-dark:not(.scrolled) .nav-links a {
   color: var(--night-ink-2);
 }
@@ -2891,8 +2890,7 @@ a {
    bar for the whole range instead — it already covers the same 6 sections. */
 @media (max-width: 900px) {
   .nav-links,
-  .nav-cta .btn-ghost,
-  .nav-cta .nav-login {
+  .nav-cta .btn-ghost {
     display: none;
   }
 
@@ -2945,15 +2943,8 @@ a {
 
   .logo {
     font-size: 20px;
-    gap: 8px;
     /* the 34px-tall brand link was the only real sub-44px target in the nav */
     min-height: 44px;
-  }
-
-  .logo-mark {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
   }
 
   .hide-sm {
@@ -2962,6 +2953,12 @@ a {
 
   .btn-nav.btn-primary {
     gap: 4px;
+  }
+
+  /* Signed out, Log in + Register sit where the nav links used to — tighten them
+     so both still fit next to the language and theme controls on a phone. */
+  .nav-login {
+    padding: 8px 8px;
   }
 
   .assess-grid,
@@ -3022,8 +3019,8 @@ a {
 }
 
 /* Touch devices keep the pointer layout above 900px (iPad landscape), where the
-   top-nav links sit at 39px and the logo at 38px. Width can't distinguish those
-   from a desktop, so key off the pointer instead. */
+   top-nav links sit at 39px and the text-only logo at ~29px. Width can't
+   distinguish those from a desktop, so key off the pointer instead. */
 @media (hover: none) {
   .nav-links a {
     padding-block: 13px;

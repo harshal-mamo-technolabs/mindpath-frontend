@@ -26,6 +26,8 @@
     "subscription": "Abonnement",
     "pricing": "Tarife & Preise",
     "logout": "Abmelden",
+    "login": "Anmelden",
+    "register": "Registrieren",
     "accountMenu": "Konto & Menü",
     "dayMode": "Tagmodus",
     "nightMode": "Nachtmodus",
@@ -323,7 +325,7 @@
     "errEmail": "Diese E-Mail sieht nicht richtig aus.",
     "errGender": "Bitte wähle etwas aus.",
     "errAge": "Gib ein Alter von 1 bis 120 an.",
-    "errMsisdn": "Gib eine echte Handynummer ein (8 bis 15 Ziffern).",
+    "errMsisdn": "Gib deine Handynummer ein.",
     "errMsisdnExists": "Für diese Nummer gibt es bereits ein Konto. Bitte melde dich an.",
     "errMsisdnNoAccount": "Für diese Nummer gibt es kein Konto. Bitte registriere dich zuerst.",
     "handoff": {
@@ -778,6 +780,7 @@
     "libraryLoadError": "Die Audiobibliothek konnte nicht geladen werden — {{error}}",
     "audioLibrary": "Audiobibliothek",
     "librarySub": "Geführtes Audio, das du jederzeit starten kannst — kein Test nötig. Manches ist kostenlos. Anderes erfordert eine einmalige Zahlung.",
+    "aiSectionNote": "Von einer KI-Stimme gesprochen, gemacht zum täglichen Hören.",
     "loadingLibrary": "Bibliothek wird geladen…",
     "inYourPath": "In deinem Weg",
     "tracksCount_one": "{{count}} Titel",
@@ -957,6 +960,7 @@
     "errorChargeFailedRetry": "Wir konnten deine Karte nicht belasten. Bitte versuche eine andere."
   },
   "counsel": {
+    "aiNotice": "Du sprichst mit einer KI. {{name}} ist eine KI-Stimme, kein menschlicher Berater — und kein Notdienst.",
     "advisor": {
       "role": "Dein {{appName}}-Berater",
       "blurb": "Wähl einfach, was dir gerade auf dem Herzen liegt, und sprich es laut mit einem KI-Berater durch, mit dem du wirklich redest. Jeder kann das, ganz ohne Bericht. Du hast einen? Dann hilft er Sol nur, dich besser kennenzulernen."
@@ -1226,6 +1230,7 @@
     "checkoutError": "Checkout konnte nicht gestartet werden — versuche es erneut.",
     "chapterKicker": "Kapitel {{n}}",
     "pdfFooter": "Für dich zum Lesen gemacht.",
+    "aiNotice": "Von KI erstelltes E-Book.",
     "preparingPdf": "Bereite “{{title}}” vor — wähle im Druckfenster “Als PDF speichern”.",
     "previewAria": "Vorschau von {{title}}",
     "premium": "Premium",
@@ -1246,6 +1251,7 @@
     "booksCount_one": "{{count}} Buch",
     "booksCount_other": "{{count}} Bücher",
     "shelfSub": "Bücher, die du hinzugefügt oder gekauft hast — jederzeit öffnen.",
+    "aiSectionNote": "Von KI geschrieben, gemacht zum Lesen in deinem Tempo.",
     "explore": "Entdecken",
     "searchPlaceholder": "Titel oder Autoren suchen",
     "searchAria": "Bibliothek durchsuchen",
@@ -1456,6 +1462,7 @@
     "baselineMid_other": " für {{topic}}. Mach ihn in {{count}} Tagen erneut, um zu sehen, wie deine Zahlen sich zu bewegen beginnen.",
     "allReports": "Alle Berichte",
     "latest": "Aktuell",
+    "viewReport": "Bericht ansehen",
     "start": "Start",
     "takeAgainNow": "Jetzt erneut machen",
     "retakeNote_one": "Es ist {{count}} Tag her — jetzt erneut zu machen zeigt, wie weit du gekommen bist.",
@@ -2685,10 +2692,8 @@
       }
     },
     "chrome": {
-      "audio": "Audio",
       "gettingAudio": "Audio wird vorbereitet …",
       "audioPreparingTitle": "Dein Audio-Plan wird noch erstellt",
-      "downloadPdf": "PDF herunterladen",
       "takeAgain": "Erneut machen",
       "attempt": "Versuch {{n}}",
       "completed": "Abgeschlossen {{date}} · {{name}}",
@@ -2705,7 +2710,14 @@
       "leanOnText": "Das funktioniert gerade gut für dich. Setz es bei den Fokusbereichen oben ein — so bleibt der Rest des Plans hängen.",
       "disclaimer": "{{appName}} ist ein Werkzeug, das dir beim Nachdenken hilft. Es ist kein medizinischer Test, keine Diagnose und keine Behandlung. Wenn es dir schwerfällt, ist der Schritt zu einer ausgebildeten Fachperson mutig und lohnend.",
       "downloadReport": "Diesen Bericht herunterladen",
-      "allReports": "Alle meine Berichte"
+      "allReports": "Alle meine Berichte",
+      "audioNextTitle": "Höre deinen Audio-Plan",
+      "audioNextBody": "Dieser Bericht ist auch ein täglicher Audio-Plan — kurze geführte Einheiten, die aus deinen Antworten entstehen. Schau vorbei und leg los.",
+      "audioNextCta": "Zu meinem Audio-Plan",
+      "retakeNextTitle": "Mach den Test noch einmal",
+      "retakeNextBody": "Dinge verändern sich. Wiederhole ihn in ein paar Wochen und sieh, was sich bewegt hat — jeder Bericht bleibt gespeichert.",
+      "downloadPdf": "PDF herunterladen",
+      "downloadNextBody": "Sichere dir eine Kopie zum Behalten, Ausdrucken oder Teilen mit jemandem, dem du vertraust."
     },
     "json": {
       "headerNote": "Ein Werkzeug zur Selbstwahrnehmung, erstellt aus deinen Antworten — keine klinische oder diagnostische Beurteilung.",

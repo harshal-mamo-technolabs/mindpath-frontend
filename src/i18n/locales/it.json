@@ -26,6 +26,8 @@
     "subscription": "Abbonamento",
     "pricing": "Piani e prezzi",
     "logout": "Esci",
+    "login": "Accedi",
+    "register": "Registrati",
     "accountMenu": "Account e menu",
     "dayMode": "Modalità giorno",
     "nightMode": "Modalità notte",
@@ -323,7 +325,7 @@
     "errEmail": "Questa e-mail non sembra valida.",
     "errGender": "Scegline uno.",
     "errAge": "Inserisci un’età da 1 a 120.",
-    "errMsisdn": "Inserisci un numero di cellulare reale (da 8 a 15 cifre).",
+    "errMsisdn": "Inserisci il tuo numero di cellulare.",
     "errMsisdnExists": "Questo numero ha già un account. Accedi.",
     "errMsisdnNoAccount": "Nessun account per questo numero. Registrati prima.",
     "handoff": {
@@ -778,6 +780,7 @@
     "libraryLoadError": "Impossibile caricare la libreria audio — {{error}}",
     "audioLibrary": "Libreria audio",
     "librarySub": "Audio guidati che puoi avviare quando vuoi — senza test. Alcuni sono gratis. Altri richiedono un pagamento una tantum.",
+    "aiSectionNote": "Narrati da una voce IA, da ascoltare ogni giorno.",
     "loadingLibrary": "Caricamento della libreria…",
     "inYourPath": "Nel tuo percorso",
     "tracksCount_one": "{{count}} traccia",
@@ -957,6 +960,7 @@
     "errorChargeFailedRetry": "Non siamo riusciti ad addebitare la tua carta. Prova con un’altra."
   },
   "counsel": {
+    "aiNotice": "Stai parlando con un’IA. {{name}} è una voce IA, non un consulente umano — e non è un servizio di emergenza.",
     "advisor": {
       "role": "Il tuo consulente {{appName}}",
       "blurb": "Scegli qualsiasi cosa ti passi per la testa e parlane a voce alta con un consulente IA con cui parli davvero. Chiunque può farlo, senza bisogno di alcun report. Ne hai uno? Aiuta solo Sol a conoscerti meglio."
@@ -1226,6 +1230,7 @@
     "checkoutError": "Impossibile avviare il checkout — riprova.",
     "chapterKicker": "Capitolo {{n}}",
     "pdfFooter": "Creato per la tua lettura.",
+    "aiNotice": "E-book generato dall’IA.",
     "preparingPdf": "Preparazione di “{{title}}” — scegli “Salva come PDF” nella finestra di stampa.",
     "previewAria": "Anteprima di {{title}}",
     "premium": "Premium",
@@ -1246,6 +1251,7 @@
     "booksCount_one": "{{count}} libro",
     "booksCount_other": "{{count}} libri",
     "shelfSub": "I libri che hai aggiunto o acquistato — aprili quando vuoi.",
+    "aiSectionNote": "Scritti dall’IA, da leggere al tuo ritmo.",
     "explore": "Esplora",
     "searchPlaceholder": "Cerca titoli o autori",
     "searchAria": "Cerca nella biblioteca",
@@ -1456,6 +1462,7 @@
     "baselineMid_other": " per {{topic}}. Rifallo tra {{count}} giorni per vedere i tuoi numeri iniziare a muoversi.",
     "allReports": "Tutti i report",
     "latest": "Ultimo",
+    "viewReport": "Vedi il report",
     "start": "inizio",
     "takeAgainNow": "Rifallo ora",
     "retakeNote_one": "È passato {{count}} giorno — rifarlo ora mostra quanta strada hai fatto.",
@@ -2685,10 +2692,8 @@
       }
     },
     "chrome": {
-      "audio": "Audio",
       "gettingAudio": "Preparazione dell’audio…",
       "audioPreparingTitle": "Il tuo piano audio è ancora in preparazione",
-      "downloadPdf": "Scarica il PDF",
       "takeAgain": "Rifai",
       "attempt": "tentativo {{n}}",
       "completed": "Completato {{date}} · {{name}}",
@@ -2705,7 +2710,14 @@
       "leanOnText": "Ecco ciò che al momento funziona bene per te. Usalo sulle aree di focus qui sopra — è ciò che fa reggere il resto del piano.",
       "disclaimer": "{{appName}} è uno strumento per aiutarti a riflettere. Non è un test medico, una diagnosi o una cura. Se stai attraversando un momento difficile, rivolgerti a un professionista qualificato è un passo coraggioso e prezioso.",
       "downloadReport": "Scarica questo report",
-      "allReports": "Tutti i miei report"
+      "allReports": "Tutti i miei report",
+      "audioNextTitle": "Ascolta il tuo piano audio",
+      "audioNextBody": "Questo report è anche un piano audio quotidiano — brevi sessioni guidate costruite su ciò che dicono le tue risposte. Vai ad ascoltarlo.",
+      "audioNextCta": "Vai al mio piano audio",
+      "retakeNextTitle": "Rifai questo test",
+      "retakeNextBody": "Le cose cambiano. Rifallo tra qualche settimana per vedere cosa si è mosso — ogni report resta salvato.",
+      "downloadPdf": "Scarica il PDF",
+      "downloadNextBody": "Salva una copia da conservare, stampare o condividere con qualcuno di cui ti fidi."
     },
     "json": {
       "headerNote": "Uno strumento di consapevolezza di sé generato dalle tue risposte — non una valutazione clinica o diagnostica.",

@@ -20,8 +20,9 @@ import { msisdnLogin, msisdnSignup, saveSession } from '../lib/auth.js'
    Login = mobile number only. Signup = name, gender, age + mobile number,
    which also provisions an active subscription server-side. */
 
+// Strip formatting only (spaces, dashes, brackets). No shape/length rules —
+// leading zeros and local formats are valid; the API is the validator.
 const cleanMsisdn = (s) => s.replace(/[^\d+]/g, '')
-const validMsisdn = (s) => /^\+?\d{8,15}$/.test(s)
 
 export default function MsisdnAuthPage({ mode }) {
   const { t } = useTranslation()
@@ -55,7 +56,7 @@ export default function MsisdnAuthPage({ mode }) {
       if (!form.age || !Number.isInteger(age) || age < 1 || age > 120)
         er.age = t('auth.errAge')
     }
-    if (!validMsisdn(cleanMsisdn(form.msisdn))) er.msisdn = t('auth.errMsisdn')
+    if (!cleanMsisdn(form.msisdn)) er.msisdn = t('auth.errMsisdn')
     return er
   }
 

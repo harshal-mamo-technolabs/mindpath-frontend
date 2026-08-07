@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   Bell,
@@ -28,7 +28,6 @@ import {
   subscribePush,
   updateNotificationPrefs,
 } from '../lib/notificationsApi.js'
-
 
 const SECTIONS = [
   ['account', User],
@@ -127,7 +126,7 @@ function Toggle({ on, onChange, label }) {
 export default function Profile() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
-  const { user, logout } = useAuth()
+  const { user, isAuthenticated, logout } = useAuth()
   // Seeded from the session so the page paints instantly, then refreshed from
   // the API (which also carries createdAt for the "member since" line).
   const [form, setForm] = useState({ name: user?.name ?? '', email: user?.email ?? '' })
@@ -202,6 +201,9 @@ export default function Profile() {
       alive = false
     }
   }, [])
+
+  // Nothing to show without a session — send them to sign in first.
+  if (!isAuthenticated) return <Navigate to="/login?next=/profile" replace />
 
   async function saveAccount() {
     const name = form.name.trim()
@@ -296,7 +298,6 @@ export default function Profile() {
   function go(id) {
     sectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
-
 
   function signOut() {
     logout()

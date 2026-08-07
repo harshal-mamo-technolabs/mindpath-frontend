@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   ArrowRight,
   BookOpen,
+  Bot,
   Check,
   ClipboardList,
   Clock,
@@ -520,6 +521,11 @@ export default function CounsellingPage() {
                   t('counsel.call.listening')
                 )}
               </p>
+              {/* AI disclosure — on screen from the first frame of the call, before Sol
+                  ever speaks, not tucked into the scrolling transcript. */}
+              <p className="cn-ai-notice" role="note">
+                <Bot size={13} /> {t('counsel.aiNotice', { name: ADVISOR.name })}
+              </p>
             </div>
 
             {/* transcript */}
@@ -717,6 +723,9 @@ export default function CounsellingPage() {
               )}
 
               <div className="cn-setup-foot">
+                <p className="cn-ai-notice" role="note">
+                  <Bot size={13} /> {t('counsel.aiNotice', { name: ADVISOR.name })}
+                </p>
                 <button
                   className="btn btn-primary cn-start"
                   onClick={() => startCall()}

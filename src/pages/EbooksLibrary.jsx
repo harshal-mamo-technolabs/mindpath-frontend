@@ -37,6 +37,7 @@ import { chapterHtml } from '../lib/bookBlocks.js'
 import { isStripeMode } from '../lib/billingMode.js'
 import { stripeConfigured, stripePromise } from '../lib/stripe.js'
 import { getPaymentMethods } from '../lib/payments.js'
+import { AI_MEDIA_ATTRS, AI_SOURCE_TYPE, aiJsonLd } from '../lib/aiDisclosure.js'
 import { getEbook, listEbooks, markEbookProgress, startEbook } from '../lib/ebooksApi.js'
 
 /* The ebook shop — real catalog from the backend. Free books are readable by anyone but
@@ -610,6 +611,16 @@ export default function EbooksLibrary() {
 <head>
 <meta charset="utf-8" />
 <title>${esc(book.title)} — ${esc(APP_PRESS)}</title>
+<!-- AI labels: meta for simple parsers, JSON-LD for structured ones. The visible
+     footer line carries it into the printed PDF, where head metadata doesn't survive. -->
+<meta name="ai-generated" content="true" />
+<meta name="digital-source-type" content="${AI_SOURCE_TYPE}" />
+<script type="application/ld+json">${aiJsonLd({
+      '@type': 'Book',
+      name: book.title,
+      author: { '@type': 'Organization', name: book.author || APP_PRESS },
+      publisher: { '@type': 'Organization', name: APP_PRESS },
+    })}</script>
 <style>
   @page { margin: 18mm 0; }
   /* Plain white page. print-color-adjust: exact keeps it white regardless of any dark UI. */
@@ -648,7 +659,7 @@ export default function EbooksLibrary() {
     <p class="by">${esc(book.author || APP_PRESS)}</p>
   </div>
 ${chaptersHtml}
-  <footer>© ${esc(APP_PRESS)} · ${t('ebooks.pdfFooter')}</footer>
+  <footer>© ${esc(APP_PRESS)} · ${t('ebooks.pdfFooter')} · ${t('ebooks.aiNotice')}</footer>
 </body>
 </html>`
   }
@@ -824,7 +835,9 @@ ${chaptersHtml}
                 {t('ebooks.booksCount', { count: shelf.length })}
               </span>
             </div>
-            <p className="eb-section-sub">{t('ebooks.shelfSub')}</p>
+            <p className="eb-section-sub">
+              {t('ebooks.shelfSub')} {t('ebooks.aiSectionNote')}
+            </p>
             <div className="eb-grid">{shelf.map((b, i) => renderCard(b, i))}</div>
           </div>
         </section>
@@ -848,7 +861,9 @@ ${chaptersHtml}
               />
             </label>
           </div>
-          <p className="eb-section-sub">{t('ebooks.exploreSub')}</p>
+          <p className="eb-section-sub">
+            {t('ebooks.exploreSub')} {t('ebooks.aiSectionNote')}
+          </p>
 
           {categories.length > 1 && (
             <div className="eb-filters" role="tablist" aria-label={t('ebooks.categoriesAria')}>
@@ -1069,7 +1084,7 @@ ${chaptersHtml}
                   </span>
                 </div>
 
-                <article className="eb-read-body">
+                <article className="eb-read-body" {...AI_MEDIA_ATTRS}>
                   <span className="eb-read-eyebrow">{reader.title}</span>
                   <h2 className="eb-read-title">{reader.chapters?.[openChapter]?.title}</h2>
                   <ChapterBody body={reader.chapters?.[openChapter]?.body} slug={reader.slug} />

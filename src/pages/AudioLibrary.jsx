@@ -18,6 +18,7 @@ import Reveal from '../components/Reveal.jsx'
 import AudioPrograms from '../components/audio/AudioPrograms.jsx'
 import { useAuth } from '../hooks/useAuth.js'
 import { mediaUrl } from '../lib/api.js'
+import { AI_MEDIA_ATTRS } from '../lib/aiDisclosure.js'
 import { getAudioPlans, markPlayed } from '../lib/audioApi.js'
 import { getMyPrograms, markProgramPlayed } from '../lib/audioProgramsApi.js'
 import { formatTime } from '../lib/time.js'
@@ -142,7 +143,8 @@ function lockReason(plan, d, t) {
 }
 
 export default function AudioLibrary() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language
   const { user, isAuthenticated } = useAuth()
   const firstName = (user?.name || '').split(' ')[0] || t('audio.thereFallback')
 
@@ -168,7 +170,8 @@ export default function AudioLibrary() {
   }, [])
   useEffect(() => () => clearTimeout(toastTimer.current), [])
 
-  /* fetch the user's plans */
+  /* fetch the user's plans — refetched on a language switch, since the clip titles
+     and audio URLs in the response are localized by the backend */
   useEffect(() => {
     if (!isAuthenticated) {
       setState({ status: 'unauth', plans: [] })
@@ -190,7 +193,7 @@ export default function AudioLibrary() {
     return () => {
       alive = false
     }
-  }, [isAuthenticated, reloadKey, pathKey, t])
+  }, [isAuthenticated, reloadKey, pathKey, lang, t])
 
   const plans = useMemo(() => state.plans.map((p, i) => shapePlan(p, i, t)), [state.plans, t])
   // The hero follows whatever's playing (so playing a clip from "Your paths"
@@ -698,6 +701,7 @@ export default function AudioLibrary() {
               {t('audio.completeCount', { count: plans.filter((p) => p.isComplete).length })}
             </span>
           </div>
+          <p className="ap-section-sub">{t('audio.aiSectionNote')}</p>
           <div className="ap-plans-grid">
             {plans.map((p) => (
               // plain article (not Reveal): a scroll-reveal here can sit at opacity:0
@@ -826,8 +830,10 @@ export default function AudioLibrary() {
       {/* ===== standalone purchasable audio library ===== */}
       <AudioPrograms pathKey={pathKey} onChange={() => setPathKey((k) => k + 1)} />
 
-      {/* real audio element (hidden) */}
+      {/* real audio element (hidden) — the narration is synthesized, so it carries the
+          machine-readable AI label */}
       <audio
+        {...AI_MEDIA_ATTRS}
         ref={audioRef}
         src={mediaUrl(nowPlaying?.url) || undefined}
         preload="metadata"

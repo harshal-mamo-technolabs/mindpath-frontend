@@ -15,24 +15,67 @@
   gap: 18px;
 }
 
-/* ---- toolbar ---- */
-.srep-toolbar {
+/* ---- next steps (audio plan, retake) — one row-card each, under the closing ---- */
+.srep-next {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 10px;
+  align-items: center;
+  gap: 16px;
 }
 
-.srep-tool-btn {
-  padding: 9px 16px;
-  font-size: 13.5px;
+.srep-next-ico {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: rgba(100, 80, 207, 0.1);
+  color: var(--violet);
+}
+
+.srep-next-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.srep-next-text h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.srep-next-text p {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.srep-next-btn {
+  flex: none;
 }
 
 /* audio plan still generating — non-clickable, quietly working */
-.srep-tool-btn:disabled {
+.srep-next-btn:disabled {
   opacity: 0.6;
   cursor: default;
   pointer-events: none;
+}
+
+.srep-next-foot {
+  text-align: center;
+}
+
+.srep-next-foot a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.srep-next-foot a:hover {
+  color: var(--ink);
 }
 
 /* ---- shared card ---- */
@@ -988,13 +1031,6 @@
   color: var(--sage);
 }
 
-.srep-closing-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-}
-
 /* ---- load spectrum (in the snapshot) ---- */
 .srep-spectrum {
   margin-top: 18px;
@@ -1276,9 +1312,14 @@
     padding: 22px 18px 20px;
   }
 
-  /* wrapped toolbar buttons read better ranged left than ragged right */
-  .srep-toolbar {
-    justify-content: flex-start;
+  /* the icon + copy + button row won't fit side by side on a phone */
+  .srep-next {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .srep-next-btn {
+    width: 100%;
   }
 
   .srep-cat {
@@ -1352,8 +1393,8 @@
 
   .take-bar,
   .take-progress,
-  .srep-toolbar,
-  .srep-closing-actions,
+  .srep-next,
+  .srep-next-foot,
   .srep-doors {
     display: none !important;
   }

@@ -183,7 +183,7 @@ function ReportGroup({ g, i }) {
               const isLatest = idx === g.count - 1
               return (
                 <li key={a.id}>
-                  <Link className="r-take-row" to={`/reports/${a.id}`}>
+                  <Link className={`r-take-row ${isLatest ? 'is-latest' : ''}`} to={`/reports/${a.id}`}>
                     <span className="r-take-date">
                       {fmtDate(a.createdAt, true, i18n.language)}
                       {isLatest && <em className="r-latest-tag">{t('reports.latest')}</em>}
@@ -204,7 +204,11 @@ function ReportGroup({ g, i }) {
                     ) : (
                       <span className="r-take-change muted">{t('reports.start')}</span>
                     )}
-                    <ChevronRight size={17} className="r-take-chev" />
+                    {/* explicit label — the row alone didn't read as clickable */}
+                    <span className="r-take-open">
+                      <em>{t('reports.viewReport')}</em>
+                      <ChevronRight size={15} />
+                    </span>
                   </Link>
                 </li>
               )

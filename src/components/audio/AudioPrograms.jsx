@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react'
 import { mediaUrl } from '../../lib/api.js'
+import { AI_MEDIA_ATTRS } from '../../lib/aiDisclosure.js'
 import { isStripeMode } from '../../lib/billingMode.js'
 import { stripeConfigured, stripePromise } from '../../lib/stripe.js'
 import { getPaymentMethods } from '../../lib/payments.js'
@@ -398,7 +399,9 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
             <h2 className="rp-h2 on-night">
               <Headphones size={19} /> {t('audio.audioLibrary')}
             </h2>
-            <p className="apl-store-sub">{t('audio.librarySub')}</p>
+            <p className="apl-store-sub">
+              {t('audio.librarySub')} {t('audio.aiSectionNote')}
+            </p>
           </div>
         </div>
 
@@ -464,8 +467,9 @@ export default function AudioPrograms({ pathKey = 0, onChange }) {
         )}
       </div>
 
-      {/* shared (hidden) audio element for previews */}
+      {/* shared (hidden) audio element for previews — synthesized narration, labelled */}
       <audio
+        {...AI_MEDIA_ATTRS}
         ref={audioRef}
         style={{ display: 'none' }}
         preload="metadata"

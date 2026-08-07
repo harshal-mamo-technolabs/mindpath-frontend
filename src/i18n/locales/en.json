@@ -26,6 +26,8 @@
     "subscription": "Subscription",
     "pricing": "Plans & pricing",
     "logout": "Log out",
+    "login": "Log in",
+    "register": "Register",
     "accountMenu": "Account & menu",
     "dayMode": "Day mode",
     "nightMode": "Night mode",
@@ -323,7 +325,7 @@
     "errEmail": "That email doesn’t look right.",
     "errGender": "Please pick one.",
     "errAge": "Enter an age from 1 to 120.",
-    "errMsisdn": "Enter a real mobile number (8 to 15 digits).",
+    "errMsisdn": "Enter your mobile number.",
     "errMsisdnExists": "This number already has an account. Please log in.",
     "errMsisdnNoAccount": "No account for this number. Please sign up first.",
     "handoff": {
@@ -778,6 +780,7 @@
     "libraryLoadError": "Couldn’t load the audio library — {{error}}",
     "audioLibrary": "Audio library",
     "librarySub": "Guided audio you can start any time — no assessment needed. Some are free. Others need a one-time payment.",
+    "aiSectionNote": "Narrated by an AI voice, made for daily listening.",
     "loadingLibrary": "Loading the library…",
     "inYourPath": "In your path",
     "tracksCount_one": "{{count}} track",
@@ -957,6 +960,7 @@
     "errorChargeFailedRetry": "We couldn’t charge your card. Please try another one."
   },
   "counsel": {
+    "aiNotice": "You’re talking to an AI. {{name}} is an AI voice, not a human counsellor — and not an emergency service.",
     "advisor": {
       "role": "Your {{appName}} advisor",
       "blurb": "Pick whatever’s on your mind and talk it through out loud with an AI advisor you actually speak to. Anyone can, no report needed. Have one? It just helps Sol get to know you better."
@@ -1226,6 +1230,7 @@
     "checkoutError": "Couldn’t start checkout — try again.",
     "chapterKicker": "Chapter {{n}}",
     "pdfFooter": "Made for you to read.",
+    "aiNotice": "AI-generated ebook.",
     "preparingPdf": "Preparing “{{title}}” — choose “Save as PDF” in the print window.",
     "previewAria": "Preview {{title}}",
     "premium": "Premium",
@@ -1246,6 +1251,7 @@
     "booksCount_one": "{{count}} book",
     "booksCount_other": "{{count}} books",
     "shelfSub": "Books you’ve added or bought — open any time.",
+    "aiSectionNote": "Written by AI, made to be read at your own pace.",
     "explore": "Explore",
     "searchPlaceholder": "Search titles or authors",
     "searchAria": "Search the library",
@@ -1456,6 +1462,7 @@
     "baselineMid_other": " for {{topic}}. Take it again in {{count}} days to see your numbers start to move.",
     "allReports": "All reports",
     "latest": "Latest",
+    "viewReport": "View report",
     "start": "start",
     "takeAgainNow": "Take it again now",
     "retakeNote_one": "It’s been {{count}} day — taking it again now shows how far you’ve come.",
@@ -2685,10 +2692,8 @@
       }
     },
     "chrome": {
-      "audio": "Audio",
       "gettingAudio": "Getting audio ready…",
       "audioPreparingTitle": "Your audio plan is still being made",
-      "downloadPdf": "Download PDF",
       "takeAgain": "Take again",
       "attempt": "try {{n}}",
       "completed": "Completed {{date}} · {{name}}",
@@ -2705,7 +2710,14 @@
       "leanOnText": "This is what’s working well for you right now. Use it on the focus areas above — it’s what makes the rest of the plan stick.",
       "disclaimer": "{{appName}} is a tool to help you reflect. It is not a medical test, a diagnosis, or treatment. If you’re struggling, reaching out to a trained professional is a brave and worthwhile next step.",
       "downloadReport": "Download this report",
-      "allReports": "All my reports"
+      "allReports": "All my reports",
+      "audioNextTitle": "Listen to your audio plan",
+      "audioNextBody": "This report is also a daily audio plan — short guided sessions built from what your answers show. Head over to start listening.",
+      "audioNextCta": "Go to my audio plan",
+      "retakeNextTitle": "Take this assessment again",
+      "retakeNextBody": "Things shift. Take it again in a few weeks to see what has moved — every report you have taken stays saved.",
+      "downloadPdf": "Download PDF",
+      "downloadNextBody": "Save a copy to keep, print, or share with someone you trust."
     },
     "json": {
       "headerNote": "A self-awareness tool generated from your answers — not a clinical or diagnostic assessment.",

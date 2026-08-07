@@ -432,6 +432,12 @@
   transform: translateX(3px);
 }
 
+/* the newest report is the one people want first — give it the accent edge */
+.r-take-row.is-latest {
+  border-color: color-mix(in srgb, var(--topic) 32%, transparent);
+  background: color-mix(in srgb, var(--topic) 5%, var(--paper));
+}
+
 .r-take-date {
   display: flex;
   align-items: center;
@@ -489,9 +495,30 @@
   color: var(--ink-3);
 }
 
-.r-take-chev {
-  color: var(--ink-3);
+/* named action so the row reads as "open this", not just a list line */
+.r-take-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   flex: none;
+  padding: 6px 10px 6px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--topic);
+  background: color-mix(in srgb, var(--topic) 11%, transparent);
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.r-take-open em {
+  font-style: normal;
+}
+
+.r-take-row:hover .r-take-open {
+  background: var(--topic);
+  color: #fff;
 }
 
 /* retake */
@@ -732,6 +759,21 @@
      Give the date its own line; score / change / chevron sit underneath. */
   .r-take-row .band-chip {
     display: none;
+  }
+
+  /* the row already wraps here, so the action gets its own full-width line.
+     A lone arrow at this size read as decoration, not a button. */
+  .r-take-open {
+    flex: 1 0 100%;
+    justify-content: center;
+    padding: 11px;
+    margin-top: 2px;
+    font-size: 13.5px;
+  }
+
+  .r-take-row.is-latest .r-take-open {
+    background: var(--topic);
+    color: #fff;
   }
 
   .r-take-row {

@@ -26,6 +26,8 @@
     "subscription": "Abonnement",
     "pricing": "Offres & tarifs",
     "logout": "Se déconnecter",
+    "login": "Se connecter",
+    "register": "S’inscrire",
     "accountMenu": "Compte et menu",
     "dayMode": "Mode jour",
     "nightMode": "Mode nuit",
@@ -323,7 +325,7 @@
     "errEmail": "Cet e-mail ne semble pas valide.",
     "errGender": "Veuillez en choisir un.",
     "errAge": "Indiquez un âge de 1 à 120.",
-    "errMsisdn": "Saisissez un vrai numéro de mobile (8 à 15 chiffres).",
+    "errMsisdn": "Saisissez votre numéro de mobile.",
     "errMsisdnExists": "Ce numéro a déjà un compte. Veuillez vous connecter.",
     "errMsisdnNoAccount": "Aucun compte pour ce numéro. Veuillez d’abord vous inscrire.",
     "handoff": {
@@ -778,6 +780,7 @@
     "libraryLoadError": "Impossible de charger la bibliothèque audio — {{error}}",
     "audioLibrary": "Bibliothèque audio",
     "librarySub": "Des audios guidés à démarrer à tout moment — sans test. Certains sont gratuits. D’autres nécessitent un paiement unique.",
+    "aiSectionNote": "Narrés par une voix IA, à écouter chaque jour.",
     "loadingLibrary": "Chargement de la bibliothèque…",
     "inYourPath": "Dans votre parcours",
     "tracksCount_one": "{{count}} piste",
@@ -957,6 +960,7 @@
     "errorChargeFailedRetry": "Nous n’avons pas pu débiter votre carte. Veuillez en essayer une autre."
   },
   "counsel": {
+    "aiNotice": "Vous parlez à une IA. {{name}} est une voix IA, pas un accompagnateur humain — et ce n’est pas un service d’urgence.",
     "advisor": {
       "role": "Votre accompagnateur {{appName}}",
       "blurb": "Choisissez ce qui vous préoccupe et parlez-en à voix haute avec un accompagnateur IA à qui vous parlez vraiment. Tout le monde le peut, sans aucun rapport. Vous en avez un ? Il aide seulement Sol à mieux vous connaître."
@@ -1226,6 +1230,7 @@
     "checkoutError": "Impossible de démarrer le paiement — réessayez.",
     "chapterKicker": "Chapitre {{n}}",
     "pdfFooter": "Conçu pour votre lecture.",
+    "aiNotice": "E-book généré par IA.",
     "preparingPdf": "Préparation de “{{title}}” — choisissez “Enregistrer au format PDF” dans la fenêtre d’impression.",
     "previewAria": "Aperçu de {{title}}",
     "premium": "Premium",
@@ -1246,6 +1251,7 @@
     "booksCount_one": "{{count}} livre",
     "booksCount_other": "{{count}} livres",
     "shelfSub": "Les livres que vous avez ajoutés ou achetés — ouvrez-les quand vous voulez.",
+    "aiSectionNote": "Écrits par une IA, à lire à votre rythme.",
     "explore": "Explorer",
     "searchPlaceholder": "Rechercher un titre ou un auteur",
     "searchAria": "Rechercher dans la bibliothèque",
@@ -1456,6 +1462,7 @@
     "baselineMid_other": " pour {{topic}}. Refaites-le dans {{count}} jours pour voir vos chiffres commencer à bouger.",
     "allReports": "Tous les rapports",
     "latest": "Dernier",
+    "viewReport": "Voir le rapport",
     "start": "début",
     "takeAgainNow": "Refaire maintenant",
     "retakeNote_one": "Cela fait {{count}} jour — le refaire maintenant montre le chemin parcouru.",
@@ -2685,10 +2692,8 @@
       }
     },
     "chrome": {
-      "audio": "Audio",
       "gettingAudio": "Préparation de l’audio…",
       "audioPreparingTitle": "Votre programme audio est encore en préparation",
-      "downloadPdf": "Télécharger le PDF",
       "takeAgain": "Refaire",
       "attempt": "essai {{n}}",
       "completed": "Terminé {{date}} · {{name}}",
@@ -2705,7 +2710,14 @@
       "leanOnText": "Voilà ce qui fonctionne bien pour vous en ce moment. Servez-vous-en sur les domaines à travailler ci-dessus — c’est ce qui fait tenir le reste du plan.",
       "disclaimer": "{{appName}} est un outil pour vous aider à réfléchir. Ce n’est ni un test médical, ni un diagnostic, ni un traitement. Si vous traversez une période difficile, faire appel à un professionnel qualifié est une prochaine étape courageuse et utile.",
       "downloadReport": "Télécharger ce rapport",
-      "allReports": "Tous mes rapports"
+      "allReports": "Tous mes rapports",
+      "audioNextTitle": "Écoutez votre plan audio",
+      "audioNextBody": "Ce bilan est aussi un plan audio quotidien — de courtes séances guidées construites à partir de vos réponses. Passez-y pour commencer à écouter.",
+      "audioNextCta": "Voir mon plan audio",
+      "retakeNextTitle": "Refaites ce bilan",
+      "retakeNextBody": "Les choses évoluent. Refaites-le dans quelques semaines pour voir ce qui a bougé — chacun de vos bilans reste enregistré.",
+      "downloadPdf": "Télécharger le PDF",
+      "downloadNextBody": "Gardez-en une copie à conserver, imprimer ou partager avec une personne de confiance."
     },
     "json": {
       "headerNote": "Un outil de connaissance de soi généré à partir de vos réponses — ni évaluation clinique ni diagnostic.",

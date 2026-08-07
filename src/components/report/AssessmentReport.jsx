@@ -372,31 +372,6 @@ export default function AssessmentReport({
 
   return (
     <div className="srep">
-      {/* toolbar (hidden in print) */}
-      <div className="srep-toolbar">
-        {audioState === 'ready' && (
-          <button className="btn btn-ghost srep-tool-btn" onClick={openWelcomeAudio}>
-            <Headphones size={16} /> {t('report.chrome.audio', 'Audio')}
-          </button>
-        )}
-        {audioState === 'preparing' && (
-          <button
-            className="btn btn-ghost srep-tool-btn"
-            disabled
-            aria-disabled="true"
-            title={t('report.chrome.audioPreparingTitle', 'Your audio plan is still being made')}
-          >
-            <Loader2 size={15} className="ap-spin" /> {t('report.chrome.gettingAudio', 'Getting audio ready…')}
-          </button>
-        )}
-        <button className="btn btn-ghost srep-tool-btn" onClick={() => window.print()}>
-          <Download size={16} /> {t('report.chrome.downloadPdf', 'Download PDF')}
-        </button>
-        <button className="btn btn-ghost srep-tool-btn" onClick={onRetake}>
-          <RefreshCcw size={16} /> {t('report.chrome.takeAgain', 'Take again')}
-        </button>
-      </div>
-
       {/* 1 — header */}
       <header className="srep-head">
         <span className="srep-avatar">{name[0].toUpperCase()}</span>
@@ -435,9 +410,7 @@ export default function AssessmentReport({
           </BandPill>
         </div>
         <div className="srep-snapshot-body">
-          <h2 className="srep-archetype">
-            {r.archetype.name}
-          </h2>
+          <h2 className="srep-archetype">{r.archetype.name}</h2>
           <p className="srep-snapshot-text">
             {r.archetype.summary} {ui.scoreSentence(r.headline.value)}
           </p>
@@ -644,7 +617,9 @@ export default function AssessmentReport({
               <span className="srep-action-tag strength">
                 {t('report.chrome.useStrengthTag', 'Use this strength')}
               </span>
-              <h3>{t('report.chrome.useYour', 'Use your {{label}}', { label: leanOn.strengthLabel })}</h3>
+              <h3>
+                {t('report.chrome.useYour', 'Use your {{label}}', { label: leanOn.strengthLabel })}
+              </h3>
               <p>
                 {t(
                   'report.chrome.leanOnText',
@@ -682,15 +657,80 @@ export default function AssessmentReport({
             `${APP_NAME} is a tool to help you reflect. It is not a medical test, a diagnosis, or treatment. If you’re struggling, reaching out to a trained professional is a brave and worthwhile next step.`,
           )}
         </p>
-        <div className="srep-closing-actions">
-          <button className="btn btn-primary" onClick={() => window.print()}>
-            <Download size={16} /> {t('report.chrome.downloadReport', 'Download this report')}
-          </button>
-          <Link to="/reports" className="btn btn-ghost">
-            {t('report.chrome.allReports', 'All my reports')}
-          </Link>
-        </div>
       </section>
+
+      {/* 10 — where to go next. Hidden in print: they're actions, not report. */}
+      <section className="srep-card srep-next">
+        <span className="srep-next-ico">
+          <Download size={20} />
+        </span>
+        <div className="srep-next-text">
+          <h3>{t('report.chrome.downloadReport', 'Download this report')}</h3>
+          <p>
+            {t(
+              'report.chrome.downloadNextBody',
+              'Save a copy to keep, print, or share with someone you trust.',
+            )}
+          </p>
+        </div>
+        <button className="btn btn-primary srep-next-btn" onClick={() => window.print()}>
+          <Download size={16} /> {t('report.chrome.downloadPdf', 'Download PDF')}
+        </button>
+      </section>
+
+      {audioState !== 'unavailable' && (
+        <section className="srep-card srep-next">
+          <span className="srep-next-ico">
+            <Headphones size={20} />
+          </span>
+          <div className="srep-next-text">
+            <h3>{t('report.chrome.audioNextTitle', 'Listen to your audio plan')}</h3>
+            <p>
+              {t(
+                'report.chrome.audioNextBody',
+                'This report is also a daily audio plan — short guided sessions built from what your answers show. Head over to start listening.',
+              )}
+            </p>
+          </div>
+          {audioState === 'ready' ? (
+            <button className="btn btn-primary srep-next-btn" onClick={openWelcomeAudio}>
+              <Headphones size={16} /> {t('report.chrome.audioNextCta', 'Go to my audio plan')}
+            </button>
+          ) : (
+            <button
+              className="btn btn-ghost srep-next-btn"
+              disabled
+              aria-disabled="true"
+              title={t('report.chrome.audioPreparingTitle', 'Your audio plan is still being made')}
+            >
+              <Loader2 size={15} className="ap-spin" />{' '}
+              {t('report.chrome.gettingAudio', 'Getting audio ready…')}
+            </button>
+          )}
+        </section>
+      )}
+
+      <section className="srep-card srep-next">
+        <span className="srep-next-ico">
+          <RefreshCcw size={20} />
+        </span>
+        <div className="srep-next-text">
+          <h3>{t('report.chrome.retakeNextTitle', 'Take this assessment again')}</h3>
+          <p>
+            {t(
+              'report.chrome.retakeNextBody',
+              'Things shift. Take it again in a few weeks to see what has moved — every report you have taken stays saved.',
+            )}
+          </p>
+        </div>
+        <button className="btn btn-ghost srep-next-btn" onClick={onRetake}>
+          <RefreshCcw size={16} /> {t('report.chrome.takeAgain', 'Take again')}
+        </button>
+      </section>
+
+      <div className="srep-next-foot">
+        <Link to="/reports">{t('report.chrome.allReports', 'All my reports')}</Link>
+      </div>
     </div>
   )
 }
