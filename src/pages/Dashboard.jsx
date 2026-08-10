@@ -31,6 +31,7 @@ import { getAssessments, getScores } from '../lib/assessmentsApi.js'
 import { getAudioPlans } from '../lib/audioApi.js'
 import { getMyPrograms } from '../lib/audioProgramsApi.js'
 import { listEbooks } from '../lib/ebooksApi.js'
+import { assetUrl } from '../lib/assets.js'
 import { groupScores, reportTotals } from '../components/report/reportsData.js'
 
 const MOOD_ICONS = [Frown, Meh, Smile, Smile, Laugh]
@@ -469,7 +470,7 @@ export default function Dashboard() {
                     {reading.slug && (
                       <img
                         className="dash-book-img"
-                        src={`/ebook-cover/${reading.slug}.png`}
+                        src={assetUrl(`ebook-cover/${reading.slug}.png`)}
                         alt=""
                         onError={(e) => {
                           e.currentTarget.style.display = 'none'

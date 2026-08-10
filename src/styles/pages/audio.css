@@ -69,13 +69,14 @@
 }
 
 /* ------- covers (shared) -------
-   Each theme layers its atmospheric image (/public/audio/cover/<theme>.png) on top of the
-   original gradient. The gradient stays underneath as a graceful fallback: if the image is
-   missing it just shows the gradient. Applied on .cover-* so every usage picks it up —
+   Each theme layers its atmospheric image on top of the original gradient. The image URL
+   comes from a --cover-<theme> custom property set at boot by lib/assets.js, because CSS
+   can't read the env var the asset host lives in. The gradient stays underneath as a
+   graceful fallback: unset or missing, it just shows the gradient. Applied on .cover-* so every usage picks it up —
    plan/program card strips, the featured hero, the detail modal, and the mini player. */
 .cover-dusk {
   background:
-    url('/audio/cover/dusk.png') center / cover no-repeat,
+    var(--cover-dusk, none) center / cover no-repeat,
     radial-gradient(circle at 72% 18%, #f0b787 0%, #b06a9b 42%, #4d3da8 100%);
 }
 
@@ -85,25 +86,25 @@
 
 .cover-meadow {
   background:
-    url('/audio/cover/meadow.png') center / cover no-repeat,
+    var(--cover-meadow, none) center / cover no-repeat,
     radial-gradient(circle at 70% 22%, #b5e3c8 0%, #5fae85 50%, #2c5f49 100%);
 }
 
 .cover-tide {
   background:
-    url('/audio/cover/tide.png') center / cover no-repeat,
+    var(--cover-tide, none) center / cover no-repeat,
     radial-gradient(circle at 70% 20%, #9adfc3 0%, #3e8e7a 50%, #1f4a44 100%);
 }
 
 .cover-violet {
   background:
-    url('/audio/cover/violet.png') center / cover no-repeat,
+    var(--cover-violet, none) center / cover no-repeat,
     radial-gradient(circle at 70% 20%, #c4b3fb 0%, #7a63d6 50%, #3a2e7e 100%);
 }
 
 .cover-ember {
   background:
-    url('/audio/cover/ember.png') center / cover no-repeat,
+    var(--cover-ember, none) center / cover no-repeat,
     radial-gradient(circle at 70% 20%, #f6c3a4 0%, #d77f6b 50%, #6e3550 100%);
 }
 

@@ -94,11 +94,8 @@ export const apiPut = (path, body) => request(path, { method: 'PUT', body })
 export const apiDelete = (path) => request(path, { method: 'DELETE' })
 
 /**
- * Resolve a media URL returned by the API (audio clips, and anything else the
- * backend serves out of its public/ folder) against the API origin.
- *
- * The backend hands back root-relative paths like `/public/audio/welcome/x.mp3`
- * so the origin is never baked into its database. Already-absolute URLs (an
- * external CDN, say) pass through untouched.
+ * Resolve a media path returned by the API (audio clips, welcome audio) to a
+ * playable URL. The backend stores these relative — `audio/welcome/x.mp3` — so
+ * the host is never baked into its database; see lib/assets.js.
  */
-export const mediaUrl = (url) => (url?.startsWith('/') ? `${BASE_URL}${url}` : url)
+export { assetUrl as mediaUrl } from './assets.js'

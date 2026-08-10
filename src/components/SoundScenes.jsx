@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { assetUrl } from '../lib/assets.js'
 
 /**
  * Soundscape art. When a real scene image exists in /public/sound/image/<scene>.png
@@ -190,7 +191,7 @@ export const SCENE_ART = {
 
 export default function SceneArt({ scene, className }) {
   const [failed, setFailed] = useState(false)
-  const src = scene in SCENE_ART ? `/sound/image/${scene}.png` : null
+  const src = scene in SCENE_ART ? assetUrl(`sound/image/${scene}.png`) : null
 
   if (src && !failed) {
     return (

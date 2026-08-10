@@ -35,6 +35,7 @@ import { APP_PRESS } from '../lib/brand.js'
 import ChapterBody from '../components/ChapterBody.jsx'
 import { chapterHtml } from '../lib/bookBlocks.js'
 import { isStripeMode } from '../lib/billingMode.js'
+import { assetUrl } from '../lib/assets.js'
 import { stripeConfigured, stripePromise } from '../lib/stripe.js'
 import { getPaymentMethods } from '../lib/payments.js'
 import { AI_MEDIA_ATTRS, AI_SOURCE_TYPE, aiJsonLd } from '../lib/aiDisclosure.js'
@@ -94,8 +95,8 @@ const shelfBadge = (b, t) => {
 const acquireLabel = (b, t) =>
   b.isFree || !isStripeMode ? t('ebooks.addToShelf') : t('ebooks.buyPrice', { price: priceTag(b) })
 
-/* Real cover art lives in /public/ebook-cover/<slug>.png (filename === book slug). */
-const coverImageFor = (book) => (book?.slug ? `/ebook-cover/${book.slug}.png` : null)
+/* Real cover art is hosted at ebook-cover/<slug>.png (filename === book slug). */
+const coverImageFor = (book) => (book?.slug ? assetUrl(`ebook-cover/${book.slug}.png`) : null)
 
 // Maps a category name to a stable i18n key (ebooks.cat.<key>), e.g.
 // "Anxiety & Mental Health" → "anxiety-mental-health". The category name itself

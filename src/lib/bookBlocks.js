@@ -5,10 +5,13 @@
    into blocks; ChapterBody renders them in the reader and chapterHtml() renders the
    same blocks for the print-to-PDF export, so the two never drift apart. */
 
+import { assetUrl } from './assets.js'
+
 const WRAPPED = { 'BOX:': 'END BOX', 'TABLE:': 'END TABLE', 'IMAGE:': 'END IMAGE' }
 
-/* Image art lives in the frontend's own public folder, one directory per book. */
-export const artUrl = (slug, file) => `/ebook-art/${slug}/${file}`
+/* Chapter bodies store the bare filename; the art itself is hosted with the rest
+   of the media, one directory per book. */
+export const artUrl = (slug, file) => assetUrl(`ebook-art/${slug}/${file}`)
 
 /* Reads "ALT: ..." out of an IMAGE block, following indented continuation lines. */
 const field = (lines, name) => {

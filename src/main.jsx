@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { ConversationProvider } from '@elevenlabs/react'
 import './i18n/index.js'
+import { installAssetCssVars } from './lib/assets.js'
 import './styles/index.css'
 import './styles/pages/assessment.css'
 import './styles/pages/stress-report.css'
@@ -17,6 +18,8 @@ import './styles/pages/billing.css'
 import './styles/pages/counselling.css'
 import './styles/pages/music.css'
 import App from './App.jsx'
+
+installAssetCssVars()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -4,10 +4,12 @@
  * illustrated "places" you can go, plus a build-your-own ambient mixer.
  *
  * Audio: royalty-free ambient loops from the Google Sound Library (CC BY 4.0),
- * stored in /public/audio/soundscapes/ (see CREDITS.md there). Each scene has a
- * `src`; each mixer layer has a `src` + a default `vol` so layers blend cleanly.
+ * hosted at audio/soundscapes/ (see CREDITS.md there). Each scene has a `src`;
+ * each mixer layer has a `src` + a default `vol` so layers blend cleanly.
  */
-const S = '/audio/soundscapes'
+import { assetUrl } from '../lib/assets.js'
+
+const S = assetUrl('audio/soundscapes')
 
 // `moodKey` is a stable filter category (never shown); title/mood display text is
 // localized in the i18n `sound.scenes.<id>` keys (falling back to these English values).

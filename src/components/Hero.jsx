@@ -3,6 +3,7 @@ import { landingCheckinUrl } from '../lib/landing.js'
 import { useTranslation } from 'react-i18next'
 import { ArrowRight, Headphones, Leaf, Play, TrendingUp } from 'lucide-react'
 import Reveal from './Reveal.jsx'
+import { assetUrl } from '../lib/assets.js'
 
 function Spark() {
   return (
@@ -91,7 +92,7 @@ export default function Hero() {
           <div className="hero-art">
             <span className="hero-art-glow" aria-hidden="true" />
             <img
-              src="/hero-calm.png"
+              src={assetUrl('hero-calm.png')}
               alt={t('home.hero.imageAlt')}
               loading="eager"
               width="1536"

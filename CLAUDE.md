@@ -68,8 +68,28 @@ src/
     index.css           Design tokens, base/reset, global element styles
     pages/*.css         Per-feature stylesheets, one file per area
 
-public/                 Static assets served as-is (images, favicon)
+public/                 Same-origin files only (favicon, sw.js) — media lives in S3
 ```
+
+### Media (images and audio)
+
+All images and audio are served from an S3 bucket, **not** from `public/`. Never write a
+media path as a literal — build it with `assetUrl()` from `src/lib/assets.js`, which
+prefixes `VITE_ASSET_BASE_URL`:
+
+```js
+import { assetUrl } from '../lib/assets.js'
+<img src={assetUrl(`ebook-cover/${book.slug}.png`)} />
+```
+
+- The backend's database stores media paths **relative** (`audio/welcome/x.mp3`), so
+  `mediaUrl()` in `api.js` is just `assetUrl` re-exported. Moving bucket or adding a CDN
+  is a change to the one env var.
+- **CSS can't read env vars.** The theme covers in `styles/pages/audio.css` use
+  `var(--cover-<theme>, none)`; `installAssetCssVars()` sets them from `main.jsx` at boot.
+  Do the same for any new CSS background image.
+- `public/sw.js` and `public/favicon.svg` stay local — a service worker must be
+  same-origin, and it references the favicon for notification icons.
 
 ### Where things go
 
