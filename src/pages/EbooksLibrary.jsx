@@ -713,7 +713,7 @@ ${chaptersHtml}
           aria-label={t('ebooks.previewAria', { title: book.title })}
         >
           <Cover book={book} theme={theme} size="md" />
-          {!book.isFree && (
+          {!book.isFree && isStripeMode && (
             <span className="eb-premium">
               <Crown size={11} /> {t('ebooks.premium')}
             </span>
